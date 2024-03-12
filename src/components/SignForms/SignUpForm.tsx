@@ -14,25 +14,19 @@ import FormLabel from '@mui/material/FormLabel/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup/RadioGroup';
 import InputAdornment from '@mui/material/InputAdornment';
 import Radio from '@mui/material/Radio/Radio';
-import validator, { isEmail } from 'validator'
+import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import yup from 'yup'
-import { useState } from 'react';
 import IconButton from '@mui/material/IconButton/IconButton';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import FormControl from '@mui/material/FormControl/FormControl';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
+import {User} from '../../types/types'
+import { api } from '../../service/api';
+import { TypeAlert } from '../../hooks/TypeAlert';
+import { env } from 'process';
 
 
-interface FormData{
-  nome:string;
-  email:string;
-  cargo:string;
-  ativo:string;
-  senha:string;
-  consfirmesenha:string
-}
 
 function Copyright(props: any) {
   return (
@@ -48,21 +42,22 @@ function Copyright(props: any) {
 }
 
 
-
-
 export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({});
-  
-
+  const { register, handleSubmit,formState: { errors } } = useForm<User>({});
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
-  const onSubmit = (data:FormData) => {
-    console.log(data)
-  }
+  const onSubmit = (data:User) => {
+    try{
+      console.log(data)
+
+    }catch{
+
+    }
+  };
 
   return (
       <Container component="main" maxWidth="xs"  sx={{mt:'-90px'}} >
@@ -140,17 +135,16 @@ export default function SignUp() {
                       aria-labelledby="radio-buttons-ativo-inativo"
                       defaultValue="S"
                       aria-required
-                      {...register('ativo')}
                     > 
                       <Box sx={{display:'flex', flexDirection:'row', ml:"10px"}}>
-                        <FormControlLabel value="S" control={<Radio />} label="SIM" />
-                        <FormControlLabel value="n" control={<Radio />} label="NÃO" />
+                        <FormControlLabel {...register('ativo')} id='formRdio1' value="S" control={<Radio />} label="SIM" />
+                        <FormControlLabel {...register('ativo')} id='formRdio2' value="N" control={<Radio />} label="NÃO" />
                       </Box>
                     </RadioGroup>
                 </Grid>
               </Grid>
               <FormControl  sx={{ml:1, width: '100%' }} variant="outlined" error={!!errors?.senha}>
-                <InputLabel sx={{p:'px'}} htmlFor="senha">Password</InputLabel>
+                <InputLabel sx={{p:'px'}} htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
                   required
                   id="senha"
@@ -159,7 +153,10 @@ export default function SignUp() {
                   label="senha"
                   error={!!errors?.senha}
                   {...register('senha',{required:'Campo obrigatório',
-                  minLength: 8 || 'A senha deve ter 8 caracteres no mínimo', 
+                  minLength: {
+                    value: 8,
+                    message: 'A senha deve ter 8 caracteres no mínimo',
+                  },
                   pattern: {
                     value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
                     message: 'A senha deve conter letras maiúsculas, minúsculas, números e um caractere especial #$%'
@@ -184,16 +181,6 @@ export default function SignUp() {
                 {errors.senha.message}
               </Typography>
               )}
-              <Grid item xs={12}>
-                <TextField  
-                    required
-                    fullWidth
-                    label="confirmesenha"
-                    type="password"
-                    id="confirmesenha"
-                    autoComplete="new-password"
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"

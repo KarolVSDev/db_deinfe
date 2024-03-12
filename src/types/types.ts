@@ -1,7 +1,7 @@
-export type User = {
+export interface User{
     nome:string;
     email:string;
     cargo:string;
     ativo:string;
     senha:string;
-}
+  }
