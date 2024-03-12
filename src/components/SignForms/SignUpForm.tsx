@@ -12,10 +12,17 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import FormLabel from '@mui/material/FormLabel/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup/RadioGroup';
+import InputAdornment from '@mui/material/InputAdornment';
 import Radio from '@mui/material/Radio/Radio';
 import validator, { isEmail } from 'validator'
 import { useForm } from 'react-hook-form';
 import yup from 'yup'
+import { useState } from 'react';
+import IconButton from '@mui/material/IconButton/IconButton';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import FormControl from '@mui/material/FormControl/FormControl';
+import InputLabel from '@mui/material/InputLabel/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 
 
 interface FormData{
@@ -44,9 +51,14 @@ function Copyright(props: any) {
 
 
 export default function SignUp() {
-  
+  const [showPassword, setShowPassword] = React.useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({});
   
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   const onSubmit = (data:FormData) => {
     console.log(data)
@@ -121,10 +133,10 @@ export default function SignUp() {
                   {errors.cargo.message}
                 </Typography>
                 )}
-              <Grid >
+              <Grid sx={{width:'100%'}}>
                 <Grid sx={{display:'flex', flexDirection:'row', ml:"10px"}}>
                   <FormLabel id="demo-radio-buttons-group-label" sx={{mt:"8px"}}>Ativo:</FormLabel>
-                  <RadioGroup
+                  <RadioGroup 
                       aria-labelledby="radio-buttons-ativo-inativo"
                       defaultValue="S"
                       aria-required
@@ -137,20 +149,36 @@ export default function SignUp() {
                     </RadioGroup>
                 </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <TextField  
+              <FormControl  sx={{ml:1, width: '100%' }} variant="outlined" error={!!errors?.senha}>
+                <InputLabel sx={{p:'px'}} htmlFor="senha">Password</InputLabel>
+                <OutlinedInput
                   required
+                  id="senha"
+                  type={showPassword ? 'text' : 'password'}
                   fullWidth
                   label="senha"
-                  type="password"
-                  id="senha"
                   error={!!errors?.senha}
                   {...register('senha',{required:'Campo obrigatório',
                   minLength: 8 || 'A senha deve ter 8 caracteres no mínimo', 
-                  pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/ || 'A senha deve conter letras maiúsculas, minúsculas números e um carcter especial #$%'})}
-                  autoComplete="new-password"
+                  pattern: {
+                    value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+                    message: 'A senha deve conter letras maiúsculas, minúsculas, números e um caractere especial #$%'
+                  }
+                  })}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
                 />
-              </Grid>
+              </FormControl>
               {errors?.senha && (
                 <Typography variant="caption" sx={{ color: 'red', ml:'10px'}}>
                 {errors.senha.message}
@@ -189,6 +217,4 @@ export default function SignUp() {
   )
 }
 
-function yupResolver(schema: yup.ObjectSchema<{ nome: string; email: string | undefined; }, yup.AnyObject, { nome: undefined; email: undefined; }, "">): import("react-hook-form").Resolver<import("react-hook-form").FieldValues, any> | undefined {
-  throw new Error('Function not implemented.');
-}
+
