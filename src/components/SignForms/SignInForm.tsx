@@ -3,21 +3,29 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useForm } from 'react-hook-form';
+import { UserLogin } from '../../types/types';
+import validator from 'validator';
+import FormControl from '@mui/material/FormControl/FormControl';
+import InputAdornment from '@mui/material/InputAdornment/InputAdornment';
+import IconButton from '@mui/material/IconButton/IconButton';
+import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel/InputLabel';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="/">
         Focus
       </Link>{' '}
       {new Date().getFullYear()}
@@ -26,22 +34,24 @@ function Copyright(props: any) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
-
 export default function SignInSide() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const {register, handleSubmit, formState:{errors}} = useForm<UserLogin>({})
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
+  const {login} = useAuth();
+  const navigate = useNavigate()
+
+  const onSubmit = (data:UserLogin) => {
+    login(data);
+    navigate('/dashboard')
+  }
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: '' }}>
+
+      <Grid container component="main" sx={{ height: '', mt:'-20px', mb:'-20px', width:'700px' }}>
         <CssBaseline />
         <Grid
           item
@@ -49,7 +59,7 @@ export default function SignInSide() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundImage: 'url(/images/tce_1.jpeg)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -57,7 +67,7 @@ export default function SignInSide() {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}  square>
           <Box
             sx={{
               my: 8,
@@ -67,62 +77,85 @@ export default function SignInSide() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Entrar
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, flex:'col', display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 id="email"
-                label="Email Address"
-                name="email"
+                label="E-mail"
                 autoComplete="email"
                 autoFocus
+                error= {!!errors?.email}
+                {...register("email", {required:'Campo obrigatório', validate:(value) => validator.isEmail(value) || 'Insira um E-mail válido'})}
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+                {errors?.email && (
+                    <Typography variant="caption" sx={{ color: 'red'}}>
+                      {errors.email.message}
+                    </Typography>
+                  )}
+              <FormControl  sx={{ width: '100%' }} variant="outlined" error={!!errors?.password}>
+                <InputLabel sx={{p:'px'}} htmlFor="senha">Senha</InputLabel>
+                <OutlinedInput
+                  required
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  fullWidth
+                  label="Senha"
+                  error={!!errors?.password}
+                  {...register('password',{required:'Campo obrigatório',
+                  minLength: {
+                    value: 8,
+                    message: 'A senha deve ter 8 caracteres no mínimo',
+                  },
+                  pattern: {
+                    value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+                    message: 'A senha deve conter letras maiúsculas, minúsculas, números e um caractere especial #$%'
+                  }
+                  })}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+              {errors?.password && (
+                <Typography variant="caption" sx={{ mr:'30px', color: 'red'}}>
+                {errors.password.message}
+              </Typography>
+              )}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                Entrar
               </Button>
               <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link href="/signup" variant="body2">
+                    {"Não tem uma conta? Criar conta!"}
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
+              <Copyright sx={{mt:'15px'}}/>
             </Box>
           </Box>
         </Grid>
       </Grid>
-    </ThemeProvider>
   );
 }

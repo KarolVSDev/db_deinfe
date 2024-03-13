@@ -25,14 +25,13 @@ import {User} from '../../types/types'
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
 import { env } from 'process';
-
-
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="/">
         Focus
       </Link>{' '}
       {new Date().getFullYear()}
@@ -49,15 +48,20 @@ export default function SignUp() {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+  const navigate = useNavigate()
 
   const onSubmit = (data:User) => {
-    try{
-      console.log(data)
-
-    }catch{
-
-    }
-  };
+    api.post('/usuario',data).then(response => {
+      TypeAlert(response.data.message, 'success')
+      setTimeout(() => {
+        navigate('/signin')
+      }, 1000);
+    }).catch(error => {
+      if (error.response && error.response.status === 403) {
+          TypeAlert(error.response.data.message, 'error');
+      }
+    })
+  }
 
   return (
       <Container component="main" maxWidth="xs"  sx={{mt:'-90px'}} >
