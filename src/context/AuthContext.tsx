@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { AuthData, UserLogin } from "../types/types";
 import Cookies from "universal-cookie";
 import { api } from "../service/api";
@@ -18,6 +18,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC <Props>= ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate()
+    const cookies = new Cookies()
+    const auth = cookies.get('focusToken')
+
+    useEffect(()=>{
+        if(!auth){
+            setIsLoggedIn(false)
+            navigate('/signin')
+        }
+    },[])
 
     const setCookies = (authData:AuthData) => {
         const cookies = new Cookies()
@@ -27,15 +37,20 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
     }
 
     const login = async (data:UserLogin) => {
-       await  api.post('/login', data).then((response:any) => {
+       await api.post('/login', data).then((response:any) => {
             setCookies(response.data)
             setIsLoggedIn(true)
+
         })
     };
 
-    const logout = () => {
 
+    const logout = () => {
+        const cookies = new Cookies();
+        cookies.remove('focusToken', {path:'/'})
+        localStorage.removeItem('email')
         setIsLoggedIn(false)
+        navigate('/signin')
     }
 
     return (
