@@ -147,12 +147,12 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item>
-                  <Link href="/signup" variant="body2">
+                  <Link href="/signup" variant="body2" sx={{m:'auto'}}>
                     {"Não tem uma conta? Criar conta!"}
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{mt:'15px'}}/>
+              <Copyright sx={{pt:'15px', m:'auto'}}/>
             </Box>
           </Box>
         </Grid>

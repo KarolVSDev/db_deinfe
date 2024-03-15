@@ -25,7 +25,7 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
     useEffect(()=>{
         if(!auth){
             setIsLoggedIn(false)
-            navigate('/signin')
+            console.log(isLoggedIn)
         }
     },[])
 
