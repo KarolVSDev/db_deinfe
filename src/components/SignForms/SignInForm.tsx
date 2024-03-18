@@ -50,8 +50,8 @@ export default function SignInSide() {
   }
 
   return (
-
-      <Grid container component="main" sx={{ height: '', mt:'-20px', mb:'-20px', width:'700px' }}>
+    <>
+      <Grid container component="main" sx={{height:'100vh'}} >
         <CssBaseline />
         <Grid
           item
@@ -146,7 +146,7 @@ export default function SignInSide() {
                 Entrar
               </Button>
               <Grid container>
-                <Grid item>
+                <Grid item sx={{m:'auto'}}>
                   <Link href="/signup" variant="body2" sx={{m:'auto'}}>
                     {"Não tem uma conta? Criar conta!"}
                   </Link>
@@ -157,5 +157,6 @@ export default function SignInSide() {
           </Box>
         </Grid>
       </Grid>
+    </>
   );
 }

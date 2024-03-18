@@ -64,7 +64,7 @@ export default function SignUp() {
   }
 
   return (
-      <Container component="main" maxWidth="xs"  sx={{mt:'-90px'}} >
+      <Container component="main" maxWidth="xs"  sx={{mt:'-60px'}} >
         <CssBaseline />
         <Box
           sx={{

@@ -5,7 +5,6 @@ import Dashboard  from './pages/Dashboard/Dashboard'
 import SignIn from './pages/SignPage/SignIn';
 import SignUp from './pages/SignPage/SignUp';
 import { AuthProvider } from './context/AuthContext';
-
 import PessoaFisica from './pages/Dashboard/Pessoa Física/PessoaFisica';
 
 
