@@ -11,10 +11,11 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import MuiAppBar from '@mui/material/AppBar';
 import { useAppStore } from '../../hooks/appStore';
 import { useAuth } from '../../context/AuthContext';
+import { LogoutOutlined } from '@mui/icons-material';
+
 
 
 const AppBar = styled(MuiAppBar, {
@@ -89,9 +90,7 @@ export default function NavBar() {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+  
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -110,8 +109,7 @@ export default function NavBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+      
     </Menu>
   );
 
@@ -142,15 +140,15 @@ export default function NavBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Perfil</p>
+        <p>Teste</p>
       </MenuItem>
     </Menu>
   );
   const {logout} = useAuth();
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" >
-        <Toolbar>
+      <AppBar position="fixed">
+        <Toolbar sx={{backgroundColor:'rgb(17 24 39)'}}>
           <IconButton
             size="large"
             edge="start"
@@ -167,7 +165,7 @@ export default function NavBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            MUI
+            Focus
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -184,24 +182,23 @@ export default function NavBar() {
               size="large"
               edge="end"
               aria-label="account of current user"
-              aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
               color="inherit"
+              sx={{mr:'10px'}}
             >
-              <AccountCircle />
+              <AccountCircle sx={{mr:'5px'}} /> <Typography>Perfil</Typography>
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
+              edge="end"
+              aria-label="account of current user"
               aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
+              onClick={logout}
               color="inherit"
             >
-              <MoreIcon />
+              <LogoutOutlined sx={{mr:'5px'}}/> <Typography>Sair</Typography>
             </IconButton>
           </Box>
         </Toolbar>
