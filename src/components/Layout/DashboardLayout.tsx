@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAppStore } from '../../hooks/appStore';
+import TableChartIcon from '@mui/icons-material/TableChart';
 
 
 const drawerWidth = 240;
@@ -81,7 +82,7 @@ export default function SideNav() {
 
   const pages = [
     {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
-    {name:'Pessoa Física', link:'/dashboard/pessoafisica',  icon:<AccountCircleIcon/>},
+    {name:'Pessoa Física', link:'/dashboard/pessoafisica',  icon:<TableChartIcon/>},
   ]
   return (
     <>
@@ -119,31 +120,6 @@ export default function SideNav() {
                     {page.icon}
                   </ListItemIcon>
                   <ListItemText primary={page.name} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
             ))}

@@ -2,7 +2,7 @@ import SideNav from "../../../components/Layout/DashboardLayout"
 import { Box, Button } from "@mui/material"
 import { useAuth } from "../../../context/AuthContext"
 import NavBar from "../../../components/Layout/NavBar"
-import TablePessoaFisica from "../../../components/Tables/TablePessoaFisica/TablePessoaFisica"
+import DataBaseTable from "../../../components/Tables/TablePessoaFisica/DatabaseTable"
 
 const PessoaFisica = () => {
   return (
@@ -13,7 +13,7 @@ const PessoaFisica = () => {
         <Box sx={{ display: 'flex' }}>
           <SideNav/>
           <Box component="main" sx={{flexGrow:1, p:3}}>
-            <TablePessoaFisica/>
+            <DataBaseTable/>
           </Box>
         </Box>
         </>
