@@ -3,7 +3,7 @@ import Cookies from "universal-cookie";
 
 
 const api = Axios.create({
-    baseURL:`${import.meta.env.VITE_API_BACKEND}/api`
+    baseURL:`${import.meta.env.VITE_API_BACKEND}`
 })
 
 api.interceptors.request.use(config => {

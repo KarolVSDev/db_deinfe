@@ -16,6 +16,7 @@ export interface AuthData {
 }
 
 export interface PessoaFisica {
+  id:string;
   nome: string;
   cpf: string;
   rg: string;
@@ -31,4 +32,12 @@ export interface PessoaFisica {
   telefone2: string;
   ramal: string;
   email: string;
+  ativo:string
+}
+export interface Procurador {
+  nome: string;
+}
+export interface Relator {
+  nome: string;
+  cargo: string;
 }

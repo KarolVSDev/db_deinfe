@@ -7,7 +7,6 @@ import DataBaseTable from "../../../components/Tables/TablePessoaFisica/Database
 const PessoaFisica = () => {
   return (
     <>  
-       <>
        <NavBar/>
        <Box height={60}/>
         <Box sx={{ display: 'flex' }}>
@@ -17,7 +16,6 @@ const PessoaFisica = () => {
           </Box>
         </Box>
         </>
-    </>
   )
 }
 

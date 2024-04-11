@@ -9,9 +9,10 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Divider, MenuItem, Select, Typography } from '@mui/material';
 import { api } from '../../../service/api';
-import { PessoaFisica } from '../../../types/types';
+import { PessoaFisica, Procurador, Relator } from '../../../types/types';
 import { Edit } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
+import { pessoaFisicaHeader, procuradorHeader, relatorHeader } from '../../../service/columns';
 
 
 interface Column {
@@ -21,26 +22,43 @@ interface Column {
   align?: 'left';
 }
 
+
 export default function DatabaseTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [pessoaFisica, setPessoaFisica] = useState<PessoaFisica[]>([]);
-  const [dataType, setDataType] = useState('pessoaFisica');
+  const [procurador, setProcurador] = useState<Procurador[]>([]);
+  const [relator, setRelator] = useState<Relator[]>([]);
+  const [dataType, setDataType] = useState('pessoafisica');
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState<Column[]>([]);
 
-  const getPessoaFisica =  () => {
-      api.get('/').then((response:any) => {
-      setPessoaFisica(response.data)
+  const fetchData =  async () => {
+    try {
+      await api.get(`/${dataType}`).then((response:any) => {
+        if(dataType === 'pessoafisica'){
+          setPessoaFisica(response.data)
+        }else if(dataType === 'procurador'){
+          setProcurador(response.data)
+        }else if(dataType === 'relator'){
+          setRelator(response.data)
+        }
       return 
     })
+    } catch (error) {
+      console.log('Erro ao buscar dados', error)
+    }
   }
 
   useEffect(() => {
-    getPessoaFisica()
-  }, [])
+    fetchData()
+  }, [dataType, columns])
+  
 
-
+  if(dataType){
+    fetchData()
+  }
+  console.log(relator)
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -63,38 +81,14 @@ export default function DatabaseTable() {
     editButton:<Edit></Edit>
   }
 
+
   const handleDataTypeChange = (event: { target: { value: any; }; }) => {
     setDataType(event.target.value)
-    let newColumns: Column[] = [];
-    if(dataType === 'pessoaFisica'){
-      newColumns = [
-        {id:'nome', label:'Nome', minWidth:150, align:'left'},
-        {id:'cpf', label:'CPF', minWidth:150, align:'left'},
-        {id:'profissao', label:'Profissão', minWidth:150, align:'left'},
-        {id:'genero', label:'Gênero', minWidth:150, align:'left'},
-        {id:'cep', label:'CEP', minWidth:150, align:'left'},
-        {id:'logradouro', label:'Logradouro', minWidth:150, align:'left'},
-        {id:'complemento', label:'Complemento', minWidth:150, align:'left'},
-        {id:'numero', label:'Número', minWidth:150, align:'left'},
-        {id:'cidade', label:'Cidade', minWidth:150, align:'left'},
-        {id:'uf', label:'UF', minWidth:150, align:'left'},
-        {id:'telefone1', label:'Telefone1', minWidth:150, align:'left'},
-        {id:'telefone2', label:'Telefone2', minWidth:150, align:'left'},
-        {id:'ramal', label:'Ramal', minWidth:150, align:'left'},
-        {id:'email', label:'E-mail', minWidth:150, align:'left'},
-      ]
-    }
-    if(dataType === 'procurador'){
-      newColumns = [
-        {id:'nome', label:'Nome', minWidth:150, align:'left'},
-      ]
-    }
-    setColumns(newColumns)
-   
   };
+  
 
   const optionsSelect = [
-    {value:'pessoaFisica', string:'Pessoa Física'},
+    {value:'pessoafisica', string:'Pessoa Física'},
     {value:'achado', string:'Achado'},
     {value:'divAreaAchado', string:'Divisão da área do achado'},
     {value:'area-achado', string:'Area do Achado'},
@@ -107,8 +101,9 @@ export default function DatabaseTable() {
     {value:'procurador', string:'Procurador'},
     {value:'relator', string:'Relator'},
   ]
+  
   return (
-    <Paper sx={{ width: '77vw', overflow: 'hidden' }}>
+    <Paper sx={{ maxWidth: 'calc(100vw - 300px)', overflow: 'hidden' }}>
       <Typography
       gutterBottom
       variant='h5'
@@ -126,34 +121,77 @@ export default function DatabaseTable() {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
+              {dataType === 'pessoafisica' && (
+                pessoaFisicaHeader.map((pf) => (
+                  <TableCell
+                  id={pf.id}
+                  align={'left'}
+                  style={{ minWidth: 150 }}
                 >
-                  {column.label}
-                </TableCell>
-              ))}
+                  {pf.label}
+                </TableCell> 
+                ))
+                
+              )}
+              {dataType === 'procurador' && (
+                procuradorHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150 }}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
+              {dataType === 'relator' && (
+                relatorHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150 }}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.nome}>
-          {columns.map((column) => {
-            const value = row[column.id];
-            return (
-              <TableCell key={column.id} align={column.align}>
-                {value}
-              </TableCell>
-            );
-          })}
-        </TableRow>
-                );
-              })}
+          {dataType === 'pessoafisica' && (
+              pessoaFisica.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.nome}</TableCell>
+                  <TableCell align="left">{row.cpf}</TableCell>
+                  <TableCell align="left">{row.rg}</TableCell>
+                  <TableCell align="left">{row.profissao}</TableCell>
+                  <TableCell align="left">{row.genero}</TableCell>
+                  <TableCell align="left">{row.cep}</TableCell>
+                  <TableCell align="left">{row.logradouro}</TableCell>
+                  <TableCell align="left">{row.complemento}</TableCell>
+                  <TableCell align="left">{row.numero}</TableCell>
+                  <TableCell align="left">{row.cidade}</TableCell>
+                  <TableCell align="left">{row.uf}</TableCell>
+                  <TableCell align="left">{row.telefone1}</TableCell>
+                  <TableCell align="left">{row.telefone2}</TableCell>
+                  <TableCell align="left">{row.ramal}</TableCell>
+                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="left">{row.ativo}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'procurador' && (
+              procurador.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.nome}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'relator' && (
+              relator.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.nome}</TableCell>
+                  <TableCell align="left">{row.cargo}</TableCell>
+                </TableRow>
+          )))}
           </TableBody>
         </Table>
       </TableContainer>
