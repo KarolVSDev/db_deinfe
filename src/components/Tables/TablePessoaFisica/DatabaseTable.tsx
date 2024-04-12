@@ -9,11 +9,28 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Divider, MenuItem, Select, Typography } from '@mui/material';
 import { api } from '../../../service/api';
-import { PessoaFisica, Procurador, Relator } from '../../../types/types';
+import { PessoaFisica, 
+  Procurador, 
+  Relator, 
+  NatAchado, 
+  DivAreaAchado, 
+  AreaAchado,
+  Achado,  
+  Jurisd,
+  Processo,
+} from '../../../types/types';
 import { Edit } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
-import { pessoaFisicaHeader, procuradorHeader, relatorHeader } from '../../../service/columns';
-
+import { pessoaFisicaHeader, 
+  procuradorHeader, 
+  relatorHeader, 
+  natAchadoHeader, 
+  divAreaAchadoHeader,
+  areaAchadoHeader,
+  achadoHeader,
+  jurisdHeader,
+  processoHeader,
+} from '../../../service/columns';
 
 interface Column {
   id: string;
@@ -29,6 +46,12 @@ export default function DatabaseTable() {
   const [pessoaFisica, setPessoaFisica] = useState<PessoaFisica[]>([]);
   const [procurador, setProcurador] = useState<Procurador[]>([]);
   const [relator, setRelator] = useState<Relator[]>([]);
+  const [natAchado, setNatAchado] = useState<NatAchado[]>([]);
+  const [divAreaAchado, setDivAreaAchado] = useState<DivAreaAchado[]>([]);
+  const [areaAchado, setAreaAchado] = useState<AreaAchado[]>([]);
+  const [achado, setAchado] = useState<Achado[]>([]);
+  const [jurisd, setJurisd] = useState<Jurisd[]>([]);
+  const [processo, setProcesso] = useState<Processo[]>([]);
   const [dataType, setDataType] = useState('pessoafisica');
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState<Column[]>([]);
@@ -42,6 +65,18 @@ export default function DatabaseTable() {
           setProcurador(response.data)
         }else if(dataType === 'relator'){
           setRelator(response.data)
+        }else if(dataType === 'nat-achado'){
+          setNatAchado(response.data)
+        }else if(dataType === 'div-area-achado'){
+          setDivAreaAchado(response.data)
+        }else if(dataType === 'area-achado'){
+          setAreaAchado(response.data)
+        }else if(dataType === 'achado'){
+          setAchado(response.data)
+        }else if(dataType === 'jurisd'){
+          setJurisd(response.data)
+        }else if(dataType === 'processo'){
+          setProcesso(response.data)
         }
       return 
     })
@@ -58,7 +93,8 @@ export default function DatabaseTable() {
   if(dataType){
     fetchData()
   }
-  console.log(relator)
+
+  console.log(areaAchado)
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -90,7 +126,7 @@ export default function DatabaseTable() {
   const optionsSelect = [
     {value:'pessoafisica', string:'Pessoa Física'},
     {value:'achado', string:'Achado'},
-    {value:'divAreaAchado', string:'Divisão da área do achado'},
+    {value:'div-area-achado', string:'Divisão da área do achado'},
     {value:'area-achado', string:'Area do Achado'},
     {value:'nat-achado', string:'Natureza do Achado'},
     {value:'interessado', string:'Interessado'},
@@ -116,6 +152,13 @@ export default function DatabaseTable() {
             <MenuItem value={option.value}>{option.string}</MenuItem>
           ))}
       </Select>
+      {dataType === 'interessado' && (
+        <Select value={dataType} onChange={handleDataTypeChange} sx={{ml:'20px', mb:'10px'}}>
+        {optionsSelect.map((option) => (
+          <MenuItem value={option.value}>{option.string}</MenuItem>
+        ))}
+    </Select>
+      )}
       <Divider/>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
@@ -126,7 +169,7 @@ export default function DatabaseTable() {
                   <TableCell
                   id={pf.id}
                   align={'left'}
-                  style={{ minWidth: 150 }}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0'}}
                 >
                   {pf.label}
                 </TableCell> 
@@ -138,7 +181,7 @@ export default function DatabaseTable() {
                   <TableCell
                   id={p.id}
                   align={'left'}
-                  style={{ minWidth: 150 }}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
                 >
                   {p.label}
                 </TableCell> 
@@ -149,7 +192,73 @@ export default function DatabaseTable() {
                   <TableCell
                   id={p.id}
                   align={'left'}
-                  style={{ minWidth: 150 }}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
+              {dataType === 'nat-achado' && (
+                natAchadoHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
+              {dataType === 'div-area-achado' && (
+                divAreaAchadoHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
+              {dataType === 'area-achado' && (
+                areaAchadoHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
+              {dataType === 'achado' && (
+                achadoHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
+              {dataType === 'jurisd' && (
+                jurisdHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0'}}
+                >
+                  {p.label}
+                </TableCell> 
+                ))
+              )}
+              {dataType === 'processo' && (
+                processoHeader.map((p) => (
+                  <TableCell
+                  id={p.id}
+                  align={'left'}
+                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
                 >
                   {p.label}
                 </TableCell> 
@@ -190,6 +299,69 @@ export default function DatabaseTable() {
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.nome}</TableCell>
                   <TableCell align="left">{row.cargo}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'nat-achado' && (
+              natAchado.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.descricao}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'div-area-achado' && (
+              divAreaAchado.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.descricao}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'area-achado' && (
+              areaAchado.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.descricao}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'achado' && (
+              achado.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.titulo}</TableCell>
+                  <TableCell align="left">{row.texto}</TableCell>
+                  <TableCell align="left">{row.criterio}</TableCell>
+                  <TableCell align="left">{row.ativo}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'jurisd' && (
+              jurisd.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.nome}</TableCell>
+                  <TableCell align="left">{row.sigla}</TableCell>
+                  <TableCell align="left">{row.cnpj}</TableCell>
+                  <TableCell align="left">{row.ug}</TableCell>
+                  <TableCell align="left">{row.cep}</TableCell>
+                  <TableCell align="left">{row.logradouro}</TableCell>
+                  <TableCell align="left">{row.complemento}</TableCell>
+                  <TableCell align="left">{row.numero}</TableCell>
+                  <TableCell align="left">{row.cidade}</TableCell>
+                  <TableCell align="left">{row.telefone1}</TableCell>
+                  <TableCell align="left">{row.telefone2}</TableCell>
+                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="left">{row.site}</TableCell>
+                  <TableCell align="left">{row.cargoGestor}</TableCell>
+                  <TableCell align="left">{row.normaCriacao}</TableCell>
+                  <TableCell align="left">{row.dataCriacao}</TableCell>
+                  <TableCell align="left">{row.normaExtincao}</TableCell>
+                  <TableCell align="left">{row.dataExtincao}</TableCell>
+                  <TableCell align="left">{row.poder}</TableCell>
+                  <TableCell align="left">{row.ativo}</TableCell>
+                </TableRow>
+          )))}
+          {dataType === 'processo' && (
+              processo.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.numero}</TableCell>
+                  <TableCell align="left">{row.ano}</TableCell>
+                  <TableCell align="left">{row.natureza}</TableCell>
+                  <TableCell align="left">{row.exercicio}</TableCell>
+                  <TableCell align="left">{row.objeto}</TableCell>
+                  <TableCell align="left">{row.arquivamento}</TableCell>
                 </TableRow>
           )))}
           </TableBody>

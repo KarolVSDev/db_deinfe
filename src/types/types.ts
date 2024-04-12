@@ -16,7 +16,7 @@ export interface AuthData {
 }
 
 export interface PessoaFisica {
-  id:string;
+  id: string;
   nome: string;
   cpf: string;
   rg: string;
@@ -32,12 +32,70 @@ export interface PessoaFisica {
   telefone2: string;
   ramal: string;
   email: string;
-  ativo:string
+  ativo: string;
 }
 export interface Procurador {
+  id: string
   nome: string;
 }
 export interface Relator {
+  id: string;
   nome: string;
   cargo: string;
+}
+
+export interface NatAchado {
+  id: string;
+  descricao: string;
+}
+
+export interface DivAreaAchado {
+  id: string;
+  descricao: string;
+}
+export interface AreaAchado {
+  id: string;
+  descricao: string;
+}
+
+export interface Achado {
+  id: string;
+  titulo: string;
+  texto: string;
+  criterio: string;
+  ativo: string;
+}
+
+export interface Jurisd {
+  id:string;
+  nome:string;
+  sigla:string;
+  cnpj:string;
+  ug:string;
+  cep:string;
+  logradouro:string;
+  complemento:string;
+  numero:string;
+  cidade:string;
+  telefone1:string;
+  telefone2:string;
+  email:string;
+  site:string;
+  cargoGestor:string;
+  normaCriacao:string;
+  dataCriacao:string;
+  normaExtincao:string;
+  dataExtincao:string;
+  poder:string;
+  ativo:string;
+}
+
+export interface Processo{
+  id:string;
+  numero:string;
+  ano:string;
+  natureza:string;
+  exercicio:string;
+  objeto:string;
+  arquivamento:string;
 }

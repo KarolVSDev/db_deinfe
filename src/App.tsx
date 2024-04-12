@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css'
 import Home from './pages/Home/Home';
 import Dashboard  from './pages/Dashboard/Dashboard'
@@ -14,7 +14,7 @@ function App() {
       <Router>
         <AuthProvider>
           <Routes>
-            <Route path='/' element={<Home/>} />
+            <Route path='/'  element={<Navigate to="/signin"  />} />
             <Route path='/signup' element={<SignUp/>} />
             <Route path='/signin' element={<SignIn/>} />
             <Route path="/dashboard" element={<Dashboard />} />
