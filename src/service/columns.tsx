@@ -76,3 +76,7 @@ export const processoHeader = [
     {id:'objeto', label:'Objeto', minWidth:150},
     {id:'arquivamento', label:'Arquivamento', minWidth:150},
 ]
+
+export const interessadoHeader = [
+    {id:'interesse', label:'Interesse', minWidth:150}
+]

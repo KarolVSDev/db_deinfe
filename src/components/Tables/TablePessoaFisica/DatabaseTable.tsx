@@ -7,30 +7,35 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Divider, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { api } from '../../../service/api';
-import { PessoaFisica, 
-  Procurador, 
-  Relator, 
-  NatAchado, 
-  DivAreaAchado, 
+import {
+  PessoaFisica,
+  Procurador,
+  Relator,
+  NatAchado,
+  DivAreaAchado,
   AreaAchado,
-  Achado,  
+  Achado,
   Jurisd,
   Processo,
+  Interessado,
 } from '../../../types/types';
 import { Edit } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
-import { pessoaFisicaHeader, 
-  procuradorHeader, 
-  relatorHeader, 
-  natAchadoHeader, 
+import {
+  pessoaFisicaHeader,
+  procuradorHeader,
+  relatorHeader,
+  natAchadoHeader,
   divAreaAchadoHeader,
   areaAchadoHeader,
   achadoHeader,
   jurisdHeader,
   processoHeader,
+  interessadoHeader
 } from '../../../service/columns';
+import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert';
 
 interface Column {
   id: string;
@@ -52,49 +57,61 @@ export default function DatabaseTable() {
   const [achado, setAchado] = useState<Achado[]>([]);
   const [jurisd, setJurisd] = useState<Jurisd[]>([]);
   const [processo, setProcesso] = useState<Processo[]>([]);
+  const [interessado, setInteressado] = useState<Interessado[]>([]);
   const [dataType, setDataType] = useState('pessoafisica');
+  const [searchPessoa, setSearchPessoa] = useState('');
+  const [searchProcesso, setSearchProcesso] = useState('');
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState<Column[]>([]);
 
-  const fetchData =  async () => {
+  const fetchData = async () => {
     try {
-      await api.get(`/${dataType}`).then((response:any) => {
-        if(dataType === 'pessoafisica'){
+      await api.get(`/${dataType}`).then((response: any) => {
+        if (dataType === 'pessoafisica') {
           setPessoaFisica(response.data)
-        }else if(dataType === 'procurador'){
+        } else if (dataType === 'procurador') {
           setProcurador(response.data)
-        }else if(dataType === 'relator'){
+        } else if (dataType === 'relator') {
           setRelator(response.data)
-        }else if(dataType === 'nat-achado'){
+        } else if (dataType === 'nat-achado') {
           setNatAchado(response.data)
-        }else if(dataType === 'div-area-achado'){
+        } else if (dataType === 'div-area-achado') {
           setDivAreaAchado(response.data)
-        }else if(dataType === 'area-achado'){
+        } else if (dataType === 'area-achado') {
           setAreaAchado(response.data)
-        }else if(dataType === 'achado'){
+        } else if (dataType === 'achado') {
           setAchado(response.data)
-        }else if(dataType === 'jurisd'){
+        } else if (dataType === 'jurisd') {
           setJurisd(response.data)
-        }else if(dataType === 'processo'){
+        } else if (dataType === 'processo') {
           setProcesso(response.data)
         }
-      return 
-    })
+        return
+      })
     } catch (error) {
       console.log('Erro ao buscar dados', error)
     }
+    fetchProcesso()
   }
 
+  const fetchProcesso = async () => {
+    await api.get('/processo').then(response => {
+      setProcesso(response.data)
+    }).catch(error => {
+      console.error('Erro eu pegar dados de processo', error)
+    })
+  }
   useEffect(() => {
     fetchData()
   }, [dataType, columns])
-  
 
-  if(dataType){
+
+  if (dataType) {
     fetchData()
   }
 
   console.log(areaAchado)
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -112,54 +129,100 @@ export default function DatabaseTable() {
     // Lógica para excluir a pessoa com o ID fornecido
     console.log("Excluir", id);
   };
-  
-  const buttons = {
-    editButton:<Edit></Edit>
-  }
-
 
   const handleDataTypeChange = (event: { target: { value: any; }; }) => {
     setDataType(event.target.value)
   };
-  
+
+  const handleSearchPessoa = (event: { target: { value: any } }) => {
+    setSearchPessoa(event.target.value)
+  };
+  const handleSearchProcesso = (event: { target: { value: any } }) => {
+    setSearchProcesso(event.target.value)
+  };
+
+  const handleBusca = async () => {
+    if (searchPessoa !== '' && searchProcesso === '') {
+      await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
+        setInteressado(response.data)
+      }).catch(error => {
+        console.error('Erro ao buscar dados', error)
+      })
+    }else if (searchProcesso !== '' && searchPessoa === '') {
+      await api.get(`/${dataType}/processo/${searchProcesso}`).then((response) => {
+        setInteressado(response.data)
+      }).catch(error => {
+        console.error('Erro ao buscar dados', error)
+      })
+    }else if(searchProcesso === '' && searchPessoa === ''){
+      TypeInfo('Selecione um campo')
+    }else{
+      TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles')
+    }
+  }
+
+  const cleanInput = () => {
+    setSearchPessoa('')
+    setSearchProcesso('')
+    return
+  }
 
   const optionsSelect = [
-    {value:'pessoafisica', string:'Pessoa Física'},
-    {value:'achado', string:'Achado'},
-    {value:'div-area-achado', string:'Divisão da área do achado'},
-    {value:'area-achado', string:'Area do Achado'},
-    {value:'nat-achado', string:'Natureza do Achado'},
-    {value:'interessado', string:'Interessado'},
-    {value:'jurisd', string:'Jurisdicionado'},
-    {value:'jurisd-jurisd', string:'Jurisd-jurisd'},
-    {value:'processo', string:'Processo'},
-    {value:'apenso', string:'Apenso'},
-    {value:'procurador', string:'Procurador'},
-    {value:'relator', string:'Relator'},
+    { value: 'pessoafisica', string: 'Pessoa Física' },
+    { value: 'achado', string: 'Achado' },
+    { value: 'div-area-achado', string: 'Divisão da área do achado' },
+    { value: 'area-achado', string: 'Area do Achado' },
+    { value: 'nat-achado', string: 'Natureza do Achado' },
+    { value: 'interessado', string: 'Interessado' },
+    { value: 'jurisd', string: 'Jurisdicionado' },
+    { value: 'jurisd-jurisd', string: 'Jurisd-jurisd' },
+    { value: 'processo', string: 'Processo' },
+    { value: 'apenso', string: 'Apenso' },
+    { value: 'procurador', string: 'Procurador' },
+    { value: 'relator', string: 'Relator' },
   ]
-  
+
   return (
     <Paper sx={{ maxWidth: 'calc(100vw - 300px)', overflow: 'hidden' }}>
       <Typography
-      gutterBottom
-      variant='h5'
-      component='div'
-      sx={{padding:'20px'}}>
+        gutterBottom
+        variant='h5'
+        component='div'
+        sx={{ padding: '20px' }}>
         Base de dados Secex
       </Typography>
-      <Select value={dataType} onChange={handleDataTypeChange} sx={{ml:'20px', mb:'10px'}}>
+      <Box sx={{ display: 'flex' }}>
+        <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
           {optionsSelect.map((option) => (
             <MenuItem value={option.value}>{option.string}</MenuItem>
           ))}
-      </Select>
-      {dataType === 'interessado' && (
-        <Select value={dataType} onChange={handleDataTypeChange} sx={{ml:'20px', mb:'10px'}}>
-        {optionsSelect.map((option) => (
-          <MenuItem value={option.value}>{option.string}</MenuItem>
-        ))}
-    </Select>
-      )}
-      <Divider/>
+        </Select>
+        {dataType === 'interessado' && (
+          <Box sx={{ alignItems: 'bottom' }}>
+            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
+              <InputLabel id="label-pesoafisica">Pessoa Física</InputLabel>
+              <Select value={searchPessoa} onChange={handleSearchPessoa} labelId="label-pesoafisica" >
+                {pessoaFisica.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
+              <InputLabel id="label-processo">n do processo</InputLabel>
+              <Select value={searchProcesso} onChange={handleSearchProcesso} labelId="label-processo" >
+                {processo.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>{option.numero}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {(searchProcesso !== '' || searchPessoa !== '') && (
+              <Button variant="outlined" sx={{ height: 20, mt: '27px', width: 10 }} color='error' onClick={cleanInput} >Limpar</Button>
+            )}
+            <Button variant="outlined" sx={{ ml:2,height: 30, mt: '27px' }} onClick={handleBusca} >Buscar</Button>
+          </Box>
+        )}
+      </Box>
+      <Divider />
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -167,107 +230,118 @@ export default function DatabaseTable() {
               {dataType === 'pessoafisica' && (
                 pessoaFisicaHeader.map((pf) => (
                   <TableCell
-                  id={pf.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0'}}
-                >
-                  {pf.label}
-                </TableCell> 
+                    id={pf.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {pf.label}
+                  </TableCell>
                 ))
-                
+
               )}
               {dataType === 'procurador' && (
                 procuradorHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
               {dataType === 'relator' && (
                 relatorHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
               {dataType === 'nat-achado' && (
                 natAchadoHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
               {dataType === 'div-area-achado' && (
                 divAreaAchadoHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
               {dataType === 'area-achado' && (
                 areaAchadoHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
               {dataType === 'achado' && (
                 achadoHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
               {dataType === 'jurisd' && (
                 jurisdHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0'}}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
               {dataType === 'processo' && (
                 processoHeader.map((p) => (
                   <TableCell
-                  id={p.id}
-                  align={'left'}
-                  style={{ minWidth: 150, backgroundColor:'#e2e8f0' }}
-                >
-                  {p.label}
-                </TableCell> 
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
+                ))
+              )}
+              {dataType === 'interessado' && (
+                interessadoHeader.map((p) => (
+                  <TableCell
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
                 ))
               )}
             </TableRow>
           </TableHead>
           <TableBody>
-          {dataType === 'pessoafisica' && (
+            {dataType === 'pessoafisica' && (
               pessoaFisica.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.nome}</TableCell>
@@ -287,39 +361,39 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.email}</TableCell>
                   <TableCell align="left">{row.ativo}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'procurador' && (
+              )))}
+            {dataType === 'procurador' && (
               procurador.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.nome}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'relator' && (
+              )))}
+            {dataType === 'relator' && (
               relator.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.nome}</TableCell>
                   <TableCell align="left">{row.cargo}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'nat-achado' && (
+              )))}
+            {dataType === 'nat-achado' && (
               natAchado.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.descricao}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'div-area-achado' && (
+              )))}
+            {dataType === 'div-area-achado' && (
               divAreaAchado.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.descricao}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'area-achado' && (
+              )))}
+            {dataType === 'area-achado' && (
               areaAchado.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.descricao}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'achado' && (
+              )))}
+            {dataType === 'achado' && (
               achado.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.titulo}</TableCell>
@@ -327,8 +401,8 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.criterio}</TableCell>
                   <TableCell align="left">{row.ativo}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'jurisd' && (
+              )))}
+            {dataType === 'jurisd' && (
               jurisd.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.nome}</TableCell>
@@ -352,8 +426,8 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.poder}</TableCell>
                   <TableCell align="left">{row.ativo}</TableCell>
                 </TableRow>
-          )))}
-          {dataType === 'processo' && (
+              )))}
+            {dataType === 'processo' && (
               processo.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.numero}</TableCell>
@@ -363,7 +437,13 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.objeto}</TableCell>
                   <TableCell align="left">{row.arquivamento}</TableCell>
                 </TableRow>
-          )))}
+              )))}
+            {dataType === 'interessado' && (
+              interessado.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell key={row.id} align="left">{row.interesse}</TableCell>
+                </TableRow>
+              )))}
           </TableBody>
         </Table>
       </TableContainer>

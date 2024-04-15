@@ -5,7 +5,7 @@ export function TypeAlert(message: string, type: 'success' | 'error' | 'warning'
     toast: true,
     icon: type,
     title: message,
-    position: 'top',
+    position: 'top-end',
     showConfirmButton: false,
     timer: 4000,
     timerProgressBar: true,
@@ -14,4 +14,8 @@ export function TypeAlert(message: string, type: 'success' | 'error' | 'warning'
       toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
   })
+}
+
+export function TypeInfo(message:string) {
+  Swal.fire(message);
 }

@@ -99,3 +99,8 @@ export interface Processo{
   objeto:string;
   arquivamento:string;
 }
+
+export interface Interessado{
+  id:string;
+  interesse:string;
+}
