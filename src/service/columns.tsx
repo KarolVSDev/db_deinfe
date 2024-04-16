@@ -80,3 +80,13 @@ export const processoHeader = [
 export const interessadoHeader = [
     {id:'interesse', label:'Interesse', minWidth:150}
 ]
+
+export const pessoaJurisdHeader = [
+    {id:'cargo', label:'Cargo', minWidth:150},
+    {id:'mandato', label:'Mandato', minWidth:150},
+    {id:'normaNomeacao', label:'Norma Nomeação', minWidth:150},
+    {id:'dataNomeacao', label:'Data Nomeação', minWidth:150},
+    {id:'normaExoneracao', label:'Norma Exoneração', minWidth:150},
+    {id:'dataExoneracao', label:'Data Exoneração', minWidth:150},
+    {id:'gestor', label:'Gestor', minWidth:150},
+]

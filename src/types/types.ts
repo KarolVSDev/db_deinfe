@@ -104,3 +104,15 @@ export interface Interessado{
   id:string;
   interesse:string;
 }
+
+export interface PessoaJurisd{
+  id:string;
+  cargo:string;
+  mandato:string;
+  normaNomeacao:string;
+  dataNomeacao:string;
+  normaExoneracao:string;
+  dataExoneracao:string;
+  gestor:string;
+  
+}

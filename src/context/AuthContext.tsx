@@ -43,7 +43,6 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
         })
     };
 
-
     const logout = () => {
         const cookies = new Cookies();
         cookies.remove('focusToken', {path:'/'})

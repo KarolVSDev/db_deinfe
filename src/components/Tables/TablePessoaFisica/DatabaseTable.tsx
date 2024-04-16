@@ -20,6 +20,7 @@ import {
   Jurisd,
   Processo,
   Interessado,
+  PessoaJurisd
 } from '../../../types/types';
 import { Edit } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
@@ -33,9 +34,11 @@ import {
   achadoHeader,
   jurisdHeader,
   processoHeader,
-  interessadoHeader
+  interessadoHeader,
+  pessoaJurisdHeader
 } from '../../../service/columns';
-import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert';
+import { TypeInfo } from '../../../hooks/TypeAlert';
+import { useContextTable } from '../../../context/TableContext';
 
 interface Column {
   id: string;
@@ -58,52 +61,82 @@ export default function DatabaseTable() {
   const [jurisd, setJurisd] = useState<Jurisd[]>([]);
   const [processo, setProcesso] = useState<Processo[]>([]);
   const [interessado, setInteressado] = useState<Interessado[]>([]);
+  const [pessoaJurisd, setPessoaJurisd] = useState<PessoaJurisd[]>([]);
   const [dataType, setDataType] = useState('pessoafisica');
   const [searchPessoa, setSearchPessoa] = useState('');
   const [searchProcesso, setSearchProcesso] = useState('');
-  const [data, setData] = useState([]);
-  const [columns, setColumns] = useState<Column[]>([]);
+  const [searchJurisd, setSearchJurisd] = useState('');
+  const [data, setData] = useState([10]);
+  const {teste} = useContextTable()
+  
+  const entidades = ['interessado', 'pessoajurisd']
 
-  const fetchData = async () => {
-    try {
-      await api.get(`/${dataType}`).then((response: any) => {
-        if (dataType === 'pessoafisica') {
-          setPessoaFisica(response.data)
-        } else if (dataType === 'procurador') {
-          setProcurador(response.data)
-        } else if (dataType === 'relator') {
-          setRelator(response.data)
-        } else if (dataType === 'nat-achado') {
-          setNatAchado(response.data)
-        } else if (dataType === 'div-area-achado') {
-          setDivAreaAchado(response.data)
-        } else if (dataType === 'area-achado') {
-          setAreaAchado(response.data)
-        } else if (dataType === 'achado') {
-          setAchado(response.data)
-        } else if (dataType === 'jurisd') {
-          setJurisd(response.data)
-        } else if (dataType === 'processo') {
-          setProcesso(response.data)
+  const fetchData = async ()  => {
+    entidades.map((entidade):any => {
+      if(dataType !== entidade){
+        if(dataType === 'pessoafisica'){
+          api.get(`/${dataType}`).then(response => {
+            setPessoaFisica(response.data)
+          })
+        }else if(dataType === 'procurador'){
+          api.get(`/${dataType}`).then(response => {
+            setProcurador(response.data)
+          })
+        }else if(dataType === 'relator'){
+          api.get(`/${dataType}`).then(response => {
+            setRelator(response.data)
+          })
+        }else if (dataType === 'nat-achado') {
+          api.get(`/${dataType}`).then(response => {
+            setNatAchado(response.data)
+          })
+        }else if(dataType === 'div-area-achado'){
+          api.get(`/${dataType}`).then(response => {
+            setDivAreaAchado(response.data)
+          })
+        }else if(dataType === 'area-achado'){
+          api.get(`/${dataType}`).then(response => {
+            setAreaAchado(response.data)
+          })
+        }else if(dataType === 'achado'){
+          api.get(`/${dataType}`).then(response => {
+            setAchado(response.data)
+          })
+        }else if(dataType === 'jurisd'){
+          api.get(`/${dataType}`).then(response => {
+            setJurisd(response.data)
+          })
+        }else if(dataType === 'processo'){
+          api.get(`/${dataType}`).then(response  => {
+            setProcesso(response.data)
+          })
         }
-        return
-      })
-    } catch (error) {
-      console.log('Erro ao buscar dados', error)
+      }
+      fetchProcesso()
     }
-    fetchProcesso()
-  }
+  )
+}
 
   const fetchProcesso = async () => {
-    await api.get('/processo').then(response => {
-      setProcesso(response.data)
-    }).catch(error => {
-      console.error('Erro eu pegar dados de processo', error)
-    })
+    if(dataType == 'interessado'){
+      await api.get('/processo').then(response => {
+        setProcesso(response.data)
+      }).catch(error => {
+        console.error('Erro eu pegar dados de processo', error)
+      })
+    }else if(dataType === 'pessoajurisd'){
+      await api.get('/jurisd').then(response => {
+        setJurisd(response.data)
+      }).catch(error => {
+        console.error('Erro eu pegar dados de jurisd', error)
+      })
+    }
   }
+
+
   useEffect(() => {
     fetchData()
-  }, [dataType, columns])
+  }, [dataType])
 
 
   if (dataType) {
@@ -137,38 +170,70 @@ export default function DatabaseTable() {
   const handleSearchPessoa = (event: { target: { value: any } }) => {
     setSearchPessoa(event.target.value)
   };
+  const handleSearchJurisd = (event: { target: { value: any } }) => {
+    setSearchJurisd(event.target.value)
+  };
   const handleSearchProcesso = (event: { target: { value: any } }) => {
     setSearchProcesso(event.target.value)
   };
 
   const handleBusca = async () => {
-    if (searchPessoa !== '' && searchProcesso === '') {
-      await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
-        setInteressado(response.data)
-      }).catch(error => {
-        console.error('Erro ao buscar dados', error)
-      })
-    }else if (searchProcesso !== '' && searchPessoa === '') {
-      await api.get(`/${dataType}/processo/${searchProcesso}`).then((response) => {
-        setInteressado(response.data)
-      }).catch(error => {
-        console.error('Erro ao buscar dados', error)
-      })
-    }else if(searchProcesso === '' && searchPessoa === ''){
-      TypeInfo('Selecione um campo')
-    }else{
-      TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles')
+    if(dataType === 'interessado'){
+      if (searchPessoa !== '' && searchProcesso === '') {
+        await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
+          console.log(response.data)
+          setInteressado(response.data)
+        }).catch(error => {
+          console.error('Erro ao buscar dados', error)
+        })
+      }else if (searchProcesso !== '' && searchPessoa === '') {
+        await api.get(`/${dataType}/processo/${searchProcesso}`).then((response) => {
+          setInteressado(response.data)
+        }).catch(error => {
+          console.error('Erro ao buscar dados', error)
+        })
+      }else if(searchProcesso === '' && searchPessoa === ''){
+        TypeInfo('Selecione um campo')
+      }else{
+        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles')
+      }
+    }
+
+    if(dataType === 'pessoajurisd'){
+      if (searchPessoa !== '' && searchJurisd === '') {
+        await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
+          const data = response.data
+          setPessoaJurisd(data.result)
+        }).catch(error => {
+          console.error('Erro ao buscar dados', error)
+        })
+      }else if (searchJurisd !== '' && searchPessoa === '') {
+        await api.get(`/${dataType}/jurisd/${searchJurisd}`).then((response) => {
+          const data = response.data
+          setPessoaJurisd(data.result)
+        }).catch(error => {
+          console.error('Erro ao buscar dados', error)
+        })
+      }else if(searchJurisd === '' && searchPessoa === ''){
+        TypeInfo('Selecione um campo')
+      }else{
+        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles')
+      }
+      console.log(pessoaJurisd)
     }
   }
 
+    
   const cleanInput = () => {
     setSearchPessoa('')
     setSearchProcesso('')
+    setSearchJurisd('')
     return
   }
 
   const optionsSelect = [
     { value: 'pessoafisica', string: 'Pessoa Física' },
+    { value: 'pessoajurisd', string: 'Pessoa Jurisdicionada' },
     { value: 'achado', string: 'Achado' },
     { value: 'div-area-achado', string: 'Divisão da área do achado' },
     { value: 'area-achado', string: 'Area do Achado' },
@@ -181,7 +246,7 @@ export default function DatabaseTable() {
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
   ]
-
+  console.log(pessoaJurisd)
   return (
     <Paper sx={{ maxWidth: 'calc(100vw - 300px)', overflow: 'hidden' }}>
       <Typography
@@ -216,6 +281,30 @@ export default function DatabaseTable() {
               </Select>
             </FormControl>
             {(searchProcesso !== '' || searchPessoa !== '') && (
+              <Button variant="outlined" sx={{ height: 20, mt: '27px', width: 10 }} color='error' onClick={cleanInput} >Limpar</Button>
+            )}
+            <Button variant="outlined" sx={{ ml:2,height: 30, mt: '27px' }} onClick={handleBusca} >Buscar</Button>
+          </Box>
+        )}
+        {dataType === 'pessoajurisd' && (
+          <Box sx={{ alignItems: 'bottom' }}>
+            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
+              <InputLabel id="label-pesoafisica">Pessoa Física</InputLabel>
+              <Select value={searchPessoa} onChange={handleSearchPessoa} labelId="label-pesoafisica" >
+                {pessoaFisica.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 124 }}>
+              <InputLabel id="label-processo">Jurisdicionado</InputLabel>
+              <Select value={searchJurisd} onChange={handleSearchJurisd} labelId="label-processo" >
+                {jurisd.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {(searchJurisd !== '' || searchPessoa !== '') && (
               <Button variant="outlined" sx={{ height: 20, mt: '27px', width: 10 }} color='error' onClick={cleanInput} >Limpar</Button>
             )}
             <Button variant="outlined" sx={{ ml:2,height: 30, mt: '27px' }} onClick={handleBusca} >Buscar</Button>
@@ -338,6 +427,17 @@ export default function DatabaseTable() {
                   </TableCell>
                 ))
               )}
+              {dataType === 'pessoajurisd' && (
+                pessoaJurisdHeader.map((p) => (
+                  <TableCell
+                    id={p.id}
+                    align={'left'}
+                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                  >
+                    {p.label}
+                  </TableCell>
+                ))
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -441,7 +541,19 @@ export default function DatabaseTable() {
             {dataType === 'interessado' && (
               interessado.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell key={row.id} align="left">{row.interesse}</TableCell>
+                  <TableCell align="left">{row.interesse}</TableCell>
+                </TableRow>
+              )))}
+            {dataType === 'pessoajurisd' && (
+              pessoaJurisd.map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableCell align="left">{row.cargo}</TableCell>
+                  <TableCell align="left">{row.mandato}</TableCell>
+                  <TableCell align="left">{row.normaNomeacao}</TableCell>
+                  <TableCell align="left">{row.dataNomeacao}</TableCell>
+                  <TableCell align="left">{row.normaExoneracao}</TableCell>
+                  <TableCell align="left">{row.dataExoneracao}</TableCell>
+                  <TableCell align="left">{row.gestor}</TableCell>
                 </TableRow>
               )))}
           </TableBody>
