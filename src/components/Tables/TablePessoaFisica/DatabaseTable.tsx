@@ -62,15 +62,16 @@ export default function DatabaseTable() {
   const [processo, setProcesso] = useState<Processo[]>([]);
   const [interessado, setInteressado] = useState<Interessado[]>([]);
   const [pessoaJurisd, setPessoaJurisd] = useState<PessoaJurisd[]>([]);
-  const [dataType, setDataType] = useState('pessoafisica');
+  const [dataType, setDataType] = useState('pesquisa');
   const [searchPessoa, setSearchPessoa] = useState('');
   const [searchProcesso, setSearchProcesso] = useState('');
   const [searchJurisd, setSearchJurisd] = useState('');
+  const [searchTipo, setSearchTipo] = useState('');
   const [data, setData] = useState([10]);
   const {teste} = useContextTable()
   
+  //função pra resgatar os dados da api
   const entidades = ['interessado', 'pessoajurisd']
-
   const fetchData = async ()  => {
     entidades.map((entidade):any => {
       if(dataType !== entidade){
@@ -116,7 +117,7 @@ export default function DatabaseTable() {
     }
   )
 }
-
+  //resgata dados para os inputs da table interessado
   const fetchProcesso = async () => {
     if(dataType == 'interessado'){
       await api.get('/processo').then(response => {
@@ -145,6 +146,7 @@ export default function DatabaseTable() {
 
   console.log(areaAchado)
 
+  //lida com as páginas
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -153,6 +155,7 @@ export default function DatabaseTable() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  //controle dos botões de update e delete
   const handleEdit = (id: string) => {
     // Lógica para editar a pessoa com o ID fornecido
     console.log("Editar", id);
@@ -163,10 +166,10 @@ export default function DatabaseTable() {
     console.log("Excluir", id);
   };
 
+  //armazenam os valores dos inputs
   const handleDataTypeChange = (event: { target: { value: any; }; }) => {
     setDataType(event.target.value)
   };
-
   const handleSearchPessoa = (event: { target: { value: any } }) => {
     setSearchPessoa(event.target.value)
   };
@@ -177,6 +180,7 @@ export default function DatabaseTable() {
     setSearchProcesso(event.target.value)
   };
 
+  //lida com as buscas do usuário
   const handleBusca = async () => {
     if(dataType === 'interessado'){
       if (searchPessoa !== '' && searchProcesso === '') {
@@ -232,6 +236,7 @@ export default function DatabaseTable() {
   }
 
   const optionsSelect = [
+    { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'pessoafisica', string: 'Pessoa Física' },
     { value: 'pessoajurisd', string: 'Pessoa Jurisdicionada' },
     { value: 'achado', string: 'Achado' },
@@ -259,7 +264,7 @@ export default function DatabaseTable() {
       <Box sx={{ display: 'flex' }}>
         <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
           {optionsSelect.map((option) => (
-            <MenuItem value={option.value}>{option.string}</MenuItem>
+            <MenuItem value={option.value} disabled = {option.value === 'pesquisa'}>{option.string}</MenuItem>
           ))}
         </Select>
         {dataType === 'interessado' && (
@@ -268,7 +273,7 @@ export default function DatabaseTable() {
               <InputLabel id="label-pesoafisica">Pessoa Física</InputLabel>
               <Select value={searchPessoa} onChange={handleSearchPessoa} labelId="label-pesoafisica" >
                 {pessoaFisica.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
+                  <MenuItem key={option.id} value={option.id} >{option.nome}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -291,6 +296,30 @@ export default function DatabaseTable() {
             <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
               <InputLabel id="label-pesoafisica">Pessoa Física</InputLabel>
               <Select value={searchPessoa} onChange={handleSearchPessoa} labelId="label-pesoafisica" >
+                {pessoaFisica.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 124 }}>
+              <InputLabel id="label-processo">Jurisdicionado</InputLabel>
+              <Select value={searchJurisd} onChange={handleSearchJurisd} labelId="label-processo" >
+                {jurisd.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {(searchJurisd !== '' || searchPessoa !== '') && (
+              <Button variant="outlined" sx={{ height: 20, mt: '27px', width: 10 }} color='error' onClick={cleanInput} >Limpar</Button>
+            )}
+            <Button variant="outlined" sx={{ ml:2,height: 30, mt: '27px' }} onClick={handleBusca} >Buscar</Button>
+          </Box>
+        )}
+        {dataType === 'pessoafisica' && (
+          <Box sx={{ alignItems: 'bottom' }}>
+            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
+              <InputLabel id="label-pesoafisica">Tipo</InputLabel>
+              <Select value={searchTipo} onChange={handleBusca} labelId="label-pesoafisica" >
                 {pessoaFisica.map((option) => (
                   <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
                 ))}
