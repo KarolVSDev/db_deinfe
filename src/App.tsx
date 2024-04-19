@@ -5,7 +5,7 @@ import Dashboard  from './pages/Dashboard/Dashboard'
 import SignIn from './pages/SignPage/SignIn';
 import SignUp from './pages/SignPage/SignUp';
 import { AuthProvider } from './context/AuthContext';
-import PessoaFisica from './pages/Dashboard/Pessoa Física/PessoaFisica';
+import Table from './pages/Dashboard/Table/Table';
 
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
             <Route path='/signup' element={<SignUp/>} />
             <Route path='/signin' element={<SignIn/>} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/pessoafisica" element={<PessoaFisica />} />
+            <Route path="/dashboard/table" element={<Table />} />
           </Routes>
         </AuthProvider>
       </Router>

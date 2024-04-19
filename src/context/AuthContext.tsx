@@ -3,6 +3,7 @@ import { AuthData, UserLogin } from "../types/types";
 import Cookies from "universal-cookie";
 import { api } from "../service/api";
 import { useNavigate } from "react-router-dom";
+import { TypeAlert } from "../hooks/TypeAlert";
 
 interface AuthContextType {
     isLoggedIn:boolean;
@@ -23,10 +24,12 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
     const auth = cookies.get('focusToken')
 
     useEffect(()=>{
-        if(!auth){
-            console.log(isLoggedIn)
+        if(auth){
+            setIsLoggedIn(true)
+        }else{
+            setIsLoggedIn(false)
         }
-    },[])
+    },[isLoggedIn])
 
     const setCookies = (authData:AuthData) => {
         const cookies = new Cookies()
@@ -36,10 +39,14 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
     }
 
     const login = async (data:UserLogin) => {
-       await api.post('/login', data).then((response:any) => {
-            setCookies(response.data)
+       await api.post('/auth/login', data).then((response:any) => {
+            setCookies(response.data.token)
             setIsLoggedIn(true)
-
+            navigate('/dashboard')
+        }).catch((error:any) => {
+            if(error.response.status === 401){
+                TypeAlert(error.response.data.message, 'error' )
+            }
         })
     };
 

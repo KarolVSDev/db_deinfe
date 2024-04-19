@@ -5,7 +5,7 @@ import NavBar from "../../../components/Layout/NavBar";
 import DataBaseTable from "../../../components/Tables/TablePessoaFisica/DatabaseTable";
 import { TableProvider } from "../../../context/TableContext";
 
-const PessoaFisica = () => {
+const Table = () => {
   return (
     <>  
        <NavBar/>
@@ -22,4 +22,4 @@ const PessoaFisica = () => {
   )
 }
 
-export default PessoaFisica
+export default Table

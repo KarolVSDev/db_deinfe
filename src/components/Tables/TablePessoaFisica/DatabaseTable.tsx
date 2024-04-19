@@ -262,7 +262,7 @@ export default function DatabaseTable() {
         Base de dados Secex
       </Typography>
       <Box sx={{ display: 'flex' }}>
-        <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
+        <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px', height:30, mt:'25px' }}>
           {optionsSelect.map((option) => (
             <MenuItem value={option.value} disabled = {option.value === 'pesquisa'}>{option.string}</MenuItem>
           ))}

@@ -5,7 +5,7 @@ export function TypeAlert(message: string, type: 'success' | 'error' | 'warning'
     toast: true,
     icon: type,
     title: message,
-    position: 'top-end',
+    position: 'top',
     showConfirmButton: false,
     timer: 4000,
     timerProgressBar: true,

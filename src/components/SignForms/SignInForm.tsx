@@ -46,7 +46,7 @@ export default function SignInSide() {
 
   const onSubmit = (data:UserLogin) => {
     login(data);
-    navigate('/dashboard')
+    // navigate('/dashboard')
   }
 
   return (
@@ -77,7 +77,7 @@ export default function SignInSide() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'rgb(17 24 39)' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -141,17 +141,12 @@ export default function SignInSide() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, bgcolor:'rgb(17 24 39)','&:hover': {
+                  bgcolor: '#1e293b', 
+                },}}
               >
                 Entrar
               </Button>
-              <Grid container>
-                <Grid item sx={{m:'auto'}}>
-                  <Link href="/signup" variant="body2" sx={{m:'auto'}}>
-                    {"Não tem uma conta? Criar conta!"}
-                  </Link>
-                </Grid>
-              </Grid>
               <Copyright sx={{pt:'15px', m:'auto'}}/>
             </Box>
           </Box>

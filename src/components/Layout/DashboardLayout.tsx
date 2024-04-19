@@ -82,7 +82,7 @@ export default function SideNav() {
 
   const pages = [
     {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
-    {name:'Pessoa Física', link:'/dashboard/pessoafisica',  icon:<TableChartIcon/>},
+    {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
   ]
   return (
     <>
