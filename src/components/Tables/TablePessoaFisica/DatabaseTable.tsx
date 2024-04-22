@@ -50,7 +50,7 @@ interface Column {
 
 export default function DatabaseTable() {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [pessoaFisica, setPessoaFisica] = useState<PessoaFisica[]>([]);
   const [procurador, setProcurador] = useState<Procurador[]>([]);
   const [relator, setRelator] = useState<Relator[]>([]);
@@ -68,7 +68,7 @@ export default function DatabaseTable() {
   const [searchJurisd, setSearchJurisd] = useState('');
   const [searchTipo, setSearchTipo] = useState('');
   const [data, setData] = useState([10]);
-  const {teste} = useContextTable()
+ 
   
   //função pra resgatar os dados da api
   const entidades = ['interessado', 'pessoajurisd']
@@ -143,8 +143,6 @@ export default function DatabaseTable() {
   if (dataType) {
     fetchData()
   }
-
-  console.log(areaAchado)
 
   //lida com as páginas
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -251,9 +249,9 @@ export default function DatabaseTable() {
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
   ]
-  console.log(pessoaJurisd)
+  
   return (
-    <Paper sx={{ maxWidth: 'calc(100vw - 300px)', overflow: 'hidden' }}>
+    <Paper sx={{ maxWidth: 'calc(100vw - 300px)', overflow: 'hidden',  }}>
       <Typography
         gutterBottom
         variant='h5'
@@ -261,7 +259,7 @@ export default function DatabaseTable() {
         sx={{ padding: '20px' }}>
         Base de dados Secex
       </Typography>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex'}}>
         <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px', height:30, mt:'25px' }}>
           {optionsSelect.map((option) => (
             <MenuItem value={option.value} disabled = {option.value === 'pesquisa'}>{option.string}</MenuItem>

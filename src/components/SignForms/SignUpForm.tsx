@@ -64,7 +64,7 @@ export default function SignUp() {
   }
 
   return (
-      <Container component="main" maxWidth="xs"  sx={{mt:'-60px'}} >
+      <Container component="main" maxWidth="xs"  sx={{mt:'-60px', height:'95vh'}} >
         <CssBaseline />
         <Box
           sx={{
@@ -192,18 +192,17 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Registrar-se
+              Registrar
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signin" variant="body2">
-                  Já tem uma conta? Clique Aqui
+                 Atualizar Dados
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 1.5 }} />
       </Container>
   )
 }

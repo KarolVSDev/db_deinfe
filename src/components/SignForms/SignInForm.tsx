@@ -41,14 +41,14 @@ export default function SignInSide() {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
-  const {login} = useAuth();
+  const {login, isLoggedIn} = useAuth();
   const navigate = useNavigate()
 
   const onSubmit = (data:UserLogin) => {
     login(data);
-    // navigate('/dashboard')
   }
-
+  
+  console.log(isLoggedIn)
   return (
     <>
       <Grid container component="main" sx={{height:'100vh'}} >

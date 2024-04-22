@@ -8,7 +8,7 @@ const api = Axios.create({
 
 api.interceptors.request.use(config => {
     const cookie = new Cookies();
-    const Token = cookie.get('token')
+    const Token = cookie.get('focusToken')
     if(Token && config.headers){
       config.headers.Authorization = `Bearer ${Token}`;
     }

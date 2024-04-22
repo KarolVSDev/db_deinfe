@@ -15,6 +15,8 @@ import MuiAppBar from '@mui/material/AppBar';
 import { useAppStore } from '../../hooks/appStore';
 import { useAuth } from '../../context/AuthContext';
 import { LogoutOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 
 
@@ -76,6 +78,7 @@ export default function NavBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const navigate = useNavigate()
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -90,6 +93,9 @@ export default function NavBar() {
     handleMobileMenuClose();
   };
 
+  const handlePerfil = () => {
+      navigate('/dashboard/edituser')
+  }
   
 
   const menuId = 'primary-search-account-menu';
@@ -185,6 +191,7 @@ export default function NavBar() {
               aria-haspopup="true"
               color="inherit"
               sx={{mr:'10px'}}
+              onClick={handlePerfil}
             >
               <AccountCircle sx={{mr:'5px'}} /> <Typography>Perfil</Typography>
             </IconButton>

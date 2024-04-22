@@ -1,15 +1,19 @@
 import React from 'react'
 import { useAuth } from '../context/AuthContext'
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+import { useEffect } from 'react';
 
 
 
 const PrivateRoutes = ({ children }: { children: any }) => {
-    const { isLoggedIn, logout } = useAuth();
-    const navigate = useNavigate()
-    console.log(isLoggedIn)
+    const {auth} = useAuth()
     
-    return isLoggedIn ? children :
+    useEffect(() => {
+        auth
+    }, [])
+    
+    return auth ? children :
         
     <Navigate to='/signin' />
 }
