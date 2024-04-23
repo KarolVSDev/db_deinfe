@@ -1,10 +1,21 @@
 export interface User {
+  id:string;
   nome: string;
   email: string;
   cargo: string;
   ativo: string;
   senha: string;
 }
+export interface UserUpdate {
+  id:string;
+  nome: string;
+  email: string;
+  cargo: string;
+  ativo: string;
+  senhaAtual: string;
+  novaSenha: string;
+}
+
 export interface UserLogin {
   email: string;
   password: string;
@@ -116,3 +127,5 @@ export interface PessoaJurisd{
   gestor:string;
   
 }
+
+
