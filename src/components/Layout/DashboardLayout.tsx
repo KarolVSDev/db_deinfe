@@ -19,6 +19,7 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAppStore } from '../../hooks/appStore';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 
 const drawerWidth = 240;
@@ -83,6 +84,7 @@ export default function SideNav() {
   const pages = [
     {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
     {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
+    {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>},
   ]
   return (
     <>

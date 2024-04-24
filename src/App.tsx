@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Table from './pages/Dashboard/Table/Table';
 import PrivateRoutes from './routes/PrivateRoutes';
 import UpdateUserForm from './components/Forms/UpdateUserForm';
+import UsersAmin from './pages/Dashboard/Users_admin/UsersAmin';
 
 
 
@@ -30,6 +31,9 @@ function App() {
             </PrivateRoutes>}/>
             <Route path = '/dashboard/edituser' element={<PrivateRoutes>
               <UpdateUserForm/>
+            </PrivateRoutes>}/>
+            <Route path = '/dashboard/usersadmin' element={<PrivateRoutes>
+              <UsersAmin/>
             </PrivateRoutes>}/>
           </Routes>
         </AuthProvider>

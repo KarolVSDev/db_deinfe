@@ -1,13 +1,21 @@
 export interface User {
-  id:string;
+  id: string;
   nome: string;
   email: string;
   cargo: string;
   ativo: string;
   senha: string;
 }
+
+export interface AllUsers {
+  id: string;
+  nome: string;
+  email: string;
+  cargo: string;
+  ativo: string;
+}
 export interface UserUpdate {
-  id:string;
+  id: string;
   nome: string;
   email: string;
   cargo: string;
@@ -15,7 +23,6 @@ export interface UserUpdate {
   senhaAtual: string;
   novaSenha: string;
 }
-
 export interface UserLogin {
   email: string;
   password: string;
@@ -78,54 +85,54 @@ export interface Achado {
 }
 
 export interface Jurisd {
-  id:string;
-  nome:string;
-  sigla:string;
-  cnpj:string;
-  ug:string;
-  cep:string;
-  logradouro:string;
-  complemento:string;
-  numero:string;
-  cidade:string;
-  telefone1:string;
-  telefone2:string;
-  email:string;
-  site:string;
-  cargoGestor:string;
-  normaCriacao:string;
-  dataCriacao:string;
-  normaExtincao:string;
-  dataExtincao:string;
-  poder:string;
-  ativo:string;
+  id: string;
+  nome: string;
+  sigla: string;
+  cnpj: string;
+  ug: string;
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  numero: string;
+  cidade: string;
+  telefone1: string;
+  telefone2: string;
+  email: string;
+  site: string;
+  cargoGestor: string;
+  normaCriacao: string;
+  dataCriacao: string;
+  normaExtincao: string;
+  dataExtincao: string;
+  poder: string;
+  ativo: string;
 }
 
-export interface Processo{
-  id:string;
-  numero:string;
-  ano:string;
-  natureza:string;
-  exercicio:string;
-  objeto:string;
-  arquivamento:string;
+export interface Processo {
+  id: string;
+  numero: string;
+  ano: string;
+  natureza: string;
+  exercicio: string;
+  objeto: string;
+  arquivamento: string;
 }
 
-export interface Interessado{
-  id:string;
-  interesse:string;
+export interface Interessado {
+  id: string;
+  interesse: string;
 }
 
-export interface PessoaJurisd{
-  id:string;
-  cargo:string;
-  mandato:string;
-  normaNomeacao:string;
-  dataNomeacao:string;
-  normaExoneracao:string;
-  dataExoneracao:string;
-  gestor:string;
-  
+export interface PessoaJurisd {
+  id: string;
+  cargo: string;
+  mandato: string;
+  normaNomeacao: string;
+  dataNomeacao: string;
+  normaExoneracao: string;
+  dataExoneracao: string;
+  gestor: string;
+
 }
 
 

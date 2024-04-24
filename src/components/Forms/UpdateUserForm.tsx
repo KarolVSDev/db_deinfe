@@ -235,7 +235,9 @@ const UpdateUserForm = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{  mb: 2 }}
+              sx={{  mb: 2,  bgcolor:'rgb(17 24 39)','&:hover': {
+                bgcolor: '#1e293b', 
+              } }}
             >
               Atualizar
             </Button>
