@@ -7,14 +7,18 @@ import Typography from '@mui/material/Typography';
 import { api } from '../../service/api';
 import { useState, useEffect } from 'react';
 import { AllUsers } from '../../types/types';
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, Grid, Hidden } from '@mui/material';
+import { TypeInfo } from '../../hooks/TypeAlert';
+import ModalAddUser from '../Modais/ModalAddUser';
+import SignUp from '../SignForms/SignUpForm';
+
 
 
 export default function ListUsers() {
 
     const [users, setUsers] = useState<AllUsers[]>()
-    const [idUser, setIdUser] = useState<AllUsers[]>()
-    const [email, setEmail] = useState(localStorage.getItem('email'))
+    const [idUser, setIdUser] = useState<string | null>()
+    const [emailAdmin, setEmailAdmin] = useState<string | null>(localStorage.getItem('email'))
 
     const getUsers = () => {
         api.get('/usuario').then((response) => {
@@ -23,59 +27,60 @@ export default function ListUsers() {
             console.error('erro ao trazer os dados', error)
         })
     }
-    const getUser = async() => {
-        await api.get(`/usuario/login/${email}`).then((response) => {
-          let data = response.data;
-          delete data.createAt;
-          delete data.updateAt;
-          setIdUser(data)
-        }).catch((error) => {
-          console.error('Erro ao buscar dados de usuário', error)
-        })
-      }
-    
-    // const removeUser = () => {
-    //     let iduser = 
-    //     // api.delete(`/usuario/${}`)
 
-    // }
+    const removeUser = (userId:string) => {
+        api.delete(`/usuario/${userId}`).then((response:any) => {
+            TypeInfo(response.data.message)
+        }).catch((error:any) => {
+            TypeInfo(error.response.data.message)
+        })
+        
+    }
+    
     
     useEffect(() => {
         getUsers()
-        getUser()
-    },[])
+    },[users])
     
-
+    
     return (
-        <Grid container >{users?.map((user:any) => (
-            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', mb:2}}>
-                <ListItem alignItems="flex-start"  >
-                    <ListItemText
-                    primary={user.nome}
-                    secondary={
-                        <React.Fragment>
-                        <Typography
-                            sx={{ display: 'inline' }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
-                        >
-                            {user.email}
+        <Grid>
+            <ModalAddUser/>
+            <Grid container >{users?.map((user:any) => (
+                <List key={user.id} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', mb:2}}>
+                    <ListItem  alignItems="flex-start"  >
+                        <ListItemText
+                        primary={user.nome}
+                        secondary={
+                            <React.Fragment>
+                            <Typography
+                                sx={{ display: 'inline', fontSize:16 }}
+                                component="span"
+                                variant="body2"
+                                color="text.primary"
+                            >
+                                {user.email}
+                            <br/>
+                            </Typography>
+                            <Typography component='span' >
+                                {user.cargo}
+                            </Typography>
+                            <Typography component='span' sx={{display:'none'}}>
+                                {user.id}
+                            </Typography>
+                            </React.Fragment>
+                        }
+                        />
                         <br/>
-                        </Typography>
-                        {`id: ${user.id}`}
-                        </React.Fragment>
-                    }
-                    />
-                    <br/>
-                    <Box sx={{display:'flex', flexDirection:'column'}}>
-                        <Button onClick={() => removeUser()} variant='contained' color='error' sx={{mb:1}}>Excluir</Button>
-                        <Button variant='contained' color='secondary'>Atualizar</Button>
-                    </Box>
-                </ListItem>
-                <Divider variant="inset" component="li" />
-            </List>
-        ))}</Grid>
+                        <Box sx={{display:'flex', flexDirection:'column'}}>
+                            <Button onClick={() => removeUser(user.id)}variant='outlined' color='error' sx={{mb:1}}>Excluir</Button>
+                            <Button variant='outlined' color='secondary'>Atualizar</Button>
+                        </Box>
+                    </ListItem>
+                    <Divider variant="inset" component="li" />
+                </List>
+            ))}</Grid>
+        </Grid>
         
   );
 }

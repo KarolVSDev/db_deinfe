@@ -19,6 +19,7 @@ function App() {
         <AuthProvider >
           <Routes>
             <Route path='/'  element={<Navigate to="/signin"  />} />
+            
             <Route path='/signup' element={<PrivateRoutes>
               <SignUp/>
             </PrivateRoutes>} />
