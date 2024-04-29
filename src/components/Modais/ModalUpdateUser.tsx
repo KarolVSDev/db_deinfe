@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import SignUp from '../SignForms/SignUpForm';
 import { useEffect, useState} from 'react';
 import UpdateUserForm from '../Forms/UpdateUserForm';
 
@@ -22,7 +21,10 @@ const style = {
   p: 4,
 };
 
-export default function ModalAddUser() {
+interface UpdateUser {
+    userId:string;
+}
+const ModalUpdateUser:React.FC<UpdateUser> = ({userId}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -37,8 +39,8 @@ export default function ModalAddUser() {
 
   return (
     <div>
-        <Button onClick={handleOpen}variant='contained'sx={{mb:2}} >
-                Add Usuário +
+        <Button onClick={handleOpen}variant='outlined' color='secondary' sx={{mb:1}}>
+            Atualizar
         </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -55,10 +57,12 @@ export default function ModalAddUser() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <SignUp  closeModal = {handleSubmit}/>
+            <UpdateUserForm  closeModal = {handleSubmit} userId = {userId}/>
           </Box>
         </Fade>
       </Modal>
     </div>
   );
 }
+
+export default ModalUpdateUser;

@@ -7,18 +7,15 @@ import Typography from '@mui/material/Typography';
 import { api } from '../../service/api';
 import { useState, useEffect } from 'react';
 import { AllUsers } from '../../types/types';
-import { Box, Button, Grid, Hidden } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import ModalAddUser from '../Modais/ModalAddUser';
-import SignUp from '../SignForms/SignUpForm';
-
+import ModalUpdateUser from '../Modais/ModalUpdateUser';
 
 
 export default function ListUsers() {
 
     const [users, setUsers] = useState<AllUsers[]>()
-    const [idUser, setIdUser] = useState<string | null>()
-    const [emailAdmin, setEmailAdmin] = useState<string | null>(localStorage.getItem('email'))
 
     const getUsers = () => {
         api.get('/usuario').then((response) => {
@@ -30,24 +27,22 @@ export default function ListUsers() {
 
     const removeUser = (userId:string) => {
         api.delete(`/usuario/${userId}`).then((response:any) => {
-            TypeInfo(response.data.message)
+            TypeInfo(response.data.message, 'success')
         }).catch((error:any) => {
-            TypeInfo(error.response.data.message)
+            TypeInfo(error.response.data.message, 'error')
         })
         
     }
-    
-    
+
     useEffect(() => {
         getUsers()
     },[users])
     
-    
     return (
-        <Grid>
+        <Grid sx={{overflowY:'auto'}} >
             <ModalAddUser/>
             <Grid container >{users?.map((user:any) => (
-                <List key={user.id} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', mb:2}}>
+                <List key={user.id} sx={{ width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb:2}}>
                     <ListItem  alignItems="flex-start"  >
                         <ListItemText
                         primary={user.nome}
@@ -74,13 +69,12 @@ export default function ListUsers() {
                         <br/>
                         <Box sx={{display:'flex', flexDirection:'column'}}>
                             <Button onClick={() => removeUser(user.id)}variant='outlined' color='error' sx={{mb:1}}>Excluir</Button>
-                            <Button variant='outlined' color='secondary'>Atualizar</Button>
+                            <ModalUpdateUser userId = {user.id}/>
                         </Box>
                     </ListItem>
                     <Divider variant="inset" component="li" />
                 </List>
             ))}</Grid>
         </Grid>
-        
   );
 }

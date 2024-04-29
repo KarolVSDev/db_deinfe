@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -23,59 +22,56 @@ import InputLabel from '@mui/material/InputLabel/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 import {User} from '../../types/types'
 import { api } from '../../service/api';
-import { TypeAlert } from '../../hooks/TypeAlert';
-import { env } from 'process';
-import { useNavigate } from 'react-router-dom';
+import { TypeInfo } from '../../hooks/TypeAlert';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import CloseIcon from '@mui/icons-material/Close';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="/">
-        Focus
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );  
+
+interface SignUpProps {
+  closeModal: () => void;
 }
 
-
-export default function SignUp() {
+const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { register, handleSubmit,formState: { errors } } = useForm<User>({});
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
-  const navigate = useNavigate()
 
   const onSubmit = (data:User) => {
     api.post('/usuario',data).then(response => {
-      TypeAlert(response.data.message, 'success')
-      setTimeout(() => {
-        navigate('/signin')
-      }, 1000);
-    }).catch(error => {
-      if (error.response && error.response.status === 403) {
-          TypeAlert(error.response.data.message, 'error');
-      }
+      closeModal()
+      TypeInfo(response.data.message, 'success')
+    }).catch((error) => {
+      TypeInfo(error.response.data.message, 'warning');
     })
   }
 
+  const handleModalClose = () => {
+    closeModal()
+  }
+
   return (
-      <Container  maxWidth="xs"  sx={{mt:'-60px', height:'95vh'}} >
+      <Container  maxWidth="xs"  sx={{ height:'95vh'}} >
         <CssBaseline />
+            <IconButton onClick={handleModalClose} sx={{ml:35, mb:0,mr:0,'&:hover': {
+                bgcolor: '#1e293b', color:'#ffffff', 
+              }}}>
+              <CloseIcon />
+            </IconButton>
         <Box
           sx={{
-            marginTop: 8,
+           
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{ m: 1, bgcolor:'rgb(17 24 39)','&:hover': {
+                  bgcolor: '#1e293b', 
+                } }}>
+            <HowToRegIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Registro de Usuário
@@ -155,6 +151,7 @@ export default function SignUp() {
                   type={showPassword ? 'text' : 'password'}
                   fullWidth
                   label="senha"
+                  autoComplete='off'
                   error={!!errors?.senha}
                   {...register('senha',{required:'Campo obrigatório',
                   minLength: {
@@ -190,21 +187,16 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, bgcolor:'rgb(17 24 39)','&:hover': {
+                bgcolor: '#1e293b', 
+              } }}
             >
               Registrar
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/signin" variant="body2">
-                 Atualizar Dados
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
   )
 }
 
-
+export default SignUp;

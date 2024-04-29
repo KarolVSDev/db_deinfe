@@ -3,3 +3,6 @@ main{
     width:70vw;
     background-color: rgb(243 244 246);
 }
+.swal2-container {
+    z-index: 9999; 
+}

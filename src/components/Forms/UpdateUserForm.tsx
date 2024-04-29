@@ -2,16 +2,20 @@ import React, { useEffect } from 'react';
 import { api } from '../../service/api';
 import { useState } from 'react';
 import { UserUpdate } from '../../types/types';
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputAdornment, InputLabel, Link, List, ListItem, OutlinedInput, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { TypeAlert } from '../../hooks/TypeAlert';
+import { TypeInfo } from '../../hooks/TypeAlert';
 
+interface SignUpProps {
+  closeModal: () => void;
+  userId:string
+}
 
-const UpdateUserForm = () => {
+const UpdateUserForm:React.FC<SignUpProps> = ({closeModal, userId}) => {
 
-  const [email, setEmail ]= useState(localStorage.getItem('email'))
+  const [email ]= useState(localStorage.getItem('email'))
   const [user, setUser ] = useState<UserUpdate>()
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -32,24 +36,35 @@ const UpdateUserForm = () => {
     })
   }
 
+  const getById = async(userId:string) => {
+    await api.get(`/usuario/${userId}`).then(response => {
+      let data = response.data
+      setUser(data)
+    }).catch((error) => {
+      console.error('Erro ao buscar dados do usuário', error)
+    })
+  }
+
   const onSubmit = (data:UserUpdate) => {
-    console.log(data)
     api.patch(`/usuario/${user?.id}`, data).then((response) => {
-      TypeAlert(response.data.message, 'success')
+      TypeInfo(response.data.message, 'success')
+      closeModal()
     }).catch((error:any) => { 
-      TypeAlert(error.response.data.message, 'error')
+      TypeInfo(error.response.data.message, 'warning')
     })
   }
 
 
   useEffect(() => {
     getUser()
-  }, [])
+    getById(userId)
+  }, [userId, email])
 
+  console.log(userId)
   return (
     <div>
       {user && (
-        <Box noValidate  component='form' onSubmit={handleSubmit(onSubmit)} sx={{width:'30%', m:'auto', mt:'30px'}}>
+        <Box noValidate  component='form' onSubmit={handleSubmit(onSubmit)} sx={{ m:'auto', mt:'30px'}}>
            <Typography component="h1" variant="h5" sx={{mb:4, textAlign:'center'}}>
             Atualizar Usuário
           </Typography>

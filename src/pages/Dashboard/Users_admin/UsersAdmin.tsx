@@ -1,5 +1,4 @@
 import { Box } from '@mui/material'
-import React from 'react'
 import SideNav from '../../../components/Layout/DashboardLayout'
 import NavBar from '../../../components/Layout/NavBar'
 import ListUsers from '../../../components/Users_admin/ListUsers'

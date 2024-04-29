@@ -195,9 +195,9 @@ export default function DatabaseTable() {
           console.error('Erro ao buscar dados', error)
         })
       }else if(searchProcesso === '' && searchPessoa === ''){
-        TypeInfo('Selecione um campo')
+        TypeInfo('Selecione um campo', 'info')
       }else{
-        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles')
+        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles', 'info')
       }
     }
 
@@ -217,9 +217,9 @@ export default function DatabaseTable() {
           console.error('Erro ao buscar dados', error)
         })
       }else if(searchJurisd === '' && searchPessoa === ''){
-        TypeInfo('Selecione um campo')
+        TypeInfo('Selecione um campo', 'info')
       }else{
-        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles')
+        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles', 'info')
       }
       console.log(pessoaJurisd)
     }
