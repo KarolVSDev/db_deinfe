@@ -37,9 +37,11 @@ export default function ListUsers() {
     useEffect(() => {
         getUsers()
     },[users])
+
     
+
     return (
-        <Grid sx={{overflowY:'auto'}} >
+        <Grid sx={{overflowY:'auto', height:'85vh'}} >
             <ModalAddUser/>
             <Grid container >{users?.map((user:any) => (
                 <List key={user.id} sx={{ width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb:2}}>

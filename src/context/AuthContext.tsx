@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { AuthData, UserLogin } from "../types/types";
+import { AllUsers, AuthData, UserLogin } from "../types/types";
 import Cookies from "universal-cookie";
 import { api } from "../service/api";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ interface AuthContextType {
     login:(data:UserLogin) => void;
     logout:() => void;
     auth:any
+   
 }
 
 interface Props {
@@ -24,10 +25,12 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
     const navigate = useNavigate()
     const cookies = new Cookies()
     const auth = cookies.get('focusToken');
+    const [email, setEmail] = useState(localStorage.getItem('email'))
 
     useEffect(() => {
         testeAuth()
     }, []); 
+
 
     const testeAuth = async () => {
         if (auth) {
@@ -58,6 +61,7 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
         })
     };
 
+
     const logout = () => {
         const cookies = new Cookies();
         cookies.remove('focusToken', {path:'/'})
@@ -66,7 +70,7 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
         setIsLoggedIn(false)
         navigate('/signin')
     }
-
+  
     return (
         <AuthContext.Provider value={{isLoggedIn, login, logout, auth}}>
             {children}

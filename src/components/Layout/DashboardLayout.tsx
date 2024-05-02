@@ -11,15 +11,18 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAppStore } from '../../hooks/appStore';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import {  useState, useEffect } from 'react';
+import { api } from '../../service/api';
+import { AllUsers } from '../../types/types';
+import React from 'react';
+
+
 
 
 const drawerWidth = 240;
@@ -74,18 +77,51 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function SideNav() {
   const theme = useTheme();
   //const [open, setOpen] = React.useState(true);
-  const {logout} = useAuth()
   const updateOpen = useAppStore((state) => state.updateOpen);
   const open = useAppStore((state) => state.dopen);
+  const [pages, setPages] = useState<any>([
+        {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
+        {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
+        {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>}
+        
+  ]);
+  const [display1, setDisplay1] = useState('block')
+  const [email, setEmail] = useState(localStorage.getItem('email'))
+  const [user, setUser] = useState<AllUsers | undefined>()
 
+  const getUserIdByEmail = async () => {
+    const user = await api.get(`/usuario/login/${email}`).then(response => {
+        delete response.data.senha
+        delete response.data.updateAt
+        delete response.data.createAt
+        return response.data
+        
+    }).catch(error => {
+        console.error('caiu no catch',error.response.data.message)
+    })
+    
+    if(user?.id === "bad93c02-41df-4637-949e-3b5a2b8629d1"){
+        setUser(user)
+      }else{
+        setUser(undefined)
+        toogleLink()
+    }
+} 
+  const toogleLink = () => {
+    if(user?.id !== "bad93c02-41df-4637-949e-3b5a2b8629d1"){
+      pages.map((page:any) => {
+        if(page.name === 'Gerência de usuários'){
+          setDisplay1('none')
+        }
+      })
+    }
+  }
+ 
+  useEffect(() => {
+    getUserIdByEmail()
+  },[pages])
+  
 
-  const {isLoggedIn} = useAuth()
-
-  const pages = [
-    {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
-    {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
-    {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>},
-  ]
   return (
     <>
        <Box sx={{ display: 'flex' }}>
@@ -99,11 +135,11 @@ export default function SideNav() {
           </DrawerHeader>
           <Divider />
           <List>
-            {pages.map((page, index) => (
-              <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+            {pages.map((page:any, index:any) => (
+              <ListItem key={index} disablePadding sx={{ display:{display1}}}> 
                 <ListItemButton
                   component={Link}
-                  to={page.link }
+                  to={page?.link}
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
@@ -111,6 +147,7 @@ export default function SideNav() {
                   }}
 
                 >
+                  
                   <ListItemIcon
                     sx={{
                       minWidth: 0,
@@ -119,9 +156,10 @@ export default function SideNav() {
                       color:'#404040'
                     }}
                   >
-                    {page.icon}
+                    {page?.icon}
                   </ListItemIcon>
-                  <ListItemText primary={page.name} sx={{ opacity: open ? 1 : 0 }} />
+
+                    <ListItemText primary={page?.name} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
             ))}
@@ -131,3 +169,5 @@ export default function SideNav() {
     </>
   );
 }
+
+

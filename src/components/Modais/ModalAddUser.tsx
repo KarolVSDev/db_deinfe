@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import SignUp from '../SignForms/SignUpForm';
+import SignUp from '../Forms/RegisterForm';
 import { useEffect, useState} from 'react';
 import UpdateUserForm from '../Forms/UpdateUserForm';
 

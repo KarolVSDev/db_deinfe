@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import './App.css'
 import Dashboard  from './pages/Dashboard/Dashboard'
 import SignIn from './pages/SignPage/SignIn';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Table from './pages/Dashboard/Table/Table';
 import PrivateRoutes from './routes/PrivateRoutes';
 import UsersAmin from './pages/Dashboard/Users_admin/UsersAdmin';

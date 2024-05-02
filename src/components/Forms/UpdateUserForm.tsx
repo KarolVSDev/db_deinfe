@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { TypeInfo } from '../../hooks/TypeAlert';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface SignUpProps {
   closeModal: () => void;
@@ -54,17 +55,24 @@ const UpdateUserForm:React.FC<SignUpProps> = ({closeModal, userId}) => {
     })
   }
 
+  const handleModalClose:any = () =>{
+    closeModal()
+  }
 
   useEffect(() => {
     getUser()
     getById(userId)
-  }, [userId, email])
+  }, [userId])
 
-  console.log(userId)
   return (
     <div>
       {user && (
         <Box noValidate  component='form' onSubmit={handleSubmit(onSubmit)} sx={{ m:'auto', mt:'30px'}}>
+          <IconButton onClick={handleModalClose} sx={{ml:38, mb:2,mr:0,'&:hover': {
+                bgcolor: '#1e293b', color:'#ffffff', 
+              }}}>
+              <CloseIcon />
+            </IconButton>
            <Typography component="h1" variant="h5" sx={{mb:4, textAlign:'center'}}>
             Atualizar Usuário
           </Typography>

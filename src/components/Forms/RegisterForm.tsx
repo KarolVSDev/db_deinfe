@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import FormLabel from '@mui/material/FormLabel/FormLabel';
@@ -48,7 +47,7 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
     })
   }
 
-  const handleModalClose = () => {
+  const handleModalClose:any = () => {
     closeModal()
   }
 
