@@ -2,10 +2,9 @@ import { Box } from '@mui/material'
 import SideNav from '../../../components/Layout/DashboardLayout'
 import NavBar from '../../../components/Layout/NavBar'
 import ListUsers from '../../../components/Users_admin/ListUsers'
-import { useAuth } from '../../../context/AuthContext'
+
 
 const UsersAmin = () => {
-  const {user} = useAuth()
     return (
         <>  
            <NavBar/>

@@ -17,6 +17,7 @@ import { useAuth } from '../../context/AuthContext';
 import { LogoutOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import env from '../../service/env';
 
 
 
@@ -79,6 +80,8 @@ export default function NavBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const navigate = useNavigate()
+
+  const [email] = useState(localStorage.getItem('email'))
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -183,19 +186,22 @@ export default function NavBar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-haspopup="true"
-              color="inherit"
-              sx={{mr:'10px'}}
-              onClick={handlePerfil}
-            >
-              <AccountCircle sx={{mr:'5px'}} /> <Typography>Perfil</Typography>
-            </IconButton>
-          </Box>
+            {email !== env.EMAIL_MASTER ? (
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-haspopup="true"
+                  color="inherit"
+                  sx={{mr:'10px'}}
+                  onClick={handlePerfil}
+                >
+                  <AccountCircle sx={{mr:'5px'}} /> <Typography>Perfil</Typography>
+                </IconButton>
+              </Box>
+            ):(null)}
+            
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"

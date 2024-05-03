@@ -41,7 +41,7 @@ export default function ListUsers() {
     
 
     return (
-        <Grid sx={{overflowY:'auto', height:'85vh'}} >
+        <Grid sx={{overflowY:'auto', height:'85vh', scrollbarWidth:'thin'}} >
             <ModalAddUser/>
             <Grid container >{users?.map((user:any) => (
                 <List key={user.id} sx={{ width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb:2}}>

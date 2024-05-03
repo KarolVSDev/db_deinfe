@@ -7,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { api } from '../../../service/api';
 import {
   PessoaFisica,
@@ -39,6 +39,7 @@ import {
 } from '../../../service/columns';
 import { TypeInfo } from '../../../hooks/TypeAlert';
 import { useContextTable } from '../../../context/TableContext';
+import SearchParams from '../../Inputs/SearchParams';
 
 interface Column {
   id: string;
@@ -236,22 +237,15 @@ export default function DatabaseTable() {
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'pessoafisica', string: 'Pessoa Física' },
-    { value: 'pessoajurisd', string: 'Pessoa Jurisdicionada' },
-    { value: 'achado', string: 'Achado' },
-    { value: 'div-area-achado', string: 'Divisão da área do achado' },
-    { value: 'area-achado', string: 'Area do Achado' },
-    { value: 'nat-achado', string: 'Natureza do Achado' },
-    { value: 'interessado', string: 'Interessado' },
     { value: 'jurisd', string: 'Jurisdicionado' },
-    { value: 'jurisd-jurisd', string: 'Jurisd-jurisd' },
     { value: 'processo', string: 'Processo' },
-    { value: 'apenso', string: 'Apenso' },
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
   ]
   
   return (
-    <Paper sx={{ maxWidth: 'calc(100vw - 300px)', overflow: 'hidden',  }}>
+    <Grid sx={{height:'100vh', pt:3, pr:3, pl:3}}>
+    <Paper sx={{overflow: 'hidden'}}>
       <Typography
         gutterBottom
         variant='h5'
@@ -259,84 +253,13 @@ export default function DatabaseTable() {
         sx={{ padding: '20px' }}>
         Base de dados Secex
       </Typography>
-      <Box sx={{ display: 'flex'}}>
-        <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px', height:30, mt:'25px' }}>
+      <Box sx={{display:'flex', flexDirection:'row', gap:2}}>
+        <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px',  }}>
           {optionsSelect.map((option) => (
             <MenuItem value={option.value} disabled = {option.value === 'pesquisa'}>{option.string}</MenuItem>
           ))}
         </Select>
-        {dataType === 'interessado' && (
-          <Box sx={{ alignItems: 'bottom' }}>
-            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
-              <InputLabel id="label-pesoafisica">Pessoa Física</InputLabel>
-              <Select value={searchPessoa} onChange={handleSearchPessoa} labelId="label-pesoafisica" >
-                {pessoaFisica.map((option) => (
-                  <MenuItem key={option.id} value={option.id} >{option.nome}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
-              <InputLabel id="label-processo">n do processo</InputLabel>
-              <Select value={searchProcesso} onChange={handleSearchProcesso} labelId="label-processo" >
-                {processo.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>{option.numero}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {(searchProcesso !== '' || searchPessoa !== '') && (
-              <Button variant="outlined" sx={{ height: 20, mt: '27px', width: 10 }} color='error' onClick={cleanInput} >Limpar</Button>
-            )}
-            <Button variant="outlined" sx={{ ml:2,height: 30, mt: '27px' }} onClick={handleBusca} >Buscar</Button>
-          </Box>
-        )}
-        {dataType === 'pessoajurisd' && (
-          <Box sx={{ alignItems: 'bottom' }}>
-            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
-              <InputLabel id="label-pesoafisica">Pessoa Física</InputLabel>
-              <Select value={searchPessoa} onChange={handleSearchPessoa} labelId="label-pesoafisica" >
-                {pessoaFisica.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 124 }}>
-              <InputLabel id="label-processo">Jurisdicionado</InputLabel>
-              <Select value={searchJurisd} onChange={handleSearchJurisd} labelId="label-processo" >
-                {jurisd.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {(searchJurisd !== '' || searchPessoa !== '') && (
-              <Button variant="outlined" sx={{ height: 20, mt: '27px', width: 10 }} color='error' onClick={cleanInput} >Limpar</Button>
-            )}
-            <Button variant="outlined" sx={{ ml:2,height: 30, mt: '27px' }} onClick={handleBusca} >Buscar</Button>
-          </Box>
-        )}
-        {dataType === 'pessoafisica' && (
-          <Box sx={{ alignItems: 'bottom' }}>
-            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 122 }}>
-              <InputLabel id="label-pesoafisica">Tipo</InputLabel>
-              <Select value={searchTipo} onChange={handleBusca} labelId="label-pesoafisica" >
-                {pessoaFisica.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl variant="standard" sx={{ m: 1, ml: 3, minWidth: 124 }}>
-              <InputLabel id="label-processo">Jurisdicionado</InputLabel>
-              <Select value={searchJurisd} onChange={handleSearchJurisd} labelId="label-processo" >
-                {jurisd.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>{option.nome}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {(searchJurisd !== '' || searchPessoa !== '') && (
-              <Button variant="outlined" sx={{ height: 20, mt: '27px', width: 10 }} color='error' onClick={cleanInput} >Limpar</Button>
-            )}
-            <Button variant="outlined" sx={{ ml:2,height: 30, mt: '27px' }} onClick={handleBusca} >Buscar</Button>
-          </Box>
-        )}
+        <SearchParams pesquisa = {pessoaFisica}/>
       </Box>
       <Divider />
       <TableContainer sx={{ maxHeight: 440 }}>
@@ -353,8 +276,8 @@ export default function DatabaseTable() {
                     {pf.label}
                   </TableCell>
                 ))
-
               )}
+
               {dataType === 'procurador' && (
                 procuradorHeader.map((p) => (
                   <TableCell
@@ -366,6 +289,7 @@ export default function DatabaseTable() {
                   </TableCell>
                 ))
               )}
+
               {dataType === 'relator' && (
                 relatorHeader.map((p) => (
                   <TableCell
@@ -377,50 +301,7 @@ export default function DatabaseTable() {
                   </TableCell>
                 ))
               )}
-              {dataType === 'nat-achado' && (
-                natAchadoHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
-              {dataType === 'div-area-achado' && (
-                divAreaAchadoHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
-              {dataType === 'area-achado' && (
-                areaAchadoHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
-              {dataType === 'achado' && (
-                achadoHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
+
               {dataType === 'jurisd' && (
                 jurisdHeader.map((p) => (
                   <TableCell
@@ -432,6 +313,7 @@ export default function DatabaseTable() {
                   </TableCell>
                 ))
               )}
+
               {dataType === 'processo' && (
                 processoHeader.map((p) => (
                   <TableCell
@@ -443,28 +325,7 @@ export default function DatabaseTable() {
                   </TableCell>
                 ))
               )}
-              {dataType === 'interessado' && (
-                interessadoHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
-              {dataType === 'pessoajurisd' && (
-                pessoaJurisdHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
+
             </TableRow>
           </TableHead>
           <TableBody>
@@ -489,12 +350,14 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.ativo}</TableCell>
                 </TableRow>
               )))}
+
             {dataType === 'procurador' && (
               procurador.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                   <TableCell align="left">{row.nome}</TableCell>
                 </TableRow>
               )))}
+
             {dataType === 'relator' && (
               relator.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
@@ -502,33 +365,7 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.cargo}</TableCell>
                 </TableRow>
               )))}
-            {dataType === 'nat-achado' && (
-              natAchado.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.descricao}</TableCell>
-                </TableRow>
-              )))}
-            {dataType === 'div-area-achado' && (
-              divAreaAchado.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.descricao}</TableCell>
-                </TableRow>
-              )))}
-            {dataType === 'area-achado' && (
-              areaAchado.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.descricao}</TableCell>
-                </TableRow>
-              )))}
-            {dataType === 'achado' && (
-              achado.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.titulo}</TableCell>
-                  <TableCell align="left">{row.texto}</TableCell>
-                  <TableCell align="left">{row.criterio}</TableCell>
-                  <TableCell align="left">{row.ativo}</TableCell>
-                </TableRow>
-              )))}
+
             {dataType === 'jurisd' && (
               jurisd.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
@@ -554,6 +391,7 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.ativo}</TableCell>
                 </TableRow>
               )))}
+
             {dataType === 'processo' && (
               processo.map((row, rowIndex) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
@@ -565,24 +403,7 @@ export default function DatabaseTable() {
                   <TableCell align="left">{row.arquivamento}</TableCell>
                 </TableRow>
               )))}
-            {dataType === 'interessado' && (
-              interessado.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.interesse}</TableCell>
-                </TableRow>
-              )))}
-            {dataType === 'pessoajurisd' && (
-              pessoaJurisd.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.cargo}</TableCell>
-                  <TableCell align="left">{row.mandato}</TableCell>
-                  <TableCell align="left">{row.normaNomeacao}</TableCell>
-                  <TableCell align="left">{row.dataNomeacao}</TableCell>
-                  <TableCell align="left">{row.normaExoneracao}</TableCell>
-                  <TableCell align="left">{row.dataExoneracao}</TableCell>
-                  <TableCell align="left">{row.gestor}</TableCell>
-                </TableRow>
-              )))}
+
           </TableBody>
         </Table>
       </TableContainer>
@@ -597,5 +418,6 @@ export default function DatabaseTable() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
+    </Grid>
   );
 }

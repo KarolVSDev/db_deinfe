@@ -4,8 +4,10 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import UpdateUserForm from '../Forms/UpdateUserForm';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
@@ -22,9 +24,9 @@ const style = {
 };
 
 interface UpdateUser {
-    userId:string;
+  userId: string;
 }
-const ModalUpdateUser:React.FC<UpdateUser> = ({userId}) => {
+const ModalUpdateUser: React.FC<UpdateUser> = ({ userId }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -39,9 +41,9 @@ const ModalUpdateUser:React.FC<UpdateUser> = ({userId}) => {
 
   return (
     <div>
-        <Button onClick={handleOpen}variant='outlined' color='secondary' sx={{mb:1}}>
-            Atualizar
-        </Button>
+      <Button onClick={handleOpen} variant='outlined' color='secondary' sx={{ mb: 1 }}>
+        Atualizar
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -57,7 +59,14 @@ const ModalUpdateUser:React.FC<UpdateUser> = ({userId}) => {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <UpdateUserForm  closeModal = {handleSubmit} userId = {userId}/>
+            <IconButton onClick={handleClose} sx={{
+              ml: 38, mr: 0, mt: 4, '&:hover': {
+                bgcolor: '#1e293b', color: '#ffffff',
+              }
+            }}>
+              <CloseIcon />
+            </IconButton>
+            <UpdateUserForm closeModal={handleSubmit} userId={userId} />
           </Box>
         </Fade>
       </Modal>

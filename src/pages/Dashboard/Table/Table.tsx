@@ -12,7 +12,7 @@ const Table = () => {
        <Box height={60}/>
         <Box sx={{ display: 'flex' }}>
           <SideNav/>
-          <Box component="main" sx={{flexGrow:1, p:3}}>
+          <Box component="main" sx={{flexGrow:1, height:'100vh'}}>
             <TableProvider>
               <DataBaseTable/>
             </TableProvider>

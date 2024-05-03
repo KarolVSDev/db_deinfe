@@ -79,47 +79,45 @@ export default function SideNav() {
   //const [open, setOpen] = React.useState(true);
   const updateOpen = useAppStore((state) => state.updateOpen);
   const open = useAppStore((state) => state.dopen);
+  const [display1, setDisplay1] = useState('block')
+  const [email, setEmail] = useState(localStorage.getItem('email'))
+  const [user, setUser] = useState<AllUsers | null>()
+  
+  const getUserIdByEmail = async () => {
+    const user = await api.get(`/usuario/login/${email}`).then(response => {
+      delete response.data.senha
+      delete response.data.updateAt
+      delete response.data.createAt
+      return response.data
+      
+    }).catch(error => {
+      console.error('Erro ao tentar resgatar o usuário',error.response.data.message)
+    })
+    setUser(user)
+  } 
+  
   const [pages, setPages] = useState<any>([
         {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
         {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
-        {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>}
         
   ]);
-  const [display1, setDisplay1] = useState('block')
-  const [email, setEmail] = useState(localStorage.getItem('email'))
-  const [user, setUser] = useState<AllUsers | undefined>()
 
-  const getUserIdByEmail = async () => {
-    const user = await api.get(`/usuario/login/${email}`).then(response => {
-        delete response.data.senha
-        delete response.data.updateAt
-        delete response.data.createAt
-        return response.data
-        
-    }).catch(error => {
-        console.error('caiu no catch',error.response.data.message)
-    })
-    
+  const verifyUser = () => {
     if(user?.id === "bad93c02-41df-4637-949e-3b5a2b8629d1"){
-        setUser(user)
-      }else{
-        setUser(undefined)
-        toogleLink()
-    }
-} 
-  const toogleLink = () => {
-    if(user?.id !== "bad93c02-41df-4637-949e-3b5a2b8629d1"){
-      pages.map((page:any) => {
-        if(page.name === 'Gerência de usuários'){
-          setDisplay1('none')
-        }
-      })
+      setPages([
+        {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
+        {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
+        {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>}])
     }
   }
- 
-  useEffect(() => {
-    getUserIdByEmail()
-  },[pages])
+
+useEffect(() => {
+  getUserIdByEmail()
+},[pages])
+
+useEffect(() => {
+  verifyUser()
+},[user])
   
 
   return (
@@ -136,7 +134,7 @@ export default function SideNav() {
           <Divider />
           <List>
             {pages.map((page:any, index:any) => (
-              <ListItem key={index} disablePadding sx={{ display:{display1}}}> 
+              <ListItem key={index} disablePadding > 
                 <ListItemButton
                   component={Link}
                   to={page?.link}

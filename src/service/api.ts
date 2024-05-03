@@ -1,9 +1,10 @@
 import Axios from "axios";
 import Cookies from "universal-cookie";
+import env from "./env";
 
 
 const api = Axios.create({
-    baseURL:`${import.meta.env.VITE_API_BACKEND}`
+    baseURL:`${env.API_URL}`
 })
 
 api.interceptors.request.use(config => {
