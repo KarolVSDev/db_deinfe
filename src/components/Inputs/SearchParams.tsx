@@ -1,19 +1,30 @@
-import * as React from 'react';
+
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import { PessoaFisica } from '../../types/types';
+import { useEffect } from 'react';
 
-export default function SearchParams(pesquisa:any) {
+interface Props {
+  onOptionSelected: (option: PessoaFisica | null) => void;
+  data: PessoaFisica[];
+}
 
-    
+export default function SearchParams({data, onOptionSelected}: Props) {
+
   
-    
+  useEffect(() => {
+
+  },[data])
+
   return (
     <Autocomplete 
       disablePortal
       id="combo-box-demo"
-      options={[]}
+      options={data}
+      getOptionLabel={(option:PessoaFisica) => option.nome}
+      onChange={(event, value) => onOptionSelected(value)}
       sx={{ width: 200 }}
-      renderInput={(params) => <TextField  {...params} label="Pessoa Física" />}
+      renderInput={(params) => <TextField  {...params} label="Filtrar por pessoa" />}
     />
   );
 }

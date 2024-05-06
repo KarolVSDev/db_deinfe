@@ -40,6 +40,7 @@ import {
 import { TypeInfo } from '../../../hooks/TypeAlert';
 import { useContextTable } from '../../../context/TableContext';
 import SearchParams from '../../Inputs/SearchParams';
+import ModalPessoaFisica from '../../Modais/ModalPessoaFisica';
 
 interface Column {
   id: string;
@@ -69,64 +70,49 @@ export default function DatabaseTable() {
   const [searchJurisd, setSearchJurisd] = useState('');
   const [searchTipo, setSearchTipo] = useState('');
   const [data, setData] = useState([10]);
- 
-  
+  const [selectedPessoaFisica, setSelectedPessoaFisica] = useState<PessoaFisica | null>(null);
+
+
   //função pra resgatar os dados da api
   const entidades = ['interessado', 'pessoajurisd']
-  const fetchData = async ()  => {
-    entidades.map((entidade):any => {
-      if(dataType !== entidade){
-        if(dataType === 'pessoafisica'){
+  const fetchData = async () => {
+    entidades.map((entidade): any => {
+      if (dataType !== entidade) {
+        if (dataType === 'pessoafisica') {
           api.get(`/${dataType}`).then(response => {
             setPessoaFisica(response.data)
           })
-        }else if(dataType === 'procurador'){
+        } else if (dataType === 'procurador') {
           api.get(`/${dataType}`).then(response => {
             setProcurador(response.data)
           })
-        }else if(dataType === 'relator'){
+        } else if (dataType === 'relator') {
           api.get(`/${dataType}`).then(response => {
             setRelator(response.data)
           })
-        }else if (dataType === 'nat-achado') {
-          api.get(`/${dataType}`).then(response => {
-            setNatAchado(response.data)
-          })
-        }else if(dataType === 'div-area-achado'){
-          api.get(`/${dataType}`).then(response => {
-            setDivAreaAchado(response.data)
-          })
-        }else if(dataType === 'area-achado'){
-          api.get(`/${dataType}`).then(response => {
-            setAreaAchado(response.data)
-          })
-        }else if(dataType === 'achado'){
-          api.get(`/${dataType}`).then(response => {
-            setAchado(response.data)
-          })
-        }else if(dataType === 'jurisd'){
+        } else if (dataType === 'jurisd') {
           api.get(`/${dataType}`).then(response => {
             setJurisd(response.data)
           })
-        }else if(dataType === 'processo'){
-          api.get(`/${dataType}`).then(response  => {
+        } else if (dataType === 'processo') {
+          api.get(`/${dataType}`).then(response => {
             setProcesso(response.data)
           })
         }
       }
       fetchProcesso()
     }
-  )
-}
+    )
+  }
   //resgata dados para os inputs da table interessado
   const fetchProcesso = async () => {
-    if(dataType == 'interessado'){
+    if (dataType == 'interessado') {
       await api.get('/processo').then(response => {
         setProcesso(response.data)
       }).catch(error => {
         console.error('Erro eu pegar dados de processo', error)
       })
-    }else if(dataType === 'pessoajurisd'){
+    } else if (dataType === 'pessoajurisd') {
       await api.get('/jurisd').then(response => {
         setJurisd(response.data)
       }).catch(error => {
@@ -181,7 +167,7 @@ export default function DatabaseTable() {
 
   //lida com as buscas do usuário
   const handleBusca = async () => {
-    if(dataType === 'interessado'){
+    if (dataType === 'interessado') {
       if (searchPessoa !== '' && searchProcesso === '') {
         await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
           console.log(response.data)
@@ -189,20 +175,20 @@ export default function DatabaseTable() {
         }).catch(error => {
           console.error('Erro ao buscar dados', error)
         })
-      }else if (searchProcesso !== '' && searchPessoa === '') {
+      } else if (searchProcesso !== '' && searchPessoa === '') {
         await api.get(`/${dataType}/processo/${searchProcesso}`).then((response) => {
           setInteressado(response.data)
         }).catch(error => {
           console.error('Erro ao buscar dados', error)
         })
-      }else if(searchProcesso === '' && searchPessoa === ''){
+      } else if (searchProcesso === '' && searchPessoa === '') {
         TypeInfo('Selecione um campo', 'info')
-      }else{
+      } else {
         TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles', 'info')
       }
     }
 
-    if(dataType === 'pessoajurisd'){
+    if (dataType === 'pessoajurisd') {
       if (searchPessoa !== '' && searchJurisd === '') {
         await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
           const data = response.data
@@ -210,29 +196,35 @@ export default function DatabaseTable() {
         }).catch(error => {
           console.error('Erro ao buscar dados', error)
         })
-      }else if (searchJurisd !== '' && searchPessoa === '') {
+      } else if (searchJurisd !== '' && searchPessoa === '') {
         await api.get(`/${dataType}/jurisd/${searchJurisd}`).then((response) => {
           const data = response.data
           setPessoaJurisd(data.result)
         }).catch(error => {
           console.error('Erro ao buscar dados', error)
         })
-      }else if(searchJurisd === '' && searchPessoa === ''){
+      } else if (searchJurisd === '' && searchPessoa === '') {
         TypeInfo('Selecione um campo', 'info')
-      }else{
+      } else {
         TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles', 'info')
       }
       console.log(pessoaJurisd)
     }
   }
 
-    
+
   const cleanInput = () => {
     setSearchPessoa('')
     setSearchProcesso('')
     setSearchJurisd('')
     return
   }
+
+  //lógica para os filtros de pesquisa
+  const handleOptionSelected = (option: PessoaFisica | null) => {
+    setSelectedPessoaFisica(option)
+  }
+
 
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
@@ -242,182 +234,208 @@ export default function DatabaseTable() {
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
   ]
-  
-  return (
-    <Grid sx={{height:'100vh', pt:3, pr:3, pl:3}}>
-    <Paper sx={{overflow: 'hidden'}}>
-      <Typography
-        gutterBottom
-        variant='h5'
-        component='div'
-        sx={{ padding: '20px' }}>
-        Base de dados Secex
-      </Typography>
-      <Box sx={{display:'flex', flexDirection:'row', gap:2}}>
-        <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px',  }}>
-          {optionsSelect.map((option) => (
-            <MenuItem value={option.value} disabled = {option.value === 'pesquisa'}>{option.string}</MenuItem>
-          ))}
-        </Select>
-        <SearchParams pesquisa = {pessoaFisica}/>
-      </Box>
-      <Divider />
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {dataType === 'pessoafisica' && (
-                pessoaFisicaHeader.map((pf) => (
-                  <TableCell
-                    id={pf.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {pf.label}
-                  </TableCell>
-                ))
-              )}
 
-              {dataType === 'procurador' && (
-                procuradorHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
+  return (
+    <Grid sx={{ height: '100vh', pt: 3, pr: 3, pl: 3 }}>
+      <Paper sx={{ overflow: 'hidden' }}>
+        <Typography
+          gutterBottom
+          variant='h5'
+          component='div'
+          sx={{ padding: '20px' }}>
+          Base de dados Secex
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px', }}>
+            {optionsSelect.map((option) => (
+              <MenuItem value={option.value} disabled={option.value === 'pesquisa'}>{option.string}</MenuItem>
+            ))}
+          </Select>
+          {dataType === 'pessoafisica' && (
+            <>
+              <SearchParams data={pessoaFisica} onOptionSelected={handleOptionSelected} />
+              <ModalPessoaFisica/>
+            </>
+          )
+          }
+        </Box>
+        <Divider />
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {dataType === 'pessoafisica' && (
+                  pessoaFisicaHeader.map((pf) => (
+                    <TableCell
+                      id={pf.id}
+                      align={'left'}
+                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                    >
+                      {pf.label}
+                    </TableCell>
+                  ))
+                )}
+
+                {dataType === 'procurador' && (
+                  procuradorHeader.map((p) => (
+                    <TableCell
+                      id={p.id}
+                      align={'left'}
+                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                    >
+                      {p.label}
+                    </TableCell>
+                  ))
+                )}
+
+                {dataType === 'relator' && (
+                  relatorHeader.map((p) => (
+                    <TableCell
+                      id={p.id}
+                      align={'left'}
+                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                    >
+                      {p.label}
+                    </TableCell>
+                  ))
+                )}
+
+                {dataType === 'jurisd' && (
+                  jurisdHeader.map((p) => (
+                    <TableCell
+                      id={p.id}
+                      align={'left'}
+                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                    >
+                      {p.label}
+                    </TableCell>
+                  ))
+                )}
+
+                {dataType === 'processo' && (
+                  processoHeader.map((p) => (
+                    <TableCell
+                      id={p.id}
+                      align={'left'}
+                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
+                    >
+                      {p.label}
+                    </TableCell>
+                  ))
+                )}
+
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {selectedPessoaFisica && (
+                <TableRow>
+                  <TableCell align="left">{selectedPessoaFisica.nome}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.cpf}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.rg}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.profissao}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.genero}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.cep}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.logradouro}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.complemento}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.numero}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.cidade}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.uf}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.telefone1}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.telefone2}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.ramal}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.email}</TableCell>
+                  <TableCell align="left">{selectedPessoaFisica.ativo}</TableCell>
+                </TableRow>
+              ) }
+              {dataType === 'pessoafisica' && !selectedPessoaFisica && (
+                pessoaFisica.map((row, rowIndex) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    <TableCell align="left">{row.nome}</TableCell>
+                    <TableCell align="left">{row.cpf}</TableCell>
+                    <TableCell align="left">{row.rg}</TableCell>
+                    <TableCell align="left">{row.profissao}</TableCell>
+                    <TableCell align="left">{row.genero}</TableCell>
+                    <TableCell align="left">{row.cep}</TableCell>
+                    <TableCell align="left">{row.logradouro}</TableCell>
+                    <TableCell align="left">{row.complemento}</TableCell>
+                    <TableCell align="left">{row.numero}</TableCell>
+                    <TableCell align="left">{row.cidade}</TableCell>
+                    <TableCell align="left">{row.uf}</TableCell>
+                    <TableCell align="left">{row.telefone1}</TableCell>
+                    <TableCell align="left">{row.telefone2}</TableCell>
+                    <TableCell align="left">{row.ramal}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="left">{row.ativo}</TableCell>
+                  </TableRow>
                 ))
               )}
+              {dataType === 'procurador' && (
+                procurador.map((row, rowIndex) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    <TableCell align="left">{row.nome}</TableCell>
+                  </TableRow>
+                )))}
 
               {dataType === 'relator' && (
-                relatorHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
+                relator.map((row, rowIndex) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    <TableCell align="left">{row.nome}</TableCell>
+                    <TableCell align="left">{row.cargo}</TableCell>
+                  </TableRow>
+                )))}
 
               {dataType === 'jurisd' && (
-                jurisdHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
+                jurisd.map((row, rowIndex) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    <TableCell align="left">{row.nome}</TableCell>
+                    <TableCell align="left">{row.sigla}</TableCell>
+                    <TableCell align="left">{row.cnpj}</TableCell>
+                    <TableCell align="left">{row.ug}</TableCell>
+                    <TableCell align="left">{row.cep}</TableCell>
+                    <TableCell align="left">{row.logradouro}</TableCell>
+                    <TableCell align="left">{row.complemento}</TableCell>
+                    <TableCell align="left">{row.numero}</TableCell>
+                    <TableCell align="left">{row.cidade}</TableCell>
+                    <TableCell align="left">{row.telefone1}</TableCell>
+                    <TableCell align="left">{row.telefone2}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="left">{row.site}</TableCell>
+                    <TableCell align="left">{row.cargoGestor}</TableCell>
+                    <TableCell align="left">{row.normaCriacao}</TableCell>
+                    <TableCell align="left">{row.dataCriacao}</TableCell>
+                    <TableCell align="left">{row.normaExtincao}</TableCell>
+                    <TableCell align="left">{row.dataExtincao}</TableCell>
+                    <TableCell align="left">{row.poder}</TableCell>
+                    <TableCell align="left">{row.ativo}</TableCell>
+                  </TableRow>
+                )))}
 
               {dataType === 'processo' && (
-                processoHeader.map((p) => (
-                  <TableCell
-                    id={p.id}
-                    align={'left'}
-                    style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                  >
-                    {p.label}
-                  </TableCell>
-                ))
-              )}
+                processo.map((row, rowIndex) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    <TableCell align="left">{row.numero}</TableCell>
+                    <TableCell align="left">{row.ano}</TableCell>
+                    <TableCell align="left">{row.natureza}</TableCell>
+                    <TableCell align="left">{row.exercicio}</TableCell>
+                    <TableCell align="left">{row.objeto}</TableCell>
+                    <TableCell align="left">{row.arquivamento}</TableCell>
+                  </TableRow>
+                )))}
 
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dataType === 'pessoafisica' && (
-              pessoaFisica.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.nome}</TableCell>
-                  <TableCell align="left">{row.cpf}</TableCell>
-                  <TableCell align="left">{row.rg}</TableCell>
-                  <TableCell align="left">{row.profissao}</TableCell>
-                  <TableCell align="left">{row.genero}</TableCell>
-                  <TableCell align="left">{row.cep}</TableCell>
-                  <TableCell align="left">{row.logradouro}</TableCell>
-                  <TableCell align="left">{row.complemento}</TableCell>
-                  <TableCell align="left">{row.numero}</TableCell>
-                  <TableCell align="left">{row.cidade}</TableCell>
-                  <TableCell align="left">{row.uf}</TableCell>
-                  <TableCell align="left">{row.telefone1}</TableCell>
-                  <TableCell align="left">{row.telefone2}</TableCell>
-                  <TableCell align="left">{row.ramal}</TableCell>
-                  <TableCell align="left">{row.email}</TableCell>
-                  <TableCell align="left">{row.ativo}</TableCell>
-                </TableRow>
-              )))}
-
-            {dataType === 'procurador' && (
-              procurador.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.nome}</TableCell>
-                </TableRow>
-              )))}
-
-            {dataType === 'relator' && (
-              relator.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.nome}</TableCell>
-                  <TableCell align="left">{row.cargo}</TableCell>
-                </TableRow>
-              )))}
-
-            {dataType === 'jurisd' && (
-              jurisd.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.nome}</TableCell>
-                  <TableCell align="left">{row.sigla}</TableCell>
-                  <TableCell align="left">{row.cnpj}</TableCell>
-                  <TableCell align="left">{row.ug}</TableCell>
-                  <TableCell align="left">{row.cep}</TableCell>
-                  <TableCell align="left">{row.logradouro}</TableCell>
-                  <TableCell align="left">{row.complemento}</TableCell>
-                  <TableCell align="left">{row.numero}</TableCell>
-                  <TableCell align="left">{row.cidade}</TableCell>
-                  <TableCell align="left">{row.telefone1}</TableCell>
-                  <TableCell align="left">{row.telefone2}</TableCell>
-                  <TableCell align="left">{row.email}</TableCell>
-                  <TableCell align="left">{row.site}</TableCell>
-                  <TableCell align="left">{row.cargoGestor}</TableCell>
-                  <TableCell align="left">{row.normaCriacao}</TableCell>
-                  <TableCell align="left">{row.dataCriacao}</TableCell>
-                  <TableCell align="left">{row.normaExtincao}</TableCell>
-                  <TableCell align="left">{row.dataExtincao}</TableCell>
-                  <TableCell align="left">{row.poder}</TableCell>
-                  <TableCell align="left">{row.ativo}</TableCell>
-                </TableRow>
-              )))}
-
-            {dataType === 'processo' && (
-              processo.map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  <TableCell align="left">{row.numero}</TableCell>
-                  <TableCell align="left">{row.ano}</TableCell>
-                  <TableCell align="left">{row.natureza}</TableCell>
-                  <TableCell align="left">{row.exercicio}</TableCell>
-                  <TableCell align="left">{row.objeto}</TableCell>
-                  <TableCell align="left">{row.arquivamento}</TableCell>
-                </TableRow>
-              )))}
-
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        labelRowsPerPage={'Linhas por Página'}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          labelRowsPerPage={'Linhas por Página'}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </Grid>
   );
 }
