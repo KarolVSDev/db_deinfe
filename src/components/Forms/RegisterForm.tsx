@@ -181,7 +181,6 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
                 {errors.senha.message}
               </Typography>
               )}
-            </Grid>
             <Button
               type="submit"
               fullWidth
@@ -192,6 +191,7 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
             >
               Registrar
             </Button>
+            </Grid>
           </Box>
         </Box>
       </Container>

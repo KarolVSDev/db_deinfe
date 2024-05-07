@@ -34,7 +34,7 @@ export interface AuthData {
 }
 
 export interface PessoaFisica {
-  id: string;
+  id?: string;
   nome: string;
   cpf: string;
   rg: string;

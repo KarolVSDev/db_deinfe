@@ -124,7 +124,7 @@ export default function DatabaseTable() {
 
   useEffect(() => {
     fetchData()
-  }, [dataType])
+  }, [dataType, pessoaFisica])
 
 
   if (dataType) {
@@ -236,8 +236,8 @@ export default function DatabaseTable() {
   ]
 
   return (
-    <Grid sx={{ height: '100vh', pt: 3, pr: 3, pl: 3 }}>
-      <Paper sx={{ overflow: 'hidden' }}>
+    <Grid sx={{ pt: 3, pr: 3, pl: 3 }}>
+      <Paper >
         <Typography
           gutterBottom
           variant='h5'

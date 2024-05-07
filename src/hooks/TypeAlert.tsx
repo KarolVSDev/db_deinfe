@@ -1,7 +1,5 @@
 import Swal from "sweetalert2"
 
-
-
 export function TypeAlert(message: string, type: 'success' | 'error' | 'warning' | 'info' | 'question') {
   Swal.fire({
     toast: true,
