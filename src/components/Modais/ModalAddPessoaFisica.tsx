@@ -21,6 +21,9 @@ const style = {
   border: '1px solid #000',
   boxShadow: 24,
   p: 4,
+  overflowY:'auto',
+  height:'95vh', 
+  scrollbarWidth:'thin',
 };
 
 export default function ModalPessoaFisica() {

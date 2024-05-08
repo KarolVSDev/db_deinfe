@@ -1,4 +1,4 @@
-import SideNav from "../../../components/Layout/DashboardLayout";
+import SideNav from "../../../components/Layout/SideNav";
 import { Box, Button } from "@mui/material";
 import { useAuth } from "../../../context/AuthContext";
 import NavBar from "../../../components/Layout/NavBar";
@@ -7,18 +7,18 @@ import { TableProvider } from "../../../context/TableContext";
 
 const Table = () => {
   return (
-    <>  
-       <NavBar/>
-       <Box height={60}/>
-        <Box sx={{ display: 'flex' }}>
-          <SideNav/>
-          <Box component="main" sx={{flexGrow:1, height:'100vh'}}>
-            <TableProvider>
-              <DataBaseTable/>
-            </TableProvider>
-          </Box>
+    <>
+      <NavBar />
+      <Box />
+      <Box sx={{ display: 'flex' }}>
+        <SideNav />
+        <Box component='main' sx={{ flexGrow: 1, height: '100vh' }}>
+          <TableProvider>
+            <DataBaseTable />
+          </TableProvider>
         </Box>
-        </>
+      </Box>
+    </>
   )
 }
 

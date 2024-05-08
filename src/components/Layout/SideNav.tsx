@@ -12,7 +12,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useAuth } from '../../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { useAppStore } from '../../hooks/appStore';
 import TableChartIcon from '@mui/icons-material/TableChart';
@@ -20,7 +20,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import {  useState, useEffect } from 'react';
 import { api } from '../../service/api';
 import { AllUsers } from '../../types/types';
-import React from 'react';
+
 
 
 
@@ -76,10 +76,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function SideNav() {
   const theme = useTheme();
-  //const [open, setOpen] = React.useState(true);
   const updateOpen = useAppStore((state) => state.updateOpen);
   const open = useAppStore((state) => state.dopen);
-  const [display1, setDisplay1] = useState('block')
   const [email, setEmail] = useState(localStorage.getItem('email'))
   const [user, setUser] = useState<AllUsers | null>()
   
@@ -135,30 +133,30 @@ useEffect(() => {
           <List>
             {pages.map((page:any, index:any) => (
               <ListItem key={index} disablePadding > 
-                <ListItemButton
-                  component={Link}
-                  to={page?.link}
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                  }}
-
-                >
-                  
-                  <ListItemIcon
+                  <ListItemButton
+                    component={NavLink as any}
+                    to={page?.link}
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                      color:'#404040'
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
                     }}
-                  >
-                    {page?.icon}
-                  </ListItemIcon>
+                    
 
-                    <ListItemText primary={page?.name} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
+                  >
+                    
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                        color:'#404040'
+                      }}
+                    >
+                      {page?.icon}
+                    </ListItemIcon>
+                      <ListItemText primary={page?.name} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
               </ListItem>
             ))}
           </List>

@@ -40,7 +40,8 @@ import {
 import { TypeInfo } from '../../../hooks/TypeAlert';
 import { useContextTable } from '../../../context/TableContext';
 import SearchParams from '../../Inputs/SearchParams';
-import ModalPessoaFisica from '../../Modais/ModalPessoaFisica';
+import ModalPessoaFisica from '../../Modais/ModalAddPessoaFisica';
+import Actions from './Actions';
 
 interface Column {
   id: string;
@@ -235,8 +236,9 @@ export default function DatabaseTable() {
     { value: 'relator', string: 'Relator' },
   ]
 
+  
   return (
-    <Grid sx={{ pt: 3, pr: 3, pl: 3 }}>
+    <Grid sx={{overflowY:'auto', height:'95vh', scrollbarWidth:'thin', pt:10, pl:2, pr:2}}>
       <Paper >
         <Typography
           gutterBottom
@@ -260,7 +262,7 @@ export default function DatabaseTable() {
           }
         </Box>
         <Divider />
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer sx={{ maxHeight:'90%'}}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -349,7 +351,8 @@ export default function DatabaseTable() {
               ) }
               {dataType === 'pessoafisica' && !selectedPessoaFisica && (
                 pessoaFisica.map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  <TableRow  sx={{cursor:'pointer'}} hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    <TableCell align="left"><Actions  userId = {row.id}/></TableCell>
                     <TableCell align="left">{row.nome}</TableCell>
                     <TableCell align="left">{row.cpf}</TableCell>
                     <TableCell align="left">{row.rg}</TableCell>

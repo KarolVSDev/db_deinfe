@@ -3,28 +3,19 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import FormLabel from '@mui/material/FormLabel/FormLabel';
-import RadioGroup from '@mui/material/RadioGroup/RadioGroup';
-import InputAdornment from '@mui/material/InputAdornment';
-import Radio from '@mui/material/Radio/Radio';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
 import IconButton from '@mui/material/IconButton/IconButton';
-import FormControl from '@mui/material/FormControl/FormControl';
-import InputLabel from '@mui/material/InputLabel/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
-import { PessoaFisica, User } from '../../types/types'
+import { PessoaFisica } from '../../types/types'
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CloseIcon from '@mui/icons-material/Close';
-import { insertMaskCPF } from '../../hooks/masks';
-import { useState } from 'react';
+
 
 
 
@@ -33,9 +24,9 @@ interface SignUpProps {
 }
 
 const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
-  const [showPassword, setShowPassword] = React.useState(false);
+
   const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
-  const [cpf, setCpf] = useState('')
+
 
 
   const onSubmit = (data: PessoaFisica) => {
@@ -80,7 +71,7 @@ const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
           Registro de Pessao Física
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px' }}>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{pb:1}} >
             <Grid item xs={3} >
               <TextField
                 autoComplete="given-name"
@@ -91,10 +82,17 @@ const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
                 label="Nome Completo"
                 autoFocus
                 error={errors?.nome?.type === 'required'}
-                {...register('nome', { required: true })}
+                {...register('nome', {
+                  required: 'Campo obrigatório', pattern: {
+                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
+                    message: 'Nome inválido'
+                  }
+                })}
               />
-              {errors?.nome?.type === 'required' && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>Campo obrigatório</Typography>
+              {errors?.nome && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+                  {errors.nome.message}
+                </Typography>
               )}
             </Grid>
             <Grid item xs={3} >
@@ -131,9 +129,6 @@ const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
                   pattern: {
                     value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
                     message: 'CPF inválido'
-                  },
-                  setValueAs: (value: string) => {
-                    return insertMaskCPF(value);
                   }
                 })}
               />
@@ -174,11 +169,15 @@ const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
               <TextField
                 required
                 fullWidth
+                placeholder='Ex:Servidor'
                 id="profissao"
                 label="Profissão"
                 type="text"
                 error={!!errors?.profissao}
-                {...register('profissao', { required: 'Campo obrigatório' })}
+                {...register('profissao', { required: 'Campo obrigatório',  pattern: {
+                  value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
+                  message: 'Profissão inválida'
+                } })}
               />
 
               {errors?.profissao && (
@@ -262,7 +261,7 @@ const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
                 label="Complemento"
                 type="text"
                 error={!!errors?.complemento}
-                {...register('complemento',{required:'Campo obrigatório'})}
+                {...register('complemento', { required: 'Campo obrigatório' })}
               />
               {errors?.complemento && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
@@ -302,7 +301,7 @@ const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
                   required: 'Campo obrigatório',
                   pattern: {
                     value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Nome inválido'
+                    message: 'Cidade inválida'
                   }
                 })}
               />
@@ -371,7 +370,8 @@ const FormPessoaFisica: React.FC<SignUpProps> = ({ closeModal }) => {
                 label="Telefone 2"
                 type="text"
                 error={!!errors?.telefone2}
-                {...register('telefone2', {required:'Campo obrigatório',
+                {...register('telefone2', {
+                  required: 'Campo obrigatório',
                   pattern: {
                     value: /^\(\d{2}\)\d{4,5}-\d{4}$/,
                     message: 'Telefone inválido'

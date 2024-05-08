@@ -155,7 +155,7 @@ export default function NavBar() {
   );
   const {logout} = useAuth();
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1}}>
       <AppBar position="fixed">
         <Toolbar sx={{backgroundColor:'rgb(17 24 39)'}}>
           <IconButton
