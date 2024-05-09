@@ -1,5 +1,5 @@
 export const pessoaFisicaHeader = [
-    {id:'acao', label:'Ação', minWidth:150},
+    {id:'acao', label:'Atualizar / Deletar', minWidth:150},
     {id:'nome', label:'Nome', minWidth:150},
     {id:'cpf', label:'CPF', minWidth:150},
     {id:'rg', label:'RG', minWidth:150},

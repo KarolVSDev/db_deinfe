@@ -20,6 +20,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import {  useState, useEffect } from 'react';
 import { api } from '../../service/api';
 import { AllUsers } from '../../types/types';
+import env from '../../service/env';
 
 
 
@@ -101,7 +102,7 @@ export default function SideNav() {
   ]);
 
   const verifyUser = () => {
-    if(user?.id === "bad93c02-41df-4637-949e-3b5a2b8629d1"){
+    if(email === env.EMAIL_MASTER){
       setPages([
         {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
         {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
