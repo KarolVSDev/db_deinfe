@@ -9,6 +9,8 @@ import { useEffect, useState} from 'react';
 import UpdateUserForm from '../Forms/UpdateUserForm';
 import FormPessoaFisica from '../Forms/FormPessoaFisica';
 import PessoaFisicaStepper from '../Steps/Stepper';
+import Stepper from '../Steps/Stepper';
+import StepperFormsAddData from '../Steps/Stepper';
 
 
 const style = {
@@ -59,8 +61,9 @@ export default function ModalPessoaFisica() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <FormPessoaFisica  closeModal = {handleSubmit}/>
-           
+            <StepperFormsAddData closeModal = {handleSubmit}/>
+            {/* <FormPessoaFisica  closeModal = {handleSubmit}/> */}
+            
           </Box>
         </Fade>
       </Modal>

@@ -1,121 +1,71 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepButton from '@mui/material/StepButton';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
+import { Stepper, Step, StepLabel, Button, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
-const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+// Importar os formulários que deseja controlar
+import FormPessoaFisica from '../Forms/FormPessoaFisica';
 
-export default function PessoaFisicaStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [completed, setCompleted] = React.useState<{
-    [k: number]: boolean;
-  }>({});
+interface ModalProps {
+  closeModal: () => void;
+}
 
-  const totalSteps = () => {
-    return steps.length;
-  };
-
-  const completedSteps = () => {
-    return Object.keys(completed).length;
-  };
-
-  const isLastStep = () => {
-    return activeStep === totalSteps() - 1;
-  };
-
-  const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
-  };
+const StepperFormsAddData: React.FC<ModalProps> = ({closeModal}) =>  {
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-    setActiveStep(newActiveStep);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
-
-  const handleComplete = () => {
-    const newCompleted = completed;
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-    handleNext();
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
-  };
+  const handleModalClose: any = () => {
+    closeModal()
+  }
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper nonLinear activeStep={activeStep}>
-        {steps.map((label, index) => (
-          <Step key={label} completed={completed[index]}>
-            <StepButton color="inherit" onClick={handleStep(index)}>
-              {label}
-            </StepButton>
-          </Step>
-        ))}
+    <div>
+      <IconButton onClick={handleModalClose} sx={{
+        ml: 85, mb: 0, mr: 0, '&:hover': {
+          bgcolor: '#1e293b', color: '#ffffff',
+        }
+      }}>
+        <CloseIcon />
+      </IconButton>
+      <Stepper activeStep={activeStep} alternativeLabel>
+        <Step>
+          <StepLabel>Regitro de Pessoa Física</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Passo 2</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Passo 3</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Passo 4</StepLabel>
+        </Step>
       </Stepper>
+      {activeStep === 0 && <FormPessoaFisica />} 
+      
       <div>
-        {allStepsCompleted() ? (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
-          </React.Fragment>
+        {activeStep !== 0 && (
+          <Button onClick={handleBack}>Voltar</Button>
+        )}
+        {activeStep !== 3 ? (
+          <Button variant="contained" color="primary" onClick={handleNext}>
+            Próximo
+          </Button>
         ) : (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
-              Step {activeStep + 1}
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleNext} sx={{ mr: 1 }}>
-                Next
-              </Button>
-              {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography variant="caption" sx={{ display: 'inline-block' }}>
-                    Step {activeStep + 1} already completed
-                  </Typography>
-                ) : (
-                  <Button onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1
-                      ? 'Finish'
-                      : 'Complete Step'}
-                  </Button>
-                ))}
-            </Box>
-          </React.Fragment>
+          <Button variant="contained" color="primary">
+            Concluir
+          </Button>
         )}
       </div>
-    </Box>
+    </div>
   );
 }
+
+export default StepperFormsAddData;
+

@@ -22,7 +22,6 @@ import {
   Interessado,
   PessoaJurisd
 } from '../../../types/types';
-import { Edit } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import {
   pessoaFisicaHeader,
@@ -42,13 +41,6 @@ import { useContextTable } from '../../../context/TableContext';
 import SearchParams from '../../Inputs/SearchParams';
 import ModalPessoaFisica from '../../Modais/ModalAddPessoaFisica';
 import Actions from './Actions';
-
-interface Column {
-  id: string;
-  label: string;
-  minWidth?: number;
-  align?: 'left';
-}
 
 
 export default function DatabaseTable() {
@@ -331,6 +323,7 @@ export default function DatabaseTable() {
             <TableBody>
               {selectedPessoaFisica && (
                 <TableRow>
+                  <TableCell align="left"><Actions  userId = {selectedPessoaFisica.id}/></TableCell>
                   <TableCell align="left">{selectedPessoaFisica.nome}</TableCell>
                   <TableCell align="left">{selectedPessoaFisica.cpf}</TableCell>
                   <TableCell align="left">{selectedPessoaFisica.rg}</TableCell>

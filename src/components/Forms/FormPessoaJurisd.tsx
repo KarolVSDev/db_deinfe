@@ -22,7 +22,7 @@ import Stepper from '../Steps/Stepper';
 
 
 
-const FormPessoaFisica = () => {
+const FormPessoaJurisd = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
 
@@ -38,16 +38,26 @@ const FormPessoaFisica = () => {
 
 
   return (
-    <Container maxWidth="xs" sx={{ mb:2}} >
+    <Container maxWidth="xs" sx={{ height: '95vh' }} >
       <CssBaseline />
       <Box
         sx={{
+
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
         >
-     
+        <Avatar sx={{
+          m: 1, bgcolor: 'rgb(17 24 39)', '&:hover': {
+            bgcolor: '#1e293b',
+          }
+        }}>
+          <HowToRegIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Registro de Pessao Física
+        </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px' }}>
          <Grid container spacing={3} sx={{pb:1}} >
             <Grid item xs={3} >
@@ -421,6 +431,6 @@ const FormPessoaFisica = () => {
   )
 }
 
-export default FormPessoaFisica;
+export default FormPessoaJurisd;
 
 
