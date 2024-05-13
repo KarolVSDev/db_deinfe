@@ -124,7 +124,7 @@ export interface Interessado {
   id: string;
   interesse: string;
 }
-
+//esse type é para o formulário de criação de pessoaJurisd obs: datas aqui são string, pra retorno vai ter que ser date
 export interface PessoaJurisd {
   id: string;
   cargo: string;
@@ -134,7 +134,8 @@ export interface PessoaJurisd {
   normaExoneracao: string;
   dataExoneracao: string;
   gestor: string;
-
+  jurisd: string;
+  pessoa: string | undefined
 }
 
 

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Stepper, Step, StepLabel, Button, IconButton } from '@mui/material';
+import { Stepper, Step, StepLabel, Button, IconButton, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 // Importar os formulários que deseja controlar
 import FormPessoaFisica from '../Forms/FormPessoaFisica';
+import FormPessoaJurisd from '../Forms/FormPessoaJurisd';
+import FormProcesso from '../Forms/FormProcesso';
 
 interface ModalProps {
   closeModal: () => void;
@@ -33,23 +35,25 @@ const StepperFormsAddData: React.FC<ModalProps> = ({closeModal}) =>  {
       }}>
         <CloseIcon />
       </IconButton>
-      <Stepper activeStep={activeStep} alternativeLabel>
+      <Stepper activeStep={activeStep} alternativeLabel sx={{mb:4}}>
         <Step>
           <StepLabel>Regitro de Pessoa Física</StepLabel>
         </Step>
         <Step>
-          <StepLabel>Passo 2</StepLabel>
+          <StepLabel>Registro de Pessoa Jurisdicionada</StepLabel>
         </Step>
         <Step>
-          <StepLabel>Passo 3</StepLabel>
+          <StepLabel>Registro de Processo</StepLabel>
         </Step>
         <Step>
           <StepLabel>Passo 4</StepLabel>
         </Step>
       </Stepper>
       {activeStep === 0 && <FormPessoaFisica />} 
+      {activeStep === 1 && <FormPessoaJurisd />} 
+      {activeStep === 2 && <FormProcesso />} 
       
-      <div>
+      <Box sx={{mt:4}}>
         {activeStep !== 0 && (
           <Button onClick={handleBack}>Voltar</Button>
         )}
@@ -62,7 +66,7 @@ const StepperFormsAddData: React.FC<ModalProps> = ({closeModal}) =>  {
             Concluir
           </Button>
         )}
-      </div>
+      </Box>
     </div>
   );
 }

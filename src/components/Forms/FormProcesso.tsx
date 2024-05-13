@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import { Autocomplete } from '@mui/material';
 
 
-const FormPessoaJurisd = () => {
+const FormProcesso = () => {
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<PessoaJurisd>({});
   const { arrayPessoaFisica, arrayJurisd } = useContextTable()
@@ -267,6 +267,6 @@ const FormPessoaJurisd = () => {
   )
 }
 
-export default FormPessoaJurisd;
+export default FormProcesso;
 
 

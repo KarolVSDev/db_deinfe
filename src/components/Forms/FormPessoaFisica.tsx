@@ -409,7 +409,7 @@ const FormPessoaFisica = () => {
               sx={{
                 bgcolor: 'rgb(17 24 39)', '&:hover': {
                   bgcolor: '#1e293b',
-                }, width: '400px', m: 'auto', mt: 3,
+                }, width: '200px', m: 'auto', mt: 3,
               }}
             >
               Registrar
