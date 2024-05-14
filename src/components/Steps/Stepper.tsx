@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import FormPessoaFisica from '../Forms/FormPessoaFisica';
 import FormPessoaJurisd from '../Forms/FormPessoaJurisd';
 import FormProcesso from '../Forms/FormProcesso';
+import FormInteresse from '../Forms/FormInteresse';
 
 interface ModalProps {
   closeModal: () => void;
@@ -46,12 +47,13 @@ const StepperFormsAddData: React.FC<ModalProps> = ({closeModal}) =>  {
           <StepLabel>Registro de Processo</StepLabel>
         </Step>
         <Step>
-          <StepLabel>Passo 4</StepLabel>
+          <StepLabel>Registro de Interesse</StepLabel>
         </Step>
       </Stepper>
       {activeStep === 0 && <FormPessoaFisica />} 
       {activeStep === 1 && <FormPessoaJurisd />} 
       {activeStep === 2 && <FormProcesso />} 
+      {activeStep === 3 && <FormInteresse />} 
       
       <Box sx={{mt:4}}>
         {activeStep !== 0 && (

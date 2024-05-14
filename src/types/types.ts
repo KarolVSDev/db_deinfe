@@ -57,11 +57,13 @@ export interface PessoaFisica {
 export interface Procurador {
   id: string
   nome: string;
+  ativo:string;
 }
 export interface Relator {
   id: string;
   nome: string;
   cargo: string;
+  ativo: string;
 }
 
 export interface NatAchado {
@@ -118,11 +120,25 @@ export interface Processo {
   exercicio: string;
   objeto: string;
   arquivamento: string;
+  jurisd: string;
+  relator: string;
+  procurador: string;
+  advogado: string;
+  apensado:string;
+  interessado:string;
+}
+
+export interface Apenso {
+  id:string
+  principal:string;
+  apenso:string;
 }
 
 export interface Interessado {
   id: string;
   interesse: string;
+  processo:string;
+  pessoa:string;
 }
 //esse type é para o formulário de criação de pessoaJurisd obs: datas aqui são string, pra retorno vai ter que ser date
 export interface PessoaJurisd {

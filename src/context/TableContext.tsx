@@ -1,11 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
-import { Jurisd, PessoaFisica } from "../types/types";
+import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso } from "../types/types";
 
 interface TableContextType {
-    arrayPessoaFisica:PessoaFisica[];
-    arrayJurisd:Jurisd[];
+    arrayPessoaFisica: PessoaFisica[];
+    arrayJurisd: Jurisd[];
+    arrayRelator: Relator[];
+    arrayProcurador: Procurador[];
+    arrayProcesso: Processo[];
+    arrayApenso: Apenso[];
 }
 
 interface Props {
@@ -18,14 +22,17 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
 
     const [arrayPessoaFisica, setArrayPessoaFisica] = useState([])
     const [arrayJurisd, setArrayJurisd] = useState([])
+    const [arrayRelator, setArrayRelator] = useState([])
+    const [arrayProcurador, setArrayProcurador] = useState([])
+    const [arrayProcesso, setArrayProcesso] = useState([])
+    const [arrayApenso, setArrayApenso] = useState([])
 
     const getAllPessoaFisica = async () => {
         try {
             const response = await api.get('/pessoafisica');
             setArrayPessoaFisica(response.data);
-        } catch (error:any) {
+        } catch (error: any) {
             TypeInfo(error.response.data.message, 'error');
-            // Retorna uma array vazia no caso de erro
             return [];
         }
     }
@@ -33,19 +40,59 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         try {
             const response = await api.get('/jurisd');
             setArrayJurisd(response.data);
-        } catch (error:any) {
+        } catch (error: any) {
             TypeInfo(error.response.data.message, 'error');
             return [];
+        }
+    }
+
+    const getAllRelator = async () => {
+        try {
+            const response = await api.get('/relator');
+            setArrayRelator(response.data);
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error')
+        }
+    }
+
+    const getAllProcurador = async () => {
+        try {
+            const response = await api.get('/procurador');
+            setArrayProcurador(response.data);
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error')
+        }
+    }
+
+    const getAllProccesso = async () => {
+        try {
+            const response = await api.get('/processo');
+            setArrayProcesso(response.data)
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error')
+        }
+    }
+
+    const getAllApenso = async () => {
+        try {
+            const response = await api.get('/apenso');
+            setArrayApenso(response.data);
+        } catch (error:any) {
+            TypeInfo(error.response.data.message,'error')
         }
     }
 
     useEffect(() => {
         getAllPessoaFisica()
         getAllJurisd()
-    },[])
+        getAllRelator()
+        getAllProcurador()
+        getAllProccesso()
+    }, [])
 
     return (
-        <TableContext.Provider value={{ arrayPessoaFisica, arrayJurisd }}>
+        <TableContext.Provider value={{ arrayPessoaFisica, 
+        arrayJurisd, arrayRelator, arrayProcurador, arrayProcesso, arrayApenso}}>
             {children}
         </TableContext.Provider>
     )

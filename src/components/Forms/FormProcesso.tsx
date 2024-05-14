@@ -9,41 +9,46 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { Jurisd, PessoaFisica, PessoaJurisd } from '../../types/types'
+import { Apenso, Jurisd, PessoaFisica, PessoaJurisd, Processo, Procurador, Relator } from '../../types/types'
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import SearchParams from '../Inputs/SearchParams';
 import { useContextTable } from '../../context/TableContext';
 import { useEffect, useState } from 'react';
-import { Autocomplete } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSlots, AccordionSummary, Autocomplete, Fade, } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FormApenso from './FormApenso';
 
 
 const FormProcesso = () => {
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<PessoaJurisd>({});
-  const { arrayPessoaFisica, arrayJurisd } = useContextTable()
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<Processo>({});
+  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador} = useContextTable()
+  const [expanded, setExpanded] = React.useState(false);
 
   const formatDate = (data: string) => {
     const partes = data.split('/');
     const dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
     return dataFormatada;
   }
-
-  const onSubmit = (data: PessoaJurisd) => {
-    let Ndata = formatDate(data.dataNomeacao)
-    let Edata = formatDate(data.dataExoneracao)
-    data.dataNomeacao = Ndata
-    data.dataExoneracao = Edata
-    api.post('/pessoajurisd', data).then(response => {
+  
+  const onSubmit = (data: Processo) => {
+    let dataArq = data.arquivamento;
+    data.arquivamento = formatDate(dataArq)
+    console.log(data)
+    api.post('/processo', data).then(response => {
       TypeInfo(response.data.message, 'success')
     }).catch((error) => {
       TypeInfo(error.response.data.message, 'warning');
     })
   }
 
+  const handleExpansion = () => {
+    setExpanded((prevExpanded) => !prevExpanded);
+  };
   return (
-    <Container maxWidth="xs" sx={{ mb: 2 }}>
+    <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
       <CssBaseline />
       <Box
         sx={{
@@ -62,20 +67,28 @@ const FormProcesso = () => {
                 type="text"
                 required
                 fullWidth
-                id="gestor"
-                label="Gestor"
+                id="numero"
+                label="Número"
                 autoFocus
-                error={errors?.gestor?.type === 'required'}
-                {...register('gestor', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^[A-Z]$/,
-                    message: 'Gestor inválido'
+                error={errors?.numero?.type === 'required'}
+                {...register('numero', {
+                  required: 'Campo obrigatório', maxLength: {
+                    value: 5,
+                    message: 'Tamanho inválido' 
+                  }, 
+                  minLength: {
+                    value: 5,
+                    message: 'Tamanho inválido' 
+                  }, 
+                  pattern: {
+                    value: /^\d+$/,
+                    message: 'Apenas números'
                   }
                 })}
               />
-              {errors?.cargo && (
+              {errors?.numero && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                  {errors.gestor?.message}
+                  {errors.numero?.message}
                 </Typography>
               )}
             </Grid>
@@ -85,22 +98,31 @@ const FormProcesso = () => {
                 autoComplete="given-name"
                 required
                 fullWidth
-                id="cargo"
-                label="Cargo"
+                id="ano"
+                label="Ano"
                 type="text"
                 autoFocus
-                error={!!errors?.cargo}
-                {...register("cargo", {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Cargo inválido'
+                error={!!errors?.ano}
+                {...register("ano", {
+                  required: 'Campo obrigatório', 
+                  maxLength: {
+                    value: 4,
+                    message: 'Tamanho inválido' 
+                  }, 
+                  minLength: {
+                    value: 4,
+                    message: 'Tamanho inválido' 
+                  },
+                  pattern: {
+                    value: /^\d+$/,
+                    message: 'Apenas Números'
                   }
                 })}
               />
 
-              {errors?.cargo && (
+              {errors?.ano && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.cargo.message}
+                  {errors.ano.message}
                 </Typography>
               )}
             </Grid>
@@ -110,22 +132,22 @@ const FormProcesso = () => {
                 variant='filled'
                 required
                 fullWidth
-                id="mandato"
-                label="Mandato"
+                id="natureza"
+                label="Natureza"
                 type="text"
-                error={!!errors?.mandato}
-                {...register('mandato', {
+                error={!!errors?.natureza}
+                {...register('natureza', {
                   required: 'Campo obrigatório',
                   pattern: {
                     value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Mandato inválido'
+                    message: 'Natureza inválida'
                   }
                 })}
               />
 
-              {errors?.mandato && (
+              {errors?.natureza && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.mandato.message}
+                  {errors.natureza.message}
                 </Typography>
               )}
             </Grid>
@@ -134,22 +156,30 @@ const FormProcesso = () => {
                 variant='filled'
                 required
                 fullWidth
-                id="normaNomeacao"
-                label="Nomeação"
+                id="exercicio"
+                label="Exercício"
                 type="text"
-                error={!!errors?.normaNomeacao}
-                {...register('normaNomeacao', {
+                error={!!errors?.exercicio}
+                {...register('exercicio', {
                   required: 'Campo obrigatório',
+                   maxLength: {
+                    value: 4,
+                    message: 'Tamanho inválido'
+                  },
+                   minLength: {
+                    value: 4,
+                    message: 'Tamanho inválido'
+                  },
                   pattern: {
                     value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Nomeação inválida'
+                    message: 'Exercício inválido'
                   }
                 })}
               />
 
-              {errors?.normaNomeacao && (
+              {errors?.exercicio && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.normaNomeacao.message}
+                  {errors.exercicio.message}
                 </Typography>
               )}
             </Grid>
@@ -159,12 +189,33 @@ const FormProcesso = () => {
                 variant='filled'
                 required
                 fullWidth
+                id="objeto"
+                label="Objeto"
+                type="text"
+                error={!!errors?.objeto}
+                {...register('objeto', {
+                  required: 'Campo obrigatório',
+                })}
+              />
+
+              {errors?.objeto && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.objeto.message}
+                </Typography>
+              )}
+            </Grid>
+
+            <Grid item xs={3}>
+              <TextField
+                variant='filled'
+                required
                 placeholder='xx/xx/xxxx'
-                id="dataNomeacao"
-                label="Data da Nomeação"
+                fullWidth
+                id="arquivamento"
+                label="Arquivamento"
                 type="text"
-                error={!!errors?.dataNomeacao}
-                {...register('dataNomeacao', {
+                error={!!errors?.arquivamento}
+                {...register('arquivamento', {
                   required: 'Campo obrigatório', pattern: {
                     value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
                     message: 'Data inválida'
@@ -172,73 +223,13 @@ const FormProcesso = () => {
                 })}
               />
 
-              {errors?.dataNomeacao && (
+              {errors?.arquivamento && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.dataNomeacao.message}
+                  {errors.arquivamento.message}
                 </Typography>
               )}
             </Grid>
-
             <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="normaExoneracao"
-                label="Exoneração"
-                type="text"
-                error={!!errors?.normaExoneracao}
-                {...register('normaExoneracao', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Exoneração inválida'
-                  }
-                })}
-              />
-
-              {errors?.normaExoneracao && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.normaExoneracao.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                placeholder='xx/xx/xxx'
-                id="dataExoneracao"
-                label="Data da Exoneracao"
-                type="text"
-                error={!!errors?.dataExoneracao}
-                {...register('dataExoneracao', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                    message: 'Data inválida'
-                  }
-                })}
-              />
-
-              {errors?.dataExoneracao && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.dataExoneracao.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={3}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={arrayPessoaFisica}
-                getOptionLabel={(option: PessoaFisica) => option.nome}
-                onChange={(event, value) => setValue('pessoa', value?.id)}
-                renderInput={(params) => <TextField variant='filled' {...params} label="Pessoa Física" />}
-              />
-            </Grid>
-            <Grid item xs={3} >
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -246,6 +237,41 @@ const FormProcesso = () => {
                 getOptionLabel={(option: Jurisd) => option.nome}
                 onChange={(event, value) => setValue('jurisd', value?.id ?? '')}
                 renderInput={(params) => <TextField variant='filled' {...params} label="Unidade Gestora" />}
+              />
+              {errors.jurisd && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.jurisd.message}
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={3} >
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={arrayRelator}
+                getOptionLabel={(option: Relator) => option.nome}
+                onChange={(event, value) => setValue('relator', value?.id ?? '')}
+                renderInput={(params) => <TextField variant='filled' {...params} label="Relator"/>}
+              />
+            </Grid>
+            <Grid item xs={3} >
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={arrayProcurador}
+                getOptionLabel={(option: Procurador) => option.nome}
+                onChange={(event, value) => setValue('procurador', value?.id ?? '')}
+                renderInput={(params) => <TextField variant='filled' {...params} label="Procurador" />}
+              />
+            </Grid>
+            <Grid item xs={3} >
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={arrayPessoaFisica}
+                getOptionLabel={(option: PessoaFisica) => option.nome}
+                onChange={(event, value) => setValue('advogado', value?.id ?? '')}
+                renderInput={(params) => <TextField variant='filled' {...params} label="Advogado" />}
               />
             </Grid>
           </Grid>
@@ -263,6 +289,28 @@ const FormProcesso = () => {
           </Button>
         </Box>
       </Box>
+      <Accordion
+        expanded={expanded}
+        onChange={handleExpansion}
+        slots={{ transition: Fade as AccordionSlots['transition'] }}
+        slotProps={{ transition: { timeout: 500 } }}
+        sx={{
+          width: '100%', mt: 4,
+          '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
+          '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
+        }}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Typography>Apenso</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FormApenso />
+        </AccordionDetails>
+      </Accordion>
     </Container>
   )
 }
