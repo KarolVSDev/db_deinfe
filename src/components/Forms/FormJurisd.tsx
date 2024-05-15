@@ -12,7 +12,7 @@ import { TypeInfo } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 
 
-const FormPessoaFisica = () => {
+const FormJurisd = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
 
@@ -402,6 +402,6 @@ const FormPessoaFisica = () => {
   )
 }
 
-export default FormPessoaFisica;
+export default FormJurisd;
 
 

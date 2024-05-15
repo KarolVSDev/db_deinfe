@@ -17,6 +17,7 @@ import SearchParams from '../Inputs/SearchParams';
 import { useContextTable } from '../../context/TableContext';
 import { useEffect, useState } from 'react';
 import { Autocomplete } from '@mui/material';
+import RegisterButton from '../Buttons/RegisterButton';
 
 
 const FormPessoaJurisd = () => {
@@ -53,7 +54,7 @@ const FormPessoaJurisd = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px' }}>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p:2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={3} >
               <TextField
@@ -249,18 +250,7 @@ const FormPessoaJurisd = () => {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{
-              bgcolor: 'rgb(17 24 39)', '&:hover': {
-                bgcolor: '#1e293b',
-              }, width: '200px', m: 'auto', mt: 3, display: 'flex'
-            }}
-          >
-            Registrar
-          </Button>
+          <RegisterButton/>
         </Box>
       </Box>
     </Container>

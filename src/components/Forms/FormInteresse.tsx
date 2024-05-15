@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Apenso, Interessado, PessoaFisica, Processo } from '../../types/types';
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
+import RegisterButton from '../Buttons/RegisterButton';
 
 const FormInteresse = () => {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<Interessado>({});
@@ -19,7 +20,7 @@ const FormInteresse = () => {
 
     return (
         <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2}}>
-           <Grid container spacing={3} sx={{pb:1, justifyContent:'center'}} >
+
             <Grid item xs={3}>
               <TextField
                 variant='filled'
@@ -61,14 +62,7 @@ const FormInteresse = () => {
                 renderInput={(params) => <TextField variant='filled' {...params} label="Pessoa Física" />}
               />
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{
-              bgcolor: 'rgb(17 24 39)', '&:hover': {
-                bgcolor: '#1e293b',
-              }, m: 'auto', mt: 3, display: 'flex', width: '200px'
-            }}>
-                Registrar
-            </Button>
-            </Grid> 
+            <RegisterButton/>
         </Box>
     );
 }

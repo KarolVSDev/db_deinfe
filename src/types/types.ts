@@ -1,4 +1,3 @@
-import React from "react";
 
 export interface User {
   id: string;
@@ -131,7 +130,7 @@ export interface Processo {
 export interface Apenso {
   id:string
   principal:string;
-  apenso:string;
+  apensado:string;
 }
 
 export interface Interessado {

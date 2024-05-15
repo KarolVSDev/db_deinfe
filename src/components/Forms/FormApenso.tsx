@@ -4,9 +4,10 @@ import { useForm } from 'react-hook-form';
 import { Apenso, Processo } from '../../types/types';
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
+import RegisterButton from '../Buttons/RegisterButton';
 
 const FormApenso = () => {
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Apenso>({});
+    const { handleSubmit, setValue, formState: { errors } } = useForm<Apenso>({});
     const { arrayProcesso } = useContextTable();
 
     const onSubmit = (data: Apenso) => {
@@ -18,7 +19,7 @@ const FormApenso = () => {
     };
 
     return (
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2}}>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={3} >
               <Autocomplete
                 disablePortal
@@ -35,17 +36,11 @@ const FormApenso = () => {
                 id="combo-box-demo"
                 options={arrayProcesso}
                 getOptionLabel={(option: Processo) => 'N.º ' + option.numero}
-                onChange={(event, value) => setValue('apenso', value?.id ?? '')}
-                renderInput={(params) => <TextField variant='filled' {...params} label="Apenso" />}
+                onChange={(event, value) => setValue('apensado', value?.id ?? '')}
+                renderInput={(params) => <TextField variant='filled' {...params} label="Apensado" />}
               />
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{
-              bgcolor: 'rgb(17 24 39)', '&:hover': {
-                bgcolor: '#1e293b',
-              }, m: 'auto', mt: 3, display: 'flex'
-            }}>
-                Registrar
-            </Button>
+            <RegisterButton/>
         </Box>
     );
 }

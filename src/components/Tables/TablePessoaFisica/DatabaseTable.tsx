@@ -39,7 +39,7 @@ import {
 import { TypeInfo } from '../../../hooks/TypeAlert';
 import { useContextTable } from '../../../context/TableContext';
 import SearchParams from '../../Inputs/SearchParams';
-import ModalPessoaFisica from '../../Modais/ModalAddPessoaFisica';
+import ModalPessoaFisica from '../../Modais/ModalAddDataTable';
 import Actions from './Actions';
 
 

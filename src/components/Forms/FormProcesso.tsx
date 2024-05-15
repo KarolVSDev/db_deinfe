@@ -7,24 +7,22 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { Apenso, Jurisd, PessoaFisica, PessoaJurisd, Processo, Procurador, Relator } from '../../types/types'
+import { Jurisd, PessoaFisica, Processo, Procurador, Relator } from '../../types/types'
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
-import SearchParams from '../Inputs/SearchParams';
 import { useContextTable } from '../../context/TableContext';
-import { useEffect, useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSlots, AccordionSummary, Autocomplete, Fade, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormApenso from './FormApenso';
+import RegisterButton from '../Buttons/RegisterButton';
+import AccordionComponent from '../Accordion/Accordion';
 
 
 const FormProcesso = () => {
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<Processo>({});
-  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador} = useContextTable()
+  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador } = useContextTable()
   const [expanded, setExpanded] = React.useState(false);
 
   const formatDate = (data: string) => {
@@ -32,7 +30,7 @@ const FormProcesso = () => {
     const dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
     return dataFormatada;
   }
-  
+
   const onSubmit = (data: Processo) => {
     let dataArq = data.arquivamento;
     data.arquivamento = formatDate(dataArq)
@@ -58,7 +56,7 @@ const FormProcesso = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px' }}>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={3} >
               <TextField
@@ -74,12 +72,12 @@ const FormProcesso = () => {
                 {...register('numero', {
                   required: 'Campo obrigatório', maxLength: {
                     value: 5,
-                    message: 'Tamanho inválido' 
-                  }, 
+                    message: 'Tamanho inválido'
+                  },
                   minLength: {
                     value: 5,
-                    message: 'Tamanho inválido' 
-                  }, 
+                    message: 'Tamanho inválido'
+                  },
                   pattern: {
                     value: /^\d+$/,
                     message: 'Apenas números'
@@ -104,14 +102,14 @@ const FormProcesso = () => {
                 autoFocus
                 error={!!errors?.ano}
                 {...register("ano", {
-                  required: 'Campo obrigatório', 
+                  required: 'Campo obrigatório',
                   maxLength: {
                     value: 4,
-                    message: 'Tamanho inválido' 
-                  }, 
+                    message: 'Tamanho inválido'
+                  },
                   minLength: {
                     value: 4,
-                    message: 'Tamanho inválido' 
+                    message: 'Tamanho inválido'
                   },
                   pattern: {
                     value: /^\d+$/,
@@ -162,11 +160,11 @@ const FormProcesso = () => {
                 error={!!errors?.exercicio}
                 {...register('exercicio', {
                   required: 'Campo obrigatório',
-                   maxLength: {
+                  maxLength: {
                     value: 4,
                     message: 'Tamanho inválido'
                   },
-                   minLength: {
+                  minLength: {
                     value: 4,
                     message: 'Tamanho inválido'
                   },
@@ -251,7 +249,7 @@ const FormProcesso = () => {
                 options={arrayRelator}
                 getOptionLabel={(option: Relator) => option.nome}
                 onChange={(event, value) => setValue('relator', value?.id ?? '')}
-                renderInput={(params) => <TextField variant='filled' {...params} label="Relator"/>}
+                renderInput={(params) => <TextField variant='filled' {...params} label="Relator" />}
               />
             </Grid>
             <Grid item xs={3} >
@@ -275,42 +273,9 @@ const FormProcesso = () => {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{
-              bgcolor: 'rgb(17 24 39)', '&:hover': {
-                bgcolor: '#1e293b',
-              }, width: '200px', m: 'auto', mt: 3, display: 'flex'
-            }}
-          >
-            Registrar
-          </Button>
+          <RegisterButton />
         </Box>
       </Box>
-      <Accordion
-        expanded={expanded}
-        onChange={handleExpansion}
-        slots={{ transition: Fade as AccordionSlots['transition'] }}
-        slotProps={{ transition: { timeout: 500 } }}
-        sx={{
-          width: '100%', mt: 4,
-          '& .MuiAccordion-region': { height: expanded ? 'auto' : 0 },
-          '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
-        }}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-        >
-          <Typography>Apenso</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <FormApenso />
-        </AccordionDetails>
-      </Accordion>
     </Container>
   )
 }
