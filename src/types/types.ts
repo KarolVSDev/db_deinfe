@@ -109,8 +109,13 @@ export interface Jurisd {
   dataExtincao: string;
   poder: string;
   ativo: string;
+  uf:string;
 }
 
+export interface Jurisd_Jurisd {
+  principal:string;
+  subordinado:string;
+}
 export interface Processo {
   id: string;
   numero: string;

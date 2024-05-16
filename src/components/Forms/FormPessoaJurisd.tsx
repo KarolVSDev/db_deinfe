@@ -74,7 +74,7 @@ const FormPessoaJurisd = () => {
                   }
                 })}
               />
-              {errors?.cargo && (
+              {errors?.gestor && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
                   {errors.gestor?.message}
                 </Typography>

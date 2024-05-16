@@ -1,19 +1,8 @@
-// import { useState, useEffect } from 'react';
-// import { format, toDate } from 'date-fns';
+const formatDate = (data: string) => {
+    const partes = data.split('/');
+    const dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    return dataFormatada;
+}
 
-// const useFormatDate = (dateProp: string | Date | undefined): string | null => {
-//   const [formattedDate, setFormattedDate] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     if (dateProp) {
-//       const date = toDate(new Date(dateProp));
-//       const formatted = format(date, 'dd/MM/yyyy');
-//       setFormattedDate(formatted);
-//     }
-//   }, [dateProp]);
-
-//   return formattedDate;
-// };
-
-// export default useFormatDate;
+export default formatDate;
 

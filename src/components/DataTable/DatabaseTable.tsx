@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Box, Button, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
-import { api } from '../../../service/api';
+import { api } from '../../service/api';
 import {
   PessoaFisica,
   Procurador,
@@ -21,7 +21,7 @@ import {
   Processo,
   Interessado,
   PessoaJurisd
-} from '../../../types/types';
+} from '../../types/types';
 import { useState, useEffect } from 'react';
 import {
   pessoaFisicaHeader,
@@ -35,11 +35,11 @@ import {
   processoHeader,
   interessadoHeader,
   pessoaJurisdHeader
-} from '../../../service/columns';
-import { TypeInfo } from '../../../hooks/TypeAlert';
-import { useContextTable } from '../../../context/TableContext';
-import SearchParams from '../../Inputs/SearchParams';
-import ModalPessoaFisica from '../../Modais/ModalAddDataTable';
+} from '../../service/columns';
+import { TypeInfo } from '../../hooks/TypeAlert';
+import { useContextTable } from '../../context/TableContext';
+import SearchParams from '../Inputs/SearchParams';
+import ModalPessoaFisica from '../Modais/ModalAddDataTable';
 import Actions from './Actions';
 
 
@@ -228,9 +228,9 @@ export default function DatabaseTable() {
     { value: 'relator', string: 'Relator' },
   ]
 
-  
+
   return (
-    <Grid sx={{overflowY:'auto', height:'95vh', scrollbarWidth:'thin', pt:10, pl:2, pr:2}}>
+    <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >
         <Typography
           gutterBottom
@@ -248,13 +248,13 @@ export default function DatabaseTable() {
           {dataType === 'pessoafisica' && (
             <>
               <SearchParams data={pessoaFisica} onOptionSelected={handleOptionSelected} />
-              <ModalPessoaFisica/>
+              <ModalPessoaFisica />
             </>
           )
           }
         </Box>
         <Divider />
-        <TableContainer sx={{ maxHeight:'90%'}}>
+        <TableContainer sx={{ maxHeight: '90%' }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -323,7 +323,7 @@ export default function DatabaseTable() {
             <TableBody>
               {selectedPessoaFisica && (
                 <TableRow>
-                  <TableCell align="left"><Actions  userId = {selectedPessoaFisica.id}/></TableCell>
+                  <TableCell align="left"><Actions userId={selectedPessoaFisica.id} /></TableCell>
                   <TableCell align="left">{selectedPessoaFisica.nome}</TableCell>
                   <TableCell align="left">{selectedPessoaFisica.cpf}</TableCell>
                   <TableCell align="left">{selectedPessoaFisica.rg}</TableCell>
@@ -341,11 +341,11 @@ export default function DatabaseTable() {
                   <TableCell align="left">{selectedPessoaFisica.email}</TableCell>
                   <TableCell align="left">{selectedPessoaFisica.ativo}</TableCell>
                 </TableRow>
-              ) }
+              )}
               {dataType === 'pessoafisica' && !selectedPessoaFisica && (
                 pessoaFisica.map((row, rowIndex) => (
-                  <TableRow  sx={{cursor:'pointer'}} hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="left"><Actions  userId = {row.id}/></TableCell>
+                  <TableRow sx={{ cursor: 'pointer' }} hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    <TableCell align="left"><Actions userId={row.id} /></TableCell>
                     <TableCell align="left">{row.nome}</TableCell>
                     <TableCell align="left">{row.cpf}</TableCell>
                     <TableCell align="left">{row.rg}</TableCell>

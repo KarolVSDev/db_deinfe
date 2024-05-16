@@ -20,6 +20,7 @@ import FormInteresse from '../Forms/FormInteresse';
 import FormApenso from '../Forms/FormApenso';
 import InnerAccordion from '../Accordion/InnerAccordion';
 import FormJurisd from '../Forms/FormJurisd';
+import FormJurisd_Jurisd from '../Forms/FormJurisd_Jurisd';
 
 
 const style = {
@@ -98,11 +99,12 @@ export default function ModalPessoaFisica() {
             <AccordionComponent  title={'Registro de Interessado'}>
               <FormInteresse />
             </AccordionComponent>
-            <AccordionComponent  title={'Registro de Jurisdicionado'}>
+            <AccordionComponent  title={'Registro de Unidade Gestora'}>
               <FormJurisd />
+              <InnerAccordion  title={"Registro de relação entre U.G's"}>
+                <FormJurisd_Jurisd />
+              </InnerAccordion>
             </AccordionComponent>
-
-
           </Box>
         </Fade>
       </Modal>
