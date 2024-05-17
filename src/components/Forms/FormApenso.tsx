@@ -7,12 +7,13 @@ import { TypeInfo } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 
 const FormApenso = () => {
-    const { handleSubmit, setValue, formState: { errors } } = useForm<Apenso>({});
+    const { handleSubmit, setValue, formState: { errors }, reset } = useForm<Apenso>({});
     const { arrayProcesso } = useContextTable();
 
     const onSubmit = (data: Apenso) => {
         api.post('/apenso', data).then(response => {
           TypeInfo(response.data.message, 'success');
+          reset()
         }).catch((error) => {
           TypeInfo(error.response.data.message, 'warning');
         });

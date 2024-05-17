@@ -21,6 +21,7 @@ import FormApenso from '../Forms/FormApenso';
 import InnerAccordion from '../Accordion/InnerAccordion';
 import FormJurisd from '../Forms/FormJurisd';
 import FormJurisd_Jurisd from '../Forms/FormJurisd_Jurisd';
+import StepperV from '../Stepper/Stepper';
 
 
 const style = {
@@ -104,6 +105,9 @@ export default function ModalPessoaFisica() {
               <InnerAccordion  title={"Registro de relação entre U.G's"}>
                 <FormJurisd_Jurisd />
               </InnerAccordion>
+            </AccordionComponent>
+            <AccordionComponent  title={'Registro de Achados'}>
+              <StepperV/>
             </AccordionComponent>
           </Box>
         </Fade>

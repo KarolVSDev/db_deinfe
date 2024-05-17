@@ -16,8 +16,6 @@ const FormPessoaFisica = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
 
-
-
   const onSubmit = (data: PessoaFisica) => {
     api.post('/pessoafisica/create', data).then(response => {
       TypeInfo(response.data.message, 'success')
@@ -25,7 +23,6 @@ const FormPessoaFisica = () => {
       TypeInfo(error.response.data.message, 'warning');
     })
   }
-
 
   return (
     <Container maxWidth="xs" sx={{ mb: 2 }} >

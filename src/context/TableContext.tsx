@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
-import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso } from "../types/types";
+import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado } from "../types/types";
 
 interface TableContextType {
     arrayPessoaFisica: PessoaFisica[];
@@ -10,6 +10,9 @@ interface TableContextType {
     arrayProcurador: Procurador[];
     arrayProcesso: Processo[];
     arrayApenso: Apenso[];
+    arrayNatAchado: NatAchado[];
+    arrayAreaAchado:AreaAchado[];
+    arrayDivAchado:DivAchado[];
 }
 
 interface Props {
@@ -20,12 +23,15 @@ const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export const TableProvider: React.FC<Props> = ({ children }) => {
 
-    const [arrayPessoaFisica, setArrayPessoaFisica] = useState([])
-    const [arrayJurisd, setArrayJurisd] = useState([])
-    const [arrayRelator, setArrayRelator] = useState([])
-    const [arrayProcurador, setArrayProcurador] = useState([])
-    const [arrayProcesso, setArrayProcesso] = useState([])
-    const [arrayApenso, setArrayApenso] = useState([])
+    const [arrayPessoaFisica, setArrayPessoaFisica] = useState([]);
+    const [arrayJurisd, setArrayJurisd] = useState([]);
+    const [arrayRelator, setArrayRelator] = useState([]);
+    const [arrayProcurador, setArrayProcurador] = useState([]);
+    const [arrayProcesso, setArrayProcesso] = useState([]);
+    const [arrayApenso, setArrayApenso] = useState([]);
+    const [arrayNatAchado, setArrayNatAchado] = useState([]);
+    const [arrayAreaAchado, setArrayAreaAchado] = useState([]);
+    const [arrayDivAchado, setArrayDivAchado] = useState([]);
 
     const getAllPessoaFisica = async () => {
         try {
@@ -35,7 +41,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             TypeInfo(error.response.data.message, 'error');
             return [];
         }
-    }
+    };
+
     const getAllJurisd = async () => {
         try {
             const response = await api.get('/jurisd');
@@ -44,7 +51,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             TypeInfo(error.response.data.message, 'error');
             return [];
         }
-    }
+    };
 
     const getAllRelator = async () => {
         try {
@@ -53,7 +60,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         } catch (error: any) {
             TypeInfo(error.response.data.message, 'error')
         }
-    }
+    };
 
     const getAllProcurador = async () => {
         try {
@@ -62,7 +69,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         } catch (error: any) {
             TypeInfo(error.response.data.message, 'error')
         }
-    }
+    };
 
     const getAllProccesso = async () => {
         try {
@@ -71,14 +78,41 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         } catch (error: any) {
             TypeInfo(error.response.data.message, 'error')
         }
-    }
+    };
 
     const getAllApenso = async () => {
         try {
             const response = await api.get('/apenso');
             setArrayApenso(response.data);
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error')
+        }
+    };
+
+    const getAllNatAchado = async () => {
+        try {
+            const response = await api.get('/nat-achado');
+            setArrayNatAchado(response.data)
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error');
+        }
+    };
+
+    const getAllAreaAchado = async () => {
+        try {
+            const response = await api.get('/area-achado');
+            setArrayAreaAchado(response.data)
         } catch (error:any) {
-            TypeInfo(error.response.data.message,'error')
+            TypeInfo(error.response.data.message, 'error')
+        }
+    }
+
+    const getAllDivAchado = async () => {
+        try {
+            const response = await api.get('/div-area-achado');
+            setArrayDivAchado(response.data)
+        } catch (error) {
+            
         }
     }
 
@@ -88,11 +122,23 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllRelator()
         getAllProcurador()
         getAllProccesso()
+        getAllNatAchado()
+        getAllAreaAchado()
+        getAllDivAchado()
     }, [])
 
     return (
-        <TableContext.Provider value={{ arrayPessoaFisica, 
-        arrayJurisd, arrayRelator, arrayProcurador, arrayProcesso, arrayApenso}}>
+        <TableContext.Provider value={{
+            arrayPessoaFisica,
+            arrayJurisd,
+            arrayRelator,
+            arrayProcurador,
+            arrayProcesso,
+            arrayApenso,
+            arrayNatAchado,
+            arrayAreaAchado,
+            arrayDivAchado
+        }}>
             {children}
         </TableContext.Provider>
     )

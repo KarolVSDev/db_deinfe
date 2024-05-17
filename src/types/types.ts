@@ -70,13 +70,15 @@ export interface NatAchado {
   descricao: string;
 }
 
-export interface DivAreaAchado {
+export interface DivAchado {
   id: string;
   descricao: string;
+  area:string;
 }
 export interface AreaAchado {
   id: string;
   descricao: string;
+  natureza:string | null;
 }
 
 export interface Achado {
@@ -84,7 +86,8 @@ export interface Achado {
   titulo: string;
   texto: string;
   criterio: string;
-  ativo: string;
+  ativo:string;
+  divisao:string;
 }
 
 export interface Jurisd {

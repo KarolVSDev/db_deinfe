@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { Achado, Jurisd, PessoaFisica } from '../../types/types'
+import { Achado, DivAchado, Jurisd, PessoaFisica } from '../../types/types'
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import { useContextTable } from '../../context/TableContext';
@@ -13,18 +13,18 @@ import { Autocomplete } from '@mui/material';
 import RegisterButton from '../Buttons/RegisterButton';
 
 
-const FormPessoaJurisd = () => {
+const FormAchado = () => {
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<Achado>({});
-//   const { arrayPessoaFisica, arrayJurisd } = useContextTable()
+  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Achado>({});
+  const { arrayDivAchado } = useContextTable()
 
   const onSubmit = (data: Achado) => {
-    console.log(data)
-    // api.post('/pessoajurisd', data).then(response => {
-    //   TypeInfo(response.data.message, 'success')
-    // }).catch((error) => {
-    //   TypeInfo(error.response.data.message, 'warning');
-    // })
+    api.post('/achado', data).then(response => {
+      TypeInfo(response.data.message, 'success')
+      reset()
+    }).catch((error) => {
+      TypeInfo(error.response.data.message, 'warning');
+    })
   }
 
   return (
@@ -38,9 +38,8 @@ const FormPessoaJurisd = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p:2 }}>
-          <Grid container spacing={3} sx={{ pb: 1 }} >
-            <Grid item xs={3} >
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{width:'360px'}}>
+        
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -60,8 +59,8 @@ const FormPessoaJurisd = () => {
                   {errors.titulo?.message}
                 </Typography>
               )}
-            </Grid>
-            <Grid item xs={3} >
+        
+           
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -81,9 +80,9 @@ const FormPessoaJurisd = () => {
                   {errors.texto.message}
                 </Typography>
               )}
-            </Grid>
+           
 
-            <Grid item xs={3}>
+         
               <TextField
                 variant='filled'
                 required
@@ -94,10 +93,6 @@ const FormPessoaJurisd = () => {
                 error={!!errors?.criterio}
                 {...register('criterio', {
                   required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'criterio inválido'
-                  }
                 })}
               />
               {errors?.criterio && (
@@ -105,15 +100,48 @@ const FormPessoaJurisd = () => {
                   {errors.criterio.message}
                 </Typography>
               )}
-           </Grid>
-          </Grid>
-          <RegisterButton/>
+         
+         
+              <TextField
+                variant='filled'
+                required
+                fullWidth
+                id="ativo"
+                label="Ativo"
+                type="text"
+                error={!!errors?.ativo}
+                {...register('ativo', {
+                  required: 'Campo obrigatório',pattern:{
+                    value:/^(S|N)$/,
+                    message:'Valor do campo inválido'
+                  }
+                })}
+              />
+              {errors?.ativo && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.ativo.message}
+                </Typography>
+              )}
+         
+
+          
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={arrayDivAchado}
+                getOptionLabel={(option: DivAchado) => option.descricao}
+                onChange={(event, value) => setValue('divisao', value?.id ?? '')}
+                renderInput={(params) => <TextField variant='filled' {...params} label="Divisão" />}
+              />
+       
+      
+          <RegisterButton />
         </Box>
       </Box>
     </Container>
   )
 }
 
-export default FormPessoaJurisd;
+export default FormAchado;
 
 
