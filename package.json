@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.12",
     "@mui/material": "^5.15.12",
+    "@mui/x-data-grid": "^7.5.0",
     "axios": "^1.6.7",
     "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
@@ -23,6 +24,7 @@
     "sweetalert2": "^11.10.6",
     "universal-cookie": "^7.1.0",
     "validator": "^13.11.0",
+    "xlsx": "^0.18.5",
     "yup": "^1.4.0",
     "zustand": "^4.5.2"
   },
@@ -33,6 +35,7 @@
     "@types/validator": "^13.11.9",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
+    "@types/xlsx": "^0.0.36",
     "@vitejs/plugin-react": "^4.2.1",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",

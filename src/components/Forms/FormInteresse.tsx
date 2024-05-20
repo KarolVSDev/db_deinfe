@@ -26,6 +26,7 @@ const FormInteresse = () => {
                 variant='filled'
                 required
                 fullWidth
+                autoFocus
                 id="interesse"
                 label="Interesse"
                 type="text"

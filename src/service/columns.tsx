@@ -1,5 +1,4 @@
 export const pessoaFisicaHeader = [
-    {id:'acao', label:'Atualizar / Deletar', minWidth:150},
     {id:'nome', label:'Nome', minWidth:150},
     {id:'cpf', label:'CPF', minWidth:150},
     {id:'rg', label:'RG', minWidth:150},
@@ -60,11 +59,11 @@ export const jurisdHeader = [
     {id:'telefone2', label:'Telefone2', minWidth:150},
     {id:'email', label:'E-mail', minWidth:150},
     {id:'site', label:'Site', minWidth:150},
-    {id:'cagogestor', label:'Cargo Gestor', minWidth:150},
-    {id:'normacriacao', label:'Norma Criação', minWidth:150},
-    {id:'datacriacao', label:'Data Criação', minWidth:150},
-    {id:'normaextincao', label:'Norma Extinção', minWidth:150},
-    {id:'dataextincao', label:'Data Extinção', minWidth:150},
+    {id:'cargoGestor', label:'Cargo Gestor', minWidth:150},
+    {id:'normaCriacao', label:'Norma Criação', minWidth:150},
+    {id:'dataCriacao', label:'Data Criação', minWidth:150},
+    {id:'normaExtincao', label:'Norma Extinção', minWidth:150},
+    {id:'dataExtincao', label:'Data Extinção', minWidth:150},
     {id:'poder', label:'Poder', minWidth:150},
     {id:'ativo', label:'Ativo', minWidth:150},
 ]

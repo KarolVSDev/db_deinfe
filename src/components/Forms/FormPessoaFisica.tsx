@@ -43,10 +43,10 @@ const FormPessoaFisica = () => {
                 autoComplete="given-name"
                 type="text"
                 required
+                autoFocus
                 fullWidth
                 id="nome"
                 label="Nome Completo"
-                autoFocus
                 error={errors?.nome?.type === 'required'}
                 {...register('nome', {
                   required: 'Campo obrigatório', pattern: {

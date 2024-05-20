@@ -27,6 +27,7 @@ const FormNatAchado = () => {
                 variant='filled'
                 required
                 fullWidth
+                autoFocus
                 id="descricao"
                 label='Natureza do Achado'
                 type="text"

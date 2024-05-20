@@ -161,4 +161,10 @@ export interface PessoaJurisd {
   pessoa: string | undefined
 }
 
+export type ColumnConfig = {
+  id: string;
+  label: string;
+  minWidth: number;
+};
+
 

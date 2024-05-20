@@ -57,8 +57,8 @@ export default function StepperV({}) {
           <Step key={step.label}>
             <StepLabel
               optional={
-                index === 2 ? (
-                  <Typography variant="caption">Last step</Typography>
+                index === 3 ? (
+                  <Typography variant="caption">último passo</Typography>
                 ) : null
               }
             >

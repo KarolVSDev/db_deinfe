@@ -89,7 +89,6 @@ const FormPessoaJurisd = () => {
                 id="cargo"
                 label="Cargo"
                 type="text"
-                autoFocus
                 error={!!errors?.cargo}
                 {...register("cargo", {
                   required: 'Campo obrigatório', pattern: {
