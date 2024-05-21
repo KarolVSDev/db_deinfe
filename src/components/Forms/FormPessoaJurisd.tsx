@@ -54,7 +54,7 @@ const FormPessoaJurisd = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p:2 }}>
+        <Box component="form"  name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p:2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={3} >
               <TextField

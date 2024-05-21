@@ -1,7 +1,7 @@
-import {  Button, Box, Grid, Autocomplete, TextField } from '@mui/material';
+import {  Box, Grid, Autocomplete, TextField } from '@mui/material';
 import { useContextTable } from '../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { Apenso, Jurisd, Jurisd_Jurisd, Processo } from '../../types/types';
+import { Jurisd, Jurisd_Jurisd, Processo } from '../../types/types';
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
@@ -19,7 +19,7 @@ const FormJurisd_Jurisd = () => {
     };
 
     return (
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box component="form"  name='formJurisdJurisd' noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={3} >
               <Autocomplete
                 disablePortal

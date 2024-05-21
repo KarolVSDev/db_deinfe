@@ -13,6 +13,7 @@ interface TableContextType {
     arrayNatAchado: NatAchado[];
     arrayAreaAchado:AreaAchado[];
     arrayDivAchado:DivAchado[];
+    getAllPessoaFisica: () => void;
 }
 
 interface Props {
@@ -116,7 +117,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     }
 
-   /* useEffect(() => {
+    useEffect(() => {
         getAllPessoaFisica()
         getAllJurisd()
         getAllRelator()
@@ -125,7 +126,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllNatAchado()
         getAllAreaAchado()
         getAllDivAchado()
-    }, [])*/
+    }, [])
 
     return (
         <TableContext.Provider value={{
@@ -137,7 +138,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayApenso,
             arrayNatAchado,
             arrayAreaAchado,
-            arrayDivAchado
+            arrayDivAchado,
+            getAllPessoaFisica
         }}>
             {children}
         </TableContext.Provider>

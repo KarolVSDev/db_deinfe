@@ -10,15 +10,18 @@ import { PessoaFisica } from '../../types/types'
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
+import { useContextTable } from '../../context/TableContext';
 
 
 const FormPessoaFisica = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
+  const {getAllPessoaFisica} = useContextTable()
 
   const onSubmit = (data: PessoaFisica) => {
-    api.post('/pessoafisica/create', data).then(response => {
+    api.post('/pessoafisica/create', data).then(async response => {
       TypeInfo(response.data.message, 'success')
+      await getAllPessoaFisica()
     }).catch((error) => {
       TypeInfo(error.response.data.message, 'warning');
     })
@@ -35,7 +38,7 @@ const FormPessoaFisica = () => {
         }}
       >
 
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
+        <Box component="form" name='formPessoaFisica' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={3} >
               <TextField

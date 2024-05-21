@@ -15,7 +15,7 @@ import {
   PessoaJurisd,
   ColumnConfig
 } from '../../types/types';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   pessoaFisicaHeader,
   procuradorHeader,
@@ -35,6 +35,7 @@ import SearchParams from '../Inputs/SearchParams';
 import ModalPessoaFisica from '../Modais/ModalAddDataTable';
 import Actions from './Actions';
 import * as XLSX from 'xlsx';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 export default function DatabaseTable() {
   const [page, setPage] = useState(0);
@@ -43,7 +44,6 @@ export default function DatabaseTable() {
   const [procurador, setProcurador] = useState<Procurador[]>([]);
   const [relator, setRelator] = useState<Relator[]>([]);
   const [natAchado, setNatAchado] = useState<NatAchado[]>([]);
-  const [divAreaAchado, setDivAreaAchado] = useState<DivAreaAchado[]>([]);
   const [areaAchado, setAreaAchado] = useState<AreaAchado[]>([]);
   const [achado, setAchado] = useState<Achado[]>([]);
   const [jurisd, setJurisd] = useState<Jurisd[]>([]);
@@ -59,12 +59,8 @@ export default function DatabaseTable() {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const [selectedPessoaFisica, setSelectedPessoaFisica] = useState<PessoaFisica | null>(null);
-  const { arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator } = useContextTable()
+  const { arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator, getAllPessoaFisica } = useContextTable()
 
-
-  const handleOptionSelected = (option: PessoaFisica | null) => {
-    setSelectedPessoaFisica(option)
-  }
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
     return headers.map(header => ({
@@ -130,6 +126,13 @@ export default function DatabaseTable() {
     { value: 'relator', string: 'Relator' },
   ]
 
+  useEffect(() => {
+    getAllPessoaFisica();
+  },[])
+
+  useEffect(() => {
+    setRows(createRows(arrayPessoaFisica))
+  },[arrayPessoaFisica])
 
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
@@ -149,8 +152,8 @@ export default function DatabaseTable() {
           </Select>
           <ModalPessoaFisica />
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-          <Button variant="contained" sx={{bgcolor:'#ff3d00', '&:hover':{bgcolor:'#b22a00'}, mb: 2 }} onClick={exportToExcel}>
-            Exportar para Excel
+          <Button variant="contained" sx={{bgcolor:'#ff3d00', '&:hover':{bgcolor:'#b22a00'}, mb: 2, display:'flex', flexDirection:'column' }} onClick={exportToExcel}>
+            <FileDownloadIcon/>
           </Button>
           </Box>
           {/* {dataType === 'pessoafisica' && (
@@ -158,7 +161,7 @@ export default function DatabaseTable() {
               <SearchParams data={pessoaFisica} onOptionSelected={handleOptionSelected} />
             </>
           )
-          }
+          } */}
         </Box>
         <Divider />
         <Box sx={{ height: 400, width: '100%' }}>

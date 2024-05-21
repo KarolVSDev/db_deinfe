@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { AreaAchado, NatAchado, Processo } from '../../types/types';
+import { AreaAchado, NatAchado } from '../../types/types';
 import { api } from '../../service/api';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
@@ -24,7 +24,7 @@ const FormAreaAchado = () => {
     };
 
     return (
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box component="form"  name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={3}>
                 <TextField
                     variant='filled'

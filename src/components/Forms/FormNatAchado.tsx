@@ -21,7 +21,7 @@ const FormNatAchado = () => {
     };
 
     return (
-        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box component="form"  name='formNatAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={3}>
               <TextField
                 variant='filled'

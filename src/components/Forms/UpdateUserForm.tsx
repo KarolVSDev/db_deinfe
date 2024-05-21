@@ -67,7 +67,7 @@ const UpdateUserForm:React.FC<SignUpProps> = ({closeModal, userId}) => {
   return (
     <div>
       {user && (
-        <Box noValidate  component='form' onSubmit={handleSubmit(onSubmit)} sx={{ m:'auto', mt:'30px'}}>
+        <Box noValidate  component='form'  name='updateUserForm' onSubmit={handleSubmit(onSubmit)} sx={{ m:'auto', mt:'30px'}}>
            <Typography component="h1" variant="h5" sx={{mb:4, textAlign:'center'}}>
             Atualizar Usuário
           </Typography>

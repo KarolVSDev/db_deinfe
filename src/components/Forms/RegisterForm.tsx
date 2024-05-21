@@ -76,7 +76,7 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
           <Typography component="h1" variant="h5">
             Registro de Usuário
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
+          <Box component="form"  name='registerForm' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <TextField
