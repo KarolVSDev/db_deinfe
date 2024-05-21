@@ -28,6 +28,7 @@ const FormDivAchado = () => {
                     variant='filled'
                     required
                     fullWidth
+                    autoFocus
                     id="descricao"
                     label='Divisão do Achado'
                     type="text"

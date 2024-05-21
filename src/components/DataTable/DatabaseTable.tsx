@@ -1,26 +1,19 @@
-import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import { Box, Button, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, MenuItem, Select, Typography } from '@mui/material';
 import { api } from '../../service/api';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import {
   PessoaFisica,
   Procurador,
   Relator,
   NatAchado,
-  DivAchado,
   AreaAchado,
   Achado,
   Jurisd,
   Processo,
   Interessado,
-  PessoaJurisd
+  PessoaJurisd,
+  ColumnConfig
 } from '../../types/types';
 import { useState, useEffect } from 'react';
 import {
@@ -41,7 +34,7 @@ import { useContextTable } from '../../context/TableContext';
 import SearchParams from '../Inputs/SearchParams';
 import ModalPessoaFisica from '../Modais/ModalAddDataTable';
 import Actions from './Actions';
-
+import * as XLSX from 'xlsx';
 
 export default function DatabaseTable() {
   const [page, setPage] = useState(0);
@@ -50,7 +43,7 @@ export default function DatabaseTable() {
   const [procurador, setProcurador] = useState<Procurador[]>([]);
   const [relator, setRelator] = useState<Relator[]>([]);
   const [natAchado, setNatAchado] = useState<NatAchado[]>([]);
-  const [divAchado, setDiAchado] = useState<DivAchado[]>([]);
+  const [divAreaAchado, setDivAreaAchado] = useState<DivAreaAchado[]>([]);
   const [areaAchado, setAreaAchado] = useState<AreaAchado[]>([]);
   const [achado, setAchado] = useState<Achado[]>([]);
   const [jurisd, setJurisd] = useState<Jurisd[]>([]);
@@ -63,160 +56,69 @@ export default function DatabaseTable() {
   const [searchJurisd, setSearchJurisd] = useState('');
   const [searchTipo, setSearchTipo] = useState('');
   const [data, setData] = useState([10]);
+  const [columns, setColumns] = useState<GridColDef[]>([]);
+  const [rows, setRows] = useState<any[]>([]);
   const [selectedPessoaFisica, setSelectedPessoaFisica] = useState<PessoaFisica | null>(null);
+  const { arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator } = useContextTable()
 
 
-  //função pra resgatar os dados da api
-  const entidades = ['interessado', 'pessoajurisd']
-  const fetchData = async () => {
-    entidades.map((entidade): any => {
-      if (dataType !== entidade) {
-        if (dataType === 'pessoafisica') {
-          api.get(`/${dataType}`).then(response => {
-            setPessoaFisica(response.data)
-          })
-        } else if (dataType === 'procurador') {
-          api.get(`/${dataType}`).then(response => {
-            setProcurador(response.data)
-          })
-        } else if (dataType === 'relator') {
-          api.get(`/${dataType}`).then(response => {
-            setRelator(response.data)
-          })
-        } else if (dataType === 'jurisd') {
-          api.get(`/${dataType}`).then(response => {
-            setJurisd(response.data)
-          })
-        } else if (dataType === 'processo') {
-          api.get(`/${dataType}`).then(response => {
-            setProcesso(response.data)
-          })
-        }
-      }
-      fetchProcesso()
-    }
-    )
-  }
-  //resgata dados para os inputs da table interessado
-  const fetchProcesso = async () => {
-    if (dataType == 'interessado') {
-      await api.get('/processo').then(response => {
-        setProcesso(response.data)
-      }).catch(error => {
-        console.error('Erro eu pegar dados de processo', error)
-      })
-    } else if (dataType === 'pessoajurisd') {
-      await api.get('/jurisd').then(response => {
-        setJurisd(response.data)
-      }).catch(error => {
-        console.error('Erro eu pegar dados de jurisd', error)
-      })
-    }
-  }
-
-
-  useEffect(() => {
-    fetchData()
-  }, [dataType, pessoaFisica])
-
-
-  if (dataType) {
-    fetchData()
-  }
-
-  //lida com as páginas
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-  //controle dos botões de update e delete
-  const handleEdit = (id: string) => {
-    // Lógica para editar a pessoa com o ID fornecido
-    console.log("Editar", id);
-  };
-
-  const handleDelete = (id: string) => {
-    // Lógica para excluir a pessoa com o ID fornecido
-    console.log("Excluir", id);
-  };
-
-  //armazenam os valores dos inputs
-  const handleDataTypeChange = (event: { target: { value: any; }; }) => {
-    setDataType(event.target.value)
-  };
-  const handleSearchPessoa = (event: { target: { value: any } }) => {
-    setSearchPessoa(event.target.value)
-  };
-  const handleSearchJurisd = (event: { target: { value: any } }) => {
-    setSearchJurisd(event.target.value)
-  };
-  const handleSearchProcesso = (event: { target: { value: any } }) => {
-    setSearchProcesso(event.target.value)
-  };
-
-  //lida com as buscas do usuário
-  const handleBusca = async () => {
-    if (dataType === 'interessado') {
-      if (searchPessoa !== '' && searchProcesso === '') {
-        await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
-          console.log(response.data)
-          setInteressado(response.data)
-        }).catch(error => {
-          console.error('Erro ao buscar dados', error)
-        })
-      } else if (searchProcesso !== '' && searchPessoa === '') {
-        await api.get(`/${dataType}/processo/${searchProcesso}`).then((response) => {
-          setInteressado(response.data)
-        }).catch(error => {
-          console.error('Erro ao buscar dados', error)
-        })
-      } else if (searchProcesso === '' && searchPessoa === '') {
-        TypeInfo('Selecione um campo', 'info')
-      } else {
-        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles', 'info')
-      }
-    }
-
-    if (dataType === 'pessoajurisd') {
-      if (searchPessoa !== '' && searchJurisd === '') {
-        await api.get(`/${dataType}/pessoa/${searchPessoa}`).then((response) => {
-          const data = response.data
-          setPessoaJurisd(data.result)
-        }).catch(error => {
-          console.error('Erro ao buscar dados', error)
-        })
-      } else if (searchJurisd !== '' && searchPessoa === '') {
-        await api.get(`/${dataType}/jurisd/${searchJurisd}`).then((response) => {
-          const data = response.data
-          setPessoaJurisd(data.result)
-        }).catch(error => {
-          console.error('Erro ao buscar dados', error)
-        })
-      } else if (searchJurisd === '' && searchPessoa === '') {
-        TypeInfo('Selecione um campo', 'info')
-      } else {
-        TypeInfo('Os dois campos estão preenchidos, preencha apenas um deles', 'info')
-      }
-      console.log(pessoaJurisd)
-    }
-  }
-
-
-  const cleanInput = () => {
-    setSearchPessoa('')
-    setSearchProcesso('')
-    setSearchJurisd('')
-    return
-  }
-
-  //lógica para os filtros de pesquisa
   const handleOptionSelected = (option: PessoaFisica | null) => {
     setSelectedPessoaFisica(option)
   }
+
+  const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
+    return headers.map(header => ({
+      field: header.id,
+      headerName: header.label,
+      width: header.minWidth,
+      editable: false, 
+    }));
+  };
+
+  const createRows = (data: any[]): any[] => {
+    return data.map((item, index) => ({
+      id: item.id,
+      ...item,
+    }));
+  };
+
+  const exportToExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, 'Data');
+    XLSX.writeFile(wb, 'data.xlsx');
+  };
+
+  const handleDataTypeChange = (event: { target: { value: any; }; }) => {
+    const value = event.target.value as string;
+    setDataType(value)
+
+    switch (value) {
+      case 'pessoafisica':
+        setColumns(createGridColumns(pessoaFisicaHeader));
+        setRows(createRows(arrayPessoaFisica));
+        break;
+      case 'jurisd':
+        setColumns(createGridColumns(jurisdHeader));
+        setRows(createRows(arrayJurisd))
+        break;
+      case 'processo':
+        setColumns(createGridColumns(processoHeader));
+        setRows(createRows(arrayProcesso));
+        break;
+      case 'procurador':
+        setColumns(createGridColumns(procuradorHeader));
+        setRows(createRows(arrayProcurador))
+        break;
+      case 'relator':
+        setColumns(createGridColumns(relatorHeader));
+        setRows(createRows(arrayRelator))
+        break;
+      default:
+        setColumns([]);
+        setRows([])
+    }
+  };
 
 
   const optionsSelect = [
@@ -245,192 +147,36 @@ export default function DatabaseTable() {
               <MenuItem value={option.value} disabled={option.value === 'pesquisa'}>{option.string}</MenuItem>
             ))}
           </Select>
-          {dataType === 'pessoafisica' && (
+          <ModalPessoaFisica />
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+          <Button variant="contained" sx={{bgcolor:'#ff3d00', '&:hover':{bgcolor:'#b22a00'}, mb: 2 }} onClick={exportToExcel}>
+            Exportar para Excel
+          </Button>
+          </Box>
+          {/* {dataType === 'pessoafisica' && (
             <>
               <SearchParams data={pessoaFisica} onOptionSelected={handleOptionSelected} />
             </>
           )
-        }
-        <ModalPessoaFisica />
+          }
         </Box>
         <Divider />
-        <TableContainer sx={{ maxHeight: '90%' }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {dataType === 'pessoafisica' && (
-                  pessoaFisicaHeader.map((pf) => (
-                    <TableCell
-                      id={pf.id}
-                      align={'left'}
-                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                    >
-                      {pf.label}
-                    </TableCell>
-                  ))
-                )}
-
-                {dataType === 'procurador' && (
-                  procuradorHeader.map((p) => (
-                    <TableCell
-                      id={p.id}
-                      align={'left'}
-                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                    >
-                      {p.label}
-                    </TableCell>
-                  ))
-                )}
-
-                {dataType === 'relator' && (
-                  relatorHeader.map((p) => (
-                    <TableCell
-                      id={p.id}
-                      align={'left'}
-                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                    >
-                      {p.label}
-                    </TableCell>
-                  ))
-                )}
-
-                {dataType === 'jurisd' && (
-                  jurisdHeader.map((p) => (
-                    <TableCell
-                      id={p.id}
-                      align={'left'}
-                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                    >
-                      {p.label}
-                    </TableCell>
-                  ))
-                )}
-
-                {dataType === 'processo' && (
-                  processoHeader.map((p) => (
-                    <TableCell
-                      id={p.id}
-                      align={'left'}
-                      style={{ minWidth: 150, backgroundColor: '#e2e8f0' }}
-                    >
-                      {p.label}
-                    </TableCell>
-                  ))
-                )}
-
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {selectedPessoaFisica && (
-                <TableRow>
-                  <TableCell align="left"><Actions userId={selectedPessoaFisica.id} /></TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.nome}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.cpf}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.rg}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.profissao}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.genero}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.cep}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.logradouro}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.complemento}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.numero}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.cidade}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.uf}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.telefone1}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.telefone2}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.ramal}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.email}</TableCell>
-                  <TableCell align="left">{selectedPessoaFisica.ativo}</TableCell>
-                </TableRow>
-              )}
-              {dataType === 'pessoafisica' && !selectedPessoaFisica && (
-                pessoaFisica.map((row, rowIndex) => (
-                  <TableRow sx={{ cursor: 'pointer' }} hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="left"><Actions userId={row.id} /></TableCell>
-                    <TableCell align="left">{row.nome}</TableCell>
-                    <TableCell align="left">{row.cpf}</TableCell>
-                    <TableCell align="left">{row.rg}</TableCell>
-                    <TableCell align="left">{row.profissao}</TableCell>
-                    <TableCell align="left">{row.genero}</TableCell>
-                    <TableCell align="left">{row.cep}</TableCell>
-                    <TableCell align="left">{row.logradouro}</TableCell>
-                    <TableCell align="left">{row.complemento}</TableCell>
-                    <TableCell align="left">{row.numero}</TableCell>
-                    <TableCell align="left">{row.cidade}</TableCell>
-                    <TableCell align="left">{row.uf}</TableCell>
-                    <TableCell align="left">{row.telefone1}</TableCell>
-                    <TableCell align="left">{row.telefone2}</TableCell>
-                    <TableCell align="left">{row.ramal}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.ativo}</TableCell>
-                  </TableRow>
-                ))
-              )}
-              {dataType === 'procurador' && (
-                procurador.map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="left">{row.nome}</TableCell>
-                  </TableRow>
-                )))}
-
-              {dataType === 'relator' && (
-                relator.map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="left">{row.nome}</TableCell>
-                    <TableCell align="left">{row.cargo}</TableCell>
-                  </TableRow>
-                )))}
-
-              {dataType === 'jurisd' && (
-                jurisd.map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="left">{row.nome}</TableCell>
-                    <TableCell align="left">{row.sigla}</TableCell>
-                    <TableCell align="left">{row.cnpj}</TableCell>
-                    <TableCell align="left">{row.ug}</TableCell>
-                    <TableCell align="left">{row.cep}</TableCell>
-                    <TableCell align="left">{row.logradouro}</TableCell>
-                    <TableCell align="left">{row.complemento}</TableCell>
-                    <TableCell align="left">{row.numero}</TableCell>
-                    <TableCell align="left">{row.cidade}</TableCell>
-                    <TableCell align="left">{row.telefone1}</TableCell>
-                    <TableCell align="left">{row.telefone2}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.site}</TableCell>
-                    <TableCell align="left">{row.cargoGestor}</TableCell>
-                    <TableCell align="left">{row.normaCriacao}</TableCell>
-                    <TableCell align="left">{row.dataCriacao}</TableCell>
-                    <TableCell align="left">{row.normaExtincao}</TableCell>
-                    <TableCell align="left">{row.dataExtincao}</TableCell>
-                    <TableCell align="left">{row.poder}</TableCell>
-                    <TableCell align="left">{row.ativo}</TableCell>
-                  </TableRow>
-                )))}
-
-              {dataType === 'processo' && (
-                processo.map((row, rowIndex) => (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                    <TableCell align="left">{row.numero}</TableCell>
-                    <TableCell align="left">{row.ano}</TableCell>
-                    <TableCell align="left">{row.natureza}</TableCell>
-                    <TableCell align="left">{row.exercicio}</TableCell>
-                    <TableCell align="left">{row.objeto}</TableCell>
-                    <TableCell align="left">{row.arquivamento}</TableCell>
-                  </TableRow>
-                )))}
-
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          labelRowsPerPage={'Linhas por Página'}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Box sx={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />
+        </Box>
       </Paper>
     </Grid>
   );

@@ -82,9 +82,6 @@ export default function ModalPessoaFisica() {
             }}>
               <CloseIcon />
             </IconButton>
-            <Typography variant='h2' sx={{ mb: 4, fontSize:18 }}>
-              Abaixo estão listados os formulários de registro de dados do sistema:
-            </Typography>
             <AccordionComponent  title={'Registro de Pessoa Física'}>
               <FormPessoaFisica />
             </AccordionComponent>

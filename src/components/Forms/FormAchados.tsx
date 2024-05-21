@@ -69,7 +69,6 @@ const FormAchado = () => {
                 id="texto"
                 label="Texto"
                 type="text"
-                autoFocus
                 error={!!errors?.texto}
                 {...register("texto", {
                   required: 'Campo obrigatório'

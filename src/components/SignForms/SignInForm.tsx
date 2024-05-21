@@ -42,7 +42,7 @@ export default function SignInSide() {
     event.preventDefault();
   };
   const {login, isLoggedIn} = useAuth();
-  const navigate = useNavigate()
+ 
 
   const onSubmit = (data:UserLogin) => {
     login(data);

@@ -29,6 +29,7 @@ const FormAreaAchado = () => {
                 <TextField
                     variant='filled'
                     required
+                    autoFocus
                     fullWidth
                     id="descricao"
                     label='Área do Achado'
