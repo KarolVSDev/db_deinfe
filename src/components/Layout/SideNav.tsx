@@ -12,7 +12,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useAuth } from '../../context/AuthContext';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { useAppStore } from '../../hooks/appStore';
 import TableChartIcon from '@mui/icons-material/TableChart';
@@ -21,9 +21,6 @@ import {  useState, useEffect } from 'react';
 import { api } from '../../service/api';
 import { AllUsers } from '../../types/types';
 import env from '../../service/env';
-
-
-
 
 
 const drawerWidth = 240;
@@ -109,6 +106,9 @@ export default function SideNav() {
         {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>}])
     }
   }
+  //const location = useLocation()
+
+  //console.log({location})
 
 useEffect(() => {
   getUserIdByEmail()
@@ -116,7 +116,7 @@ useEffect(() => {
 
 useEffect(() => {
   verifyUser()
-},[user])
+},[])
   
 
   return (

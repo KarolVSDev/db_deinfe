@@ -34,9 +34,9 @@ export default function ListUsers() {
         
     }
 
-    useEffect(() => {
+   useEffect(() => {
         getUsers()
-    },[users])
+    },[])
 
     
 

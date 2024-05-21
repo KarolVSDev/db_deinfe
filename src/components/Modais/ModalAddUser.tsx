@@ -31,9 +31,6 @@ export default function ModalAddUser() {
     setOpen(false)
   }
 
-  useEffect(() => {
-
-  }, [open])
 
   return (
     <div>

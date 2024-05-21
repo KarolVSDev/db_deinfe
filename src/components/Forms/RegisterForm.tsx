@@ -42,6 +42,7 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
     api.post('/usuario',data).then(response => {
       closeModal()
       TypeInfo(response.data.message, 'success')
+
     }).catch((error) => {
       TypeInfo(error.response.data.message, 'warning');
     })
@@ -84,10 +85,10 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
                   required
                   fullWidth
                   id="nome"
-                  label="Nome Completo"
+                  label={errors.nome?errors.nome.message:"Nome Completo"}
                   autoFocus
-                  error= {errors?.nome?.type === 'required'}
-                  {...register('nome', {required:true})}
+                  error= {errors?.nome?.type === 'required' }
+                  {...register('nome', {required:true })}
                 />
               </Grid>
                 {errors?.nome?.type === 'required' && (

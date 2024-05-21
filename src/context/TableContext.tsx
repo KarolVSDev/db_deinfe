@@ -116,7 +116,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     }
 
-    useEffect(() => {
+   /* useEffect(() => {
         getAllPessoaFisica()
         getAllJurisd()
         getAllRelator()
@@ -125,7 +125,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllNatAchado()
         getAllAreaAchado()
         getAllDivAchado()
-    }, [])
+    }, [])*/
 
     return (
         <TableContext.Provider value={{

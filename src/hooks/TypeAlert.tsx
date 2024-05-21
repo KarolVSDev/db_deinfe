@@ -8,6 +8,10 @@ export function TypeAlert(message: string, type: 'success' | 'error' | 'warning'
     position: 'top',
     showConfirmButton: false,
     timer: 4000,
+    iconColor: 'white',
+    customClass: {
+      popup: 'colored-toast',
+    },
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)

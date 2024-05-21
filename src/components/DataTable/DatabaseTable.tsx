@@ -14,7 +14,7 @@ import {
   Procurador,
   Relator,
   NatAchado,
-  DivAreaAchado,
+  DivAchado,
   AreaAchado,
   Achado,
   Jurisd,
@@ -50,7 +50,7 @@ export default function DatabaseTable() {
   const [procurador, setProcurador] = useState<Procurador[]>([]);
   const [relator, setRelator] = useState<Relator[]>([]);
   const [natAchado, setNatAchado] = useState<NatAchado[]>([]);
-  const [divAreaAchado, setDivAreaAchado] = useState<DivAreaAchado[]>([]);
+  const [divAchado, setDiAchado] = useState<DivAchado[]>([]);
   const [areaAchado, setAreaAchado] = useState<AreaAchado[]>([]);
   const [achado, setAchado] = useState<Achado[]>([]);
   const [jurisd, setJurisd] = useState<Jurisd[]>([]);
@@ -248,10 +248,10 @@ export default function DatabaseTable() {
           {dataType === 'pessoafisica' && (
             <>
               <SearchParams data={pessoaFisica} onOptionSelected={handleOptionSelected} />
-              <ModalPessoaFisica />
             </>
           )
-          }
+        }
+        <ModalPessoaFisica />
         </Box>
         <Divider />
         <TableContainer sx={{ maxHeight: '90%' }}>

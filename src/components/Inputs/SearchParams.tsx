@@ -2,7 +2,6 @@
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { PessoaFisica } from '../../types/types';
-import { useEffect } from 'react';
 
 interface Props {
   onOptionSelected: (option: PessoaFisica | null) => void;
@@ -12,9 +11,6 @@ interface Props {
 export default function SearchParams({data, onOptionSelected}: Props) {
 
   
-  useEffect(() => {
-
-  },[data])
 
   return (
     <Autocomplete 

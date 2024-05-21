@@ -3,7 +3,7 @@ import { useContextTable } from '../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { NatAchado } from '../../types/types';
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 
 
@@ -12,7 +12,7 @@ const FormNatAchado = () => {
 
     const onSubmit = (data: NatAchado) => {
         api.post('/nat-achado', data).then(response => {
-          TypeInfo(response.data.message, 'success');
+          TypeAlert(response.data.message, 'success');
           reset()
         }).catch((error) => {
           TypeInfo(error.response.data.message, 'warning');
