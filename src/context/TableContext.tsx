@@ -13,6 +13,7 @@ interface TableContextType {
     arrayNatAchado: NatAchado[];
     arrayAreaAchado:AreaAchado[];
     arrayDivAchado:DivAchado[];
+    arrayRelations:PessoaFisica[];
     getAllPessoaFisica: () => void;
 }
 
@@ -33,11 +34,22 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayNatAchado, setArrayNatAchado] = useState([]);
     const [arrayAreaAchado, setArrayAreaAchado] = useState([]);
     const [arrayDivAchado, setArrayDivAchado] = useState([]);
+    const [arrayRelations, setArrayRelations] = useState([]);
 
     const getAllPessoaFisica = async () => {
         try {
             const response = await api.get('/pessoafisica');
             setArrayPessoaFisica(response.data);
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error');
+            return [];
+        }
+    };
+
+    const getRelationPF = async () => {
+        try {
+            const response = await api.get('/pessoafisica/relations');
+            setArrayRelations(response.data);
         } catch (error: any) {
             TypeInfo(error.response.data.message, 'error');
             return [];
@@ -106,7 +118,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         } catch (error:any) {
             TypeInfo(error.response.data.message, 'error')
         }
-    }
+    };
 
     const getAllDivAchado = async () => {
         try {
@@ -115,7 +127,9 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         } catch (error) {
             
         }
-    }
+    };
+
+
 
     useEffect(() => {
         getAllPessoaFisica()
@@ -126,6 +140,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllNatAchado()
         getAllAreaAchado()
         getAllDivAchado()
+        getRelationPF()
     }, [])
 
     return (
@@ -139,6 +154,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayNatAchado,
             arrayAreaAchado,
             arrayDivAchado,
+            arrayRelations,
             getAllPessoaFisica
         }}>
             {children}

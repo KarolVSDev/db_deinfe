@@ -52,6 +52,9 @@ export interface PessoaFisica {
   ramal: string;
   email: string;
   ativo: string;
+  interessados?:[]
+  processos?:[]
+  pessoaJurisds?:[]
 }
 export interface Procurador {
   id: string

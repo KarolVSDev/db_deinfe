@@ -3,16 +3,6 @@ import { Box, Button, Divider, Grid, MenuItem, Select, Typography } from '@mui/m
 import { api } from '../../service/api';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import {
-  PessoaFisica,
-  Procurador,
-  Relator,
-  NatAchado,
-  AreaAchado,
-  Achado,
-  Jurisd,
-  Processo,
-  Interessado,
-  PessoaJurisd,
   ColumnConfig
 } from '../../types/types';
 import { useEffect, useState } from 'react';
@@ -27,7 +17,8 @@ import {
   jurisdHeader,
   processoHeader,
   interessadoHeader,
-  pessoaJurisdHeader
+  pessoaJurisdHeader,
+  arrayRelationsHeader
 } from '../../service/columns';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import { useContextTable } from '../../context/TableContext';
@@ -37,30 +28,38 @@ import Actions from './Actions';
 import * as XLSX from 'xlsx';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
+
 export default function DatabaseTable() {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [pessoaFisica, setPessoaFisica] = useState<PessoaFisica[]>([]);
-  const [procurador, setProcurador] = useState<Procurador[]>([]);
-  const [relator, setRelator] = useState<Relator[]>([]);
-  const [natAchado, setNatAchado] = useState<NatAchado[]>([]);
-  const [areaAchado, setAreaAchado] = useState<AreaAchado[]>([]);
-  const [achado, setAchado] = useState<Achado[]>([]);
-  const [jurisd, setJurisd] = useState<Jurisd[]>([]);
-  const [processo, setProcesso] = useState<Processo[]>([]);
-  const [interessado, setInteressado] = useState<Interessado[]>([]);
-  const [pessoaJurisd, setPessoaJurisd] = useState<PessoaJurisd[]>([]);
+  
   const [dataType, setDataType] = useState('pesquisa');
-  const [searchPessoa, setSearchPessoa] = useState('');
-  const [searchProcesso, setSearchProcesso] = useState('');
-  const [searchJurisd, setSearchJurisd] = useState('');
-  const [searchTipo, setSearchTipo] = useState('');
-  const [data, setData] = useState([10]);
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const [selectedPessoaFisica, setSelectedPessoaFisica] = useState<PessoaFisica | null>(null);
-  const { arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator, getAllPessoaFisica } = useContextTable()
+  const { arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator, arrayRelations, getAllPessoaFisica } = useContextTable()
 
+  const handleLocalization =  {
+    columnHeaderSortIconLabel: 'ordenar',
+    columnMenuSortAsc:'Ordenar por ASC',
+    columnMenuSortDesc:'Ordenar por Desc',
+    columnMenuFilter:'Filtrar',
+    columnMenuHideColumn:'Esconder Coluna',
+    columnMenuManageColumns:'Gerenciar Colunas',
+    columnsManagementSearchTitle:'Pesquisar',
+    checkboxSelectionHeaderName:'Caixa de Seleção',
+    columnsManagementShowHideAllText:'Mostrar/Esconder Todos',
+    columnsManagementReset:'Resetar',
+    filterPanelColumns:'Colunas',
+    filterPanelOperator:'Operador',
+    filterPanelInputLabel:'Valor',
+    filterOperatorContains:'contém',
+    filterOperatorEquals:'igual a',
+    filterOperatorStartsWith:'começa com',
+    filterOperatorEndsWith:'termina com',
+    filterOperatorIsEmpty:'está vazio',
+    filterOperatorIsNotEmpty:'não está vazio',
+    filterOperatorIsAnyOf:'é qualquer um'
+
+
+  };
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
     return headers.map(header => ({
@@ -85,14 +84,15 @@ export default function DatabaseTable() {
     XLSX.writeFile(wb, 'data.xlsx');
   };
 
-  const handleDataTypeChange = (event: { target: { value: any; }; }) => {
+  const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
 
     switch (value) {
       case 'pessoafisica':
-        setColumns(createGridColumns(pessoaFisicaHeader));
-        setRows(createRows(arrayPessoaFisica));
+        setColumns(createGridColumns(arrayRelationsHeader));
+        setRows(createRows(arrayRelations));
+
         break;
       case 'jurisd':
         setColumns(createGridColumns(jurisdHeader));
@@ -168,6 +168,7 @@ export default function DatabaseTable() {
           <DataGrid
             rows={rows}
             columns={columns}
+            localeText={handleLocalization}
             initialState={{
               pagination: {
                 paginationModel: {
