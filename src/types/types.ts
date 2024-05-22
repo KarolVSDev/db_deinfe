@@ -52,9 +52,6 @@ export interface PessoaFisica {
   ramal: string;
   email: string;
   ativo: string;
-  interessados?:[]
-  processos?:[]
-  pessoaJurisds?:[]
 }
 export interface Procurador {
   id: string
@@ -147,8 +144,8 @@ export interface Apenso {
 export interface Interessado {
   id: string;
   interesse: string;
-  processo:string;
-  pessoa:string;
+  processo:{numero:string};
+  pessoa:{nome:string};
 }
 //esse type é para o formulário de criação de pessoaJurisd obs: datas aqui são string, pra retorno vai ter que ser date
 export interface PessoaJurisd {

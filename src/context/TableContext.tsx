@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
-import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado } from "../types/types";
+import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado } from "../types/types";
 
 interface TableContextType {
     arrayPessoaFisica: PessoaFisica[];
@@ -14,6 +14,7 @@ interface TableContextType {
     arrayAreaAchado:AreaAchado[];
     arrayDivAchado:DivAchado[];
     arrayRelations:PessoaFisica[];
+    arrayRelationpp:Interessado[];
     getAllPessoaFisica: () => void;
 }
 
@@ -35,21 +36,12 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayAreaAchado, setArrayAreaAchado] = useState([]);
     const [arrayDivAchado, setArrayDivAchado] = useState([]);
     const [arrayRelations, setArrayRelations] = useState([]);
+    const [arrayRelationpp, setArrayRelationpp] = useState([]);
 
     const getAllPessoaFisica = async () => {
         try {
             const response = await api.get('/pessoafisica');
             setArrayPessoaFisica(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error');
-            return [];
-        }
-    };
-
-    const getRelationPF = async () => {
-        try {
-            const response = await api.get('/pessoafisica/relations');
-            setArrayRelations(response.data);
         } catch (error: any) {
             TypeInfo(error.response.data.message, 'error');
             return [];
@@ -129,6 +121,24 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     };
 
+    const getRelationPF = async () => {
+        try {
+            const response = await api.get('/pessoafisica/relations');
+            setArrayRelations(response.data);
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error');
+            return [];
+        }
+    };
+
+    const getRelationI = async () => {
+        try {
+            const response = await api.get('/interessado/relationpp');
+            setArrayRelationpp(response.data)
+        } catch (error: any) {
+            TypeInfo(error.response.data.message, 'error')
+        }
+    }
 
 
     useEffect(() => {
@@ -141,6 +151,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllAreaAchado()
         getAllDivAchado()
         getRelationPF()
+        getRelationI()
     }, [])
 
     return (
@@ -155,6 +166,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayAreaAchado,
             arrayDivAchado,
             arrayRelations,
+            arrayRelationpp,
             getAllPessoaFisica
         }}>
             {children}

@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { AllUsers, AuthData, UserLogin } from "../types/types";
+import { AuthData, UserLogin } from "../types/types";
 import Cookies from "universal-cookie";
 import { api } from "../service/api";
 import { useNavigate } from "react-router-dom";
 import { TypeAlert } from "../hooks/TypeAlert";
-import { jwtDecode } from "jwt-decode";
+
 
 interface AuthContextType {
     isLoggedIn:boolean;
@@ -25,7 +25,7 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
     const navigate = useNavigate()
     const cookies = new Cookies()
     const auth = cookies.get('focusToken');
-    const [email, setEmail] = useState(localStorage.getItem('email'))
+
 
     useEffect(() => {
         testeAuth()
@@ -40,7 +40,6 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
             setIsLoggedIn(false); 
         }
     }
-    
 
     const setCookies = (authData:AuthData) => {
         const cookies = new Cookies()
@@ -60,7 +59,6 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
             }
         })
     };
-
 
     const logout = () => {
         const cookies = new Cookies();
