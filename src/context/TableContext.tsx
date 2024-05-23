@@ -15,6 +15,7 @@ interface TableContextType {
     arrayDivAchado:DivAchado[];
     arrayRelations:PessoaFisica[];
     arrayRelationpp:Interessado[];
+    handleLocalization:{}
     getAllPessoaFisica: () => void;
 }
 
@@ -37,6 +38,36 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayDivAchado, setArrayDivAchado] = useState([]);
     const [arrayRelations, setArrayRelations] = useState([]);
     const [arrayRelationpp, setArrayRelationpp] = useState([]);
+
+    const handleLocalization = {
+        columnHeaderSortIconLabel: 'ordenar',
+        columnMenuSortAsc: 'Ordenar por ASC',
+        columnMenuSortDesc: 'Ordenar por Desc',
+        columnMenuFilter: 'Filtrar',
+        columnMenuHideColumn: 'Esconder Coluna',
+        columnMenuManageColumns: 'Gerenciar Colunas',
+        columnsManagementSearchTitle: 'Pesquisar',
+        checkboxSelectionHeaderName: 'Caixa de Seleção',
+        columnsManagementShowHideAllText: 'Mostrar/Esconder Todos',
+        columnsManagementReset: 'Resetar',
+        filterPanelColumns: 'Colunas',
+        filterPanelOperator: 'Operador',
+        filterPanelInputLabel: 'Valor',
+        filterOperatorContains: 'contém',
+        filterOperatorEquals: 'igual a',
+        filterOperatorStartsWith: 'começa com',
+        filterOperatorEndsWith: 'termina com',
+        filterOperatorIsEmpty: 'está vazio',
+        filterOperatorIsNotEmpty: 'não está vazio',
+        filterOperatorIsAnyOf: 'é qualquer um',
+        noRowsLabel:'sem dados',
+        columnMenuUnsort:'Desordenar',
+        noResultsOverlayLabel:'nenhum resultado encontrado',
+        footerRowSelected: (count:number) =>
+          count !== 1
+            ? `${count.toLocaleString()} linhas selecionadas`
+            : `${count.toLocaleString()} linha selecionada`,
+      };
 
     const getAllPessoaFisica = async () => {
         try {
@@ -167,6 +198,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayDivAchado,
             arrayRelations,
             arrayRelationpp,
+            handleLocalization,
             getAllPessoaFisica
         }}>
             {children}

@@ -36,37 +36,10 @@
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { arrayPessoaFisica, arrayJurisd, arrayProcesso,
-      arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp,
+      arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp, handleLocalization,
       getAllPessoaFisica } = useContextTable()
 
-    const handleLocalization = {
-      columnHeaderSortIconLabel: 'ordenar',
-      columnMenuSortAsc: 'Ordenar por ASC',
-      columnMenuSortDesc: 'Ordenar por Desc',
-      columnMenuFilter: 'Filtrar',
-      columnMenuHideColumn: 'Esconder Coluna',
-      columnMenuManageColumns: 'Gerenciar Colunas',
-      columnsManagementSearchTitle: 'Pesquisar',
-      checkboxSelectionHeaderName: 'Caixa de Seleção',
-      columnsManagementShowHideAllText: 'Mostrar/Esconder Todos',
-      columnsManagementReset: 'Resetar',
-      filterPanelColumns: 'Colunas',
-      filterPanelOperator: 'Operador',
-      filterPanelInputLabel: 'Valor',
-      filterOperatorContains: 'contém',
-      filterOperatorEquals: 'igual a',
-      filterOperatorStartsWith: 'começa com',
-      filterOperatorEndsWith: 'termina com',
-      filterOperatorIsEmpty: 'está vazio',
-      filterOperatorIsNotEmpty: 'não está vazio',
-      filterOperatorIsAnyOf: 'é qualquer um',
-      noRowsLabel:'sem dados',
-      noResultsOverlayLabel:'nenhum resultado encontrado',
-      footerRowSelected: (count:number) =>
-        count !== 1
-          ? `${count.toLocaleString()} linhas selecionadas`
-          : `${count.toLocaleString()} linha selecionada`,
-    };
+    
 
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
@@ -86,6 +59,7 @@
       }));
     };
 
+    //cria a table pra dados relacionados com interessado
     const createInteressadoRows = (data: Interessado[]): any[] => {
       return data.map((item, index) => ({
           id: item.id,
@@ -95,6 +69,7 @@
       }));
   };
 
+    //cria table pra dados sem relação
     const createRows = (data: any[]): any[] => {
       return data.map((item, index) => ({
         id: item.id,
@@ -102,24 +77,8 @@
       }));
     };
 
-    const exportToExcel = () => {
-      const exportRows = rows.map(row => {
-        const exportRow: any = { ...row };
-
-        if (dataType === 'interessado') {
-          exportRow.pessoa = row.pessoa ? row.pessoa.nome : '';
-          exportRow.processo = row.processo ? row.processo.numero : '';
-        }
-
-        return exportRow;
-      });
-
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(exportRows);
-      XLSX.utils.book_append_sheet(wb, ws, 'Data');
-      XLSX.writeFile(wb, 'data.xlsx');
-    };
-
+    
+    //controle de ações baseado no tipo de dado
     const handleDataTypeChange = (event: { target: { value: string; }; }) => {
       const value = event.target.value as string;
       setDataType(value)
@@ -128,7 +87,6 @@
         case 'pessoafisica':
           setColumns(createGridColumns(pessoaFisicaHeader));
           setRows(createRows(arrayPessoaFisica));
-
           break;
         case 'jurisd':
           setColumns(createGridColumns(jurisdHeader));
@@ -154,6 +112,26 @@
           setColumns([]);
           setRows([])
       }
+    };
+
+    handleLocalization
+    //export
+    const exportToExcel = () => {
+      const exportRows = rows.map(row => {
+        const exportRow: any = { ...row };
+
+        if (dataType === 'interessado') {
+          exportRow.pessoa = row.pessoa ? row.pessoa.nome : '';
+          exportRow.processo = row.processo ? row.processo.numero : '';
+        }
+
+        return exportRow;
+      });
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(exportRows);
+      XLSX.utils.book_append_sheet(wb, ws, 'Data');
+      XLSX.writeFile(wb, 'data.xlsx');
     };
 
     const optionsSelect = [
@@ -186,27 +164,21 @@
             sx={{ padding: '20px' }}>
             Base de dados Secex
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height:'48px' }}>
             <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px', }}>
               {optionsSelect.map((option) => (
                 <MenuItem value={option.value} disabled={option.value === 'pesquisa'}>{option.string}</MenuItem>
               ))}
             </Select>
             <ModalPessoaFisica />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-              <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, mb: 2, display: 'flex', flexDirection: 'column' }} onClick={exportToExcel}>
+            <Box>
+              <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }}} onClick={exportToExcel}>
                 <FileDownloadIcon />
               </Button>
             </Box>
-            {/* {dataType === 'pessoafisica' && (
-              <>
-                <SearchParams data={pessoaFisica} onOptionSelected={handleOptionSelected} />
-              </>
-            )
-            } */}
           </Box>
           <Divider />
-          <Box sx={{ height: 400, width: '100%' }}>
+          <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>
             <DataGrid
               rows={rows}
               columns={columns}
@@ -221,6 +193,19 @@
               pageSizeOptions={[5]}
               checkboxSelection
               disableRowSelectionOnClick
+              sx={{
+                '& .MuiDataGrid-columnHeaders': {
+                  position: 'relative',
+                  zIndex: 1,
+                  backgroundColor: '#fff',
+                },
+                '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
+                  outline: 'none',
+                },
+                '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
+                  outline: 'none',
+                },
+              }}
             />
           </Box>
         </Paper>

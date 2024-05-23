@@ -4,9 +4,9 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import SignUp from '../Forms/RegisterForm';
-import { useEffect, useState} from 'react';
-import UpdateUserForm from '../Forms/UpdateUserForm';
+import RegisterForm from '../Forms/RegisterForm';
+import { useState} from 'react';
+
 
 
 
@@ -20,6 +20,9 @@ const style = {
   border: '1px solid #000',
   boxShadow: 24,
   p: 4,
+  overflowY: 'auto',
+  height: '95vh',
+  scrollbarWidth: 'thin',
 };
 
 export default function ModalAddUser() {
@@ -52,7 +55,7 @@ export default function ModalAddUser() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <SignUp  closeModal = {handleSubmit}/>
+            <RegisterForm  closeModal = {handleSubmit}/>
           </Box>
         </Fade>
       </Modal>

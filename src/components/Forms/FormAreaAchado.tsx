@@ -3,7 +3,7 @@ import { useContextTable } from '../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { AreaAchado, NatAchado } from '../../types/types';
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 
 
@@ -13,11 +13,11 @@ const FormAreaAchado = () => {
 
     const onSubmit = (data: AreaAchado) => {
         api.post('/area-achado', data).then(response => {
-            TypeInfo(response.data.message, 'success');
+            TypeAlert(response.data.message, 'success');
             reset();
             setValue('natureza', null);
         }).catch((error) => {
-            TypeInfo(error.response.data.message, 'warning');
+            TypeAlert(error.response.data.message, 'warning');
             setValue('natureza', null);
         });
 

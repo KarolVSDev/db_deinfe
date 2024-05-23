@@ -36,22 +36,22 @@ function Copyright(props: any) {
 
 export default function SignInSide() {
   const [showPassword, setShowPassword] = React.useState(false);
-  const {register, handleSubmit, formState:{errors}} = useForm<UserLogin>({})
+  const { register, handleSubmit, formState: { errors } } = useForm<UserLogin>({})
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
-  const {login, isLoggedIn} = useAuth();
- 
+  const { login, isLoggedIn } = useAuth();
 
-  const onSubmit = (data:UserLogin) => {
+
+  const onSubmit = (data: UserLogin) => {
     login(data);
   }
-  
+
   console.log(isLoggedIn)
   return (
     <>
-      <Grid container component="main" sx={{height:'100vh'}} >
+      <Grid container component="main" sx={{ height: '100vh' }} >
         <CssBaseline />
         <Grid
           item
@@ -67,14 +67,29 @@ export default function SignInSide() {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6}  square>
+        <Grid item 
+          xs={12} 
+          sm={8} 
+          md={5} 
+          component={Paper} 
+          elevation={6}  
+          square
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: { xs: 2, sm: 3, md: 4 }}}>
           <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+           sx={{
+            my: 8,
+            mx: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%', 
+            maxWidth: '400px', 
+
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: 'rgb(17 24 39)' }}>
@@ -83,7 +98,7 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Entrar
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, flex:'col', display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, flex: 'col', display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
               <TextField
                 margin="normal"
                 fullWidth
@@ -91,16 +106,16 @@ export default function SignInSide() {
                 label="E-mail"
                 autoComplete="email"
                 autoFocus
-                error= {!!errors?.email}
-                {...register("email", {required:'Campo obrigatório', validate:(value) => validator.isEmail(value) || 'Insira um E-mail válido'})}
+                error={!!errors?.email}
+                {...register("email", { required: 'Campo obrigatório', validate: (value) => validator.isEmail(value) || 'Insira um E-mail válido' })}
               />
-                {errors?.email && (
-                    <Typography variant="caption" sx={{ color: 'red'}}>
-                      {errors.email.message}
-                    </Typography>
-                  )}
-              <FormControl  sx={{ width: '100%' }} variant="outlined" error={!!errors?.password}>
-                <InputLabel sx={{p:'px'}} htmlFor="senha">Senha</InputLabel>
+              {errors?.email && (
+                <Typography variant="caption" sx={{ color: 'red' }}>
+                  {errors.email.message}
+                </Typography>
+              )}
+              <FormControl sx={{ width: '100%' }} variant="outlined" error={!!errors?.password}>
+                <InputLabel sx={{ p: 'px' }} htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
                   required
                   id="password"
@@ -108,15 +123,16 @@ export default function SignInSide() {
                   fullWidth
                   label="Senha"
                   error={!!errors?.password}
-                  {...register('password',{required:'Campo obrigatório',
-                  minLength: {
-                    value: 8,
-                    message: 'A senha deve ter 8 caracteres no mínimo',
-                  },
-                  pattern: {
-                    value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
-                    message: 'A senha deve conter letras maiúsculas, minúsculas, números e um caractere especial #$%'
-                  }
+                  {...register('password', {
+                    required: 'Campo obrigatório',
+                    minLength: {
+                      value: 8,
+                      message: 'A senha deve ter 8 caracteres no mínimo',
+                    },
+                    pattern: {
+                      value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+                      message: 'A senha deve conter letras maiúsculas, minúsculas, números e um caractere especial #$%'
+                    }
                   })}
                   endAdornment={
                     <InputAdornment position="end">
@@ -133,21 +149,23 @@ export default function SignInSide() {
                 />
               </FormControl>
               {errors?.password && (
-                <Typography variant="caption" sx={{ mr:'30px', color: 'red'}}>
-                {errors.password.message}
-              </Typography>
+                <Typography variant="caption" sx={{ mr: '30px', color: 'red' }}>
+                  {errors.password.message}
+                </Typography>
               )}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, bgcolor:'rgb(17 24 39)','&:hover': {
-                  bgcolor: '#1e293b', 
-                },}}
+                sx={{
+                  mt: 3, mb: 2, bgcolor: 'rgb(17 24 39)', '&:hover': {
+                    bgcolor: '#1e293b',
+                  },
+                }}
               >
                 Entrar
               </Button>
-              <Copyright sx={{pt:'15px', m:'auto'}}/>
+              <Copyright sx={{ pt: '15px', m: 'auto' }} />
             </Box>
           </Box>
         </Grid>

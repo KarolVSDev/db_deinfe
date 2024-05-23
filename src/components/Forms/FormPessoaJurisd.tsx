@@ -11,7 +11,7 @@ import validator from 'validator'
 import { useForm } from 'react-hook-form';
 import { Jurisd, PessoaFisica, PessoaJurisd } from '../../types/types'
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import SearchParams from '../Inputs/SearchParams';
 import { useContextTable } from '../../context/TableContext';
@@ -37,9 +37,9 @@ const FormPessoaJurisd = () => {
     data.dataNomeacao = Ndata
     data.dataExoneracao = Edata
     api.post('/pessoajurisd', data).then(response => {
-      TypeInfo(response.data.message, 'success')
+      TypeAlert(response.data.message, 'success')
     }).catch((error) => {
-      TypeInfo(error.response.data.message, 'warning');
+      TypeAlert(error.response.data.message, 'warning');
     })
   }
 

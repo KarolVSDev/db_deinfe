@@ -21,7 +21,7 @@ import InputLabel from '@mui/material/InputLabel/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 import {User} from '../../types/types'
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -30,7 +30,7 @@ interface SignUpProps {
   closeModal: () => void;
 }
 
-const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
+const RegisterForm:React.FC<SignUpProps> = ({closeModal}) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { register, handleSubmit,formState: { errors } } = useForm<User>({});
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -41,10 +41,10 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
   const onSubmit = (data:User) => {
     api.post('/usuario',data).then(response => {
       closeModal()
-      TypeInfo(response.data.message, 'success')
+      TypeAlert(response.data.message, 'success')
 
     }).catch((error) => {
-      TypeInfo(error.response.data.message, 'warning');
+      TypeAlert(error.response.data.message, 'warning');
     })
   }
 
@@ -53,7 +53,7 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
   }
 
   return (
-      <Container  maxWidth="xs"  sx={{ height:'95vh'}} >
+      <Container  maxWidth="xs"  sx={{ height:'80vh'}} >
         <CssBaseline />
             <IconButton onClick={handleModalClose} sx={{ml:35, mb:0,mr:0,'&:hover': {
                 bgcolor: '#1e293b', color:'#ffffff', 
@@ -199,4 +199,4 @@ const SignUp:React.FC<SignUpProps> = ({closeModal}) => {
   )
 }
 
-export default SignUp;
+export default RegisterForm;

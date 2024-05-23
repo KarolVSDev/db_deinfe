@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { Jurisd, PessoaFisica } from '../../types/types'
+import { Jurisd } from '../../types/types'
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 import formatDate from '../../hooks/DateFormate';
 
@@ -27,9 +27,9 @@ const FormJurisd = () => {
     data.dataCriacao = dataC;
     data.dataExtincao = dataE;
       api.post('/jurisd', data).then(response => {
-        TypeInfo(response.data.message, 'success')
+        TypeAlert(response.data.message, 'success')
       }).catch((error) => {
-        TypeInfo(error.response.data.message, 'warning');
+        TypeAlert(error.response.data.message, 'warning');
       })
   }
 

@@ -8,7 +8,7 @@ import validator from 'validator'
 import { useForm } from 'react-hook-form';
 import { PessoaFisica } from '../../types/types'
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 import { useContextTable } from '../../context/TableContext';
 
@@ -20,10 +20,10 @@ const FormPessoaFisica = () => {
 
   const onSubmit = (data: PessoaFisica) => {
     api.post('/pessoafisica/create', data).then(async response => {
-      TypeInfo(response.data.message, 'success')
+      TypeAlert(response.data.message, 'success')
       await getAllPessoaFisica()
     }).catch((error) => {
-      TypeInfo(error.response.data.message, 'warning');
+      TypeAlert(error.response.data.message, 'warning');
     })
   }
 

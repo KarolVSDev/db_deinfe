@@ -52,11 +52,14 @@ export interface PessoaFisica {
   ramal: string;
   email: string;
   ativo: string;
+  interessado?: Interessado[]
+  pessoJurisd?: PessoaJurisd[]
+  processo?: Processo[]
 }
 export interface Procurador {
   id: string
   nome: string;
-  ativo:string;
+  ativo: string;
 }
 export interface Relator {
   id: string;
@@ -73,12 +76,12 @@ export interface NatAchado {
 export interface DivAchado {
   id: string;
   descricao: string;
-  area:string;
+  area: string;
 }
 export interface AreaAchado {
   id: string;
   descricao: string;
-  natureza:string | null;
+  natureza: string | null;
 }
 
 export interface Achado {
@@ -86,8 +89,8 @@ export interface Achado {
   titulo: string;
   texto: string;
   criterio: string;
-  ativo:string;
-  divisao:string;
+  ativo: string;
+  divisao: string;
 }
 
 export interface Jurisd {
@@ -112,12 +115,12 @@ export interface Jurisd {
   dataExtincao: string;
   poder: string;
   ativo: string;
-  uf:string;
+  uf: string;
 }
 
 export interface Jurisd_Jurisd {
-  principal:string;
-  subordinado:string;
+  principal: string;
+  subordinado: string;
 }
 export interface Processo {
   id: string;
@@ -131,21 +134,21 @@ export interface Processo {
   relator: string;
   procurador: string;
   advogado: string;
-  apensado:string;
-  interessado:string;
+  apensado: string;
+  interessado: string;
 }
 
 export interface Apenso {
-  id:string
-  principal:string;
-  apensado:string;
+  id: string
+  principal: string;
+  apensado: string;
 }
 
 export interface Interessado {
   id: string;
   interesse: string;
-  processo:{numero:string};
-  pessoa:{nome:string};
+  processo: {};
+  pessoa: {};
 }
 //esse type é para o formulário de criação de pessoaJurisd obs: datas aqui são string, pra retorno vai ter que ser date
 export interface PessoaJurisd {

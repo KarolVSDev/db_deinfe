@@ -1,13 +1,12 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
 import { Achado, DivAchado, Jurisd, PessoaFisica } from '../../types/types'
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert } from '../../hooks/TypeAlert';
 import { useContextTable } from '../../context/TableContext';
 import { Autocomplete } from '@mui/material';
 import RegisterButton from '../Buttons/RegisterButton';
@@ -20,10 +19,10 @@ const FormAchado = () => {
 
   const onSubmit = (data: Achado) => {
     api.post('/achado', data).then(response => {
-      TypeInfo(response.data.message, 'success')
+      TypeAlert(response.data.message, 'success')
       reset()
     }).catch((error) => {
-      TypeInfo(error.response.data.message, 'warning');
+      TypeAlert(error.response.data.message, 'warning');
     })
   }
 

@@ -3,7 +3,7 @@ import { useContextTable } from '../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { Jurisd, Jurisd_Jurisd, Processo } from '../../types/types';
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 
 const FormJurisd_Jurisd = () => {
@@ -12,9 +12,9 @@ const FormJurisd_Jurisd = () => {
 
     const onSubmit = (data: Jurisd_Jurisd) => {
         api.post('/jurisd-jurisd', data).then(response => {
-          TypeInfo(response.data.message, 'success');
+          TypeAlert(response.data.message, 'success');
         }).catch((error) => {
-          TypeInfo(error.response.data.message, 'warning');
+          TypeAlert(error.response.data.message, 'warning');
         });
     };
 

@@ -15,7 +15,7 @@ const FormNatAchado = () => {
           TypeAlert(response.data.message, 'success');
           reset()
         }).catch((error) => {
-          TypeInfo(error.response.data.message, 'warning');
+          TypeAlert(error.response.data.message, 'warning');
         });
 
     };

@@ -57,7 +57,7 @@ export default function ModalPessoaFisica() {
 
   return (
     <div>
-      <Button onClick={handleOpen} variant='contained' sx={{ mb: 2 }} >
+      <Button onClick={handleOpen} variant='contained'  >
         Adicionar Registro
       </Button>
       <Modal

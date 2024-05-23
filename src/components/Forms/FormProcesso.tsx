@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
 import { Jurisd, PessoaFisica, Processo, Procurador, Relator } from '../../types/types'
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
 import { useContextTable } from '../../context/TableContext';
 import { Accordion, AccordionDetails, AccordionSlots, AccordionSummary, Autocomplete, Fade, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -36,15 +36,16 @@ const FormProcesso = () => {
     data.arquivamento = formatDate(dataArq)
     console.log(data)
     api.post('/processo', data).then(response => {
-      TypeInfo(response.data.message, 'success')
+      TypeAlert(response.data.message, 'success')
     }).catch((error) => {
-      TypeInfo(error.response.data.message, 'warning');
+      TypeAlert(error.response.data.message, 'warning');
     })
   }
 
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
+  
   return (
     <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
       <CssBaseline />

@@ -21,6 +21,9 @@ const style = {
   border: '1px solid #000',
   boxShadow: 24,
   p: 4,
+  overflowY: 'auto',
+  height: '95vh',
+  scrollbarWidth: 'thin',
 };
 
 interface UpdateUser {
@@ -60,7 +63,7 @@ const ModalUpdateUser: React.FC<UpdateUser> = ({ userId }) => {
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={handleClose} sx={{
-              ml: 38, mr: 0, mt: 4, '&:hover': {
+              ml: 38, mr: 0, '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>

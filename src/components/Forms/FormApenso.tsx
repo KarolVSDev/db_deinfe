@@ -3,7 +3,7 @@ import { useContextTable } from '../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { Apenso, Processo } from '../../types/types';
 import { api } from '../../service/api';
-import { TypeInfo } from '../../hooks/TypeAlert';
+import { TypeAlert } from '../../hooks/TypeAlert';
 import RegisterButton from '../Buttons/RegisterButton';
 
 const FormApenso = () => {
@@ -12,10 +12,10 @@ const FormApenso = () => {
 
     const onSubmit = (data: Apenso) => {
         api.post('/apenso', data).then(response => {
-          TypeInfo(response.data.message, 'success');
+          TypeAlert(response.data.message, 'success');
           reset()
         }).catch((error) => {
-          TypeInfo(error.response.data.message, 'warning');
+          TypeAlert(error.response.data.message, 'warning');
         });
     };
 
