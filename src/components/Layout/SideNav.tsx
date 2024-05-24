@@ -106,9 +106,9 @@ export default function SideNav() {
         {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>}])
     }
   }
-  //const location = useLocation()
+  const location = useLocation()
 
-  //console.log({location})
+  
 
 useEffect(() => {
   getUserIdByEmail()
@@ -141,19 +141,29 @@ useEffect(() => {
                       minHeight: 48,
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
+                      ...(location.pathname === page.link && {
+                        backgroundColor: '#1e293b !important', color:'#f8fafc !important'
+                      }),
+                      '&:hover': {
+                        backgroundColor: 'inherit', 
+                        color: 'inherit',          
+                      },
                     }}
                     
 
                   >
-                    
                     <ListItemIcon
                       sx={{
                         minWidth: 0,
                         mr: open ? 3 : 'auto',
                         justifyContent: 'center',
-                        color:'#404040'
+                        color:'#404040',
+                        ...(location.pathname === page.link && {
+                          color:'#f8fafc', 
+                        })
                       }}
                     >
+                    
                       {page?.icon}
                     </ListItemIcon>
                       <ListItemText primary={page?.name} sx={{ opacity: open ? 1 : 0 }} />

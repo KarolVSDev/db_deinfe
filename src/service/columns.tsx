@@ -3,7 +3,7 @@ export const pessoaFisicaHeader = [
     {id:'cpf', label:'CPF', minWidth:150},
     {id:'rg', label:'RG', minWidth:150},
     {id:'profissao', label:'Profissão', minWidth:150},
-    {id:'genero', label:'Genero', minWidth:150},
+    {id:'genero', label:'Gênero', minWidth:150},
     {id:'cep', label:'CEP', minWidth:150},
     {id:'logradouro', label:'Logradouro', minWidth:150},
     {id:'complemento', label:'Complemento', minWidth:150},

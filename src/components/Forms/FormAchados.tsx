@@ -37,7 +37,7 @@ const FormAchado = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form"  name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} sx={{width:'360px'}}>
+        <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} sx={{width:'360px'}}>
         
               <TextField
                 variant='filled'
