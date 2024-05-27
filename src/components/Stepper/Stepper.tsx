@@ -7,35 +7,35 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import FormNatAchado from '../Forms/FormNatAchado';
-import FormAreaAchado from '../Forms/FormAreaAchado';
-import FormDivAchado from '../Forms/FormDivAchado';
-import FormAchado from '../Forms/FormAchados';
+import FormNatAchado from '../Forms/FormsTable/Register/FormNatAchado';
+import FormAreaAchado from '../Forms/FormsTable/Register/FormAreaAchado';
+import FormDivAchado from '../Forms/FormsTable/Register/FormDivAchado';
+import FormAchado from '../Forms/FormsTable/Register/FormAchados';
 
 const steps = [
   {
-    label:'Registro de Natureza do Achado',
-    component:<FormNatAchado/>
+    label: 'Registro de Natureza do Achado',
+    component: <FormNatAchado />
   },
   {
-    label:'Registro da Área do Achado',
-    component:<FormAreaAchado/>
+    label: 'Registro da Área do Achado',
+    component: <FormAreaAchado />
   },
   {
-    label:'Registro da Divisão do Achado',
-    component:<FormDivAchado/>
+    label: 'Registro da Divisão do Achado',
+    component: <FormDivAchado />
   },
   {
-    label:'Registro do Achado',
-    component:<FormAchado/>
+    label: 'Registro do Achado',
+    component: <FormAchado />
   }
 ];
 
 export interface StepperProps {
-  onCloseModal:Boolean;
+  onCloseModal: Boolean;
 }
 
-export default function StepperV({}) {
+export default function StepperV({ }) {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handleNext = () => {

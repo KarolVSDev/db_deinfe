@@ -93,7 +93,7 @@ export default function SideNav() {
   } 
   
   const [pages, setPages] = useState<any>([
-        {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
+        // {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
         {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
         
   ]);
@@ -101,7 +101,7 @@ export default function SideNav() {
   const verifyUser = () => {
     if(email === env.EMAIL_MASTER){
       setPages([
-        {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
+        // {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
         {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
         {name:'Gerência de usuários', link:'/dashboard/usersadmin',  icon:<GroupAddIcon/>}])
     }

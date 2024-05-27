@@ -176,15 +176,6 @@ export default function NavBar() {
           >
             Focus
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
           <Box sx={{ flexGrow: 1 }} />
             {email !== env.EMAIL_MASTER ? (
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

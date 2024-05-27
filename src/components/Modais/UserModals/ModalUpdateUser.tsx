@@ -4,9 +4,10 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import RegisterForm from '../Forms/RegisterForm';
-import { useState} from 'react';
-
+import { useEffect, useState } from 'react';
+import UpdateUserForm from '../../Forms/FormsUser/UpdateUserForm';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
@@ -25,7 +26,10 @@ const style = {
   scrollbarWidth: 'thin',
 };
 
-export default function ModalAddUser() {
+interface UpdateUser {
+  userId: string;
+}
+const ModalUpdateUser: React.FC<UpdateUser> = ({ userId }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -34,12 +38,15 @@ export default function ModalAddUser() {
     setOpen(false)
   }
 
+  useEffect(() => {
+
+  }, [open])
 
   return (
     <div>
-        <Button onClick={handleOpen}variant='contained'sx={{mb:2}} >
-                Add Usuário +
-        </Button>
+      <Button onClick={handleOpen} variant='outlined' color='secondary' sx={{ mb: 1 }}>
+        Atualizar
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -55,10 +62,19 @@ export default function ModalAddUser() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <RegisterForm  closeModal = {handleSubmit}/>
+            <IconButton onClick={handleClose} sx={{
+              ml: 38, mr: 0, '&:hover': {
+                bgcolor: '#1e293b', color: '#ffffff',
+              }
+            }}>
+              <CloseIcon />
+            </IconButton>
+            <UpdateUserForm closeModal={handleSubmit} userId={userId} />
           </Box>
         </Fade>
       </Modal>
     </div>
   );
 }
+
+export default ModalUpdateUser;

@@ -24,12 +24,13 @@ import {
 import { TypeInfo } from '../../hooks/TypeAlert';
 import { useContextTable } from '../../context/TableContext';
 import SearchParams from '../Inputs/SearchParams';
-import ModalPessoaFisica from '../Modais/ModalAddDataTable';
+import ModalPessoaFisica from '../Modais/DataTableModals/ModalAddDataTable';
 import Actions from './Actions';
 import * as XLSX from 'xlsx';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdatePF';
 
 
 export default function DatabaseTable() {
@@ -41,6 +42,7 @@ export default function DatabaseTable() {
     arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp, handleLocalization,
     getAllPessoaFisica } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
+  const [openModal, setOpenModal] = useState(false)
 
 
 
@@ -160,9 +162,14 @@ export default function DatabaseTable() {
     }
   }, [arrayPessoaFisica])
 
-  function handleUpdate(selectedRow: GridRowId): void {
-    throw new Error('Function not implemented.');
+  function handleUpdate(selectedRow: GridRowId) {
+    setSelectedRow(selectedRow);
+    setOpenModal(true)
   }
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   function handleDelete(selectedRow: GridRowId): void {
     throw new Error('Function not implemented.');
@@ -223,7 +230,7 @@ export default function DatabaseTable() {
             getRowClassName={(params: GridRowParams) => {
               return params.id === selectedRow ? 'selected-row' : '';
             }}
-            
+
             sx={{
               '& .MuiDataGrid-columnHeaders': {
                 position: 'relative',
@@ -237,13 +244,21 @@ export default function DatabaseTable() {
                 outline: 'none',
               },
               '& .MuiDataGrid-row:hover': {
-                backgroundColor: '#e2e8f0', color:'#000',
+                backgroundColor: '#e2e8f0', color: '#000',
               },
               cursor: 'pointer'
             }}
           />
         </Box>
       </Paper>
+      {selectedRow !== null && (
+        <ModalUpdatePF
+        id={selectedRow}
+        dataType={dataType}
+        open={openModal}
+        onClose={handleCloseModal}
+        />
+      )}
     </Grid>
   );
 }

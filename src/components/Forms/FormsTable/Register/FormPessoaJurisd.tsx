@@ -9,15 +9,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { Jurisd, PessoaFisica, PessoaJurisd } from '../../types/types'
-import { api } from '../../service/api';
-import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
+import { Jurisd, PessoaFisica, PessoaJurisd } from '../../../../types/types'
+import { api } from '../../../../service/api';
+import { TypeAlert, TypeInfo } from '../../../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
-import SearchParams from '../Inputs/SearchParams';
-import { useContextTable } from '../../context/TableContext';
+import SearchParams from '../../../Inputs/SearchParams';
+import { useContextTable } from '../../../../context/TableContext';
 import { useEffect, useState } from 'react';
 import { Autocomplete } from '@mui/material';
-import RegisterButton from '../Buttons/RegisterButton';
+import RegisterButton from '../../../Buttons/RegisterButton';
 
 
 const FormPessoaJurisd = () => {
@@ -54,7 +54,7 @@ const FormPessoaJurisd = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form"  name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p:2 }}>
+        <Box component="form" name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={3} >
               <TextField
@@ -249,7 +249,7 @@ const FormPessoaJurisd = () => {
               />
             </Grid>
           </Grid>
-          <RegisterButton/>
+          <RegisterButton />
         </Box>
       </Box>
     </Container>
