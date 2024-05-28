@@ -42,7 +42,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
   const renderForm = () => {
     switch (dataType){
       case 'pessoafisica':
-        return <FormPessoaFisica closeModal={onClose} id={id}/>
+        return <FormUpdatePF closeModal={onClose} id={id}/>
     }
   }
 

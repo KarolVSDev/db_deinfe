@@ -37,6 +37,7 @@ const style = {
   overflowY: 'auto',
   height: '95vh',
   scrollbarWidth: 'thin',
+  backgroundColor:'#111827'
 };
 
 
@@ -76,7 +77,7 @@ export default function ModalPessoaFisica() {
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={handleClose} sx={{
-              ml: 85, mb: 4, mr: 0, '&:hover': {
+              ml: 85, mb: 4, mr: 0, color:'#fff', '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>

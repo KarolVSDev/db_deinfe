@@ -1,7 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } from '@mui/material';
-import { api } from '../../service/api';
-import { DataGrid, GridColDef, GridRowId, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import {
   ColumnConfig,
   Interessado
@@ -21,11 +20,8 @@ import {
   pessoaJurisdHeader,
   arrayRelationsHeader
 } from '../../service/columns';
-import { TypeInfo } from '../../hooks/TypeAlert';
 import { useContextTable } from '../../context/TableContext';
-import SearchParams from '../Inputs/SearchParams';
 import ModalPessoaFisica from '../Modais/DataTableModals/ModalAddDataTable';
-import Actions from './Actions';
 import * as XLSX from 'xlsx';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -122,9 +118,28 @@ export default function DatabaseTable() {
   //traduz o dataGrid
   handleLocalization
 
+  //captura o estado atual do dataGrid
+  const getVisibleColumnsFromModel = (columns: GridColDef[], model: GridColumnVisibilityModel) => {
+    return console.log(columns, model)
+  };
+  
+  const captureDataGridState = () => {
+    const gridState = {
+      columns: columns,
+      rows:rows,
+    }
+    return gridState
+  }
+
+
   //export
-  const exportToExcel = () => {
-    const exportRows = rows.map(row => {
+  interface GridState {
+    columns: GridColDef[];
+    rows: any[];
+  }
+  const exportToExcel = (gridState:GridState) => {
+    const {columns, rows} = gridState
+    const exportRows = rows.map((row) => {
       const exportRow: any = { ...row };
 
       if (dataType === 'interessado') {
@@ -132,7 +147,7 @@ export default function DatabaseTable() {
         exportRow.processo = row.processo ? row.processo.numero : '';
       }
 
-      return exportRow;
+      return  exportRow;
     });
 
     const wb = XLSX.utils.book_new();
@@ -161,7 +176,8 @@ export default function DatabaseTable() {
       setRows(createRows(arrayPessoaFisica))
     }
   }, [arrayPessoaFisica])
-
+  //
+  
   function handleUpdate(selectedRow: GridRowId) {
     setSelectedRow(selectedRow);
     setOpenModal(true)
@@ -174,6 +190,7 @@ export default function DatabaseTable() {
   function handleDelete(selectedRow: GridRowId): void {
     throw new Error('Function not implemented.');
   }
+
 
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
@@ -193,7 +210,10 @@ export default function DatabaseTable() {
           </Select>
           <ModalPessoaFisica />
           <Box>
-            <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={exportToExcel}>
+            <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
+              const gridState = captureDataGridState();
+              exportToExcel(gridState)
+              }}>
               <FileDownloadIcon />
             </Button>
           </Box>
@@ -229,6 +249,10 @@ export default function DatabaseTable() {
             }}
             getRowClassName={(params: GridRowParams) => {
               return params.id === selectedRow ? 'selected-row' : '';
+            }}
+            onColumnVisibilityModelChange={(model:GridColumnVisibilityModel) => {
+              const visibleCols = getVisibleColumnsFromModel(columns, model);
+              return visibleCols
             }}
 
             sx={{

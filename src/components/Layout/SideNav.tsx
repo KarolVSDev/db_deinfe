@@ -131,7 +131,7 @@ useEffect(() => {
             </IconButton>
           </DrawerHeader>
           <Divider />
-          <List>
+          <List sx={{pt:0}}>
             {pages.map((page:any, index:any) => (
               <ListItem key={index} disablePadding > 
                   <ListItemButton

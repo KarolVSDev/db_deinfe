@@ -281,7 +281,7 @@ const UpdateUserForm: React.FC<SignUpProps> = ({ closeModal, userId }) => {
                 Atualizar
               </Button>
               {location.pathname === '/dashboard/edituser' && (
-                <Link href="/dashboard" variant="body2" sx={{ cursor: 'pointer' }}>
+                <Link href="/dashboard/table" variant="body2" sx={{ cursor: 'pointer' }}>
                   Voltar para Dashboard
                 </Link>
               )}

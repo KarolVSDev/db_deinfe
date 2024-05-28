@@ -14,12 +14,9 @@ import { useContextTable } from '../../../../context/TableContext';
 import { GridRowId } from '@mui/x-data-grid';
 import FormInteresse from './FormInteresse';
 
-interface FormPFProps {
-  id?:GridRowId;
-  closeModal:() => void;
-}
 
-const FormPessoaFisica: React.FC<FormPFProps> = ({id, closeModal}) => {
+
+const FormPessoaFisica = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
   const { getAllPessoaFisica } = useContextTable()
@@ -28,7 +25,6 @@ const FormPessoaFisica: React.FC<FormPFProps> = ({id, closeModal}) => {
     api.post('/pessoafisica/create', data).then(async response => {
       TypeAlert(response.data.message, 'success')
       await getAllPessoaFisica()
-      closeModal
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
@@ -404,9 +400,6 @@ const FormPessoaFisica: React.FC<FormPFProps> = ({id, closeModal}) => {
             </Grid>
           </Grid>
           <RegisterButton />
-      {id !== null && (
-        <FormInteresse/>
-      )}
         </Box>
       </Box>
     </Container>

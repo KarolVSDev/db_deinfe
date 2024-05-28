@@ -11,9 +11,14 @@ import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useContextTable } from '../../../../context/TableContext';
+import { GridRowId } from '@mui/x-data-grid';
 
+interface FormPFProps {
+  id?:GridRowId;
+  closeModal:() => void;
+}
 
-const FormUpdatePF = () => {
+const FormUpdatePF: React.FC<FormPFProps> = ({id, closeModal}) => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
   const { getAllPessoaFisica } = useContextTable()
@@ -22,6 +27,7 @@ const FormUpdatePF = () => {
     api.post('/pessoafisica/create', data).then(async response => {
       TypeAlert(response.data.message, 'success')
       await getAllPessoaFisica()
+      closeModal
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
