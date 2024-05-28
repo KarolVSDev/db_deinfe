@@ -52,7 +52,7 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
        await api.post('/auth/login', data).then((response:any) => {
             setCookies(response.data)
             setIsLoggedIn(true)
-            navigate('/dashboard')
+            navigate('/dashboard/table')
         }).catch((error:any) => {
             if(error.response.status === 401){
                 TypeAlert(error.response.data.message, 'error' )
