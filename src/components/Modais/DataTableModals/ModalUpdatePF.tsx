@@ -3,17 +3,10 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { PessoaFisica } from '../../../types/types';
-import UpdateUserForm from '../../Forms/FormsUser/UpdateUserForm';
 import FormUpdatePF from '../../Forms/FormsTable/Update/FormUpdatePF';
 import { GridRowId } from '@mui/x-data-grid';
-import FormPessoaFisica from '../../Forms/FormsTable/Register/FormPessoaFisica';
-
-
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -28,6 +21,7 @@ const style = {
   overflowY: 'auto',
   height: '95vh',
   scrollbarWidth: 'thin',
+  backgroundColor:'#111827'
 };
 
 interface ModalUpdateProps {
@@ -64,7 +58,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={onClose} sx={{
-              ml: 38, mr: 0, '&:hover': {
+              ml: 80, mr: 0,color:'#ffffff', '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>

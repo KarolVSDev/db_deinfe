@@ -171,7 +171,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     }
 
-
     useEffect(() => {
         getAllPessoaFisica()
         getAllJurisd()
@@ -199,7 +198,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayRelations,
             arrayRelationpp,
             handleLocalization,
-            getAllPessoaFisica
+            getAllPessoaFisica,
         }}>
             {children}
         </TableContext.Provider>
