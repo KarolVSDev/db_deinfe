@@ -12,8 +12,11 @@ import { TypeInfo } from '../../hooks/TypeAlert';
 import ModalAddUser from '../Modais/ModalAddUser';
 import ModalUpdateUser from '../Modais/ModalUpdateUser';
 
+interface ListProps {
+    dataState:any[];
+};
 
-export default function ListUsers() {
+export default function ListUsers(data:ListProps) {
 
     const [users, setUsers] = useState<AllUsers[]>()
 
@@ -38,7 +41,6 @@ export default function ListUsers() {
         getUsers()
     },[])
 
-    
 
     return (
         <Grid sx={{overflowY:'auto', height:'95vh', scrollbarWidth:'thin', pt:10, pl:2, pr:2}} >
