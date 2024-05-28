@@ -6,31 +6,25 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { Jurisd } from '../../types/types'
-import { api } from '../../service/api';
-import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
-import RegisterButton from '../Buttons/RegisterButton';
-import formatDate from '../../hooks/DateFormate';
+import { PessoaFisica } from '../../../../types/types'
+import { api } from '../../../../service/api';
+import { TypeAlert } from '../../../../hooks/TypeAlert';
+import RegisterButton from '../../../Buttons/RegisterButton';
+import { useContextTable } from '../../../../context/TableContext';
 
 
-const FormJurisd = () => {
+const FormUpdatePF = () => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm<Jurisd>({});
+  const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
+  const { getAllPessoaFisica } = useContextTable()
 
-
-
-  const onSubmit = (data: Jurisd) => {
-    let dataC;
-    let dataE;
-    dataC = formatDate(data.dataCriacao)
-    dataE = formatDate(data.dataExtincao)
-    data.dataCriacao = dataC;
-    data.dataExtincao = dataE;
-      api.post('/jurisd', data).then(response => {
-        TypeAlert(response.data.message, 'success')
-      }).catch((error) => {
-        TypeAlert(error.response.data.message, 'warning');
-      })
+  const onSubmit = (data: PessoaFisica) => {
+    api.post('/pessoafisica/create', data).then(async response => {
+      TypeAlert(response.data.message, 'success')
+      await getAllPessoaFisica()
+    }).catch((error) => {
+      TypeAlert(error.response.data.message, 'warning');
+    })
   }
 
   return (
@@ -44,7 +38,7 @@ const FormJurisd = () => {
         }}
       >
 
-        <Box component="form"  name='formJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
+        <Box component="form" name='formPessoaFisica' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={3} >
               <TextField
@@ -52,10 +46,10 @@ const FormJurisd = () => {
                 autoComplete="given-name"
                 type="text"
                 required
+                autoFocus
                 fullWidth
                 id="nome"
                 label="Nome Completo"
-                autoFocus
                 error={errors?.nome?.type === 'required'}
                 {...register('nome', {
                   required: 'Campo obrigatório', pattern: {
@@ -70,7 +64,6 @@ const FormJurisd = () => {
                 </Typography>
               )}
             </Grid>
-
             <Grid item xs={3} >
               <TextField
                 variant='filled'
@@ -92,55 +85,28 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3} >
-              <TextField
-                variant='filled'
-                autoComplete="given-name"
-                required
-                fullWidth
-                id="sigla"
-                label="Sigla"
-                type="sigla"
-                autoFocus
-                error={!!errors?.sigla}
-                {...register("sigla", {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^[A-Z]+$/,
-                    message: 'Sigla inválida'
-                  }
-                })}
-              />
-
-              {errors?.sigla && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.sigla.message}
-                </Typography>
-              )}
-            </Grid>
-
             <Grid item xs={3}>
               <TextField
                 variant='filled'
                 required
-                placeholder='xx.xxx.xxx/xxxx-xx'
                 fullWidth
-                id="cnpj"
-                label="CNPJ"
+                placeholder='xxx.xxx.xxx-xx'
+                id="cpf"
+                label="CPF"
                 type="text"
-                error={!!errors?.cnpj}
-                {...register('cnpj', {
+                error={!!errors?.cpf}
+                {...register('cpf', {
                   required: 'Campo obrigatório',
                   pattern: {
-                    value: /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/
-                    ,
-                    message: 'CNPJ inválido'
+                    value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
+                    message: 'CPF inválido'
                   }
                 })}
               />
 
-              {errors?.cnpj && (
+              {errors?.cpf && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.cnpj.message}
+                  {errors.cpf.message}
                 </Typography>
               )}
             </Grid>
@@ -149,24 +115,78 @@ const FormJurisd = () => {
                 variant='filled'
                 required
                 fullWidth
-                id="ug"
-                label="UG"
+                placeholder='xxxxxxx-x'
+                id="rg"
+                label="RG"
                 type="text"
-                error={!!errors?.ug}
-                {...register('ug', {
+                error={!!errors?.rg}
+                {...register('rg', {
                   required: 'Campo obrigatório',
                   pattern: {
-                    value: /^\d{7}$/,
-                    message: 'Unidade gestora inválida'
+                    value: /^\d{1,2}\d{3}\d{3}-\d$/,
+                    message: 'RG inválido'
                   },
+
                 })}
               />
-              {errors?.ug && (
+
+              {errors?.rg && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.ug.message}
+                  {errors.rg.message}
                 </Typography>
               )}
             </Grid>
+
+            <Grid item xs={3}>
+              <TextField
+                variant='filled'
+                required
+                fullWidth
+                placeholder='Ex:Servidor'
+                id="profissao"
+                label="Profissão"
+                type="text"
+                error={!!errors?.profissao}
+                {...register('profissao', {
+                  required: 'Campo obrigatório', pattern: {
+                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
+                    message: 'Profissão inválida'
+                  }
+                })}
+              />
+
+              {errors?.profissao && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.profissao.message}
+                </Typography>
+              )}
+            </Grid>
+
+            <Grid item xs={3}>
+              <TextField
+                variant='filled'
+                required
+                fullWidth
+                placeholder='M ou F'
+                id="genero"
+                label="Gênero"
+                type="text"
+                error={!!errors?.genero}
+                {...register('genero', {
+                  required: 'Campo obrigatório', pattern: {
+                    value: /^[MF]$/,
+                    message: 'Gênero inválido'
+                  }
+                })}
+              />
+
+              {errors?.genero && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.genero.message}
+                </Typography>
+              )}
+            </Grid>
+
             <Grid item xs={3}>
               <TextField
                 variant='filled'
@@ -184,6 +204,7 @@ const FormJurisd = () => {
                   }
                 })}
               />
+
               {errors?.cep && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
                   {errors.cep.message}
@@ -224,6 +245,25 @@ const FormJurisd = () => {
               {errors?.complemento && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
                   {errors.complemento.message}
+                </Typography>
+              )}
+            </Grid>
+
+            <Grid item xs={3}>
+              <TextField
+                variant='filled'
+                required
+                fullWidth
+                id="numero"
+                label="Número"
+                type="text"
+                error={!!errors?.numero}
+                {...register('numero', { required: 'Campo obrigatório' })}
+              />
+
+              {errors?.numero && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.numero.message}
                 </Typography>
               )}
             </Grid>
@@ -278,7 +318,6 @@ const FormJurisd = () => {
                 </Typography>
               )}
             </Grid>
-
             <Grid item xs={3}>
               <TextField
                 variant='filled'
@@ -286,7 +325,7 @@ const FormJurisd = () => {
                 fullWidth
                 placeholder='(xx)xxxxx-xxxx'
                 id="telefone1"
-                label="Telefone 1"
+                label="Telelfone 1"
                 type="text"
                 error={!!errors?.telefone1}
                 {...register('telefone1', {
@@ -336,195 +375,25 @@ const FormJurisd = () => {
                 variant='filled'
                 required
                 fullWidth
-                placeholder='Ex:Servidor'
-                id="site"
-                label="Site"
+                id="ramal"
+                label="Ramal"
                 type="text"
-                error={!!errors?.site}
-                {...register('site', {
+                error={!!errors?.ramal}
+                {...register('ramal', {
                   required: 'Campo obrigatório',
                   pattern: {
-                    value: /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\.[a-zA-Z]{2,})?$/,
-                    message: 'Site inválido'
-                  }
-                })}
-              />
-              {errors?.site && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.site.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="cargoGestor"
-                label="Cargo do Gestor"
-                type="text"
-                error={!!errors?.cargoGestor}
-                {...register('cargoGestor', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Cargo inválido'
+                    value: /^\d{2}$/,
+                    message: 'Ramal inválido'
                   }
                 })}
               />
 
-              {errors?.cargoGestor && (
+              {errors?.ramal && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.cargoGestor.message}
+                  {errors.ramal.message}
                 </Typography>
               )}
             </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="normaCriacao"
-                label="Norma da Criação"
-                type="text"
-                error={!!errors?.normaCriacao}
-                {...register('normaCriacao', { required: 'Campo obrigatório' })}
-              />
-
-              {errors?.normaCriacao && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.normaCriacao.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="dataCriacao"
-                label="Data da Criação"
-                type="text"
-                error={!!errors?.dataCriacao}
-                {...register('dataCriacao', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                    message: 'Data da criação inválida'
-                  }
-                })}
-              />
-
-              {errors?.dataCriacao && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.dataCriacao.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="normaExtincao"
-                label="Norma da Extinção"
-                type="text"
-                error={!!errors?.normaExtincao}
-                {...register('normaExtincao', { required: 'Campo obrigatório' })}
-              />
-
-              {errors?.normaExtincao && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.normaExtincao.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="dataExtincao"
-                label="dataExtincao"
-                type="text"
-                error={!!errors?.dataExtincao}
-                {...register('dataExtincao', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                    message: 'Data da extinção inválida'
-                  }
-                })}
-              />
-
-              {errors?.dataExtincao && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.dataExtincao.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                autoComplete="given-name"
-                type="text"
-                required
-                fullWidth
-                id="poder"
-                label="poder"
-                autoFocus
-                error={errors?.poder?.type === 'required'}
-                {...register('poder', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^[A-Z]$/,
-                    message: 'Poder inválido'
-                  },
-                  maxLength: {
-                    value: 1,
-                    message: 'Poder inválido'
-                  }
-                })}
-              />
-              {errors?.poder && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                  {errors.poder?.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                variant='filled'
-                autoComplete="given-name"
-                type="text"
-                required
-                fullWidth
-                id="numero"
-                label="numero"
-                autoFocus
-                error={errors?.numero?.type === 'required'}
-                {...register('numero', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^\d+$/,
-                    message: 'Número inválido'
-                  },
-                  maxLength: {
-                    value: 6,
-                    message: 'Número inválido'
-                  }
-                })}
-              />
-              {errors?.numero && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                  {errors.numero?.message}
-                </Typography>
-              )}
-            </Grid>
-
           </Grid>
           <RegisterButton />
         </Box>
@@ -533,6 +402,6 @@ const FormJurisd = () => {
   )
 }
 
-export default FormJurisd;
+export default FormUpdatePF;
 
 

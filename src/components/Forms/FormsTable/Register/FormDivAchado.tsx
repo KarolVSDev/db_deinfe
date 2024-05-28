@@ -1,38 +1,36 @@
 import { Autocomplete, Box, Grid, TextField, Typography } from '@mui/material';
-import { useContextTable } from '../../context/TableContext';
+import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { AreaAchado, NatAchado } from '../../types/types';
-import { api } from '../../service/api';
-import { TypeAlert } from '../../hooks/TypeAlert';
-import RegisterButton from '../Buttons/RegisterButton';
+import { AreaAchado, DivAchado, NatAchado, } from '../../../../types/types';
+import { api } from '../../../../service/api';
+import { TypeAlert } from '../../../../hooks/TypeAlert';
+import RegisterButton from '../../../Buttons/RegisterButton';
 
 
-const FormAreaAchado = () => {
-    const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<AreaAchado>({});
-    const {arrayNatAchado} = useContextTable();
-
-    const onSubmit = (data: AreaAchado) => {
-        api.post('/area-achado', data).then(response => {
+const FormDivAchado = () => {
+    const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<DivAchado>({});
+    const { arrayAreaAchado } = useContextTable()
+    const onSubmit = (data: DivAchado) => {
+        api.post('/div-area-achado', data).then(response => {
             TypeAlert(response.data.message, 'success');
             reset();
-            setValue('natureza', null);
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
-            setValue('natureza', null);
         });
 
     };
 
+
     return (
-        <Box component="form"  name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box component="form" name='formDivAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={3}>
                 <TextField
                     variant='filled'
                     required
-                    autoFocus
                     fullWidth
+                    autoFocus
                     id="descricao"
-                    label='Área do Achado'
+                    label='Divisão do Achado'
                     type="text"
                     error={!!errors?.descricao}
                     {...register('descricao', {
@@ -51,10 +49,10 @@ const FormAreaAchado = () => {
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    options={arrayNatAchado}
-                    getOptionLabel={(option: NatAchado) => option.descricao}
-                    onChange={(event, value) => setValue('natureza', value?.id ?? '')}
-                    renderInput={(params) => <TextField variant='filled' {...params} label="Natureza" />}
+                    options={arrayAreaAchado}
+                    getOptionLabel={(option: AreaAchado) => option.descricao}
+                    onChange={(event, value) => setValue('area', value?.id ?? '')}
+                    renderInput={(params) => <TextField variant='filled' {...params} label="Área" />}
                 />
             </Grid>
             <RegisterButton />
@@ -62,4 +60,4 @@ const FormAreaAchado = () => {
     );
 }
 
-export default FormAreaAchado;
+export default FormDivAchado;

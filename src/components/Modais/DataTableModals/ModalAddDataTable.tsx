@@ -4,24 +4,24 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import SignUp from '../Forms/RegisterForm';
+import SignUp from '../../Forms/FormsUser/RegisterForm';
 import { useEffect, useState } from 'react';
-import UpdateUserForm from '../Forms/UpdateUserForm';
-import FormPessoaFisica from '../Forms/FormPessoaFisica';
-import PessoaFisicaStepper from '../Accordion/Accordion';
-import Stepper from '../Accordion/Accordion';
-import StepperFormsAddData from '../Accordion/Accordion';
-import AccordionComponent from '../Accordion/Accordion';
-import FormPessoaJurisd from '../Forms/FormPessoaJurisd';
+import UpdateUserForm from '../../Forms/FormsUser/UpdateUserForm';
+import FormPessoaFisica from '../../Forms/FormsTable/Register/FormPessoaFisica';
+import PessoaFisicaStepper from '../../Accordion/Accordion';
+import Stepper from '../../Accordion/Accordion';
+import StepperFormsAddData from '../../Accordion/Accordion';
+import AccordionComponent from '../../Accordion/Accordion';
+import FormPessoaJurisd from '../../Forms/FormsTable/Register/FormPessoaJurisd';
 import { IconButton, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import FormProcesso from '../Forms/FormProcesso';
-import FormInteresse from '../Forms/FormInteresse';
-import FormApenso from '../Forms/FormApenso';
-import InnerAccordion from '../Accordion/InnerAccordion';
-import FormJurisd from '../Forms/FormJurisd';
-import FormJurisd_Jurisd from '../Forms/FormJurisd_Jurisd';
-import StepperV from '../Stepper/Stepper';
+import FormProcesso from '../../Forms/FormsTable/Register/FormProcesso';
+import FormInteresse from '../../Forms/FormsTable/Register/FormInteresse';
+import FormApenso from '../../Forms/FormsTable/Register/FormApenso';
+import InnerAccordion from '../../Accordion/InnerAccordion';
+import FormJurisd from '../../Forms/FormsTable/Register/FormJurisd';
+import FormJurisd_Jurisd from '../../Forms/FormsTable/Register/FormJurisd_Jurisd';
+import StepperV from '../../Stepper/Stepper';
 
 
 const style = {
@@ -82,29 +82,29 @@ export default function ModalPessoaFisica() {
             }}>
               <CloseIcon />
             </IconButton>
-            <AccordionComponent  title={'Registro de Pessoa Física'}>
+            <AccordionComponent title={'Registro de Pessoa Física'}>
               <FormPessoaFisica />
               <InnerAccordion title={'Registro de Interessado'}>
                 <FormInteresse />
               </InnerAccordion>
             </AccordionComponent>
-            <AccordionComponent  title={'Registro de Pessoa Jurisdicionada'}>
+            <AccordionComponent title={'Registro de Pessoa Jurisdicionada'}>
               <FormPessoaJurisd />
             </AccordionComponent>
-            <AccordionComponent  title={'Registro de Processo'}>
+            <AccordionComponent title={'Registro de Processo'}>
               <FormProcesso />
               <InnerAccordion title='Registro de Apenso'>
                 <FormApenso />
               </InnerAccordion>
             </AccordionComponent>
-            <AccordionComponent  title={'Registro de Unidade Gestora'}>
+            <AccordionComponent title={'Registro de Unidade Gestora'}>
               <FormJurisd />
-              <InnerAccordion  title={"Registro de relação entre U.G's"}>
+              <InnerAccordion title={"Registro de relação entre U.G's"}>
                 <FormJurisd_Jurisd />
               </InnerAccordion>
             </AccordionComponent>
-            <AccordionComponent  title={'Registro de Achados'}>
-              <StepperV/>
+            <AccordionComponent title={'Registro de Achados'}>
+              <StepperV />
             </AccordionComponent>
           </Box>
         </Fade>

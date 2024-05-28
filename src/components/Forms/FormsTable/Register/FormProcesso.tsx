@@ -8,15 +8,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { Jurisd, PessoaFisica, Processo, Procurador, Relator } from '../../types/types'
-import { api } from '../../service/api';
-import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
-import { useContextTable } from '../../context/TableContext';
+import { Jurisd, PessoaFisica, Processo, Procurador, Relator } from '../../../../types/types'
+import { api } from '../../../../service/api';
+import { TypeAlert, TypeInfo } from '../../../../hooks/TypeAlert';
+import { useContextTable } from '../../../../context/TableContext';
 import { Accordion, AccordionDetails, AccordionSlots, AccordionSummary, Autocomplete, Fade, } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormApenso from './FormApenso';
-import RegisterButton from '../Buttons/RegisterButton';
-import AccordionComponent from '../Accordion/Accordion';
+import RegisterButton from '../../../Buttons/RegisterButton';
+import AccordionComponent from '../../../Accordion/Accordion';
 
 
 const FormProcesso = () => {
@@ -45,7 +45,7 @@ const FormProcesso = () => {
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
-  
+
   return (
     <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
       <CssBaseline />
@@ -57,7 +57,7 @@ const FormProcesso = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form"  name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
+        <Box component="form" name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={3} >
               <TextField
