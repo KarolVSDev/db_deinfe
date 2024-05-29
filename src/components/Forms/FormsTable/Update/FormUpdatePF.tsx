@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { PessoaFisica } from '../../../../types/types'
+import { PessoaFisica, UpdatePessoaFisica } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -23,21 +23,32 @@ interface FormPFProps {
 
 const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const { getAllPessoaFisica } = useContextTable()
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica>()
 
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
-      const response = await api.get(`/pessoafisica/relation/interesse/${id}`)
-      setPessoaFisica(response.data)
+      const response = await api.get(`/pessoafisica/${id}`)
+      const data = response.data
+      setPessoaFisica(data)
+
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          setValue(key as keyof PessoaFisica, data[key]);
+        }
+      }
     } catch (error: any) {
       TypeAlert(error.response.data.message, 'error')
     }
   }
 
-  const onSubmit = (data: PessoaFisica) => {
-    api.post('/pessoafisica/create', data).then(async response => {
+
+  const onSubmit = (data: UpdatePessoaFisica) => {
+    const pessoaId = data.id
+    delete data.id
+    delete data.ativo
+    api.patch(`/pessoafisica/update/${pessoaId}`, data).then(async response => {
       TypeAlert(response.data.message, 'success')
       await getAllPessoaFisica()
       closeModal
@@ -45,18 +56,20 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
       TypeAlert(error.response.data.message, 'warning');
     })
   }
+
   useEffect(() => {
-    getOnePF(id)
-  }, [pessoaFifica])
+    if (id) {
+      getOnePF(id);
+    }
+  }, []);
 
   return (
     <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }} >
-      <Box component="form" name='formPessoaFisica' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, textAlign: 'left', mb: 2 }}>
+      <Box component="form"  name='formUpdatePF' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, textAlign: 'left', mb: 2 }}>
         <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Pessoa Física</Typography>
         <Grid container spacing={3} sx={{ pb: 1 }} >
           <Grid item xs={12} sm={4} >
-            <TextField
-              value={pessoaFifica?.nome || ''}
+            <TextField  
               variant='filled'
               autoComplete="given-name"
               type="text"
@@ -65,6 +78,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               fullWidth
               id="nome"
               label="Nome Completo"
+              defaultValue={pessoaFifica?.nome}
               error={errors?.nome?.type === 'required'}
               {...register('nome', {
                 required: 'Campo obrigatório', pattern: {
@@ -81,7 +95,6 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           </Grid>
           <Grid item xs={12} sm={4} >
             <TextField
-              value={pessoaFifica?.email || ''}
               variant='filled'
               autoComplete="given-name"
               required
@@ -89,6 +102,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               id="email"
               label="E-mail"
               type="email"
+              defaultValue={pessoaFifica?.email || ''}
               autoFocus
               error={!!errors?.email}
               {...register("email", { required: 'Campo obrigatório', validate: (value) => validator.isEmail(value) || 'Insira um E-mail válido' })}
@@ -103,7 +117,6 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.cpf || ''}
               variant='filled'
               required
               fullWidth
@@ -111,6 +124,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               id="cpf"
               label="CPF"
               type="text"
+              defaultValue={pessoaFifica?.cpf || ''}
               error={!!errors?.cpf}
               {...register('cpf', {
                 required: 'Campo obrigatório',
@@ -129,7 +143,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.rg || ''}
+              defaultValue={pessoaFifica?.rg || ''}
               variant='filled'
               required
               fullWidth
@@ -157,7 +171,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.profissao || ''}
+              defaultValue={pessoaFifica?.profissao || ''}
               variant='filled'
               required
               fullWidth
@@ -183,7 +197,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.genero || ''}
+              defaultValue={pessoaFifica?.genero || ''}
               variant='filled'
               required
               fullWidth
@@ -209,7 +223,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.cep || ''}
+              defaultValue={pessoaFifica?.cep || ''}
               variant='filled'
               required
               fullWidth
@@ -235,7 +249,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.logradouro || ''}
+              defaultValue={pessoaFifica?.logradouro || ''}
               variant='filled'
               required
               fullWidth
@@ -255,7 +269,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4} >
             <TextField
-              value={pessoaFifica?.complemento || ''}
+              defaultValue={pessoaFifica?.complemento || ''}
               variant='filled'
               fullWidth
               required
@@ -274,7 +288,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.numero || ''}
+              defaultValue={pessoaFifica?.numero || ''}
               variant='filled'
               required
               fullWidth
@@ -294,7 +308,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.cidade || ''}
+              defaultValue={pessoaFifica?.cidade || ''}
               variant='filled'
               required
               fullWidth
@@ -321,7 +335,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4} >
             <TextField
-              value={pessoaFifica?.uf || ''}
+              defaultValue={pessoaFifica?.uf || ''}
               variant='filled'
               required
               fullWidth
@@ -346,7 +360,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.telefone1 || ''}
+              defaultValue={pessoaFifica?.telefone1 || ''}
               variant='filled'
               required
               fullWidth
@@ -373,7 +387,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           </Grid>
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.telefone2 || ''}
+              defaultValue={pessoaFifica?.telefone2 || ''}
               variant='filled'
               required
               fullWidth
@@ -400,7 +414,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
           <Grid item xs={12} sm={4}>
             <TextField
-              value={pessoaFifica?.ramal || ''}
+              defaultValue={pessoaFifica?.ramal || ''}
               variant='filled'
               required
               fullWidth
