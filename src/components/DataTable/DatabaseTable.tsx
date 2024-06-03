@@ -27,6 +27,8 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdatePF';
+import { api } from '../../service/api';
+import { TypeAlert } from '../../hooks/TypeAlert';
 
 
 export default function DatabaseTable() {
@@ -122,11 +124,11 @@ export default function DatabaseTable() {
   const getVisibleColumnsFromModel = (columns: GridColDef[], model: GridColumnVisibilityModel) => {
     return console.log(columns, model)
   };
-  
+
   const captureDataGridState = () => {
     const gridState = {
       columns: columns,
-      rows:rows,
+      rows: rows,
     }
     return gridState
   }
@@ -137,8 +139,8 @@ export default function DatabaseTable() {
     columns: GridColDef[];
     rows: any[];
   }
-  const exportToExcel = (gridState:GridState) => {
-    const {columns, rows} = gridState
+  const exportToExcel = (gridState: GridState) => {
+    const { columns, rows } = gridState
     const exportRows = rows.map((row) => {
       const exportRow: any = { ...row };
 
@@ -147,7 +149,7 @@ export default function DatabaseTable() {
         exportRow.processo = row.processo ? row.processo.numero : '';
       }
 
-      return  exportRow;
+      return exportRow;
     });
 
     const wb = XLSX.utils.book_new();
@@ -166,6 +168,25 @@ export default function DatabaseTable() {
     { value: 'interessado', string: 'Interessado' },
   ]
 
+
+  function handleUpdate(selectedRow: GridRowId) {
+    setSelectedRow(selectedRow);
+    setOpenModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleDelete = async (selectedRow: GridRowId) => {
+    try {
+      const response = await api.delete(`/pessoafisica/${selectedRow}`)
+      TypeAlert(response.data.message, 'success')
+    } catch (error: any) {
+      TypeAlert(error.response.data.message, 'error')
+    }
+  }
+
   //esse bloco atualiza a visualização de pessoa física
   useEffect(() => {
     getAllPessoaFisica();
@@ -177,20 +198,6 @@ export default function DatabaseTable() {
     }
   }, [arrayPessoaFisica])
   //
-  
-  function handleUpdate(selectedRow: GridRowId) {
-    setSelectedRow(selectedRow);
-    setOpenModal(true)
-  }
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  function handleDelete(selectedRow: GridRowId): void {
-    throw new Error('Function not implemented.');
-  }
-
 
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
@@ -213,7 +220,7 @@ export default function DatabaseTable() {
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
               const gridState = captureDataGridState();
               exportToExcel(gridState)
-              }}>
+            }}>
               <FileDownloadIcon />
             </Button>
           </Box>
@@ -250,7 +257,7 @@ export default function DatabaseTable() {
             getRowClassName={(params: GridRowParams) => {
               return params.id === selectedRow ? 'selected-row' : '';
             }}
-            onColumnVisibilityModelChange={(model:GridColumnVisibilityModel) => {
+            onColumnVisibilityModelChange={(model: GridColumnVisibilityModel) => {
               const visibleCols = getVisibleColumnsFromModel(columns, model);
               return visibleCols
             }}
@@ -277,10 +284,10 @@ export default function DatabaseTable() {
       </Paper>
       {selectedRow !== null && (
         <ModalUpdatePF
-        id={selectedRow}
-        dataType={dataType}
-        open={openModal}
-        onClose={handleCloseModal}
+          id={selectedRow}
+          dataType={dataType}
+          open={openModal}
+          onClose={handleCloseModal}
         />
       )}
     </Grid>

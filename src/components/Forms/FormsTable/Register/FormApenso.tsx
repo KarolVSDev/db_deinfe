@@ -1,4 +1,4 @@
-import { Button, Box, Grid, Autocomplete, TextField } from '@mui/material';
+import {  Box, Grid, Autocomplete, TextField } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { Apenso, Processo } from '../../../../types/types';
@@ -41,7 +41,7 @@ const FormApenso = () => {
           renderInput={(params) => <TextField variant='filled' {...params} label="Apensado" />}
         />
       </Grid>
-      <RegisterButton />
+      <RegisterButton text="Registrar"/>
     </Box>
   );
 }

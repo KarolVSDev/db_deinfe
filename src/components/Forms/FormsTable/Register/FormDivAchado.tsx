@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { AreaAchado, DivAchado, NatAchado, } from '../../../../types/types';
+import { AreaAchado, DivAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -55,7 +55,7 @@ const FormDivAchado = () => {
                     renderInput={(params) => <TextField variant='filled' {...params} label="Área" />}
                 />
             </Grid>
-            <RegisterButton />
+            <RegisterButton text="Registrar"/>
         </Box>
     );
 }

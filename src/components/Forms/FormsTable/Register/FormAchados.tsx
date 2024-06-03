@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { Achado, DivAchado, Jurisd, PessoaFisica } from '../../../../types/types'
+import { Achado, DivAchado } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
@@ -133,7 +133,7 @@ const FormAchado = () => {
           />
 
 
-          <RegisterButton />
+          <RegisterButton text="Registrar" />
         </Box>
       </Box>
     </Container>

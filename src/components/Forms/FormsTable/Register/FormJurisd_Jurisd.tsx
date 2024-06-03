@@ -1,7 +1,7 @@
 import { Box, Grid, Autocomplete, TextField } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { Jurisd, Jurisd_Jurisd, Processo } from '../../../../types/types';
+import { Jurisd, Jurisd_Jurisd } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -40,7 +40,7 @@ const FormJurisd_Jurisd = () => {
           renderInput={(params) => <TextField variant='filled' {...params} label="Subordinado" />}
         />
       </Grid>
-      <RegisterButton />
+      <RegisterButton text="Registrar"/>
     </Box>
   );
 }

@@ -63,7 +63,7 @@ const FormInteresse = () => {
           renderInput={(params) => <TextField variant='filled' {...params} label="Pessoa Física" />}
         />
       </Grid>
-      <RegisterButton />
+      <RegisterButton text="Registrar"/>
     </Box>
   );
 }

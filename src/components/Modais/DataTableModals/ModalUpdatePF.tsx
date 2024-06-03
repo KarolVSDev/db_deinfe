@@ -21,7 +21,7 @@ const style = {
   overflowY: 'auto',
   height: '95vh',
   scrollbarWidth: 'thin',
-  backgroundColor:'#111827'
+  // backgroundColor:'#111827'
 };
 
 interface ModalUpdateProps {
@@ -36,7 +36,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
   const renderForm = () => {
     switch (dataType){
       case 'pessoafisica':
-        return <FormUpdatePF closeModal={onClose} id={id}/>
+        return <FormUpdatePF closeModal={onClose} id={id}/> 
     }
   }
 
@@ -58,7 +58,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={onClose} sx={{
-              ml: 80, mr: 0,color:'#ffffff', '&:hover': {
+              ml: 80, mr: 0, '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>

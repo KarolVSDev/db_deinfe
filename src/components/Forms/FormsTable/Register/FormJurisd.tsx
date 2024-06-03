@@ -8,7 +8,7 @@ import validator from 'validator'
 import { useForm } from 'react-hook-form';
 import { Jurisd } from '../../../../types/types'
 import { api } from '../../../../service/api';
-import { TypeAlert, TypeInfo } from '../../../../hooks/TypeAlert';
+import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import formatDate from '../../../../hooks/DateFormate';
 
@@ -526,7 +526,7 @@ const FormJurisd = () => {
             </Grid>
 
           </Grid>
-          <RegisterButton />
+          <RegisterButton text="Registrar"/>
         </Box>
       </Box>
     </Container>

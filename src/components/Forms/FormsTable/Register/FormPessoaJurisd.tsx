@@ -1,21 +1,16 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import validator from 'validator'
+
 import { useForm } from 'react-hook-form';
 import { Jurisd, PessoaFisica, PessoaJurisd } from '../../../../types/types'
 import { api } from '../../../../service/api';
-import { TypeAlert, TypeInfo } from '../../../../hooks/TypeAlert';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
-import SearchParams from '../../../Inputs/SearchParams';
+import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
-import { useEffect, useState } from 'react';
 import { Autocomplete } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
 
@@ -249,7 +244,7 @@ const FormPessoaJurisd = () => {
               />
             </Grid>
           </Grid>
-          <RegisterButton />
+          <RegisterButton text="Registrar"/>
         </Box>
       </Box>
     </Container>

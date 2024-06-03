@@ -1,7 +1,11 @@
 import { Button } from '@mui/material'
 import React from 'react'
 
-const RegisterButton = () => {
+interface ButtonProps {
+  text:string;
+}
+
+const RegisterButton:React.FC<ButtonProps> = ({text}) => {
   return (
     <>
         <Button
@@ -14,7 +18,7 @@ const RegisterButton = () => {
             }, width: '200px', m: 'auto', mt: 3,
             }}
         >
-            Registrar
+            {text}
         </Button>
     </>
   )

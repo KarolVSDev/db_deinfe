@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { PessoaFisica, UpdatePessoaFisica } from '../../../../types/types'
+import { InteressadoUpdate, PessoaFisica, UpdatePessoaFisica } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -25,7 +25,17 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const { getAllPessoaFisica } = useContextTable()
-  const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica>()
+  const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
+  const [arrayInteresses, setArrayInteresses] = useState<InteressadoUpdate[]>([])
+
+  const getIntByPessoa = async () => {
+    const response = await api.get(`/interessado/pessoa/${id}`);
+    setArrayInteresses(response.data)
+  }
+
+  useEffect(() => {
+    getIntByPessoa()
+  }, [id]);
 
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
@@ -65,6 +75,8 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   return (
     <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }} >
+      {pessoaFifica && (
+
       <Box component="form"  name='formUpdatePF' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, textAlign: 'left', mb: 2 }}>
         <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Pessoa Física</Typography>
         <Grid container spacing={3} sx={{ pb: 1 }} >
@@ -438,11 +450,14 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
             )}
           </Grid>
         </Grid>
-        <RegisterButton />
+        <RegisterButton text="Atualizar" />
       </Box>
+      )}
       <Box sx={{ mt: 2, textAlign: 'left' }}>
         <InnerAccordion title={'Atualizar Interessado'}>
-          <FormUpdateInt />
+          {arrayInteresses.map(instancia => (
+            <FormUpdateInt idPessoa={id} idInteresse={instancia.id} interesseCont={instancia.interesse}/>
+          ))}
         </InnerAccordion>
       </Box>
     </Container>

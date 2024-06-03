@@ -57,7 +57,7 @@ const FormAreaAchado = () => {
                     renderInput={(params) => <TextField variant='filled' {...params} label="Natureza" />}
                 />
             </Grid>
-            <RegisterButton />
+            <RegisterButton text="Registrar"/>
         </Box>
     );
 }

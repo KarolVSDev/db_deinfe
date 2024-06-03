@@ -1,6 +1,4 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -10,13 +8,11 @@ import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
 import { Jurisd, PessoaFisica, Processo, Procurador, Relator } from '../../../../types/types'
 import { api } from '../../../../service/api';
-import { TypeAlert, TypeInfo } from '../../../../hooks/TypeAlert';
+import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
-import { Accordion, AccordionDetails, AccordionSlots, AccordionSummary, Autocomplete, Fade, } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FormApenso from './FormApenso';
+import { Autocomplete} from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import AccordionComponent from '../../../Accordion/Accordion';
+
 
 
 const FormProcesso = () => {
@@ -274,7 +270,7 @@ const FormProcesso = () => {
               />
             </Grid>
           </Grid>
-          <RegisterButton />
+          <RegisterButton text="Registrar"/>
         </Box>
       </Box>
     </Container>

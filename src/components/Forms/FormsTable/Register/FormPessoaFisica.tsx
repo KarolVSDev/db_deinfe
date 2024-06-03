@@ -11,8 +11,7 @@ import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useContextTable } from '../../../../context/TableContext';
-import { GridRowId } from '@mui/x-data-grid';
-import FormInteresse from './FormInteresse';
+
 
 
 
@@ -399,7 +398,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
           </Grid>
-          <RegisterButton />
+          <RegisterButton text="Registrar"/>
         </Box>
       </Box>
     </Container>

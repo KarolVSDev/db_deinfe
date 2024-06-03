@@ -1,9 +1,8 @@
 import { Box, Grid, TextField, Typography } from '@mui/material';
-import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { NatAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
-import { TypeAlert, TypeInfo } from '../../../../hooks/TypeAlert';
+import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 
 
@@ -47,7 +46,7 @@ const FormNatAchado = () => {
         )}
 
       </Grid>
-      <RegisterButton />
+      <RegisterButton text="Registrar"/>
     </Box>
   );
 }
