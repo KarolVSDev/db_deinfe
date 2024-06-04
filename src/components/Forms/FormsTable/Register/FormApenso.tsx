@@ -21,7 +21,7 @@ const FormApenso = () => {
 
   return (
     <Box component="form" name='formApenso' noValidate onSubmit={handleSubmit(onSubmit)}>
-      <Grid item xs={3} >
+      <Grid item xs={12} sm={4} >
         <Autocomplete
           disablePortal
           id="combo-box-demo"
@@ -31,7 +31,7 @@ const FormApenso = () => {
           renderInput={(params) => <TextField variant='filled'  {...params} label="Principal" />}
         />
       </Grid>
-      <Grid item xs={3} >
+      <Grid item xs={12} sm={4} >
         <Autocomplete
           disablePortal
           id="combo-box-demo"

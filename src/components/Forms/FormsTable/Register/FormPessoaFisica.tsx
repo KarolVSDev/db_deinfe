@@ -28,7 +28,7 @@ const FormPessoaFisica = () => {
       TypeAlert(error.response.data.message, 'warning');
     })
   }
-  
+
 
   return (
     <Container maxWidth="xs" sx={{ mb: 2 }} >
@@ -43,7 +43,7 @@ const FormPessoaFisica = () => {
 
         <Box component="form" name='formPessoaFisica' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -55,10 +55,7 @@ const FormPessoaFisica = () => {
                 label="Nome Completo"
                 error={errors?.nome?.type === 'required'}
                 {...register('nome', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Nome inválido'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
               {errors?.nome && (
@@ -67,7 +64,7 @@ const FormPessoaFisica = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -88,7 +85,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -113,7 +110,7 @@ const FormPessoaFisica = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -140,7 +137,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -151,10 +148,7 @@ const FormPessoaFisica = () => {
                 type="text"
                 error={!!errors?.profissao}
                 {...register('profissao', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Profissão inválida'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -165,7 +159,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -190,7 +184,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -215,7 +209,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -234,7 +228,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 fullWidth
@@ -252,7 +246,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -271,22 +265,18 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
                 fullWidth
-                placeholder='Ex:Rio De Janeiro'
+                placeholder='Ex:Rio de Janeiro'
                 id="cidade"
                 label="Cidade"
                 type="text"
                 error={!!errors?.cidade}
                 {...register('cidade', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Cidade inválida'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -297,7 +287,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 required
@@ -321,14 +311,14 @@ const FormPessoaFisica = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
                 fullWidth
                 placeholder='(xx)xxxxx-xxxx'
                 id="telefone1"
-                label="Telelfone 1"
+                label="Telefone 1"
                 type="text"
                 error={!!errors?.telefone1}
                 {...register('telefone1', {
@@ -347,7 +337,7 @@ const FormPessoaFisica = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -373,7 +363,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -381,6 +371,7 @@ const FormPessoaFisica = () => {
                 id="ramal"
                 label="Ramal"
                 type="text"
+                placeholder='xx'
                 error={!!errors?.ramal}
                 {...register('ramal', {
                   required: 'Campo obrigatório',
@@ -398,7 +389,7 @@ const FormPessoaFisica = () => {
               )}
             </Grid>
           </Grid>
-          <RegisterButton text="Registrar"/>
+          <RegisterButton text="Registrar" />
         </Box>
       </Box>
     </Container>

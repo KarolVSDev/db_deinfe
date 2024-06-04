@@ -1,12 +1,11 @@
-import { Box, Grid, Autocomplete, TextField, Typography, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { useContextTable } from '../../../../context/TableContext';
+import { Box, Grid, TextField, Typography} from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { Interessado, InteressadoUpdate } from '../../../../types/types';
+import { InteressadoUpdate } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 
 interface FormIntProps {
   idPessoa?: GridRowId | undefined;

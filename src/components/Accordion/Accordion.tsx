@@ -25,7 +25,7 @@ const AccordionComponent: React.FC<ModalProps> = ({ children, title}) =>  {
         sx={{
           width: '100%', p:2,background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
           '& .MuiAccordion-region': {height: expanded ? 'auto' : 0},
-          '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' },
+          '& .MuiAccordionDetails-root': { display: expanded ? 'block' : 'none' }, boxShadow:'1px 1px 3px '
         }}
       >
         <AccordionSummary

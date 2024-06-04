@@ -20,7 +20,7 @@ const FormJurisd_Jurisd = () => {
 
   return (
     <Box component="form" name='formJurisdJurisd' noValidate onSubmit={handleSubmit(onSubmit)}>
-      <Grid item xs={3} >
+      <Grid item xs={12} sm={4} >
         <Autocomplete
           disablePortal
           id="combo-box-demo"
@@ -30,7 +30,7 @@ const FormJurisd_Jurisd = () => {
           renderInput={(params) => <TextField variant='filled'  {...params} label="Principal" />}
         />
       </Grid>
-      <Grid item xs={3} >
+      <Grid item xs={12} sm={4} >
         <Autocomplete
           disablePortal
           id="combo-box-demo"

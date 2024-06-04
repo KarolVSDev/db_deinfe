@@ -38,7 +38,7 @@ export default function DatabaseTable() {
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayJurisd, arrayProcesso,
     arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp, handleLocalization,
-    getAllPessoaFisica } = useContextTable();
+    getAllPessoaFisica, getAllJurisd } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
 
@@ -190,13 +190,17 @@ export default function DatabaseTable() {
   //esse bloco atualiza a visualização de pessoa física
   useEffect(() => {
     getAllPessoaFisica();
+    getAllJurisd();
   }, [])
 
   useEffect(() => {
     if (dataType === 'pessoafisica') {
       setRows(createRows(arrayPessoaFisica))
     }
-  }, [arrayPessoaFisica])
+    if (dataType === 'jurisd') {
+      setRows(createRows(arrayJurisd))
+    }
+  }, [arrayPessoaFisica, arrayJurisd])
   //
 
   return (

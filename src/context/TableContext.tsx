@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
 import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado } from "../types/types";
+import { GridRowId } from "@mui/x-data-grid";
 
 interface TableContextType {
     arrayPessoaFisica: PessoaFisica[];
@@ -15,17 +16,20 @@ interface TableContextType {
     arrayDivAchado:DivAchado[];
     arrayRelations:PessoaFisica[];
     arrayRelationpp:Interessado[];
+    arrayInteressados:Interessado[];
     handleLocalization:{}
     getAllPessoaFisica: () => void;
+    getAllJurisd:() => void;
 }
 
 interface Props {
     children: React.ReactNode;
+    id:GridRowId;
 }
 
 const TableContext = createContext<TableContextType | undefined>(undefined);
 
-export const TableProvider: React.FC<Props> = ({ children }) => {
+export const TableProvider: React.FC<Props> = ({ children, id }) => {
 
     const [arrayPessoaFisica, setArrayPessoaFisica] = useState([]);
     const [arrayJurisd, setArrayJurisd] = useState([]);
@@ -38,6 +42,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayDivAchado, setArrayDivAchado] = useState([]);
     const [arrayRelations, setArrayRelations] = useState([]);
     const [arrayRelationpp, setArrayRelationpp] = useState([]);
+    const [arrayInteressados, setArrayInteressados] = useState([]);
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -171,6 +176,15 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     }
 
+    const getIntByPessoa = async () => {
+        try {
+            const response = await api.get(`/interessado/pessoa/${id}`)
+            setArrayInteressados(response.data)
+        } catch (error:any) {
+            TypeInfo(error.response.data.message, 'error')
+        }
+    }
+
     useEffect(() => {
         getAllPessoaFisica()
         getAllJurisd()
@@ -182,6 +196,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllDivAchado()
         getRelationPF()
         getRelationI()
+        getIntByPessoa()
     }, [])
 
     return (
@@ -197,8 +212,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayDivAchado,
             arrayRelations,
             arrayRelationpp,
+            arrayInteressados,
             handleLocalization,
             getAllPessoaFisica,
+            getAllJurisd,
         }}>
             {children}
         </TableContext.Provider>

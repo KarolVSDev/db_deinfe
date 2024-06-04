@@ -23,7 +23,7 @@ const FormDivAchado = () => {
 
     return (
         <Box component="form" name='formDivAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
                 <TextField
                     variant='filled'
                     required
@@ -45,7 +45,7 @@ const FormDivAchado = () => {
                 )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"

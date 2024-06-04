@@ -55,13 +55,14 @@ const FormProcesso = () => {
       >
         <Box component="form" name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
                 type="text"
                 required
                 fullWidth
+                placeholder='xxxxx'
                 id="numero"
                 label="Número"
                 autoFocus
@@ -87,12 +88,13 @@ const FormProcesso = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
                 required
                 fullWidth
+                placeholder='xxxx'
                 id="ano"
                 label="Ano"
                 type="text"
@@ -122,7 +124,7 @@ const FormProcesso = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -132,11 +134,7 @@ const FormProcesso = () => {
                 type="text"
                 error={!!errors?.natureza}
                 {...register('natureza', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Natureza inválida'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -146,11 +144,12 @@ const FormProcesso = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
                 fullWidth
+                placeholder='Muni'
                 id="exercicio"
                 label="Exercício"
                 type="text"
@@ -179,7 +178,7 @@ const FormProcesso = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -200,7 +199,7 @@ const FormProcesso = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -224,7 +223,7 @@ const FormProcesso = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -239,7 +238,7 @@ const FormProcesso = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -249,7 +248,7 @@ const FormProcesso = () => {
                 renderInput={(params) => <TextField variant='filled' {...params} label="Relator" />}
               />
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -259,7 +258,7 @@ const FormProcesso = () => {
                 renderInput={(params) => <TextField variant='filled' {...params} label="Procurador" />}
               />
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"

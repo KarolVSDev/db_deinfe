@@ -38,7 +38,6 @@ const FormAchado = () => {
         }}
       >
         <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: '360px' }}>
-
           <TextField
             variant='filled'
             autoComplete="given-name"
@@ -78,8 +77,6 @@ const FormAchado = () => {
               {errors.texto.message}
             </Typography>
           )}
-
-
 
           <TextField
             variant='filled'

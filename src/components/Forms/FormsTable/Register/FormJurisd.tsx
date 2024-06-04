@@ -46,7 +46,7 @@ const FormJurisd = () => {
 
         <Box component="form" name='formJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -58,10 +58,7 @@ const FormJurisd = () => {
                 autoFocus
                 error={errors?.nome?.type === 'required'}
                 {...register('nome', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Nome inválido'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
               {errors?.nome && (
@@ -71,7 +68,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -92,7 +89,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -118,7 +115,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -144,7 +141,7 @@ const FormJurisd = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -167,7 +164,7 @@ const FormJurisd = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -191,7 +188,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -210,7 +207,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 fullWidth
@@ -228,22 +225,18 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
                 fullWidth
-                placeholder='Ex:Rio De Janeiro'
+                placeholder='Ex:Rio de Janeiro'
                 id="cidade"
                 label="Cidade"
                 type="text"
                 error={!!errors?.cidade}
                 {...register('cidade', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Cidade inválida'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -254,7 +247,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 required
@@ -279,7 +272,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -305,7 +298,7 @@ const FormJurisd = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -331,12 +324,12 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
                 fullWidth
-                placeholder='Ex:Servidor'
+                placeholder='www.exemplo.com.br'
                 id="site"
                 label="Site"
                 type="text"
@@ -356,7 +349,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -366,10 +359,7 @@ const FormJurisd = () => {
                 type="text"
                 error={!!errors?.cargoGestor}
                 {...register('cargoGestor', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Cargo inválido'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -380,7 +370,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -399,7 +389,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -424,7 +414,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -443,13 +433,13 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
                 fullWidth
                 id="dataExtincao"
-                label="dataExtincao"
+                label="Data Extinção"
                 type="text"
                 error={!!errors?.dataExtincao}
                 {...register('dataExtincao', {
@@ -468,7 +458,7 @@ const FormJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -476,7 +466,7 @@ const FormJurisd = () => {
                 required
                 fullWidth
                 id="poder"
-                label="poder"
+                label="Poder"
                 autoFocus
                 error={errors?.poder?.type === 'required'}
                 {...register('poder', {
@@ -496,7 +486,7 @@ const FormJurisd = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -504,7 +494,7 @@ const FormJurisd = () => {
                 required
                 fullWidth
                 id="numero"
-                label="numero"
+                label="Número"
                 autoFocus
                 error={errors?.numero?.type === 'required'}
                 {...register('numero', {

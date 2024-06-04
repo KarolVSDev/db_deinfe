@@ -51,7 +51,7 @@ const FormPessoaJurisd = () => {
       >
         <Box component="form" name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
           <Grid container spacing={3} sx={{ pb: 1 }} >
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -75,7 +75,7 @@ const FormPessoaJurisd = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -100,7 +100,7 @@ const FormPessoaJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -124,7 +124,7 @@ const FormPessoaJurisd = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -149,7 +149,7 @@ const FormPessoaJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -174,7 +174,7 @@ const FormPessoaJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
@@ -198,14 +198,14 @@ const FormPessoaJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 required
                 fullWidth
                 placeholder='xx/xx/xxx'
                 id="dataExoneracao"
-                label="Data da Exoneracao"
+                label="Data da Exoneração"
                 type="text"
                 error={!!errors?.dataExoneracao}
                 {...register('dataExoneracao', {
@@ -223,7 +223,7 @@ const FormPessoaJurisd = () => {
               )}
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -233,7 +233,7 @@ const FormPessoaJurisd = () => {
                 renderInput={(params) => <TextField variant='filled' {...params} label="Pessoa Física" />}
               />
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"

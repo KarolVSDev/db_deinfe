@@ -1,19 +1,14 @@
-import * as React from 'react';
+
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import SignUp from '../../Forms/FormsUser/RegisterForm';
 import { useEffect, useState } from 'react';
-import UpdateUserForm from '../../Forms/FormsUser/UpdateUserForm';
 import FormPessoaFisica from '../../Forms/FormsTable/Register/FormPessoaFisica';
-import PessoaFisicaStepper from '../../Accordion/Accordion';
-import Stepper from '../../Accordion/Accordion';
-import StepperFormsAddData from '../../Accordion/Accordion';
 import AccordionComponent from '../../Accordion/Accordion';
 import FormPessoaJurisd from '../../Forms/FormsTable/Register/FormPessoaJurisd';
-import { IconButton, Typography } from '@mui/material';
+import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FormProcesso from '../../Forms/FormsTable/Register/FormProcesso';
 import FormInteresse from '../../Forms/FormsTable/Register/FormInteresse';
@@ -22,6 +17,9 @@ import InnerAccordion from '../../Accordion/InnerAccordion';
 import FormJurisd from '../../Forms/FormsTable/Register/FormJurisd';
 import FormJurisd_Jurisd from '../../Forms/FormsTable/Register/FormJurisd_Jurisd';
 import StepperV from '../../Stepper/Stepper';
+import FormProcurador from '../../Forms/FormsTable/Register/FormProcurador';
+import FormRelator from '../../Forms/FormsTable/Register/FormRelator';
+
 
 
 const style = {
@@ -37,7 +35,7 @@ const style = {
   overflowY: 'auto',
   height: '95vh',
   scrollbarWidth: 'thin',
-  backgroundColor:'#111827'
+  background:'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };
 
 
@@ -77,7 +75,7 @@ export default function ModalPessoaFisica() {
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={handleClose} sx={{
-              ml: 85, mb: 4, mr: 0, color:'#fff', '&:hover': {
+              ml: 85, mb: 4, mr: 0, '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>
@@ -103,6 +101,12 @@ export default function ModalPessoaFisica() {
               <InnerAccordion title={"Registro de relação entre U.G's"}>
                 <FormJurisd_Jurisd />
               </InnerAccordion>
+            </AccordionComponent>
+            <AccordionComponent title={'Registro de Procurador'}>
+              <FormProcurador />
+            </AccordionComponent>
+            <AccordionComponent title={'Registro de Relator'}>
+              <FormRelator />
             </AccordionComponent>
             <AccordionComponent title={'Registro de Achados'}>
               <StepperV />

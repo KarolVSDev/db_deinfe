@@ -21,7 +21,7 @@ const FormInteresse = () => {
   return (
     <Box component="form" name='formInteresse' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
 
-      <Grid item xs={3}>
+      <Grid item xs={12} sm={4}>
         <TextField
           variant='filled'
           required
@@ -43,7 +43,7 @@ const FormInteresse = () => {
         )}
 
       </Grid>
-      <Grid item xs={3} >
+      <Grid item xs={12} sm={4} >
         <Autocomplete
           disablePortal
           id="combo-box-demo"
@@ -53,7 +53,7 @@ const FormInteresse = () => {
           renderInput={(params) => <TextField variant='filled'  {...params} label="Processo" />}
         />
       </Grid>
-      <Grid item xs={3} >
+      <Grid item xs={12} sm={4} >
         <Autocomplete
           disablePortal
           id="combo-box-demo"

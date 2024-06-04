@@ -21,7 +21,7 @@ const style = {
   overflowY: 'auto',
   height: '95vh',
   scrollbarWidth: 'thin',
-  // backgroundColor:'#111827'
+  background:'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };
 
 interface ModalUpdateProps {

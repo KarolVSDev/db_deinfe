@@ -76,15 +76,15 @@ export interface UpdatePessoaFisica {
   email: string;
 }
 export interface Procurador {
-  id: string
+  id?: string;
   nome: string;
-  ativo: string;
+  ativo?:string;
 }
 export interface Relator {
-  id: string;
+  id?: string;
   nome: string;
   cargo: string;
-  ativo: string;
+  ativo?: string;
 }
 
 export interface NatAchado {

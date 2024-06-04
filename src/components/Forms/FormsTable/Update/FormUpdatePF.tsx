@@ -15,6 +15,8 @@ import { GridRowId } from '@mui/x-data-grid';
 import FormUpdateInt from './FormUpdateInt';
 import InnerAccordion from '../../../Accordion/InnerAccordion';
 import { useEffect, useState } from 'react';
+import FormInteresse from '../Register/FormInteresse';
+import { MenuItem, Select } from '@mui/material';
 
 interface FormPFProps {
   id?: GridRowId;
@@ -26,16 +28,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const { getAllPessoaFisica } = useContextTable()
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
-  const [arrayInteresses, setArrayInteresses] = useState<InteressadoUpdate[]>([])
 
-  const getIntByPessoa = async () => {
-    const response = await api.get(`/interessado/pessoa/${id}`);
-    setArrayInteresses(response.data)
-  }
-
-  useEffect(() => {
-    getIntByPessoa()
-  }, [id]);
 
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
@@ -77,7 +70,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
     <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }} >
       {pessoaFifica && (
 
-      <Box component="form"  name='formUpdatePF' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, textAlign: 'left', mb: 2 }}>
+      <Box component="form"  name='formUpdatePF' noValidate onSubmit={handleSubmit(onSubmit)} sx={{  textAlign: 'left', mb: 2 }}>
         <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Pessoa Física</Typography>
         <Grid container spacing={3} sx={{ pb: 1 }} >
           <Grid item xs={12} sm={4} >
@@ -93,10 +86,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               defaultValue={pessoaFifica?.nome}
               error={errors?.nome?.type === 'required'}
               {...register('nome', {
-                required: 'Campo obrigatório', pattern: {
-                  value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                  message: 'Nome inválido'
-                }
+                required: 'Campo obrigatório'
               })}
             />
             {errors?.nome && (
@@ -193,10 +183,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               type="text"
               error={!!errors?.profissao}
               {...register('profissao', {
-                required: 'Campo obrigatório', pattern: {
-                  value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                  message: 'Profissão inválida'
-                }
+                required: 'Campo obrigatório'
               })}
             />
 
@@ -324,17 +311,13 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               variant='filled'
               required
               fullWidth
-              placeholder='Ex:Rio De Janeiro'
+              placeholder='Ex:Rio de Janeiro'
               id="cidade"
               label="Cidade"
               type="text"
               error={!!errors?.cidade}
               {...register('cidade', {
-                required: 'Campo obrigatório',
-                pattern: {
-                  value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                  message: 'Cidade inválida'
-                }
+                required: 'Campo obrigatório'
               })}
             />
 
@@ -429,6 +412,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               defaultValue={pessoaFifica?.ramal || ''}
               variant='filled'
               required
+              placeholder='xx'
               fullWidth
               id="ramal"
               label="Ramal"
@@ -454,11 +438,14 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
       </Box>
       )}
       <Box sx={{ mt: 2, textAlign: 'left' }}>
-        <InnerAccordion title={'Atualizar Interessado'}>
-          {arrayInteresses.map(instancia => (
-            <FormUpdateInt idPessoa={id} idInteresse={instancia.id} interesseCont={instancia.interesse}/>
-          ))}
+        <InnerAccordion title={'Adicionar Interessado'}>
+          <FormInteresse/>
         </InnerAccordion>
+      </Box>
+      <Box>
+        <Select>
+          <MenuItem></MenuItem>
+        </Select>
       </Box>
     </Container>
   )

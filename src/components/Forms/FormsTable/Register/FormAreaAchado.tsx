@@ -25,7 +25,7 @@ const FormAreaAchado = () => {
 
     return (
         <Box component="form" name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={4}>
                 <TextField
                     variant='filled'
                     required
@@ -47,7 +47,7 @@ const FormAreaAchado = () => {
                 )}
             </Grid>
 
-            <Grid item xs={3} >
+            <Grid item xs={12} sm={4} >
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
