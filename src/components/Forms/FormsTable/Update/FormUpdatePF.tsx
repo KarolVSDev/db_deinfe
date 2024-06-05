@@ -17,6 +17,7 @@ import InnerAccordion from '../../../Accordion/InnerAccordion';
 import { useEffect, useState } from 'react';
 import FormInteresse from '../Register/FormInteresse';
 import { MenuItem, Select } from '@mui/material';
+import InfoPaperIntetessado from '../../../InfoPaper/InfoPaperIntetessado';
 
 interface FormPFProps {
   id?: GridRowId;
@@ -443,9 +444,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
         </InnerAccordion>
       </Box>
       <Box>
-        <Select>
-          <MenuItem></MenuItem>
-        </Select>
+        <InfoPaperIntetessado id={id}/>
       </Box>
     </Container>
   )

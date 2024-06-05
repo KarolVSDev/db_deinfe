@@ -5,14 +5,17 @@ import { Interessado, PessoaFisica, Processo } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
+import { useState } from 'react';
 
 const FormInteresse = () => {
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<Interessado>({});
+  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Interessado>({});
   const { arrayProcesso, arrayPessoaFisica } = useContextTable();
+
 
   const onSubmit = (data: Interessado) => {
     api.post('/interessado', data).then(response => {
       TypeAlert(response.data.message, 'success');
+      reset() 
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });

@@ -57,8 +57,8 @@ export interface PessoaFisica {
   processo?: Processo[]
 }
 export interface UpdatePessoaFisica {
-  id?:string;
-  ativo?:string;
+  id?: string;
+  ativo?: string;
   nome: string;
   cpf: string;
   rg: string;
@@ -78,7 +78,7 @@ export interface UpdatePessoaFisica {
 export interface Procurador {
   id?: string;
   nome: string;
-  ativo?:string;
+  ativo?: string;
 }
 export interface Relator {
   id?: string;
@@ -166,8 +166,8 @@ export interface Apenso {
 export interface Interessado {
   id: string;
   interesse: string;
-  processo: {};
-  pessoa: {};
+  processo: string;
+  pessoa: string;
 }
 export interface InteressadoUpdate {
   id: string;
