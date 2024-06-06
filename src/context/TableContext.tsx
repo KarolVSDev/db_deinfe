@@ -176,7 +176,7 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
         }
     }
 
-    const getIntByPessoa = async () => {
+    const getIntByPessoa = async (id:any) => {
         try {
             const response = await api.get(`/interessado/pessoa/${id}`)
             setArrayInteressados(response.data)
@@ -196,7 +196,6 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
         getAllDivAchado()
         getRelationPF()
         getRelationI()
-        getIntByPessoa()
     }, [])
 
     return (

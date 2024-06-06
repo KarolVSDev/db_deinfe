@@ -161,7 +161,7 @@ export default function DatabaseTable() {
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'pessoafisica', string: 'Pessoa Física' },
-    { value: 'jurisd', string: 'Jurisdicionado' },
+    { value: 'jurisd', string: 'Unidade Gestora' },
     { value: 'processo', string: 'Processo' },
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
@@ -191,6 +191,7 @@ export default function DatabaseTable() {
   useEffect(() => {
     getAllPessoaFisica();
     getAllJurisd();
+
   }, [])
 
   useEffect(() => {

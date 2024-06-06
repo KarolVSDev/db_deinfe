@@ -113,7 +113,7 @@ export interface Achado {
 }
 
 export interface Jurisd {
-  id: string;
+  id?: string;
   nome: string;
   sigla: string;
   cnpj: string;
@@ -133,7 +133,7 @@ export interface Jurisd {
   normaExtincao: string;
   dataExtincao: string;
   poder: string;
-  ativo: string;
+  ativo?: string;
   uf: string;
 }
 

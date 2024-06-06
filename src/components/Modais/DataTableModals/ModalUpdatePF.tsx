@@ -7,6 +7,7 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import FormUpdatePF from '../../Forms/FormsTable/Update/FormUpdatePF';
 import { GridRowId } from '@mui/x-data-grid';
+import FormUpdateJurisd from '../../Forms/FormsTable/Update/FormUpdateJurisd';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -21,22 +22,25 @@ const style = {
   overflowY: 'auto',
   height: '95vh',
   scrollbarWidth: 'thin',
-  background:'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
+  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };
 
 interface ModalUpdateProps {
   id: GridRowId;
-  dataType:string;
-  open:boolean;
-  onClose:() => void;
+  dataType: string;
+  open: boolean;
+  onClose: () => void;
 }
 
 const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose }) => {
-  
+
   const renderForm = () => {
-    switch (dataType){
+    switch (dataType) {
       case 'pessoafisica':
-        return <FormUpdatePF closeModal={onClose} id={id}/> 
+        return <FormUpdatePF closeModal={onClose} id={id} />
+
+      case 'jurisd':
+        return <FormUpdateJurisd closeModal={onClose} id={id}/>
     }
   }
 

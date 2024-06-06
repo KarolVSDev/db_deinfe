@@ -1,11 +1,12 @@
 import { Box, Grid, TextField, Typography} from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { InteressadoUpdate } from '../../../../types/types';
+import { Interessado, InteressadoUpdate } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import {  useState } from 'react';
+import { useContextTable } from '../../../../context/TableContext';
 
 interface FormIntProps {
   idPessoa?: GridRowId | undefined;
@@ -16,10 +17,20 @@ interface FormIntProps {
 const FormUpdateInt: React.FC<FormIntProps> = ({ idPessoa, idInteresse, interesseCont}) => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<InteressadoUpdate>({});
   const [interesse, setInteresse] = useState({})
+  const [arrayInteressados, setArrayInteressados] = useState<Interessado[]>([])
 
+  const getIntByPessoa = async (id:any) => {
+    try {
+        const response = await api.get(`/interessado/pessoa/${id}`)
+        setArrayInteressados(response.data)
+    } catch (error:any) {
+        TypeAlert(error.response.data.message, 'error')
+    }
+}
   const onSubmit = (data: InteressadoUpdate) => {
     api.patch(`/interessado/pessoa/${idPessoa}`, data).then(response => {
       TypeAlert(response.data.message, 'success');
+      getIntByPessoa(idPessoa)
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });

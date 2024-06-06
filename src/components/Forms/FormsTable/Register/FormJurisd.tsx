@@ -10,24 +10,19 @@ import { Jurisd } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import formatDate from '../../../../hooks/DateFormate';
+import { useContextTable } from '../../../../context/TableContext';
 
 
 const FormJurisd = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<Jurisd>({});
-
+  const {getAllJurisd} =useContextTable()
 
 
   const onSubmit = (data: Jurisd) => {
-    let dataC;
-    let dataE;
-    dataC = formatDate(data.dataCriacao)
-    dataE = formatDate(data.dataExtincao)
-    data.dataCriacao = dataC;
-    data.dataExtincao = dataE;
     api.post('/jurisd', data).then(response => {
       TypeAlert(response.data.message, 'success')
+      getAllJurisd()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
@@ -95,6 +90,7 @@ const FormJurisd = () => {
                 autoComplete="given-name"
                 required
                 fullWidth
+                placeholder='SECEX'
                 id="sigla"
                 label="Sigla"
                 type="sigla"
@@ -146,6 +142,7 @@ const FormJurisd = () => {
                 variant='filled'
                 required
                 fullWidth
+                placeholder='xxxxxxx'
                 id="ug"
                 label="UG"
                 type="text"
@@ -396,14 +393,11 @@ const FormJurisd = () => {
                 fullWidth
                 id="dataCriacao"
                 label="Data da Criação"
-                type="text"
+                type="date"
+                InputProps={{ inputMode: "none" }}
                 error={!!errors?.dataCriacao}
                 {...register('dataCriacao', {
                   required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                    message: 'Data da criação inválida'
-                  }
                 })}
               />
 
@@ -440,14 +434,10 @@ const FormJurisd = () => {
                 fullWidth
                 id="dataExtincao"
                 label="Data Extinção"
-                type="text"
+                type="date"
                 error={!!errors?.dataExtincao}
                 {...register('dataExtincao', {
                   required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                    message: 'Data da extinção inválida'
-                  }
                 })}
               />
 
@@ -464,6 +454,7 @@ const FormJurisd = () => {
                 autoComplete="given-name"
                 type="text"
                 required
+                placeholder='E, L ou J'
                 fullWidth
                 id="poder"
                 label="Poder"
@@ -498,10 +489,7 @@ const FormJurisd = () => {
                 autoFocus
                 error={errors?.numero?.type === 'required'}
                 {...register('numero', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^\d+$/,
-                    message: 'Número inválido'
-                  },
+                  required: 'Campo obrigatório',
                   maxLength: {
                     value: 6,
                     message: 'Número inválido'

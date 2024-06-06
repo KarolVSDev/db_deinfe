@@ -1,4 +1,3 @@
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -6,17 +5,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { InteressadoUpdate, PessoaFisica, UpdatePessoaFisica } from '../../../../types/types'
+import { PessoaFisica, UpdatePessoaFisica } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useContextTable } from '../../../../context/TableContext';
 import { GridRowId } from '@mui/x-data-grid';
-import FormUpdateInt from './FormUpdateInt';
 import InnerAccordion from '../../../Accordion/InnerAccordion';
 import { useEffect, useState } from 'react';
 import FormInteresse from '../Register/FormInteresse';
-import { MenuItem, Select } from '@mui/material';
 import InfoPaperIntetessado from '../../../InfoPaper/InfoPaperIntetessado';
 
 interface FormPFProps {
@@ -70,7 +67,6 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   return (
     <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }} >
       {pessoaFifica && (
-
       <Box component="form"  name='formUpdatePF' noValidate onSubmit={handleSubmit(onSubmit)} sx={{  textAlign: 'left', mb: 2 }}>
         <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Pessoa Física</Typography>
         <Grid container spacing={3} sx={{ pb: 1 }} >
@@ -106,7 +102,6 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
               label="E-mail"
               type="email"
               defaultValue={pessoaFifica?.email || ''}
-              autoFocus
               error={!!errors?.email}
               {...register("email", { required: 'Campo obrigatório', validate: (value) => validator.isEmail(value) || 'Insira um E-mail válido' })}
             />

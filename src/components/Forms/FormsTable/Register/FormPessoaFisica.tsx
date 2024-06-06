@@ -73,7 +73,6 @@ const FormPessoaFisica = () => {
                 id="email"
                 label="E-mail"
                 type="email"
-                autoFocus
                 error={!!errors?.email}
                 {...register("email", { required: 'Campo obrigatório', validate: (value) => validator.isEmail(value) || 'Insira um E-mail válido' })}
               />
