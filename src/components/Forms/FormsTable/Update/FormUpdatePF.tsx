@@ -15,6 +15,7 @@ import InnerAccordion from '../../../Accordion/InnerAccordion';
 import { useEffect, useState } from 'react';
 import FormInteresse from '../Register/FormInteresse';
 import InfoPaperIntetessado from '../../../InfoPaper/InfoPaperIntetessado';
+import FormUpdatePessoaJurisd from './FormUpdatePessoaJurisd';
 
 interface FormPFProps {
   id?: GridRowId;
@@ -65,7 +66,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   }, []);
 
   return (
-    <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }} >
+    <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2}} >
       {pessoaFifica && (
       <Box component="form"  name='formUpdatePF' noValidate onSubmit={handleSubmit(onSubmit)} sx={{  textAlign: 'left', mb: 2 }}>
         <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Pessoa Física</Typography>
@@ -436,6 +437,9 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
       <Box sx={{ mt: 2, textAlign: 'left' }}>
         <InnerAccordion title={'Adicionar Interessado'}>
           <FormInteresse/>
+        </InnerAccordion>
+        <InnerAccordion title={'Adicionar Jurisdicionado'}>
+          <FormUpdatePessoaJurisd/>
         </InnerAccordion>
       </Box>
       <Box>

@@ -22,7 +22,7 @@ const FormInteresse = () => {
   };
 
   return (
-    <Box component="form" name='formInteresse' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
+    <Box component="form" name='formInteresse' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, p:2 }}>
 
       <Grid item xs={12} sm={4}>
         <TextField

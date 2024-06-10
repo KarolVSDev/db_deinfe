@@ -20,7 +20,7 @@ const FormApenso = () => {
   };
 
   return (
-    <Box component="form" name='formApenso' noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Box component="form" name='formApenso' noValidate onSubmit={handleSubmit(onSubmit)} sx={{p:2}}>
       <Grid item xs={12} sm={4} >
         <Autocomplete
           disablePortal

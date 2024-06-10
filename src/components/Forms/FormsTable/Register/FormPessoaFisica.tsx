@@ -17,12 +17,13 @@ import { useContextTable } from '../../../../context/TableContext';
 
 const FormPessoaFisica = () => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm<PessoaFisica>({});
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<PessoaFisica>({});
   const { getAllPessoaFisica } = useContextTable()
 
   const onSubmit = (data: PessoaFisica) => {
     api.post('/pessoafisica/create', data).then(async response => {
       TypeAlert(response.data.message, 'success')
+      reset()
       await getAllPessoaFisica()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');

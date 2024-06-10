@@ -8,7 +8,7 @@ interface ModalProps {
 }
 
 const InnerAccordion: React.FC<ModalProps> = ({ children, title}) =>  {
-  const [expanded2, setExpanded2] = React.useState(true);
+  const [expanded2, setExpanded2] = React.useState(false);
 
   const handleExpansion = () => {
     setExpanded2((prevExpanded) => !prevExpanded);

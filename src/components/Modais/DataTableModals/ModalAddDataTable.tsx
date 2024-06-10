@@ -86,9 +86,9 @@ export default function ModalPessoaFisica() {
               <InnerAccordion title={'Registro de Interessado'}>
                 <FormInteresse />
               </InnerAccordion>
-            </AccordionComponent>
-            <AccordionComponent title={'Registro de Pessoa Jurisdicionada'}>
-              <FormPessoaJurisd />
+              <InnerAccordion title={'Registro de Jurisdicionado'}>
+                <FormPessoaJurisd />
+              </InnerAccordion>
             </AccordionComponent>
             <AccordionComponent title={'Registro de Processo'}>
               <FormProcesso />

@@ -15,10 +15,16 @@ import { Autocomplete } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
 
 
-const FormPessoaJurisd = () => {
+const FormUpdatePessoaJurisd = () => {
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<PessoaJurisd>({});
   const { arrayPessoaFisica, arrayJurisd } = useContextTable()
+
+  const formatDate = (data: string) => {
+    const partes = data.split('/');
+    const dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    return dataFormatada;
+  }
 
   const onSubmit = (data: PessoaJurisd) => {
     api.post('/pessoajurisd', data).then(response => {
@@ -29,17 +35,15 @@ const FormPessoaJurisd = () => {
   }
 
   return (
-    <Container maxWidth="xs" sx={{ mb: 2 }}>
-      <CssBaseline />
-      <Box
+    <Container maxWidth="sm"  
         sx={{
-
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Box component="form" name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', pl: 3, pr:3 }}>
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        mb: 2,
+        background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
+        }}>
+        <Box component="form" name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} >
           <Grid container spacing={3} sx={{ pb: 1 }} >
             <Grid item xs={12} sm={4} >
               <TextField
@@ -227,12 +231,11 @@ const FormPessoaJurisd = () => {
             </Grid>
           </Grid>
           <RegisterButton text="Registrar"/>
-        </Box>
       </Box>
     </Container>
   )
 }
 
-export default FormPessoaJurisd;
+export default FormUpdatePessoaJurisd;
 
 
