@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react';
 import FormInteresse from '../Register/FormInteresse';
 import InfoPaperIntetessado from '../../../InfoPaper/InfoPaperIntetessado';
 import FormUpdatePessoaJurisd from './FormUpdatePessoaJurisd';
+import { Button } from '@mui/material';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 interface FormPFProps {
   id?: GridRowId;
@@ -27,8 +29,20 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const { getAllPessoaFisica } = useContextTable()
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
+  const [buttonValue, SetButtonValue] = useState('')
+  const {getIntByPessoa, arrayListData} = useFetchListData(id)
 
 
+  const handleTarget = (e:any) => {
+    SetButtonValue(e.target.value);
+    if(buttonValue === 'interessado'){
+      getIntByPessoa()
+    }
+  }
+
+  const handleDelete = (id:GridRowId | undefined) => {
+    console.log('teste')
+  }
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/pessoafisica/${id}`)
@@ -442,8 +456,13 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           <FormUpdatePessoaJurisd/>
         </InnerAccordion>
       </Box>
-      <Box>
-        <InfoPaperIntetessado id={id}/>
+      <Box sx={{border:'1px solid #ccc', mt:2, p:1}}>
+        <Box sx={{display:'flex', justifyContent:'center', gap:1}} >
+          <Button color="error" key='interessado' value='interessado' variant='outlined' onClick={(e) => handleTarget((e.target as HTMLButtonElement).value)}>Lista de Interessados</Button>
+          <Button color="error" key='pessoajurisd' value='pessoajurisd' variant='outlined' onClick={(e) => handleTarget((e.target as HTMLButtonElement).value)}>Lista de Cargos</Button>
+          <Button color="error" key='processo' value='processo' variant='outlined' onClick={(e) => handleTarget((e.target as HTMLButtonElement).value)}>Lista de Processos</Button>
+        </Box>
+        <InfoPaperIntetessado arrayData={arrayListData} handleDelete={handleDelete}/>
       </Box>
     </Container>
   )

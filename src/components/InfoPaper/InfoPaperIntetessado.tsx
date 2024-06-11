@@ -2,13 +2,14 @@ import { Box, Chip, Divider, Grid, IconButton, Stack, Typography } from '@mui/ma
 import Paper from '@mui/material/Paper';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { Interessado } from '../../types/types';
+import { Interessado, PessoaJurisd } from '../../types/types';
 import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
 import { api } from '../../service/api';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface PaperIntProps {
-    id: GridRowId | undefined;
+    arrayData:{label:string, labels2:string, value:string, id:string}[];
+    handleDelete:(id:GridRowId | undefined) => void
 }
 
 const stylePaper = {
@@ -32,45 +33,21 @@ const styleChip = {
     },
 };
 
-const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ id }) => {
+const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ arrayData, handleDelete}) => {
 
-    const [arrayInteressado, setArrayInteressado] = useState<Interessado[]>([]);
-
-    const getIntByPessoa = async () => {
-        try {
-            const response = await api.get(`/interessado/pessoa/${id}`);
-            setArrayInteressado(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error');
-        }
-    }   
-
-    useEffect(() => {
-        getIntByPessoa();
-    }, [id, arrayInteressado]);
-
-    function handleDelete(idInt: string): void {
-        try {
-            api.delete(`/interessado/${idInt}`).then(response => {
-                getIntByPessoa()
-            })
-        } catch (error:any) {
-            TypeAlert(error.response.data.message, 'error')
-        }
-    }
+    
 
     return (
-        <Box sx={{border:'1px solid #ccc', mt:2, p:1}}>
-            <Typography variant='h5' sx={{ pt: 3, color: '#1e293b', fontWeight: 'bold' }}>Lista de Interesses</Typography>
+        <Box >
             <Grid container spacing={3} sx={{ pb: 1, mt:1 }}>
-                {arrayInteressado.map((interessado) => (
-                    <Grid item xs={12} sm={6} key={interessado.id}>
+                {arrayData.map((item) => (
+                    <Grid item xs={12} sm={6} key={item.id}>
                         <Paper sx={stylePaper} elevation={3}>
-                            <Typography ><strong>Interesse:</strong> {interessado.interesse}</Typography>
+                            <Typography > {item.value}</Typography>
                             <Stack>
                                 <Chip
                                     label="Remover Interesse"
-                                    onDelete={() => handleDelete(interessado.id)}
+                                    onDelete={() => handleDelete(item.id)}
                                     deleteIcon={<DeleteIcon />}
                                     variant='outlined'
                                     sx={styleChip}

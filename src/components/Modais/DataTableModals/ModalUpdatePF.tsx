@@ -37,7 +37,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
   const renderForm = () => {
     switch (dataType) {
       case 'pessoafisica':
-        return <FormUpdatePF closeModal={onClose} id={id} />
+        return <FormUpdatePF closeModal={onClose} id={id}  />
 
       case 'jurisd':
         return <FormUpdateJurisd closeModal={onClose} id={id}/>
@@ -46,32 +46,32 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
 
   return (
     <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={onClose}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={open}>
-          <Box sx={style}>
-            <IconButton onClick={onClose} sx={{
-              ml: 80, mr: 0, '&:hover': {
-                bgcolor: '#1e293b', color: '#ffffff',
-              }
-            }}>
-              <CloseIcon />
-            </IconButton>
-            {renderForm()}
-          </Box>
-        </Fade>
-      </Modal>
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={open}
+          onClose={onClose}
+          closeAfterTransition
+          slots={{ backdrop: Backdrop }}
+          slotProps={{
+            backdrop: {
+              timeout: 500,
+            },
+          }}
+        >
+          <Fade in={open}>
+            <Box sx={style}>
+              <IconButton onClick={onClose} sx={{
+                ml: 80, mr: 0, '&:hover': {
+                  bgcolor: '#1e293b', color: '#ffffff',
+                }
+              }}>
+                <CloseIcon />
+              </IconButton>
+              {renderForm()}
+            </Box>
+          </Fade>
+        </Modal>
     </div>
   );
 }
