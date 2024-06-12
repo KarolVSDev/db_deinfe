@@ -193,4 +193,10 @@ export type ColumnConfig = {
   minWidth: number;
 };
 
+export type ListData = {
+  id:string;
+  label:string,
+  value:string;
+}
+
 

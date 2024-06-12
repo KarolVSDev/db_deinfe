@@ -1,15 +1,13 @@
-import { Box, Chip, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { GridRowId } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
-import { Interessado, PessoaJurisd } from '../../types/types';
-import { TypeAlert, TypeInfo } from '../../hooks/TypeAlert';
-import { api } from '../../service/api';
+import {  ListData } from '../../types/types';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+
 interface PaperIntProps {
-    arrayData:{label:string, labels2:string, value:string, id:string}[];
-    handleDelete:(id:GridRowId | undefined) => void
+    arrayData:ListData[];
+    handleDelete:(id:string, type:string) => void
+    stateType:string;
 }
 
 const stylePaper = {
@@ -33,21 +31,21 @@ const styleChip = {
     },
 };
 
-const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ arrayData, handleDelete}) => {
-
-    
-
+const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ arrayData, handleDelete, stateType}) => {
     return (
         <Box >
             <Grid container spacing={3} sx={{ pb: 1, mt:1 }}>
                 {arrayData.map((item) => (
                     <Grid item xs={12} sm={6} key={item.id}>
                         <Paper sx={stylePaper} elevation={3}>
-                            <Typography > {item.value}</Typography>
+                            <Typography > {item.label}</Typography>
+                            {item.label !== item.value && (
+                                <Typography > {item.value}</Typography>
+                            )}
                             <Stack>
                                 <Chip
-                                    label="Remover Interesse"
-                                    onDelete={() => handleDelete(item.id)}
+                                    label={`Remover registro`}
+                                    onDelete={() => handleDelete(item.id, stateType)}
                                     deleteIcon={<DeleteIcon />}
                                     variant='outlined'
                                     sx={styleChip}

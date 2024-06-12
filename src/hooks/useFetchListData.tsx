@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { Interessado, PessoaJurisd, Processo } from "../types/types";
+import { Interessado, ListData, PessoaJurisd, Processo } from "../types/types";
 import { TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 
@@ -15,14 +15,13 @@ const useFetchListData = (id:GridRowId | undefined) => {
     const [arrayInteressado, setArrayInteressado] = useState<Interessado[]>([]);
     const [arrayPessoaJurisd, setArrayPessoaJurisd] = useState<PessoaJurisd[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
-    const [arrayListData, setArrayListData] = useState<any>([])
+    const [arrayListData, setArrayListData] = useState<ListData[]>([])
 
     const getIntByPessoa = async () => {
         try {
           const response = await api.get(`/interessado/pessoa/${id}`);
-          const data = response.data.map((item:any) => ({
+          const data = response.data.map((item:Interessado) => ({
             label:item.interesse,
-            label2:'',
             value:item.interesse,
             id:item.id
           }))
@@ -35,9 +34,8 @@ const useFetchListData = (id:GridRowId | undefined) => {
       const getJurisdByPessoa = async () => {
         try {
           const response = await api.get(`/pessoajurisd/pessoa/${id}`);
-          const data = response.data.map((item:any) => ({
+          const data = response.data.result.map((item:PessoaJurisd) => ({
             label:item.cargo,
-            label2:'',
             value:item.mandato,
             id:item.id
           }))
@@ -66,9 +64,9 @@ const useFetchListData = (id:GridRowId | undefined) => {
 
       return {
         arrayListData,
-        // arrayProcesso,
         getIntByPessoa,
         getJurisdByPessoa,
+        // arrayProcesso,
         // getProcessoByPessoa
       }
 

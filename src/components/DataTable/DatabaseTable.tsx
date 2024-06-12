@@ -182,6 +182,7 @@ export default function DatabaseTable() {
     try {
       const response = await api.delete(`/pessoafisica/${selectedRow}`)
       TypeAlert(response.data.message, 'success')
+      getAllPessoaFisica()
     } catch (error: any) {
       TypeAlert(error.response.data.message, 'error')
     }

@@ -37,7 +37,7 @@ const FormUpdateInt: React.FC<FormIntProps> = ({ idPessoa, idInteresse, interess
   };
   
   return (
-      <Box component="form" name='formInteresse' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
+      <Box component="form" name='formUpdateInteresse' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
         <Grid item xs={3}>
           <TextField
             key={idInteresse}
@@ -59,7 +59,7 @@ const FormUpdateInt: React.FC<FormIntProps> = ({ idPessoa, idInteresse, interess
             </Typography>
           )}
         </Grid>
-        <RegisterButton text="Atualizar"/>
+        <RegisterButton text="Adicionar"/>
       </Box>
   );
 }

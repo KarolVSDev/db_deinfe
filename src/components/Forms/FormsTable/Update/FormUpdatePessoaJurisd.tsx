@@ -1,11 +1,9 @@
 
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-
 import { useForm } from 'react-hook-form';
 import { Jurisd, PessoaFisica, PessoaJurisd } from '../../../../types/types'
 import { api } from '../../../../service/api';
@@ -17,18 +15,13 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormUpdatePessoaJurisd = () => {
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<PessoaJurisd>({});
+  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<PessoaJurisd>({});
   const { arrayPessoaFisica, arrayJurisd } = useContextTable()
-
-  const formatDate = (data: string) => {
-    const partes = data.split('/');
-    const dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
-    return dataFormatada;
-  }
 
   const onSubmit = (data: PessoaJurisd) => {
     api.post('/pessoajurisd', data).then(response => {
       TypeAlert(response.data.message, 'success')
+      reset()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
@@ -43,9 +36,9 @@ const FormUpdatePessoaJurisd = () => {
         mb: 2,
         background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
         }}>
-        <Box component="form" name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} >
+        <Box component="form" name='formUpdatePessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} >
           <Grid container spacing={3} sx={{ pb: 1 }} >
-            <Grid item xs={12} sm={4} >
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
                 autoComplete="given-name"
@@ -230,7 +223,7 @@ const FormUpdatePessoaJurisd = () => {
               />
             </Grid>
           </Grid>
-          <RegisterButton text="Registrar"/>
+          <RegisterButton text="Adicionar"/>
       </Box>
     </Container>
   )
