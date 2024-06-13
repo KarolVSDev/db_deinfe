@@ -5,7 +5,7 @@ import {
   ColumnConfig,
   Interessado
 } from '../../types/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   pessoaFisicaHeader,
   procuradorHeader,
@@ -37,7 +37,7 @@ export default function DatabaseTable() {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayJurisd, arrayProcesso,
-    arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp, handleLocalization,
+    arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp, handleLocalization, arrayNatAchado,
     getAllPessoaFisica, getAllJurisd } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
@@ -111,6 +111,10 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(interessadoHeader));
         setRows(createInteressadoRows(arrayRelationpp))
         break;
+      case 'nat-achado':
+        setColumns(createGridColumns(natAchadoHeader));
+        setRows(createRows(arrayNatAchado))
+        break
       default:
         setColumns([]);
         setRows([])
@@ -166,23 +170,32 @@ export default function DatabaseTable() {
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
     { value: 'interessado', string: 'Interessado' },
+    { value: 'nat-achado', string: 'Natureza do Achado' },
   ]
 
 
   function handleUpdate(selectedRow: GridRowId) {
-    setSelectedRow(selectedRow);
-    setOpenModal(true)
+      setSelectedRow(selectedRow);
+      setOpenModal(true)
   }
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
-  const handleDelete = async (selectedRow: GridRowId) => {
+  const handleDelete = async (selectedRow: GridRowId, dataType:string) => {
     try {
-      const response = await api.delete(`/pessoafisica/${selectedRow}`)
+      const response = await api.delete(`/${dataType}/${selectedRow}`)
       TypeAlert(response.data.message, 'success')
-      getAllPessoaFisica()
+      switch (dataType) {
+        case 'pessoafisica':
+          getAllPessoaFisica()
+          break;
+        case 'jurisd':
+          getAllJurisd()
+        default:
+          break;
+      }
     } catch (error: any) {
       TypeAlert(error.response.data.message, 'error')
     }
@@ -235,7 +248,7 @@ export default function DatabaseTable() {
               <IconButton color='primary' onClick={() => handleUpdate(selectedRow)}>
                 <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
               </IconButton>
-              <IconButton color='error' onClick={() => handleDelete(selectedRow)}>
+              <IconButton color='error' onClick={() => handleDelete(selectedRow, dataType)}>
                 <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
               </IconButton>
             </Box>

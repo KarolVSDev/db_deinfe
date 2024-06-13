@@ -29,6 +29,7 @@ const styleChip = {
             color: '#b12a2c',
         },
     },
+    
 };
 
 const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ arrayData, handleDelete, stateType}) => {

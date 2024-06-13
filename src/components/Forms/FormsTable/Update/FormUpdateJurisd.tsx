@@ -13,6 +13,8 @@ import { formatToInputDate } from '../../../../hooks/DateFormate';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useContextTable } from '../../../../context/TableContext';
+import InnerAccordion from '../../../Accordion/InnerAccordion';
+import FormJurisd_Jurisd from '../Register/FormJurisd_Jurisd';
 
 
 interface FormJurisdProps {
@@ -37,7 +39,6 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
             if (data.dataExtincao) {
                 data.dataExtincao = formatToInputDate(new Date(data.dataExtincao));
             }
-            console.log(data)
             setJurisd(data)
         } catch (error: any) {
             TypeAlert(error.response.data.message, 'error')
@@ -544,6 +545,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
                     </Grid>
                     <RegisterButton text="Atualizar" />
+                   
                 </Box>
             )}
         </Container>

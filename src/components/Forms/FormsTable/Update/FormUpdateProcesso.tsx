@@ -15,7 +15,7 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 
 
-const FormProcesso = () => {
+const FormUpdateProcesso = () => {
 
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Processo>({});
   const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador } = useContextTable()
@@ -277,6 +277,6 @@ const FormProcesso = () => {
   )
 }
 
-export default FormProcesso;
+export default FormUpdateProcesso;
 
 

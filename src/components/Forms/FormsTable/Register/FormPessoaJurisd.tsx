@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-
 import { useForm } from 'react-hook-form';
 import { Jurisd, PessoaFisica, PessoaJurisd } from '../../../../types/types'
 import { api } from '../../../../service/api';
@@ -17,19 +16,20 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormPessoaJurisd = () => {
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<PessoaJurisd>({});
+  const { register, handleSubmit, setValue, formState: { errors }, reset} = useForm<PessoaJurisd>({});
   const { arrayPessoaFisica, arrayJurisd } = useContextTable()
 
   const onSubmit = (data: PessoaJurisd) => {
     api.post('/pessoajurisd', data).then(response => {
       TypeAlert(response.data.message, 'success')
+      reset()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
   }
 
   return (
-    <Container maxWidth="xs" sx={{ mb: 2 }}>
+    <Container maxWidth="sm" sx={{ mb: 2,}}>
       <CssBaseline />
       <Box
         sx={{
@@ -40,7 +40,7 @@ const FormPessoaJurisd = () => {
         }}
       >
         <Box component="form" name='formPessoaJurisd' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', pl: 3, pr:3 }}>
-          <Grid container spacing={3} sx={{ pb: 1 }} >
+          <Grid container spacing={3} sx={{ pr:3, pl:3 }} >
             <Grid item xs={12} sm={4} >
               <TextField
                 variant='filled'
@@ -225,8 +225,10 @@ const FormPessoaJurisd = () => {
                 renderInput={(params) => <TextField variant='filled' {...params} label="Unidade Gestora" />}
               />
             </Grid>
+            <Grid item >
+              <RegisterButton text="Registrar" />
+            </Grid>
           </Grid>
-          <RegisterButton text="Registrar"/>
         </Box>
       </Box>
     </Container>

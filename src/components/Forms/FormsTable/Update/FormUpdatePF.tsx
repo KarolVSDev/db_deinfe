@@ -14,10 +14,9 @@ import InnerAccordion from '../../../Accordion/InnerAccordion';
 import { useEffect, useState } from 'react';
 import FormInteresse from '../Register/FormInteresse';
 import InfoPaperIntetessado from '../../../InfoPaper/InfoPaperIntetessado';
-import FormUpdatePessoaJurisd from './FormUpdatePessoaJurisd';
 import { Button } from '@mui/material';
 import useFetchListData from '../../../../hooks/useFetchListData';
-import FormUpdateInt from './FormUpdateInt';
+import FormPessoaJurisd from '../Register/FormPessoaJurisd';
 
 interface FormPFProps {
   id?: GridRowId;
@@ -455,10 +454,10 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
       )}
       <Box sx={{ mt: 2, textAlign: 'left' }}>
         <InnerAccordion title={'Adicionar Interessado'}>
-          <FormUpdateInt />
+          <FormInteresse />
         </InnerAccordion>
         <InnerAccordion title={'Adicionar Jurisdicionado'}>
-          <FormUpdatePessoaJurisd />
+          <FormPessoaJurisd />
         </InnerAccordion>
       </Box>
       <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>

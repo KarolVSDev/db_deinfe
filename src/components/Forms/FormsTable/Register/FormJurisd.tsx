@@ -15,13 +15,14 @@ import { useContextTable } from '../../../../context/TableContext';
 
 const FormJurisd = () => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm<Jurisd>({});
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<Jurisd>({});
   const {getAllJurisd} =useContextTable()
 
 
   const onSubmit = (data: Jurisd) => {
     api.post('/jurisd', data).then(response => {
       TypeAlert(response.data.message, 'success')
+      reset()
       getAllJurisd()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
