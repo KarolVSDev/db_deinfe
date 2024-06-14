@@ -1,17 +1,12 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
 import { Interessado, ListData, PessoaJurisd, Processo } from "../types/types";
-import { TypeInfo } from "./TypeAlert";
+import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 
-interface ArrayData {
-    label: string;
-    label2:string;
-    value: string;
-    id: string;
-  }
 
-const useFetchListData = (id:GridRowId | undefined) => {
+
+const useFetchListData = (id: GridRowId | undefined, type:string) => {
     const [arrayInteressado, setArrayInteressado] = useState<Interessado[]>([]);
     const [arrayPessoaJurisd, setArrayPessoaJurisd] = useState<PessoaJurisd[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
@@ -45,6 +40,23 @@ const useFetchListData = (id:GridRowId | undefined) => {
         }
       };
 
+      const onDelete = (id: string, type: string) => {
+        api.delete(`/${type}/${id}`).then(response => {
+          TypeAlert(response.data.message, 'success')
+          switch (type) {
+            case 'interessado':
+              getIntByPessoa()
+              break;
+            case 'jurisd':
+              getJurisdByPessoa()
+              break
+            default:
+              break;
+          }
+        }).catch((error) => {
+          TypeAlert(error.response.data.messsage, 'error')
+        })
+      }
     //   const getProcessoByPessoa = async () => {
     //     try {
     //       const response = await api.get(`/processo/pessoa/${id}`);
@@ -66,6 +78,7 @@ const useFetchListData = (id:GridRowId | undefined) => {
         arrayListData,
         getIntByPessoa,
         getJurisdByPessoa,
+        onDelete
         // arrayProcesso,
         // getProcessoByPessoa
       }

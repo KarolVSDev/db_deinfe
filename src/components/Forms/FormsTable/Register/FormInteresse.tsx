@@ -6,16 +6,17 @@ import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useState } from 'react';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 const FormInteresse = () => {
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Interessado>({});
   const { arrayProcesso, arrayPessoaFisica } = useContextTable();
 
-
   const onSubmit = (data: Interessado) => {
     api.post('/interessado', data).then(response => {
       TypeAlert(response.data.message, 'success');
       reset() 
+      
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });

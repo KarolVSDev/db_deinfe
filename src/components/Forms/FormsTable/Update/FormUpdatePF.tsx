@@ -27,8 +27,8 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
-  const { getIntByPessoa, getJurisdByPessoa, arrayListData } = useFetchListData(id)
   const [buttonType, setButtonType] = useState<string>('interessado')
+  const { getIntByPessoa, getJurisdByPessoa, onDelete, arrayListData } = useFetchListData(id, buttonType)
 
   const handleTarget = (type: string) => {
     setButtonType(type)
@@ -39,12 +39,14 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
       getJurisdByPessoa()
     }
   }
+
   const handleDelete = (id: string, type: string) => {
-    api.delete(`/${type}/${id}`).then(response => {
-      TypeAlert(response.data.message, 'success')
-    }).catch((error) => {
-      TypeAlert(error.response.data.messsage, 'error')
-    })
+    onDelete(id, type)
+    // api.delete(`/${type}/${id}`).then(response => {
+    //   TypeAlert(response.data.message, 'success')
+    // }).catch((error) => {
+    //   TypeAlert(error.response.data.messsage, 'error')
+    // })
   }
 
   const getOnePF = async (id: GridRowId | undefined) => {
@@ -80,6 +82,8 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   useEffect(() => {
     if (id) {
       getOnePF(id);
+      getIntByPessoa()
+      getJurisdByPessoa()
     }
   }, []);
 
