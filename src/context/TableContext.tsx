@@ -25,6 +25,7 @@ interface TableContextType {
 interface Props {
     children: React.ReactNode;
     id:GridRowId;
+    getAllJurisd:() => Jurisd;
 }
 
 const TableContext = createContext<TableContextType | undefined>(undefined);

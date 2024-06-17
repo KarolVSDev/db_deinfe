@@ -367,10 +367,6 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                                 error={!!errors?.site}
                                 {...register('site', {
                                     required: 'Campo obrigatório',
-                                    pattern: {
-                                        value: /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\.[a-zA-Z]{2,})?$/,
-                                        message: 'Site inválido'
-                                    }
                                 })}
                             />
                             {errors?.site && (
@@ -430,6 +426,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                                 id="dataCriacao"
                                 label="Data da Criação"
                                 type="date"
+                                InputLabelProps={{shrink:true}}
                                 defaultValue={jurisd.dataCriacao}
                                 error={!!errors?.dataCriacao}
                                 {...register('dataCriacao', {
@@ -472,6 +469,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                                 id="dataExtincao"
                                 label="Data Extinção"
                                 type="date"
+                                InputLabelProps={{shrink:true}}
                                 defaultValue={jurisd.dataExtincao}
                                 error={!!errors?.dataExtincao}
                                 {...register('dataExtincao', {
@@ -545,7 +543,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
                     </Grid>
                     <RegisterButton text="Atualizar" />
-                    
+
                 </Box>
             )}
         </Container>

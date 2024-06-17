@@ -3,9 +3,10 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import {
   ColumnConfig,
-  Interessado
+  Interessado,
+  Jurisd
 } from '../../types/types';
-import { useEffect,  useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   pessoaFisicaHeader,
   procuradorHeader,
@@ -29,6 +30,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdatePF';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
+import useFetchListData from '../../hooks/useFetchListData';
 
 
 export default function DatabaseTable() {
@@ -36,12 +38,11 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { arrayPessoaFisica, arrayJurisd, arrayProcesso,
+  const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
     arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp, handleLocalization, arrayNatAchado,
     getAllPessoaFisica, getAllJurisd } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
-
 
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
@@ -175,31 +176,36 @@ export default function DatabaseTable() {
 
 
   function handleUpdate(selectedRow: GridRowId) {
-      setSelectedRow(selectedRow);
-      setOpenModal(true)
+    setSelectedRow(selectedRow);
+    setOpenModal(true)
   }
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
-  const handleDelete = async (selectedRow: GridRowId, dataType:string) => {
-    try {
-      const response = await api.delete(`/${dataType}/${selectedRow}`)
-      TypeAlert(response.data.message, 'success')
-      switch (dataType) {
-        case 'pessoafisica':
-          getAllPessoaFisica()
-          break;
-        case 'jurisd':
-          getAllJurisd()
-        default:
-          break;
+  const handleDelete = async (selectedRow: GridRowId, dataType: string) => {
+    if(selectedRow && dataType){
+      try {
+        const response = await api.delete(`/${dataType}/${selectedRow}`)
+        TypeAlert(response.data.message, 'success')
+        switch (dataType) {
+          case 'pessoafisica':
+            getAllPessoaFisica()
+            break;
+          case 'jurisd':
+            getAllJurisd()
+            
+            break;
+          default:
+            break;
+        }
+      } catch (error: any) {
+        TypeAlert(error.response.data.message, 'error')
       }
-    } catch (error: any) {
-      TypeAlert(error.response.data.message, 'error')
     }
   }
+
 
   //esse bloco atualiza a visualização de pessoa física
   useEffect(() => {
@@ -209,14 +215,18 @@ export default function DatabaseTable() {
   }, [])
 
   useEffect(() => {
-    if (dataType === 'pessoafisica') {
-      setRows(createRows(arrayPessoaFisica))
-    }
-    if (dataType === 'jurisd') {
-      setRows(createRows(arrayJurisd))
+    switch (dataType) {
+      case 'pessoafisica':
+        setRows(createRows(arrayPessoaFisica))
+        break;
+      case 'jurisd':
+        setRows(createRows(arrayJurisd))
+        break;
+      default:
+        break;
     }
   }, [arrayPessoaFisica, arrayJurisd])
-  //
+
 
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>

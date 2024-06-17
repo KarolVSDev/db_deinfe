@@ -24,7 +24,7 @@ const FormPessoaFisica = () => {
     api.post('/pessoafisica/create', data).then(async response => {
       TypeAlert(response.data.message, 'success')
       reset()
-      await getAllPessoaFisica()
+      getAllPessoaFisica()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })

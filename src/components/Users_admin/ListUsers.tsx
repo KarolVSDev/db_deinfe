@@ -11,6 +11,7 @@ import { Box, Button, Grid } from '@mui/material';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import ModalAddUser from '../Modais/UserModals/ModalAddUser';
 import ModalUpdateUser from '../Modais/UserModals/ModalUpdateUser';
+import useFetchUsers from '../../hooks/useFetchUsers';
 
 interface ListProps {
     dataState:any[];
@@ -18,15 +19,8 @@ interface ListProps {
 
 export default function ListUsers(data:ListProps) {
 
-    const [users, setUsers] = useState<AllUsers[]>()
+    const {users, getUsers} = useFetchUsers() 
 
-    const getUsers = () => {
-        api.get('/usuario').then((response) => {
-            setUsers(response.data)
-        }).catch((error) => {
-            console.error('erro ao trazer os dados', error)
-        })
-    }
 
     const removeUser = (userId: string) => {
         api.delete(`/usuario/${userId}`).then((response: any) => {
@@ -34,12 +28,12 @@ export default function ListUsers(data:ListProps) {
         }).catch((error: any) => {
             TypeInfo(error.response.data.message, 'error')
         })
-
     }
 
     useEffect(() => {
         getUsers()
-    }, [])
+        
+    }, [users])
 
 
 

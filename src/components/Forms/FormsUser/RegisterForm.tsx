@@ -24,6 +24,7 @@ import { api } from '../../../service/api';
 import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CloseIcon from '@mui/icons-material/Close';
+import useFetchUsers from '../../../hooks/useFetchUsers';
 
 
 interface SignUpProps {
@@ -37,12 +38,13 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+  const {getUsers} = useFetchUsers()
 
   const onSubmit = (data: User) => {
     api.post('/usuario', data).then(response => {
       closeModal()
       TypeAlert(response.data.message, 'success')
-
+      getUsers()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })

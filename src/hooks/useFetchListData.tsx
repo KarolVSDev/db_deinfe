@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { Interessado, ListData, PessoaJurisd, Processo } from "../types/types";
+import { Interessado, Jurisd, ListData, PessoaJurisd, Processo } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 
@@ -9,6 +9,7 @@ import { GridRowId } from "@mui/x-data-grid";
 const useFetchListData = (id: GridRowId | undefined, type:string) => {
     const [arrayInteressado, setArrayInteressado] = useState<Interessado[]>([]);
     const [arrayPessoaJurisd, setArrayPessoaJurisd] = useState<PessoaJurisd[]>([]);
+    const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
     const [arrayListData, setArrayListData] = useState<ListData[]>([])
 
@@ -56,6 +57,7 @@ const useFetchListData = (id: GridRowId | undefined, type:string) => {
           TypeAlert(error.response.data.messsage, 'error')
         })
       }
+
     //   const getProcessoByPessoa = async () => {
     //     try {
     //       const response = await api.get(`/processo/pessoa/${id}`);
