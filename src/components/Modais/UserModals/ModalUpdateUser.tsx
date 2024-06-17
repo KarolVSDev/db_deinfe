@@ -22,7 +22,7 @@ const style = {
   boxShadow: 24,
   p: 4,
   overflowY: 'auto',
-  height: '95vh',
+  height: 'fit-content',
   scrollbarWidth: 'thin',
 };
 

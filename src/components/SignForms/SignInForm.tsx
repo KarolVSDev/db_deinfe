@@ -48,7 +48,6 @@ export default function SignInSide() {
     login(data);
   }
 
-  console.log(isLoggedIn)
   return (
     <>
       <Grid container component="main" sx={{ height: '100vh' }} >
@@ -98,7 +97,7 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Entrar
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, flex: 'col', display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+            <Box component="form" name='signinForm' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, flex: 'col', display: 'flex', flexDirection: 'column', alignItems: 'start', width:'100%', height:'100%' }}>
               <TextField
                 margin="normal"
                 fullWidth
@@ -142,7 +141,7 @@ export default function SignInSide() {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   }

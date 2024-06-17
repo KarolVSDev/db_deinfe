@@ -53,7 +53,7 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
   }
 
   return (
-    <Container maxWidth="xs" sx={{ height: '80vh' }} >
+    <Container maxWidth="xs" sx={{ height: 'fit-content' }} >
       <CssBaseline />
       <IconButton onClick={handleModalClose} sx={{
         ml: 35, mb: 0, mr: 0, '&:hover': {
@@ -80,7 +80,7 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
         <Typography component="h1" variant="h5">
           Registro de Usuário
         </Typography>
-        <Box component="form" name='registerForm' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
+        <Box component="form" id='registerForm' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
@@ -176,7 +176,7 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }

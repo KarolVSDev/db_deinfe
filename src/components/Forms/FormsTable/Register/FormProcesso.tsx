@@ -204,11 +204,11 @@ const FormProcesso = () => {
               <TextField
                 variant='filled'
                 required
-                placeholder='xx/xx/xxxx'
                 fullWidth
                 id="arquivamento"
                 label="Arquivamento"
-                type="text"
+                type="date"
+                InputLabelProps={{ shrink: true }}
                 error={!!errors?.arquivamento}
                 {...register('arquivamento', {
                   required: 'Campo obrigatório', pattern: {

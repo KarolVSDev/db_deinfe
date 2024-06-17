@@ -41,8 +41,7 @@ const useFetchListData = (id: GridRowId | undefined, type:string) => {
       };
 
       const onDelete = (id: string, type: string) => {
-        api.delete(`/${type}/${id}`).then(response => {
-          TypeAlert(response.data.message, 'success')
+        api.delete(`/${type}/${id}`).then(() => {
           switch (type) {
             case 'interessado':
               getIntByPessoa()

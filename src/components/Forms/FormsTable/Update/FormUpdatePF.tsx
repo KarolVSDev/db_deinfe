@@ -42,11 +42,6 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const handleDelete = (id: string, type: string) => {
     onDelete(id, type)
-    // api.delete(`/${type}/${id}`).then(response => {
-    //   TypeAlert(response.data.message, 'success')
-    // }).catch((error) => {
-    //   TypeAlert(error.response.data.messsage, 'error')
-    // })
   }
 
   const getOnePF = async (id: GridRowId | undefined) => {

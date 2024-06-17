@@ -246,7 +246,7 @@ const UpdateUserForm: React.FC<SignUpProps> = ({ closeModal, userId }) => {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   }

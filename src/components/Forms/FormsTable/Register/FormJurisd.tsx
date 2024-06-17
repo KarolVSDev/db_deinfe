@@ -395,6 +395,7 @@ const FormJurisd = () => {
                 id="dataCriacao"
                 label="Data da Criação"
                 type="date"
+                InputLabelProps={{shrink:true}}
                 InputProps={{ inputMode: "none" }}
                 error={!!errors?.dataCriacao}
                 {...register('dataCriacao', {
@@ -435,6 +436,7 @@ const FormJurisd = () => {
                 fullWidth
                 id="dataExtincao"
                 label="Data Extinção"
+                InputLabelProps={{shrink:true}}
                 type="date"
                 error={!!errors?.dataExtincao}
                 {...register('dataExtincao', {
