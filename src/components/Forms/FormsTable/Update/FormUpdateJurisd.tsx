@@ -426,7 +426,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                                 id="dataCriacao"
                                 label="Data da Criação"
                                 type="date"
-                                InputLabelProps={{shrink:true}}
+                                InputLabelProps={{ shrink: true }}
                                 defaultValue={jurisd.dataCriacao}
                                 error={!!errors?.dataCriacao}
                                 {...register('dataCriacao', {
@@ -469,7 +469,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                                 id="dataExtincao"
                                 label="Data Extinção"
                                 type="date"
-                                InputLabelProps={{shrink:true}}
+                                InputLabelProps={{ shrink: true }}
                                 defaultValue={jurisd.dataExtincao}
                                 error={!!errors?.dataExtincao}
                                 {...register('dataExtincao', {
@@ -543,9 +543,14 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
                     </Grid>
                     <RegisterButton text="Atualizar" />
-
                 </Box>
+
             )}
+            <Box sx={{ mt: 2, textAlign: 'left' }}>
+                <InnerAccordion title={'Adicionar Relação'}>
+                    <FormJurisd_Jurisd />
+                </InnerAccordion>
+            </Box>
         </Container>
     )
 }

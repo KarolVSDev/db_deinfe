@@ -22,7 +22,6 @@ import {
   arrayRelationsHeader
 } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
-import ModalPessoaFisica from '../Modais/DataTableModals/ModalAddDataTable';
 import * as XLSX from 'xlsx';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,7 +29,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdatePF';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
-import useFetchListData from '../../hooks/useFetchListData';
+import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
 
 
 export default function DatabaseTable() {
@@ -39,7 +38,7 @@ export default function DatabaseTable() {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
-    arrayProcurador, arrayRelator, arrayRelations, arrayRelationpp, handleLocalization, arrayNatAchado,
+    arrayProcurador, arrayRelator, arrayRelationpp, handleLocalization, arrayNatAchado,
     getAllPessoaFisica, getAllJurisd } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
@@ -86,6 +85,7 @@ export default function DatabaseTable() {
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
+    setSelectedRow(null);
 
     switch (value) {
       case 'pessoafisica':
@@ -185,28 +185,15 @@ export default function DatabaseTable() {
   };
 
   const handleDelete = async (selectedRow: GridRowId, dataType: string) => {
-    if(selectedRow && dataType){
-      try {
-        const response = await api.delete(`/${dataType}/${selectedRow}`)
-        TypeAlert(response.data.message, 'success')
-        switch (dataType) {
-          case 'pessoafisica':
-            getAllPessoaFisica()
-            break;
-          case 'jurisd':
-            getAllJurisd()
-            
-            break;
-          default:
-            break;
-        }
-      } catch (error: any) {
-        TypeAlert(error.response.data.message, 'error')
-      }
-    }
+    try {
+      const response = await api.delete(`/${dataType}/${selectedRow}`)
+      TypeAlert(response.data.message, 'success')
+    } catch (error: any) {
+      TypeAlert(error.response.data.message, 'error')
   }
+}
 
-
+  
   //esse bloco atualiza a visualização de pessoa física
   useEffect(() => {
     getAllPessoaFisica();
@@ -217,9 +204,11 @@ export default function DatabaseTable() {
   useEffect(() => {
     switch (dataType) {
       case 'pessoafisica':
+        getAllPessoaFisica();
         setRows(createRows(arrayPessoaFisica))
         break;
       case 'jurisd':
+        getAllJurisd()
         setRows(createRows(arrayJurisd))
         break;
       default:
@@ -244,7 +233,7 @@ export default function DatabaseTable() {
               <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>{option.string}</MenuItem>
             ))}
           </Select>
-          <ModalPessoaFisica />
+          <ModalAddData />
           <Box>
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
               const gridState = captureDataGridState();

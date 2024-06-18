@@ -39,7 +39,7 @@ const style = {
 };
 
 
-export default function ModalPessoaFisica() {
+export default function ModalAddData() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
