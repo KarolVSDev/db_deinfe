@@ -12,25 +12,27 @@ interface TableContextType {
     arrayProcesso: Processo[];
     arrayApenso: Apenso[];
     arrayNatAchado: NatAchado[];
-    arrayAreaAchado:AreaAchado[];
-    arrayDivAchado:DivAchado[];
-    arrayRelations:PessoaFisica[];
-    arrayRelationpp:Interessado[];
-    arrayInteressados:Interessado[];
-    handleLocalization:{}
+    arrayAreaAchado: AreaAchado[];
+    arrayDivAchado: DivAchado[];
+    arrayRelations: PessoaFisica[];
+    arrayRelationpp: Interessado[];
+    arrayInteressados: Interessado[];
+    handleLocalization: {}
     getAllPessoaFisica: () => void;
-    getAllJurisd:() => void;
+    getAllJurisd: () => void;
+    getAllProcesso: () => void;
+    getAllProcurador: () => void;
+    getAllRelator:() => void;
 }
 
 interface Props {
     children: React.ReactNode;
-    id:GridRowId;
-    getAllJurisd:() => Jurisd;
+    getAllJurisd: () => Jurisd;
 }
 
 const TableContext = createContext<TableContextType | undefined>(undefined);
 
-export const TableProvider: React.FC<Props> = ({ children, id }) => {
+export const TableProvider: React.FC<Props> = ({ children }) => {
 
     const [arrayPessoaFisica, setArrayPessoaFisica] = useState([]);
     const [arrayJurisd, setArrayJurisd] = useState([]);
@@ -66,14 +68,14 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
         filterOperatorIsEmpty: 'está vazio',
         filterOperatorIsNotEmpty: 'não está vazio',
         filterOperatorIsAnyOf: 'é qualquer um',
-        noRowsLabel:'sem dados',
-        columnMenuUnsort:'Desordenar',
-        noResultsOverlayLabel:'nenhum resultado encontrado',
-        footerRowSelected: (count:number) =>
-          count !== 1
-            ? `${count.toLocaleString()} linhas selecionadas`
-            : `${count.toLocaleString()} linha selecionada`,
-      };
+        noRowsLabel: 'sem dados',
+        columnMenuUnsort: 'Desordenar',
+        noResultsOverlayLabel: 'nenhum resultado encontrado',
+        footerRowSelected: (count: number) =>
+            count !== 1
+                ? `${count.toLocaleString()} linhas selecionadas`
+                : `${count.toLocaleString()} linha selecionada`,
+    };
 
     const getAllPessoaFisica = async () => {
         try {
@@ -113,7 +115,7 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
         }
     };
 
-    const getAllProccesso = async () => {
+    const getAllProcesso = async () => {
         try {
             const response = await api.get('/processo');
             setArrayProcesso(response.data)
@@ -144,7 +146,7 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
         try {
             const response = await api.get('/area-achado');
             setArrayAreaAchado(response.data)
-        } catch (error:any) {
+        } catch (error: any) {
             TypeInfo(error.response.data.message, 'error')
         }
     };
@@ -154,7 +156,7 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
             const response = await api.get('/div-area-achado');
             setArrayDivAchado(response.data)
         } catch (error) {
-            
+
         }
     };
 
@@ -177,21 +179,23 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
         }
     }
 
-    const getIntByPessoa = async (id:any) => {
+    const getIntByPessoa = async (id: any) => {
         try {
             const response = await api.get(`/interessado/pessoa/${id}`)
             setArrayInteressados(response.data)
-        } catch (error:any) {
+        } catch (error: any) {
             TypeInfo(error.response.data.message, 'error')
         }
     }
+
+
 
     useEffect(() => {
         getAllPessoaFisica()
         getAllJurisd()
         getAllRelator()
         getAllProcurador()
-        getAllProccesso()
+        getAllProcesso()
         getAllNatAchado()
         getAllAreaAchado()
         getAllDivAchado()
@@ -216,6 +220,9 @@ export const TableProvider: React.FC<Props> = ({ children, id }) => {
             handleLocalization,
             getAllPessoaFisica,
             getAllJurisd,
+            getAllProcesso,
+            getAllProcurador,
+            getAllRelator
         }}>
             {children}
         </TableContext.Provider>

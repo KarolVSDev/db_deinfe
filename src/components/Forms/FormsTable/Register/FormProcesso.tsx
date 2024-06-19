@@ -18,22 +18,15 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 const FormProcesso = () => {
 
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Processo>({});
-  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador } = useContextTable()
+  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador, getAllProcesso } = useContextTable()
   const [expanded, setExpanded] = React.useState(false);
 
-  const formatDate = (data: string) => {
-    const partes = data.split('/');
-    const dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
-    return dataFormatada;
-  }
 
   const onSubmit = (data: Processo) => {
-    let dataArq = data.arquivamento;
-    data.arquivamento = formatDate(dataArq)
     api.post('/processo', data).then(response => {
       TypeAlert(response.data.message, 'success')
       reset()
-
+      getAllProcesso()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
@@ -211,10 +204,7 @@ const FormProcesso = () => {
                 InputLabelProps={{ shrink: true }}
                 error={!!errors?.arquivamento}
                 {...register('arquivamento', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                    message: 'Data inválida'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -229,6 +219,7 @@ const FormProcesso = () => {
                 disablePortal
                 id="combo-box-demo"
                 options={arrayJurisd}
+                clearOnBlur
                 getOptionLabel={(option: Jurisd) => option.nome}
                 onChange={(event, value) => setValue('jurisd', value?.id ?? '')}
                 renderInput={(params) => <TextField variant='filled' {...params} label="Unidade Gestora" />}

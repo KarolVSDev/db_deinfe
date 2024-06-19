@@ -39,7 +39,7 @@ export default function DatabaseTable() {
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
     arrayProcurador, arrayRelator, arrayRelationpp, handleLocalization, arrayNatAchado,
-    getAllPessoaFisica, getAllJurisd } = useContextTable();
+    getAllPessoaFisica, getAllJurisd, getAllProcesso, getAllProcurador, getAllRelator } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
 
@@ -190,15 +190,17 @@ export default function DatabaseTable() {
       TypeAlert(response.data.message, 'success')
     } catch (error: any) {
       TypeAlert(error.response.data.message, 'error')
+    }
   }
-}
 
-  
+
   //esse bloco atualiza a visualização de pessoa física
   useEffect(() => {
     getAllPessoaFisica();
     getAllJurisd();
-
+    getAllProcesso();
+    getAllProcurador();
+    getAllRelator();
   }, [])
 
   useEffect(() => {
@@ -211,10 +213,21 @@ export default function DatabaseTable() {
         getAllJurisd()
         setRows(createRows(arrayJurisd))
         break;
+      case 'processo':
+        getAllProcesso()
+        setRows(createRows(arrayProcesso))
+      case 'procurador':
+        getAllProcurador()
+        setRows(createRows(arrayProcurador))
+        break;
+      case 'relator':
+        getAllRelator()
+        setRows(createRows(arrayRelator))
+        break;
       default:
         break;
     }
-  }, [arrayPessoaFisica, arrayJurisd])
+  }, [arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator])
 
 
   return (
@@ -262,7 +275,7 @@ export default function DatabaseTable() {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
+                  pageSize: 5,
                 },
               },
             }}

@@ -157,6 +157,16 @@ export interface Processo {
   interessado: string;
 }
 
+export interface ProcessoUpdate {
+  id: string;
+  numero: string;
+  ano: string;
+  natureza: string;
+  exercicio: string;
+  objeto: string;
+  arquivamento: string;
+}
+
 export interface Apenso {
   id: string
   principal: string;

@@ -6,34 +6,47 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { Jurisd, PessoaFisica, Processo, Procurador, Relator } from '../../../../types/types'
+import { ProcessoUpdate } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
-import { Autocomplete} from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
+import { GridRowId } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
+import { formatToInputDate } from '../../../../hooks/DateFormate';
 
+interface FormProcessoProps {
+  id?: GridRowId;
+}
 
+const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id }) => {
 
-const FormUpdateProcesso = () => {
-
-  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Processo>({});
-  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador } = useContextTable()
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ProcessoUpdate>({});
+  const { getAllProcesso } = useContextTable()
   const [expanded, setExpanded] = React.useState(false);
+  const [processo, setProcesso] = useState<ProcessoUpdate>()
 
-  const formatDate = (data: string) => {
-    const partes = data.split('/');
-    const dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
-    return dataFormatada;
+
+  const getOneProcesso = async (id: GridRowId) => {
+    try {
+      const response = await api.get(`/processo/${id}`)
+      const data = response.data
+
+      if (data.arquivamento) {
+        data.arquivamento = formatToInputDate(new Date(data.arquivamento));
+      }
+      setProcesso(data)
+    } catch (error: any) {
+      TypeAlert(error.response.data.message, 'error')
+    }
   }
 
-  const onSubmit = (data: Processo) => {
-    let dataArq = data.arquivamento;
-    data.arquivamento = formatDate(dataArq)
-    api.post('/processo', data).then(response => {
+
+  const onSubmit = (data: ProcessoUpdate) => {
+    api.patch(`/processo/${id}`, data).then(response => {
       TypeAlert(response.data.message, 'success')
       reset()
-
+      getAllProcesso()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
@@ -43,236 +56,202 @@ const FormUpdateProcesso = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
 
+  useEffect(() => {
+    if (id) {
+      getOneProcesso(id);
+    }
+  }, []);
+
   return (
     <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
-      <CssBaseline />
-      <Box
-        sx={{
+      {processo && (
+        <Box
+          sx={{
 
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Box component="form" name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
-          <Grid container spacing={3} sx={{ pb: 1 }} >
-            <Grid item xs={12} sm={4} >
-              <TextField
-                variant='filled'
-                autoComplete="given-name"
-                type="text"
-                required
-                fullWidth
-                placeholder='xxxxx'
-                id="numero"
-                label="Número"
-                autoFocus
-                error={errors?.numero?.type === 'required'}
-                {...register('numero', {
-                  required: 'Campo obrigatório', maxLength: {
-                    value: 5,
-                    message: 'Tamanho inválido'
-                  },
-                  minLength: {
-                    value: 5,
-                    message: 'Tamanho inválido'
-                  },
-                  pattern: {
-                    value: /^\d+$/,
-                    message: 'Apenas números'
-                  }
-                })}
-              />
-              {errors?.numero && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                  {errors.numero?.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={4} >
-              <TextField
-                variant='filled'
-                autoComplete="given-name"
-                required
-                fullWidth
-                placeholder='xxxx'
-                id="ano"
-                label="Ano"
-                type="text"
-                autoFocus
-                error={!!errors?.ano}
-                {...register("ano", {
-                  required: 'Campo obrigatório',
-                  maxLength: {
-                    value: 4,
-                    message: 'Tamanho inválido'
-                  },
-                  minLength: {
-                    value: 4,
-                    message: 'Tamanho inválido'
-                  },
-                  pattern: {
-                    value: /^\d+$/,
-                    message: 'Apenas Números'
-                  }
-                })}
-              />
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box component="form" name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2, width: '700px', p: 2 }}>
+            <Typography variant='h5' sx={{ pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Processo</Typography>
+            <Grid container spacing={3} sx={{ pb: 1 }} >
+              <Grid item xs={12} sm={4} >
+                <TextField
+                  variant='filled'
+                  autoComplete="given-name"
+                  defaultValue={processo.numero}
+                  type="text"
+                  required
+                  fullWidth
+                  placeholder='xxxxx'
+                  id="numero"
+                  label="Número"
+                  autoFocus
+                  error={errors?.numero?.type === 'required'}
+                  {...register('numero', {
+                    required: 'Campo obrigatório', maxLength: {
+                      value: 5,
+                      message: 'Tamanho inválido'
+                    },
+                    minLength: {
+                      value: 5,
+                      message: 'Tamanho inválido'
+                    },
+                    pattern: {
+                      value: /^\d+$/,
+                      message: 'Apenas números'
+                    }
+                  })}
+                />
+                {errors?.numero && (
+                  <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+                    {errors.numero?.message}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12} sm={4} >
+                <TextField
+                  variant='filled'
+                  autoComplete="given-name"
+                  defaultValue={processo.ano}
+                  required
+                  fullWidth
+                  placeholder='xxxx'
+                  id="ano"
+                  label="Ano"
+                  type="text"
+                  autoFocus
+                  error={!!errors?.ano}
+                  {...register("ano", {
+                    required: 'Campo obrigatório',
+                    maxLength: {
+                      value: 4,
+                      message: 'Tamanho inválido'
+                    },
+                    minLength: {
+                      value: 4,
+                      message: 'Tamanho inválido'
+                    },
+                    pattern: {
+                      value: /^\d+$/,
+                      message: 'Apenas Números'
+                    }
+                  })}
+                />
 
-              {errors?.ano && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.ano.message}
-                </Typography>
-              )}
-            </Grid>
+                {errors?.ano && (
+                  <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                    {errors.ano.message}
+                  </Typography>
+                )}
+              </Grid>
 
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="natureza"
-                label="Natureza"
-                type="text"
-                error={!!errors?.natureza}
-                {...register('natureza', {
-                  required: 'Campo obrigatório'
-                })}
-              />
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  variant='filled'
+                  required
+                  defaultValue={processo.natureza}
+                  fullWidth
+                  id="natureza"
+                  label="Natureza"
+                  type="text"
+                  error={!!errors?.natureza}
+                  {...register('natureza', {
+                    required: 'Campo obrigatório'
+                  })}
+                />
 
-              {errors?.natureza && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.natureza.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                placeholder='Muni'
-                id="exercicio"
-                label="Exercício"
-                type="text"
-                error={!!errors?.exercicio}
-                {...register('exercicio', {
-                  required: 'Campo obrigatório',
-                  maxLength: {
-                    value: 4,
-                    message: 'Tamanho inválido'
-                  },
-                  minLength: {
-                    value: 4,
-                    message: 'Tamanho inválido'
-                  },
-                  pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Exercício inválido'
-                  }
-                })}
-              />
+                {errors?.natureza && (
+                  <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                    {errors.natureza.message}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  variant='filled'
+                  required
+                  fullWidth
+                  defaultValue={processo.exercicio}
+                  placeholder='Muni'
+                  id="exercicio"
+                  label="Exercício"
+                  type="text"
+                  error={!!errors?.exercicio}
+                  {...register('exercicio', {
+                    required: 'Campo obrigatório',
+                    maxLength: {
+                      value: 4,
+                      message: 'Tamanho inválido'
+                    },
+                    minLength: {
+                      value: 4,
+                      message: 'Tamanho inválido'
+                    },
+                    pattern: {
+                      value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
+                      message: 'Exercício inválido'
+                    }
+                  })}
+                />
 
-              {errors?.exercicio && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.exercicio.message}
-                </Typography>
-              )}
-            </Grid>
+                {errors?.exercicio && (
+                  <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                    {errors.exercicio.message}
+                  </Typography>
+                )}
+              </Grid>
 
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant='filled'
-                required
-                fullWidth
-                id="objeto"
-                label="Objeto"
-                type="text"
-                error={!!errors?.objeto}
-                {...register('objeto', {
-                  required: 'Campo obrigatório',
-                })}
-              />
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  variant='filled'
+                  required
+                  defaultValue={processo.objeto}
+                  fullWidth
+                  id="objeto"
+                  label="Objeto"
+                  type="text"
+                  error={!!errors?.objeto}
+                  {...register('objeto', {
+                    required: 'Campo obrigatório',
+                  })}
+                />
 
-              {errors?.objeto && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.objeto.message}
-                </Typography>
-              )}
-            </Grid>
+                {errors?.objeto && (
+                  <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                    {errors.objeto.message}
+                  </Typography>
+                )}
+              </Grid>
 
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant='filled'
-                required
-                placeholder='xx/xx/xxxx'
-                fullWidth
-                id="arquivamento"
-                label="Arquivamento"
-                type="text"
-                error={!!errors?.arquivamento}
-                {...register('arquivamento', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-                    message: 'Data inválida'
-                  }
-                })}
-              />
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  variant='filled'
+                  required
+                  defaultValue={processo.arquivamento}
+                  placeholder='xx/xx/xxxx'
+                  fullWidth
+                  id="arquivamento"
+                  label="Arquivamento"
+                  type="date"
+                  error={!!errors?.arquivamento}
+                  {...register('arquivamento', {
+                    required: 'Campo obrigatório'
+                  })}
+                />
 
-              {errors?.arquivamento && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.arquivamento.message}
-                </Typography>
-              )}
+                {errors?.arquivamento && (
+                  <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                    {errors.arquivamento.message}
+                  </Typography>
+                )}
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={arrayJurisd}
-                getOptionLabel={(option: Jurisd) => option.nome}
-                onChange={(event, value) => setValue('jurisd', value?.id ?? '')}
-                renderInput={(params) => <TextField variant='filled' {...params} label="Unidade Gestora" />}
-              />
-              {errors.jurisd && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.jurisd.message}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={4} >
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={arrayRelator}
-                getOptionLabel={(option: Relator) => option.nome}
-                onChange={(event, value) => setValue('relator', value?.id ?? '')}
-                renderInput={(params) => <TextField variant='filled' {...params} label="Relator" />}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} >
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={arrayProcurador}
-                getOptionLabel={(option: Procurador) => option.nome}
-                onChange={(event, value) => setValue('procurador', value?.id ?? '')}
-                renderInput={(params) => <TextField variant='filled' {...params} label="Procurador" />}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4} >
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                options={arrayPessoaFisica}
-                getOptionLabel={(option: PessoaFisica) => option.nome}
-                onChange={(event, value) => setValue('advogado', value?.id ?? '')}
-                renderInput={(params) => <TextField variant='filled' {...params} label="Advogado" />}
-              />
-            </Grid>
-          </Grid>
-          <RegisterButton text="Registrar"/>
+            <RegisterButton text="Atualizar" />
+          </Box>
         </Box>
-      </Box>
+      )}
     </Container>
   )
 }

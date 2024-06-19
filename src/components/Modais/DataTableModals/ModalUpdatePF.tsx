@@ -8,6 +8,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import FormUpdatePF from '../../Forms/FormsTable/Update/FormUpdatePF';
 import { GridRowId } from '@mui/x-data-grid';
 import FormUpdateJurisd from '../../Forms/FormsTable/Update/FormUpdateJurisd';
+import FormUpdateProcesso from '../../Forms/FormsTable/Update/FormUpdateProcesso';
+import FormUpdateProcurador from '../../Forms/FormsTable/Update/FormUpdateProcurador';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -41,6 +43,12 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
 
       case 'jurisd':
         return <FormUpdateJurisd closeModal={onClose} id={id}/>
+
+      case 'processo':
+        return <FormUpdateProcesso  id={id}/>
+
+      case 'procurador':
+        return <FormUpdateProcurador id={id}/>
     }
   }
 

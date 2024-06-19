@@ -7,11 +7,14 @@ import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormRelator = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Relator>({});
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<Relator>({});
+  const {getAllRelator} = useContextTable()
 
   const onSubmit = (data: Relator) => {
     api.post('/relator', data).then(response => {
       TypeAlert(response.data.message, 'success');
+      reset()
+      getAllRelator()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });
@@ -52,7 +55,7 @@ const FormRelator = () => {
           type="text"
           error={!!errors?.cargo}
           {...register('cargo', {
-            required: 'Campo obrigatório',
+            required: 'Campo obrigatório', maxLength:{value:25, message:'O nome do cargo é grande demais'}
           })}
         />
 

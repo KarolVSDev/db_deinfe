@@ -7,11 +7,14 @@ import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormProcurador = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<Procurador>({});
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<Procurador>({});
+  const {getAllProcurador} = useContextTable()
 
   const onSubmit = (data: Procurador) => {
     api.post('/procurador', data).then(response => {
       TypeAlert(response.data.message, 'success');
+      reset()
+      getAllProcurador()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });
