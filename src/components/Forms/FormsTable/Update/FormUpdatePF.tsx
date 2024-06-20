@@ -29,7 +29,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
   const [buttonType, setButtonType] = useState<string>('interessado')
-  const { getIntByPessoa, getJurisdByPessoa, onDelete, arrayListData } = useFetchListData(id, buttonType)
+  const { getIntByPessoa, getJurisdByPessoa, onDelete, arrayListData } = useFetchListData(id)
 
 
   const handleTarget = (type: string) => {

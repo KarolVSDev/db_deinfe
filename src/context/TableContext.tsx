@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
-import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado } from "../types/types";
-import { GridRowId } from "@mui/x-data-grid";
+import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate } from "../types/types";
+
 
 interface TableContextType {
     arrayPessoaFisica: PessoaFisica[];
@@ -38,7 +38,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayJurisd, setArrayJurisd] = useState([]);
     const [arrayRelator, setArrayRelator] = useState([]);
     const [arrayProcurador, setArrayProcurador] = useState([]);
-    const [arrayProcesso, setArrayProcesso] = useState([]);
+    const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
     const [arrayApenso, setArrayApenso] = useState([]);
     const [arrayNatAchado, setArrayNatAchado] = useState([]);
     const [arrayAreaAchado, setArrayAreaAchado] = useState([]);
@@ -188,7 +188,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     }
 
-
+    
 
     useEffect(() => {
         getAllPessoaFisica()
@@ -202,6 +202,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getRelationPF()
         getRelationI()
     }, [])
+
 
     return (
         <TableContext.Provider value={{
@@ -222,7 +223,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             getAllJurisd,
             getAllProcesso,
             getAllProcurador,
-            getAllRelator
+            getAllRelator,
         }}>
             {children}
         </TableContext.Provider>

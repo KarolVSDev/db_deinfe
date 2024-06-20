@@ -14,6 +14,7 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { formatToInputDate } from '../../../../hooks/DateFormate';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 interface FormProcessoProps {
   id?: GridRowId;
@@ -23,27 +24,12 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id }) => {
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ProcessoUpdate>({});
   const { getAllProcesso } = useContextTable()
-  const [expanded, setExpanded] = React.useState(false);
-  const [processo, setProcesso] = useState<ProcessoUpdate>()
+  const [expanded, setExpanded] = useState(false);
+  const {processo, getOneProcesso} = useFetchListData(id)
+  
 
-
-  const getOneProcesso = async (id: GridRowId) => {
-    try {
-      const response = await api.get(`/processo/${id}`)
-      const data = response.data
-
-      if (data.arquivamento) {
-        data.arquivamento = formatToInputDate(new Date(data.arquivamento));
-      }
-      setProcesso(data)
-    } catch (error: any) {
-      TypeAlert(error.response.data.message, 'error')
-    }
-  }
-
-
-  const onSubmit = (data: ProcessoUpdate) => {
-    api.patch(`/processo/${id}`, data).then(response => {
+  const onSubmit = (processo: ProcessoUpdate) => {
+    api.patch(`/processo/${id}`, processo).then(response => {
       TypeAlert(response.data.message, 'success')
       reset()
       getAllProcesso()

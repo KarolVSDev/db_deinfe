@@ -206,7 +206,7 @@ export default function DatabaseTable() {
   useEffect(() => {
     switch (dataType) {
       case 'pessoafisica':
-        getAllPessoaFisica();
+        // getAllPessoaFisica();
         setRows(createRows(arrayPessoaFisica))
         break;
       case 'jurisd':
@@ -229,7 +229,7 @@ export default function DatabaseTable() {
     }
   }, [arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator])
 
-
+  
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >

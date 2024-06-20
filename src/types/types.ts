@@ -142,7 +142,7 @@ export interface Jurisd_Jurisd {
   subordinado: string;
 }
 export interface Processo {
-  id: string;
+  id?: string;
   numero: string;
   ano: string;
   natureza: string;
@@ -157,8 +157,8 @@ export interface Processo {
   interessado: string;
 }
 
-export interface ProcessoUpdate {
-  id: string;
+export interface ProcessoUpdate extends Processo{
+  id?: string;
   numero: string;
   ano: string;
   natureza: string;
