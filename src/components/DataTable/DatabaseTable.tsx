@@ -39,7 +39,7 @@ export default function DatabaseTable() {
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
     arrayProcurador, arrayRelator, arrayRelationpp, handleLocalization, arrayNatAchado,
-    getAllPessoaFisica, getAllJurisd, getAllProcesso, getAllProcurador, getAllRelator } = useContextTable();
+    setArrayPessoaFisica, setArrayJurisd, getAllJurisd, getAllProcesso, getAllProcurador, getAllRelator } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
 
@@ -188,6 +188,16 @@ export default function DatabaseTable() {
     try {
       const response = await api.delete(`/${dataType}/${selectedRow}`)
       TypeAlert(response.data.message, 'success')
+      switch (dataType) {
+        case 'pessoafisica':
+          setArrayPessoaFisica(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
+        case 'jurisd':
+          setArrayJurisd(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
+        default:
+          break;
+      }
     } catch (error: any) {
       TypeAlert(error.response.data.message, 'error')
     }
@@ -195,27 +205,26 @@ export default function DatabaseTable() {
 
 
   //esse bloco atualiza a visualização de pessoa física
-  useEffect(() => {
-    getAllPessoaFisica();
-    getAllJurisd();
-    getAllProcesso();
-    getAllProcurador();
-    getAllRelator();
-  }, [])
+  // useEffect(() => {
+  //   getAllPessoaFisica();
+  //   getAllJurisd();
+  //   getAllProcesso();
+  //   getAllProcurador();
+  //   getAllRelator();
+  // }, [])
 
   useEffect(() => {
     switch (dataType) {
       case 'pessoafisica':
-        // getAllPessoaFisica();
         setRows(createRows(arrayPessoaFisica))
         break;
       case 'jurisd':
-        getAllJurisd()
         setRows(createRows(arrayJurisd))
         break;
       case 'processo':
         getAllProcesso()
         setRows(createRows(arrayProcesso))
+        break;
       case 'procurador':
         getAllProcurador()
         setRows(createRows(arrayProcurador))
@@ -227,9 +236,9 @@ export default function DatabaseTable() {
       default:
         break;
     }
-  }, [arrayPessoaFisica, arrayJurisd, arrayProcesso, arrayProcurador, arrayRelator])
+  }, [ arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
 
-  
+
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >

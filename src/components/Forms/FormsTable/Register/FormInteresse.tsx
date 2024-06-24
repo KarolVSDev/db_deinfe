@@ -16,7 +16,6 @@ const FormInteresse = () => {
     api.post('/interessado', data).then(response => {
       TypeAlert(response.data.message, 'success');
       reset() 
-      
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });

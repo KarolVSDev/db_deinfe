@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
 import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate } from "../types/types";
@@ -17,12 +17,14 @@ interface TableContextType {
     arrayRelations: PessoaFisica[];
     arrayRelationpp: Interessado[];
     arrayInteressados: Interessado[];
-    handleLocalization: {}
-    getAllPessoaFisica: () => void;
+    handleLocalization: {};
+    setArrayPessoaFisica: Dispatch<SetStateAction<PessoaFisica[]>>;
+    setArrayJurisd: Dispatch<SetStateAction<Jurisd[]>>;
+    getAllPessoaFisica:() => void;
     getAllJurisd: () => void;
     getAllProcesso: () => void;
     getAllProcurador: () => void;
-    getAllRelator:() => void;
+    getAllRelator: () => void;
 }
 
 interface Props {
@@ -34,8 +36,8 @@ const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export const TableProvider: React.FC<Props> = ({ children }) => {
 
-    const [arrayPessoaFisica, setArrayPessoaFisica] = useState([]);
-    const [arrayJurisd, setArrayJurisd] = useState([]);
+    const [arrayPessoaFisica, setArrayPessoaFisica] = useState<PessoaFisica[]>([]);
+    const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
     const [arrayRelator, setArrayRelator] = useState([]);
     const [arrayProcurador, setArrayProcurador] = useState([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
@@ -188,11 +190,11 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     }
 
-    
+
 
     useEffect(() => {
-        getAllPessoaFisica()
         getAllJurisd()
+        getAllPessoaFisica()
         getAllRelator()
         getAllProcurador()
         getAllProcesso()
@@ -202,7 +204,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getRelationPF()
         getRelationI()
     }, [])
-
 
     return (
         <TableContext.Provider value={{
@@ -219,7 +220,9 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayRelationpp,
             arrayInteressados,
             handleLocalization,
+            setArrayPessoaFisica,
             getAllPessoaFisica,
+            setArrayJurisd,
             getAllJurisd,
             getAllProcesso,
             getAllProcurador,

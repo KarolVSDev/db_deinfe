@@ -333,11 +333,7 @@ const FormJurisd = () => {
                 type="text"
                 error={!!errors?.site}
                 {...register('site', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+)\.([a-zA-Z]{2,})(\.[a-zA-Z]{2,})?$/,
-                    message: 'Site inválido'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
               {errors?.site && (

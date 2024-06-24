@@ -26,7 +26,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
-    const { getAllJurisd } = useContextTable()
+    const { setArrayJurisd, arrayJurisd } = useContextTable()
 
     const getOneJurisd = async (id: GridRowId | undefined) => {
         try {
@@ -54,12 +54,17 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     const onSubmit = (data: Jurisd) => {
         api.patch(`/jurisd/update/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success')
-            getAllJurisd()
+            setArrayJurisd(prevArray => {
+                const updatedArray = prevArray.map(item =>
+                    item.id === data.id ? { ...item, ...data } : item
+                );
+                return updatedArray;
+            });
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
         })
     }
-
+    
     return (
         <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }}>
             {jurisd && (

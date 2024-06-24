@@ -146,6 +146,7 @@ const FormPessoaJurisd = () => {
                 fullWidth
                 id="dataNomeacao"
                 label="Data da Nomeação"
+                InputLabelProps={{shrink:true}}
                 type="date"
                 error={!!errors?.dataNomeacao}
                 {...register('dataNomeacao', {
@@ -191,6 +192,7 @@ const FormPessoaJurisd = () => {
                 fullWidth
                 id="dataExoneracao"
                 label="Data da Exoneração"
+                InputLabelProps={{shrink:true}}
                 type="date"
                 error={!!errors?.dataExoneracao}
                 {...register('dataExoneracao', {
