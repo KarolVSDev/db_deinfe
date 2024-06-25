@@ -13,7 +13,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
   const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
-  const [processo, setProcesso] = useState<ProcessoUpdate>()
+  
 
   const getIntByPessoa = async () => {
     try {
@@ -69,19 +69,6 @@ const useFetchListData = (id: GridRowId | undefined) => {
   //     }
   //   };
 
-  const getOneProcesso = async (id: GridRowId) => {
-    try {
-      const response = await api.get(`/processo/${id}`)
-      const data = response.data
-
-      if (data.arquivamento) {
-        data.arquivamento = formatToInputDate(new Date(data.arquivamento));
-      }
-      setProcesso(data)
-    } catch (error: any) {
-      TypeAlert(error.response.data.message, 'error')
-    }
-  }
 
   useEffect(() => {
     if (id) {
@@ -93,11 +80,9 @@ const useFetchListData = (id: GridRowId | undefined) => {
 
   return {
     arrayListData,
-    processo,
     getIntByPessoa,
     getJurisdByPessoa,
     onDelete,
-    getOneProcesso
     // arrayProcesso,
     // getProcessoByPessoa
   }

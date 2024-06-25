@@ -20,6 +20,7 @@ interface TableContextType {
     handleLocalization: {};
     setArrayPessoaFisica: Dispatch<SetStateAction<PessoaFisica[]>>;
     setArrayJurisd: Dispatch<SetStateAction<Jurisd[]>>;
+    setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
     getAllPessoaFisica:() => void;
     getAllJurisd: () => void;
     getAllProcesso: () => void;
@@ -221,8 +222,9 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayInteressados,
             handleLocalization,
             setArrayPessoaFisica,
-            getAllPessoaFisica,
             setArrayJurisd,
+            setArrayProcesso,
+            getAllPessoaFisica,
             getAllJurisd,
             getAllProcesso,
             getAllProcurador,

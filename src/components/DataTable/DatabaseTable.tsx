@@ -39,7 +39,7 @@ export default function DatabaseTable() {
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
     arrayProcurador, arrayRelator, arrayRelationpp, handleLocalization, arrayNatAchado,
-    setArrayPessoaFisica, setArrayJurisd, getAllJurisd, getAllProcesso, getAllProcurador, getAllRelator } = useContextTable();
+    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, getAllJurisd, getAllProcesso, getAllProcurador, getAllRelator } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
 
@@ -195,6 +195,9 @@ export default function DatabaseTable() {
         case 'jurisd':
           setArrayJurisd(prevArray => prevArray.filter(item => item.id !== selectedRow))
           break;
+        case 'processo':
+          setArrayProcesso(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
         default:
           break;
       }
@@ -205,13 +208,6 @@ export default function DatabaseTable() {
 
 
   //esse bloco atualiza a visualização de pessoa física
-  // useEffect(() => {
-  //   getAllPessoaFisica();
-  //   getAllJurisd();
-  //   getAllProcesso();
-  //   getAllProcurador();
-  //   getAllRelator();
-  // }, [])
 
   useEffect(() => {
     switch (dataType) {
@@ -222,11 +218,9 @@ export default function DatabaseTable() {
         setRows(createRows(arrayJurisd))
         break;
       case 'processo':
-        getAllProcesso()
         setRows(createRows(arrayProcesso))
         break;
       case 'procurador':
-        getAllProcurador()
         setRows(createRows(arrayProcurador))
         break;
       case 'relator':

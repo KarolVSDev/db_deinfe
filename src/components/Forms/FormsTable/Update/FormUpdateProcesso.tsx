@@ -18,30 +18,45 @@ import useFetchListData from '../../../../hooks/useFetchListData';
 
 interface FormProcessoProps {
   id?: GridRowId;
+  closeModal: () => void;
 }
 
-const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id }) => {
+const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => {
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ProcessoUpdate>({});
+  const { register, handleSubmit, formState: { errors } } = useForm<ProcessoUpdate>({});
   const { getAllProcesso } = useContextTable()
   const [expanded, setExpanded] = useState(false);
-  const {processo, getOneProcesso} = useFetchListData(id)
+  const [processo, setProcesso] = useState<ProcessoUpdate>()
   
+  const getOneProcesso = async (id: GridRowId) => {
+    try {
+      const response = await api.get(`/processo/${id}`)
+      const data = response.data
+
+      if (data.arquivamento) {
+        data.arquivamento = formatToInputDate(new Date(data.arquivamento));
+      }
+      setProcesso(data)
+    } catch (error: any) {
+      TypeAlert(error.response.data.message, 'error')
+    }
+  }
 
   const onSubmit = (processo: ProcessoUpdate) => {
     api.patch(`/processo/${id}`, processo).then(response => {
       TypeAlert(response.data.message, 'success')
-      reset()
       getAllProcesso()
+      closeModal()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
   }
 
+  
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
-
+  
   useEffect(() => {
     if (id) {
       getOneProcesso(id);

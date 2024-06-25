@@ -10,10 +10,11 @@ import { useEffect, useState } from 'react';
 
 interface FormProcProps {
     id?: GridRowId;
+    closeModal: () => void;
 }
 
-const FormUpdateProcurador: React.FC<FormProcProps> = ({ id }) => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<Procurador>({});
+const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
+    const { register, handleSubmit, formState: { errors } } = useForm<Procurador>({});
     const [procurador, setProcurador] = useState<Procurador>()
     const {getAllProcurador} = useContextTable()
 
@@ -30,8 +31,8 @@ const FormUpdateProcurador: React.FC<FormProcProps> = ({ id }) => {
     const onSubmit = (data: Procurador) => {
         api.patch(`/procurador/${id}`, data).then(response => {
             TypeAlert('Procurador atualizado', 'success');
-            reset()
             getAllProcurador()
+            closeModal()
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
         });

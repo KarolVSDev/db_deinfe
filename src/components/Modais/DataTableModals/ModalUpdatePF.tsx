@@ -45,10 +45,10 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
         return <FormUpdateJurisd closeModal={onClose} id={id}/>
 
       case 'processo':
-        return <FormUpdateProcesso  id={id}/>
+        return <FormUpdateProcesso closeModal={onClose} id={id}/>
 
       case 'procurador':
-        return <FormUpdateProcurador id={id}/>
+        return <FormUpdateProcurador closeModal={onClose} id={id}/>
     }
   }
 

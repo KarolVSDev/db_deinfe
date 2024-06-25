@@ -76,10 +76,7 @@ const FormPessoaJurisd = () => {
                 type="text"
                 error={!!errors?.cargo}
                 {...register("cargo", {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Cargo inválido'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -100,11 +97,7 @@ const FormPessoaJurisd = () => {
                 type="text"
                 error={!!errors?.mandato}
                 {...register('mandato', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Mandato inválido'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -124,11 +117,7 @@ const FormPessoaJurisd = () => {
                 type="text"
                 error={!!errors?.normaNomeacao}
                 {...register('normaNomeacao', {
-                  required: 'Campo obrigatório',
-                  pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Nomeação inválida'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 
@@ -171,10 +160,7 @@ const FormPessoaJurisd = () => {
                 type="text"
                 error={!!errors?.normaExoneracao}
                 {...register('normaExoneracao', {
-                  required: 'Campo obrigatório', pattern: {
-                    value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                    message: 'Exoneração inválida'
-                  }
+                  required: 'Campo obrigatório'
                 })}
               />
 

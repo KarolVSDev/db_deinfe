@@ -30,7 +30,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
   const [buttonType, setButtonType] = useState<string>('interessado')
   const { getIntByPessoa, getJurisdByPessoa, onDelete, arrayListData } = useFetchListData(id)
-  const {setArrayPessoaFisica, arrayPessoaFisica} = useContextTable()
+  const {setArrayPessoaFisica} = useContextTable()
 
 
   const handleTarget = (type: string) => {
@@ -78,7 +78,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
         );
         return updatedArray;
     });
-      closeModal
+      closeModal()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
