@@ -4,15 +4,17 @@ import { NatAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
+import { useContextTable } from '../../../../context/TableContext';
 
 
 const FormNatAchado = () => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<NatAchado>({});
-
+  const {getAllNatAchado} = useContextTable()
   const onSubmit = (data: NatAchado) => {
     api.post('/nat-achado', data).then(response => {
       TypeAlert(response.data.message, 'success');
       reset()
+      getAllNatAchado()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });

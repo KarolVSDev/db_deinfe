@@ -15,12 +15,13 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 const FormAchado = () => {
 
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Achado>({});
-  const { arrayDivAchado } = useContextTable()
+  const { arrayDivAchado, getAllAchados } = useContextTable()
 
   const onSubmit = (data: Achado) => {
     api.post('/achado', data).then(response => {
       TypeAlert(response.data.message, 'success')
       reset()
+      getAllAchados()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })

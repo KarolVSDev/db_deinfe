@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
-import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate } from "../types/types";
+import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate, Achado } from "../types/types";
 
 
 interface TableContextType {
@@ -26,6 +26,10 @@ interface TableContextType {
     getAllProcesso: () => void;
     getAllProcurador: () => void;
     getAllRelator: () => void;
+    getAllNatAchado: () => void;
+    getAllAreaAchado: () => void;
+    getAllDivAchado: () => void;
+    getAllAchados: () => void;
 }
 
 interface Props {
@@ -43,9 +47,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayProcurador, setArrayProcurador] = useState([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
     const [arrayApenso, setArrayApenso] = useState([]);
-    const [arrayNatAchado, setArrayNatAchado] = useState([]);
-    const [arrayAreaAchado, setArrayAreaAchado] = useState([]);
-    const [arrayDivAchado, setArrayDivAchado] = useState([]);
+    const [arrayNatAchado, setArrayNatAchado] = useState<NatAchado[]>([]);
+    const [arrayAreaAchado, setArrayAreaAchado] = useState<AreaAchado[]>([]);
+    const [arrayDivAchado, setArrayDivAchado] = useState<DivAchado[]>([]);
+    const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
     const [arrayRelations, setArrayRelations] = useState([]);
     const [arrayRelationpp, setArrayRelationpp] = useState([]);
     const [arrayInteressados, setArrayInteressados] = useState([]);
@@ -158,10 +163,19 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         try {
             const response = await api.get('/div-area-achado');
             setArrayDivAchado(response.data)
-        } catch (error) {
-
+        } catch (error:any) {
+            TypeInfo(error.response.data.message, 'error')
         }
     };
+
+    const getAllAchados = async () => {
+        try {
+            const response = await api.get('/achado');
+            setArrayAchado(response.data)
+        } catch (error:any) {
+            TypeInfo(error.response.data.message, 'error')
+        }
+    }
 
     const getRelationPF = async () => {
         try {
@@ -192,7 +206,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     }
 
 
-
     useEffect(() => {
         getAllJurisd()
         getAllPessoaFisica()
@@ -204,6 +217,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllDivAchado()
         getRelationPF()
         getRelationI()
+        getAllNatAchado()
+        getAllAreaAchado()
+        getAllDivAchado()
+        getAllAchados()
     }, [])
 
     return (
@@ -229,6 +246,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             getAllProcesso,
             getAllProcurador,
             getAllRelator,
+            getAllNatAchado,
+            getAllAreaAchado,
+            getAllDivAchado,
+            getAllAchados,
         }}>
             {children}
         </TableContext.Provider>
