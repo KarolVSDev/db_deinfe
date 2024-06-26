@@ -278,11 +278,11 @@ export default function DatabaseTable() {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[6]}
             checkboxSelection={false}
             disableRowSelectionOnClick
             onRowClick={(params: GridRowParams) => {

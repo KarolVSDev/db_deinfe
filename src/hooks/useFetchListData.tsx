@@ -49,9 +49,9 @@ const useFetchListData = (id: GridRowId | undefined) => {
         case 'interessado':
           getIntByPessoa()
           break;
-        case 'jurisd':
+        case 'pessoajurisd':
           getJurisdByPessoa()
-          break
+          break;
         default:
           break;
       }

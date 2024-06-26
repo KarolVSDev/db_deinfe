@@ -28,7 +28,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
-  const [buttonType, setButtonType] = useState<string>('interessado')
+  const [buttonType, setButtonType] = useState<string>('')
   const { getIntByPessoa, getJurisdByPessoa, onDelete, arrayListData } = useFetchListData(id)
   const {setArrayPessoaFisica} = useContextTable()
 

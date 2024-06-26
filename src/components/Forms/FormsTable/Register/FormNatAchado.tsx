@@ -32,10 +32,7 @@ const FormNatAchado = () => {
           type="text"
           error={!!errors?.descricao}
           {...register('descricao', {
-            required: 'Campo obrigatório', pattern: {
-              value: /^[A-Za-z]+$/,
-              message: 'Valor do campo inválido'
-            }
+            required: 'Campo obrigatório'
           })}
         />
 

@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import UpdateUserForm from '../../Forms/FormsUser/UpdateUserForm';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { Height } from '@mui/icons-material';
 
 
 
@@ -23,6 +24,7 @@ const style = {
   p: 4,
   overflowY: 'auto',
   height: 'fit-content',
+  maxHeight: '96vh',
   scrollbarWidth: 'thin',
 };
 
