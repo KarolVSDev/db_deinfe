@@ -83,18 +83,18 @@ export default function ModalAddData() {
             </IconButton>
             <AccordionComponent title={'Registro de Pessoa Física'}>
               <FormPessoaFisica />
-              <InnerAccordion title={'Registro de Interessado'}>
-                <FormInteresse />
-              </InnerAccordion>
-              <InnerAccordion title={'Registro de Jurisdicionado'}>
-                <FormPessoaJurisd />
-              </InnerAccordion>
             </AccordionComponent>
             <AccordionComponent title={'Registro de Processo'}>
               <FormProcesso />
+              <InnerAccordion title={'Registro de Interessado'}>
+                <FormInteresse />
+              </InnerAccordion>
               <InnerAccordion title='Registro de Apenso'>
                 <FormApenso />
               </InnerAccordion>
+            </AccordionComponent>
+            <AccordionComponent title={'Registro de Pessoa Jurisdicionada'}>
+              <FormPessoaJurisd />
             </AccordionComponent>
             <AccordionComponent title={'Registro de Unidade Gestora'}>
               <FormJurisd />
