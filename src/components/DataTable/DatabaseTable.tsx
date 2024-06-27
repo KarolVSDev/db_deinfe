@@ -260,7 +260,7 @@ export default function DatabaseTable() {
           </Box>
           {selectedRow !== null && (
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-              <IconButton color='primary' onClick={() => handleUpdate(selectedRow)}>
+              <IconButton color='primary'  onClick={() => handleUpdate(selectedRow)}>
                 <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
               </IconButton>
               <IconButton color='error' onClick={() => handleDelete(selectedRow, dataType)}>

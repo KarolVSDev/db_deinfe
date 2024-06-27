@@ -28,26 +28,15 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
-  const [buttonType, setButtonType] = useState<string>('')
-  const { getIntByPessoa, getJurisdByPessoa, onDelete, arrayListData } = useFetchListData(id)
+  const [buttonType, setButtonType] = useState<string>('processo')
+  const { onDelete, arrayListData, arrayProcesso, getProcessoByPessoa} = useFetchListData(id)
   const {setArrayPessoaFisica} = useContextTable()
 
-
-  const handleTarget = (type: string) => {
-    setButtonType(type)
-    if (type === 'interessado') {
-      getIntByPessoa()
-    }
-    if (type === 'pessoajurisd') {
-      getJurisdByPessoa()
-    }
-  }
-
-  
 
   const handleDelete = (id: string, type: string) => {
     onDelete(id, type)
   }
+
 
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
@@ -88,10 +77,10 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   useEffect(() => {
     if (id) {
       getOnePF(id);
-      getIntByPessoa()
-      getJurisdByPessoa()
+      getProcessoByPessoa(id)
     }
   }, []);
+
 
   return (
     <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }} >
@@ -462,19 +451,9 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           <RegisterButton text="Atualizar" />
         </Box>
       )}
-      <Box sx={{ mt: 2, textAlign: 'left' }}>
-        <InnerAccordion title={'Adicionar Interessado'}>
-          <FormInteresse />
-        </InnerAccordion>
-        <InnerAccordion title={'Adicionar Jurisdicionado'}>
-          <FormPessoaJurisd />
-        </InnerAccordion>
-      </Box>
       <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }} >
-          <Button color="error" key='interessado' value='interessado' variant='outlined' onClick={() => handleTarget('interessado')}>Lista de Interessados</Button>
-          <Button color="error" key='pessoajurisd' value='pessoajurisd' variant='outlined' onClick={() => handleTarget('pessoajurisd')}>Lista de Cargos</Button>
-          <Button color="error" key='processo' value='processo' variant='outlined' onClick={() => handleTarget('processo')}>Lista de Processos</Button>
+        <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
+          <Typography variant='h6' sx={{color: '#1e293b', fontWeight: 'bold'}}>Lista de Processos</Typography>
         </Box>
         <InfoPaperIntetessado arrayData={arrayListData} handleDelete={handleDelete}  stateType={buttonType} />
       </Box>

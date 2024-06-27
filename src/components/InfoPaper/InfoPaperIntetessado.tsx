@@ -2,6 +2,7 @@ import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import {  ListData } from '../../types/types';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useEffect } from 'react';
 
 
 interface PaperIntProps {
@@ -18,7 +19,7 @@ const stylePaper = {
 };
 
 const styleChip = {
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
     left: 0,
     m: 1,
@@ -38,11 +39,14 @@ const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ arrayData, handleDelete
             <Grid container spacing={3} sx={{ pb: 1, mt:1 }}>
                 {arrayData.map((item) => (
                     <Grid item xs={12} sm={6} key={item.id}>
-                        <Paper sx={stylePaper} elevation={3}>
-                            <Typography > {item.label}</Typography>
-                            {item.label !== item.value && (
-                                <Typography > {item.value}</Typography>
-                            )}
+                        <Paper key={item.id} sx={stylePaper} elevation={3}>
+                            <Typography > Nº processo: {item.value1}</Typography>
+                            <Typography > Ano: {item.value2}</Typography>
+                            <Typography > Natureza: {item.value3}</Typography>
+                            <Typography > Exercício: {item.value4}</Typography>
+                            <Typography > Objeto: {item.value5}</Typography>
+                            <Typography > Arquivamento: {item.value6}</Typography>
+                            
                             <Stack>
                                 <Chip
                                     label={`Remover registro`}

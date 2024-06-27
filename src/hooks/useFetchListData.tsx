@@ -3,7 +3,7 @@ import { api } from "../service/api";
 import { Interessado, Jurisd, ListData, PessoaJurisd, Processo, ProcessoUpdate } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
-import { formatToInputDate } from "./DateFormate";
+import { formateDateToPtBr } from "./DateFormate";
 
 
 
@@ -13,7 +13,8 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
   const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
-  
+
+
 
   const getIntByPessoa = async () => {
     try {
@@ -44,37 +45,40 @@ const useFetchListData = (id: GridRowId | undefined) => {
   };
 
   const onDelete = (id: string, type: string) => {
-    api.delete(`/${type}/${id}`).then(() => {
-      switch (type) {
-        case 'interessado':
-          getIntByPessoa()
-          break;
-        case 'pessoajurisd':
-          getJurisdByPessoa()
-          break;
-        default:
-          break;
-      }
-    }).catch((error) => {
-      TypeAlert(error.response.data.messsage, 'error')
-    })
+    console.log(id, type)
+      api.delete(`/${type}/${id}`).then(() => {
+        const updatedList = arrayListData.filter(item => item.id !== id);
+        setArrayListData(updatedList)
+      }).catch((error) => {
+        TypeAlert(error.response.data.messsage, 'error')
+      })
   }
 
-  //   const getProcessoByPessoa = async () => {
-  //     try {
-  //       const response = await api.get(`/processo/pessoa/${id}`);
-  //       setArrayPessoaJurisd(response.data);
-  //     } catch (error: any) {
-  //       TypeInfo('error processo', 'error');
-  //     }
-  //   };
+  const getProcessoByPessoa = async (id: GridRowId | undefined) => {
+    try {
+      const response = await api.get(`/processo/pessoa/${id}`);
+      const data = response.data.map((item: Processo) => ({
+        id: item.id,
+        value1: item.numero,
+        value2: item.ano,
+        value3: item.natureza,
+        value4: item.exercicio,
+        value5: item.objeto,
+        value6: formateDateToPtBr(item.arquivamento)
+      })
+      )
+      setArrayListData(data)
+    } catch (error: any) {
+      TypeInfo('error processo', 'error');
+    }
+  };
 
 
   useEffect(() => {
     if (id) {
       getIntByPessoa()
       getJurisdByPessoa()
-      // getProcessoByPessoa()
+      getProcessoByPessoa(id)
     }
   }, [id])
 
@@ -83,8 +87,8 @@ const useFetchListData = (id: GridRowId | undefined) => {
     getIntByPessoa,
     getJurisdByPessoa,
     onDelete,
-    // arrayProcesso,
-    // getProcessoByPessoa
+    arrayProcesso,
+    getProcessoByPessoa
   }
 
 

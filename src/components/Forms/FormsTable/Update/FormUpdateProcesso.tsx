@@ -15,6 +15,8 @@ import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { formatToInputDate } from '../../../../hooks/DateFormate';
 import useFetchListData from '../../../../hooks/useFetchListData';
+import InnerAccordion from '../../../Accordion/InnerAccordion';
+import FormInteresse from '../Register/FormInteresse';
 
 interface FormProcessoProps {
   id?: GridRowId;
@@ -64,7 +66,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
   }, []);
 
   return (
-    <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+    <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
       {processo && (
         <Box
           sx={{
@@ -253,6 +255,11 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
           </Box>
         </Box>
       )}
+      <Box sx={{ mt: 2, textAlign: 'left' }}>
+        <InnerAccordion title={'Adicionar Interessado'}>
+          <FormInteresse />
+        </InnerAccordion>
+      </Box>
     </Container>
   )
 }
