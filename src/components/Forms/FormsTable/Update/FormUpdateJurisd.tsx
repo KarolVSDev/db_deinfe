@@ -15,6 +15,8 @@ import { useEffect, useState } from 'react';
 import { useContextTable } from '../../../../context/TableContext';
 import InnerAccordion from '../../../Accordion/InnerAccordion';
 import FormJurisd_Jurisd from '../Register/FormJurisd_Jurisd';
+import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 
 interface FormJurisdProps {
@@ -26,8 +28,14 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
-    const { getAllJurisd} = useContextTable()
-  
+    const { getAllJurisd } = useContextTable()
+    const { arrayListData, onDelete, getProcessoByJurisd } = useFetchListData(id)
+    const [buttonType, setButtonType] = useState<string>('processo')
+
+
+    const handleDelete = (id: string, type: string) => {
+        onDelete(id, type)
+    }
 
     const getOneJurisd = async (id: GridRowId | undefined) => {
         try {
@@ -49,6 +57,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     useEffect(() => {
         if (id) {
             getOneJurisd(id)
+            getProcessoByJurisd(id)
         }
     })
 
@@ -61,7 +70,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
             TypeAlert(error.response.data.message, 'warning');
         })
     }
-    
+
     return (
         <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }}>
             {jurisd && (
@@ -552,6 +561,12 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                 <InnerAccordion title={'Adicionar Relação'}>
                     <FormJurisd_Jurisd />
                 </InnerAccordion>
+            </Box>
+            <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
+                    <Typography variant='h6' sx={{ color: '#1e293b', fontWeight: 'bold' }}>Lista de Processos</Typography>
+                </Box>
+                <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
             </Box>
         </Container>
     )

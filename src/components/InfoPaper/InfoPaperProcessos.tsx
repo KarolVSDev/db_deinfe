@@ -33,7 +33,7 @@ const styleChip = {
     
 };
 
-const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ arrayData, handleDelete, stateType}) => {
+const InfoPaperProcessos: React.FC<PaperIntProps> = ({ arrayData, handleDelete, stateType}) => {
     return (
         <Box >
             <Grid container spacing={3} sx={{ pb: 1, mt:1 }}>
@@ -64,4 +64,4 @@ const InfoPaperIntetessado: React.FC<PaperIntProps> = ({ arrayData, handleDelete
     );
 }
 
-export default InfoPaperIntetessado;
+export default InfoPaperProcessos;

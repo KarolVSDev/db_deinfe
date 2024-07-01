@@ -1,70 +1,72 @@
-import { Box, Grid, Autocomplete, TextField, Typography, Container } from '@mui/material';
+import { Box, Grid, TextField, Typography, Container } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { Procurador } from '../../../../types/types';
+import { Procurador, Relator } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import useFetchListData from '../../../../hooks/useFetchListData';
+import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 
-interface FormProcProps {
+
+interface FormRelatorProps {
     id?: GridRowId;
     closeModal: () => void;
 }
 
-const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
-    const { register, handleSubmit, formState: { errors } } = useForm<Procurador>({});
-    const [procurador, setProcurador] = useState<Procurador>()
-    const { getAllProcurador } = useContextTable()
-    const { arrayListData, onDelete, getProcessoByProc } = useFetchListData(id)
+const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<Relator>({});
+    const { getAllRelator } = useContextTable()
+    const [relator, setRelator] = useState<Relator>()
+    const {getProcessoByRelator, arrayListData, onDelete} = useFetchListData(id)
     const [buttonType, setButtonType] = useState<string>('processo')
 
-    const getOneProcurador = async (id: GridRowId) => {
+
+    const getOneRelator = async (id: GridRowId) => {
         try {
-            const response = await api.get(`/procurador/${id}`)
-            setProcurador(response.data)
+            const response = await api.get(`/relator/${id}`)
+            setRelator(response.data)
         } catch (error: any) {
             TypeAlert(error.response.data.message, 'error')
         }
     }
 
-
-    const onSubmit = (data: Procurador) => {
-        api.patch(`/procurador/${id}`, data).then(response => {
+    const onSubmit = (data: Relator) => {  
+        api.patch(`/relator/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success');
-            getAllProcurador()
+            reset()
+            getAllRelator()
             closeModal()
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
         });
     };
 
-    const handleDelete = (id: string, type: string) => {
-        onDelete(id, type)
+    const handleDelete = (id:string, type:string) => {
+        onDelete(id, type);
     }
 
     useEffect(() => {
         if (id) {
-            getOneProcurador(id)
-            getProcessoByProc(id)
+            getOneRelator(id)
+            getProcessoByRelator(id)
         }
-    })
+    }, [])
 
     return (
-        <Container  >
-            {procurador && (
+        <Container>
+            {relator && (
                 <Box component="form" name='formProcurador' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
-                    <Typography variant='h5' sx={{ pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Procurador</Typography>
+                    <Typography variant='h5' sx={{ pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Relator</Typography>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             variant='filled'
                             required
-                            defaultValue={procurador.nome}
                             fullWidth
                             autoFocus
+                            defaultValue={relator?.nome}
                             id="nome"
                             label="Nome"
                             type="text"
@@ -79,9 +81,30 @@ const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
                                 {errors.nome.message}
                             </Typography>
                         )}
-
                     </Grid>
-                    <RegisterButton text="Atualizar" />
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            defaultValue={relator?.cargo}
+                            variant='filled'
+                            required
+                            fullWidth
+                            autoFocus
+                            id="cargo"
+                            label="Cargo"
+                            type="text"
+                            error={!!errors?.cargo}
+                            {...register('cargo', {
+                                required: 'Campo obrigatório', maxLength: { value: 25, message: 'O nome do cargo é grande demais' }
+                            })}
+                        />
+
+                        {errors?.cargo && (
+                            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                                {errors.cargo.message}
+                            </Typography>
+                        )}
+                    </Grid>
+                    <RegisterButton text="Registrar" />
                 </Box>
             )}
             <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
@@ -94,4 +117,4 @@ const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
     );
 }
 
-export default FormUpdateProcurador;
+export default FormUpdateRelator;

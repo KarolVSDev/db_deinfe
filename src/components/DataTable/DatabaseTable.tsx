@@ -38,8 +38,8 @@ export default function DatabaseTable() {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
-    arrayProcurador, arrayRelator, arrayRelationpp, handleLocalization, arrayNatAchado,
-    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, getAllJurisd, getAllProcesso, getAllProcurador, getAllRelator } = useContextTable();
+    arrayProcurador, arrayRelator, handleLocalization, arrayNatAchado,
+    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, setArrayProcurador, setArrayRelator, getAllRelator } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
 
@@ -108,10 +108,6 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(relatorHeader));
         setRows(createRows(arrayRelator))
         break;
-      case 'interessado':
-        setColumns(createGridColumns(interessadoHeader));
-        setRows(createInteressadoRows(arrayRelationpp))
-        break;
       case 'nat-achado':
         setColumns(createGridColumns(natAchadoHeader));
         setRows(createRows(arrayNatAchado))
@@ -170,7 +166,6 @@ export default function DatabaseTable() {
     { value: 'processo', string: 'Processo' },
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
-    { value: 'interessado', string: 'Interessado' },
     { value: 'nat-achado', string: 'Natureza do Achado' },
   ]
 
@@ -198,11 +193,17 @@ export default function DatabaseTable() {
         case 'processo':
           setArrayProcesso(prevArray => prevArray.filter(item => item.id !== selectedRow))
           break;
+        case 'procurador':
+          setArrayProcurador(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
+        case 'relator':
+          setArrayRelator(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
         default:
           break;
       }
     } catch (error: any) {
-      TypeAlert(error.response.data.message, 'error')
+      TypeAlert('Erro ao tentar excluir', 'error')
     }
   }
 

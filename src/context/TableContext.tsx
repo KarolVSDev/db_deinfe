@@ -21,6 +21,8 @@ interface TableContextType {
     setArrayPessoaFisica: Dispatch<SetStateAction<PessoaFisica[]>>;
     setArrayJurisd: Dispatch<SetStateAction<Jurisd[]>>;
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
+    setArrayProcurador: Dispatch<SetStateAction<Procurador[]>>;
+    setArrayRelator: Dispatch<SetStateAction<Relator[]>>;
     getAllPessoaFisica:() => void;
     getAllJurisd: () => void;
     getAllProcesso: () => void;
@@ -43,8 +45,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
 
     const [arrayPessoaFisica, setArrayPessoaFisica] = useState<PessoaFisica[]>([]);
     const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
-    const [arrayRelator, setArrayRelator] = useState([]);
-    const [arrayProcurador, setArrayProcurador] = useState([]);
+    const [arrayRelator, setArrayRelator] = useState<Relator[]>([]);
+    const [arrayProcurador, setArrayProcurador] = useState<Procurador[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
     const [arrayApenso, setArrayApenso] = useState([]);
     const [arrayNatAchado, setArrayNatAchado] = useState<NatAchado[]>([]);
@@ -187,15 +189,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     };
 
-    const getRelationI = async () => {
-        try {
-            const response = await api.get('/interessado/relationpp');
-            setArrayRelationpp(response.data)
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    }
-
     const getIntByPessoa = async (id: any) => {
         try {
             const response = await api.get(`/interessado/pessoa/${id}`)
@@ -216,7 +209,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllAreaAchado()
         getAllDivAchado()
         getRelationPF()
-        getRelationI()
         getAllNatAchado()
         getAllAreaAchado()
         getAllDivAchado()
@@ -241,6 +233,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setArrayPessoaFisica,
             setArrayJurisd,
             setArrayProcesso,
+            setArrayRelator,
+            setArrayProcurador,
             getAllPessoaFisica,
             getAllJurisd,
             getAllProcesso,

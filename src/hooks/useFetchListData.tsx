@@ -73,12 +73,72 @@ const useFetchListData = (id: GridRowId | undefined) => {
     }
   };
 
+  const getProcessoByJurisd = async (id: GridRowId | undefined) => {
+    try {
+      const response = await api.get(`/processo/jurisd/${id}`);
+      const data = response.data.map((item: Processo) => ({
+        id: item.id,
+        value1: item.numero,
+        value2: item.ano,
+        value3: item.natureza,
+        value4: item.exercicio,
+        value5: item.objeto,
+        value6: formateDateToPtBr(item.arquivamento)
+      })
+      )
+      setArrayListData(data)
+    } catch (error: any) {
+      TypeInfo('error processo', 'error');
+    }
+  };
+
+  const getProcessoByProc = async (id: GridRowId | undefined) => {
+    try {
+      const response = await api.get(`/processo/procurador/${id}`);
+      const data = response.data.map((item: Processo) => ({
+        id: item.id,
+        value1: item.numero,
+        value2: item.ano,
+        value3: item.natureza,
+        value4: item.exercicio,
+        value5: item.objeto,
+        value6: formateDateToPtBr(item.arquivamento)
+      })
+      )
+      setArrayListData(data)
+    } catch (error: any) {
+      TypeInfo('error processo', 'error');
+    }
+  };
+
+  const getProcessoByRelator = async (id: GridRowId | undefined) => {
+    try {
+      const response = await api.get(`/processo/relator/${id}`);
+      const data = response.data.map((item: Processo) => ({
+        id: item.id,
+        value1: item.numero,
+        value2: item.ano,
+        value3: item.natureza,
+        value4: item.exercicio,
+        value5: item.objeto,
+        value6: formateDateToPtBr(item.arquivamento)
+      })
+      )
+      setArrayListData(data)
+    } catch (error: any) {
+      TypeInfo('error processo', 'error');
+    }
+  };
+
 
   useEffect(() => {
     if (id) {
       getIntByPessoa()
       getJurisdByPessoa()
       getProcessoByPessoa(id)
+      getProcessoByJurisd(id)
+      getProcessoByProc(id)
+      getProcessoByRelator(id)
     }
   }, [id])
 
@@ -88,7 +148,10 @@ const useFetchListData = (id: GridRowId | undefined) => {
     getJurisdByPessoa,
     onDelete,
     arrayProcesso,
-    getProcessoByPessoa
+    getProcessoByPessoa,
+    getProcessoByJurisd,
+    getProcessoByProc,
+    getProcessoByRelator
   }
 
 

@@ -10,6 +10,7 @@ import { GridRowId } from '@mui/x-data-grid';
 import FormUpdateJurisd from '../../Forms/FormsTable/Update/FormUpdateJurisd';
 import FormUpdateProcesso from '../../Forms/FormsTable/Update/FormUpdateProcesso';
 import FormUpdateProcurador from '../../Forms/FormsTable/Update/FormUpdateProcurador';
+import FormUpdateRelator from '../../Forms/FormsTable/Update/FormUpdateRelator';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -39,47 +40,50 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
   const renderForm = () => {
     switch (dataType) {
       case 'pessoafisica':
-        return <FormUpdatePF closeModal={onClose} id={id}/>
+        return <FormUpdatePF closeModal={onClose} id={id} />
 
       case 'jurisd':
-        return <FormUpdateJurisd closeModal={onClose} id={id}/>
+        return <FormUpdateJurisd closeModal={onClose} id={id} />
 
       case 'processo':
-        return <FormUpdateProcesso closeModal={onClose} id={id}/>
+        return <FormUpdateProcesso closeModal={onClose} id={id} />
 
       case 'procurador':
-        return <FormUpdateProcurador closeModal={onClose} id={id}/>
+        return <FormUpdateProcurador closeModal={onClose} id={id} />
+
+      case 'relator':
+        return <FormUpdateRelator closeModal={onClose} id={id} />
     }
   }
 
   return (
     <div>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={open}
-          onClose={onClose}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{
-            backdrop: {
-              timeout: 500,
-            },
-          }}
-        >
-          <Fade in={open}>
-            <Box sx={style}>
-              <IconButton onClick={onClose} sx={{
-                ml: 80, mr: 0, '&:hover': {
-                  bgcolor: '#1e293b', color: '#ffffff',
-                }
-              }}>
-                <CloseIcon />
-              </IconButton>
-              {renderForm()}
-            </Box>
-          </Fade>
-        </Modal>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={onClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <IconButton onClick={onClose} sx={{
+              ml: 80, mr: 0, '&:hover': {
+                bgcolor: '#1e293b', color: '#ffffff',
+              }
+            }}>
+              <CloseIcon />
+            </IconButton>
+            {renderForm()}
+          </Box>
+        </Fade>
+      </Modal>
     </div>
   );
 }

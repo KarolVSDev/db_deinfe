@@ -13,7 +13,7 @@ import { GridRowId } from '@mui/x-data-grid';
 import InnerAccordion from '../../../Accordion/InnerAccordion';
 import { useEffect, useState } from 'react';
 import FormInteresse from '../Register/FormInteresse';
-import InfoPaperIntetessado from '../../../InfoPaper/InfoPaperIntetessado';
+import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import { Button } from '@mui/material';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import FormPessoaJurisd from '../Register/FormPessoaJurisd';
@@ -29,8 +29,8 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
   const [buttonType, setButtonType] = useState<string>('processo')
-  const { onDelete, arrayListData, arrayProcesso, getProcessoByPessoa} = useFetchListData(id)
-  const {setArrayPessoaFisica} = useContextTable()
+  const { onDelete, arrayListData, arrayProcesso, getProcessoByPessoa } = useFetchListData(id)
+  const { setArrayPessoaFisica } = useContextTable()
 
 
   const handleDelete = (id: string, type: string) => {
@@ -63,10 +63,10 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
       TypeAlert(response.data.message, 'success')
       setArrayPessoaFisica(prevArray => {
         const updatedArray = prevArray.map(item =>
-            item.id === pessoaId ? { ...item, ...data } : item
+          item.id === pessoaId ? { ...item, ...data } : item
         );
         return updatedArray;
-    });
+      });
       closeModal()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
@@ -453,9 +453,9 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
       )}
       <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
         <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
-          <Typography variant='h6' sx={{color: '#1e293b', fontWeight: 'bold'}}>Lista de Processos</Typography>
+          <Typography variant='h6' sx={{ color: '#1e293b', fontWeight: 'bold' }}>Lista de Processos</Typography>
         </Box>
-        <InfoPaperIntetessado arrayData={arrayListData} handleDelete={handleDelete}  stateType={buttonType} />
+        <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
       </Box>
     </Container>
   )
