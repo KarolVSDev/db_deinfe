@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { ProcessoUpdate } from '../../../../types/types'
+import { ProcessoDetails, ProcessoUpdate } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
@@ -14,12 +14,14 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { formatToInputDate } from '../../../../hooks/DateFormate';
-import useFetchListData from '../../../../hooks/useFetchListData';
 import InnerAccordion from '../../../Accordion/InnerAccordion';
 import FormInteresse from '../Register/FormInteresse';
+import FormApenso from '../Register/FormApenso';
+import InfoPaperProcessoDetails from '../../../InfoPaper/InfoPaperProcessoDetails';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 interface FormProcessoProps {
-  id?: GridRowId;
+  id?: GridRowId | undefined;
   closeModal: () => void;
 }
 
@@ -27,14 +29,16 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProcessoUpdate>({});
   const { getAllProcesso } = useContextTable()
+  const { getOneProcessoDetails, processoDetails } = useFetchListData(id)
   const [expanded, setExpanded] = useState(false);
   const [processo, setProcesso] = useState<ProcessoUpdate>()
-  
+
+  getOneProcessoDetails(id)
+
   const getOneProcesso = async (id: GridRowId) => {
     try {
       const response = await api.get(`/processo/${id}`)
       const data = response.data
-
       if (data.arquivamento) {
         data.arquivamento = formatToInputDate(new Date(data.arquivamento));
       }
@@ -54,16 +58,17 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
     })
   }
 
-  
+
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
-  
+
   useEffect(() => {
     if (id) {
       getOneProcesso(id);
     }
   }, []);
+
 
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
@@ -233,7 +238,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
                   variant='filled'
                   required
                   defaultValue={processo.arquivamento}
-                  placeholder='xx/xx/xxxx'
+                  InputLabelProps={{ shrink: true }}
                   fullWidth
                   id="arquivamento"
                   label="Arquivamento"
@@ -259,7 +264,12 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
         <InnerAccordion title={'Adicionar Interessado'}>
           <FormInteresse />
         </InnerAccordion>
+        <InnerAccordion title={'Adicionar Apenso'}>
+          <FormApenso />
+        </InnerAccordion>
       </Box>
+      <InfoPaperProcessoDetails processoDetails={processoDetails} />
+
     </Container>
   )
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { Interessado, Jurisd, ListData, PessoaJurisd, Processo, ProcessoUpdate } from "../types/types";
+import { Interessado, Jurisd, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
@@ -13,7 +13,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
   const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
-
+  const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
 
 
   const getIntByPessoa = async () => {
@@ -130,6 +130,18 @@ const useFetchListData = (id: GridRowId | undefined) => {
     }
   };
 
+  const getOneProcessoDetails = async (id: GridRowId | undefined) => {
+    try {
+      const response = await api.get(`/processo/relations/${id}`)
+      const data = response.data
+      if(data){
+        setProcessoDetails(data)
+      }
+    } catch (error: any) {
+      TypeAlert(error.response.data.message, 'error')
+    }
+  }
+  
 
   useEffect(() => {
     if (id) {
@@ -139,11 +151,13 @@ const useFetchListData = (id: GridRowId | undefined) => {
       getProcessoByJurisd(id)
       getProcessoByProc(id)
       getProcessoByRelator(id)
+      getOneProcessoDetails(id)
     }
   }, [id])
 
   return {
     arrayListData,
+    processoDetails,
     getIntByPessoa,
     getJurisdByPessoa,
     onDelete,
@@ -151,7 +165,8 @@ const useFetchListData = (id: GridRowId | undefined) => {
     getProcessoByPessoa,
     getProcessoByJurisd,
     getProcessoByProc,
-    getProcessoByRelator
+    getProcessoByRelator,
+    getOneProcessoDetails
   }
 
 

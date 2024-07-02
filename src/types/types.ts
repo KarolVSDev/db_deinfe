@@ -210,4 +210,20 @@ export type ListData = {
   value6:string;
 }
 
+export type ProcessoDetails = {
+  id?: string;
+  numero: string;
+  ano: string;
+  natureza: string;
+  exercicio: string;
+  objeto: string;
+  arquivamento: string;
+  advogado: PessoaFisica;
+  jurisd:Jurisd;
+  relator:Relator;
+  procurador:Procurador;
+  apensados:Apenso[];
+  interessados:Interessado[];
+}
+
 
