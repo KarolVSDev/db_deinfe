@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState, useReducer } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
 import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate, Achado } from "../types/types";
@@ -214,7 +214,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllDivAchado()
         getAllAchados()
     }, [])
-
+ 
     return (
         <TableContext.Provider value={{
             arrayPessoaFisica,
@@ -249,6 +249,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         </TableContext.Provider>
     )
 };
+
 
 export const useContextTable = () => {
     const context = useContext(TableContext);

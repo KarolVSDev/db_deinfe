@@ -16,14 +16,15 @@ import { useContextTable } from '../../../../context/TableContext';
 const FormJurisd = () => {
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Jurisd>({});
-  const {getAllJurisd} =useContextTable()
+  const { setArrayJurisd } = useContextTable()
 
 
   const onSubmit = (data: Jurisd) => {
     api.post('/jurisd', data).then(response => {
+      const newJurisd = response.data.jurisd;
       TypeAlert(response.data.message, 'success')
       reset()
-      getAllJurisd()
+      setArrayJurisd(prevArray => [...prevArray, newJurisd])
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })
@@ -391,7 +392,7 @@ const FormJurisd = () => {
                 id="dataCriacao"
                 label="Data da Criação"
                 type="date"
-                InputLabelProps={{shrink:true}}
+                InputLabelProps={{ shrink: true }}
                 InputProps={{ inputMode: "none" }}
                 error={!!errors?.dataCriacao}
                 {...register('dataCriacao', {
@@ -432,7 +433,7 @@ const FormJurisd = () => {
                 fullWidth
                 id="dataExtincao"
                 label="Data Extinção"
-                InputLabelProps={{shrink:true}}
+                InputLabelProps={{ shrink: true }}
                 type="date"
                 error={!!errors?.dataExtincao}
                 {...register('dataExtincao', {
@@ -503,7 +504,7 @@ const FormJurisd = () => {
             </Grid>
 
           </Grid>
-          <RegisterButton text="Registrar"/>
+          <RegisterButton text="Registrar" />
         </Box>
       </Box>
     </Container>

@@ -8,13 +8,14 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormProcurador = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Procurador>({});
-  const {getAllProcurador} = useContextTable()
+  const {getAllProcurador, setArrayProcurador} = useContextTable()
 
   const onSubmit = (data: Procurador) => {
     api.post('/procurador', data).then(response => {
+      const newProcurador = response.data.procurador;
       TypeAlert(response.data.message, 'success');
       reset()
-      getAllProcurador()
+      setArrayProcurador(prevArray => [...prevArray, newProcurador]);
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });

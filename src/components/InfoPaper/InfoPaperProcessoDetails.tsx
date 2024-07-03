@@ -40,8 +40,8 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
                     <Grid item xs={12} sm={12} >
                         <Paper sx={stylePaper} elevation={3}>
                             <Typography variant='h6' sx={{color:'#991b1b', fontWeight:'bold'}}>Detalhes do processo:</Typography>
-                            <Typography><strong>Relator:</strong> {processoDetails.relator.nome}</Typography>
-                            <Typography><strong>Procurador:</strong> {processoDetails.procurador.nome}</Typography>
+                            <Typography><strong>Relator(a):</strong> {processoDetails.relator.nome}</Typography>
+                            <Typography><strong>Procurador(a):</strong> {processoDetails.procurador.nome}</Typography>
                             <Typography><strong>Advogado(a):</strong> {processoDetails.advogado.nome}</Typography>
                             <Typography><strong>Unidade Gestora:</strong> {processoDetails.jurisd.nome}</Typography>
                             {/* <Typography><strong>Apensados:</strong> {processoDetails.apensados.}</Typography>

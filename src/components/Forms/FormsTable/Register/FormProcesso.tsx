@@ -18,15 +18,16 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 const FormProcesso = () => {
 
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Processo>({});
-  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador, getAllProcesso } = useContextTable()
+  const { arrayPessoaFisica, arrayJurisd, arrayRelator, arrayProcurador, setArrayProcesso } = useContextTable()
   const [expanded, setExpanded] = React.useState(false);
 
 
   const onSubmit = (data: Processo) => {
     api.post('/processo', data).then(response => {
+      const newProcesso = response.data.processo
       TypeAlert(response.data.message, 'success')
       reset()
-      getAllProcesso()
+      setArrayProcesso(prevArray => [...prevArray, newProcesso]);
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     })

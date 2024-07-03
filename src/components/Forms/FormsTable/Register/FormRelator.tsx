@@ -8,13 +8,14 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormRelator = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<Relator>({});
-  const {getAllRelator} = useContextTable()
+  const {setArrayRelator} = useContextTable()
 
   const onSubmit = (data: Relator) => {
     api.post('/relator', data).then(response => {
+      const newRelator = response.data.relator;
       TypeAlert(response.data.message, 'success');
       reset()
-      getAllRelator()
+      setArrayRelator(prevArray => [...prevArray, newRelator]);
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });

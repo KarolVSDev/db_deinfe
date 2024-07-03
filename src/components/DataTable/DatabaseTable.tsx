@@ -62,15 +62,6 @@ export default function DatabaseTable() {
     }));
   };
 
-  //cria a table pra dados relacionados com interessado
-  const createInteressadoRows = (data: Interessado[]): any[] => {
-    return data.map((item, index) => ({
-      id: item.id,
-      interesse: item.interesse,
-      pessoa: item.pessoa,
-      processo: item.processo
-    }));
-  };
 
   //cria table pra dados sem relação
   const createRows = (data: any[]): any[] => {
@@ -210,28 +201,28 @@ export default function DatabaseTable() {
 
   //esse bloco atualiza a visualização de pessoa física
 
-  useEffect(() => {
-    switch (dataType) {
-      case 'pessoafisica':
-        setRows(createRows(arrayPessoaFisica))
-        break;
-      case 'jurisd':
-        setRows(createRows(arrayJurisd))
-        break;
-      case 'processo':
-        setRows(createRows(arrayProcesso))
-        break;
-      case 'procurador':
-        setRows(createRows(arrayProcurador))
-        break;
-      case 'relator':
-        getAllRelator()
-        setRows(createRows(arrayRelator))
-        break;
-      default:
-        break;
-    }
-  }, [ arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
+  // useEffect(() => {
+  //   switch (dataType) {
+  //     case 'pessoafisica':
+  //       setRows(createRows(arrayPessoaFisica))
+  //       break;
+  //     case 'jurisd':
+  //       setRows(createRows(arrayJurisd))
+  //       break;
+  //     case 'processo':
+  //       setRows(createRows(arrayProcesso))
+  //       break;
+  //     case 'procurador':
+  //       setRows(createRows(arrayProcurador))
+  //       break;
+  //     case 'relator':
+  //       getAllRelator()
+  //       setRows(createRows(arrayRelator))
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }, [ arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
 
 
   return (
