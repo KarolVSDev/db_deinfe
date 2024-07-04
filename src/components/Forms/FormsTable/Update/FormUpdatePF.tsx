@@ -18,6 +18,7 @@ import { Button } from '@mui/material';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import FormPessoaJurisd from '../Register/FormPessoaJurisd';
 import { useContextTable } from '../../../../context/TableContext';
+import GetDataButton from '../../../Buttons/GetDataButton';
 
 interface FormPFProps {
   id?: GridRowId;
@@ -29,7 +30,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
   const [buttonType, setButtonType] = useState<string>('processo')
-  const { onDelete, arrayListData, arrayProcesso, getProcessoByPessoa } = useFetchListData(id)
+  const { onDelete, arrayListData, getProcessoByPessoa, getJurisdByPessoa } = useFetchListData(id)
   const { setArrayPessoaFisica } = useContextTable()
 
 
@@ -73,11 +74,16 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
     })
   }
 
+  const getProccessoList = async () => {
+    await getProcessoByPessoa(id)
+  }
+  const getJurisdList = async () => {
+    await getJurisdByPessoa()
+  }
 
   useEffect(() => {
     if (id) {
       getOnePF(id);
-      getProcessoByPessoa(id)
     }
   }, []);
 
@@ -451,9 +457,12 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           <RegisterButton text="Atualizar" />
         </Box>
       )}
+      <Box sx={{display:'flex', justifyContent:'space-around', mt:5}}>
+        <GetDataButton  handleClick={getProccessoList} id={id} name={'Lista de Processos'} />
+        <GetDataButton  handleClick={getJurisdList} id={id} name={'Lista de Jurisdicionados'} />
+      </Box>
       <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
         <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
-          <Typography variant='h6' sx={{ color: '#1e293b', fontWeight: 'bold' }}>Lista de Processos</Typography>
         </Box>
         <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
       </Box>

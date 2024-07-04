@@ -93,7 +93,7 @@ export default function ModalAddData() {
                 <FormApenso />
               </InnerAccordion>
             </AccordionComponent>
-            <AccordionComponent title={'Registro de Pessoa Jurisdicionada'}>
+            <AccordionComponent title={'Registro de Jurisdicionado'}>
               <FormPessoaJurisd />
             </AccordionComponent>
             <AccordionComponent title={'Registro de Unidade Gestora'}>

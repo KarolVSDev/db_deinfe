@@ -36,9 +36,9 @@ const useFetchListData = (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/pessoajurisd/pessoa/${id}`);
       const data = response.data.result.map((item: PessoaJurisd) => ({
-        label: item.cargo,
-        value: item.mandato,
-        id: item.id
+        id: item.id,
+        type:'pessoajurisd',
+        value1: item.cargo,
       }))
       setArrayListData(data);
     } catch (error: any) {
@@ -61,6 +61,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/pessoa/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
+        type:'processo',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,

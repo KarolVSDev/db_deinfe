@@ -1,7 +1,7 @@
 import { Box, Grid, TextField, Typography, Container } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { Procurador, Relator } from '../../../../types/types';
+import { Relator } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -18,7 +18,7 @@ interface FormRelatorProps {
 
 const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<Relator>({});
-    const { getAllRelator, setArrayRelator} = useContextTable()
+    const { setArrayRelator} = useContextTable()
     const [relator, setRelator] = useState<Relator>()
     const {getProcessoByRelator, arrayListData, onDelete} = useFetchListData(id)
     const [buttonType, setButtonType] = useState<string>('processo')

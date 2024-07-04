@@ -39,7 +39,7 @@ export default function DatabaseTable() {
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
     arrayProcurador, arrayRelator, handleLocalization, arrayNatAchado,
-    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, setArrayProcurador, setArrayRelator, getAllRelator } = useContextTable();
+    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, setArrayProcurador, setArrayRelator } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
 
@@ -134,12 +134,7 @@ export default function DatabaseTable() {
   const exportToExcel = (gridState: GridState) => {
     const { columns, rows } = gridState
     const exportRows = rows.map((row) => {
-      const exportRow: any = { ...row };
-
-      if (dataType === 'interessado') {
-        exportRow.pessoa = row.pessoa ? row.pessoa.nome : '';
-        exportRow.processo = row.processo ? row.processo.numero : '';
-      }
+      const {id, ...exportRow} = row;
 
       return exportRow;
     });
@@ -216,7 +211,6 @@ export default function DatabaseTable() {
         setRows(createRows(arrayProcurador))
         break;
       case 'relator':
-        getAllRelator()
         setRows(createRows(arrayRelator))
         break;
       default:
