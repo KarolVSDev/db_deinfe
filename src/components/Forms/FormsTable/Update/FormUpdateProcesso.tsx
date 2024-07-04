@@ -28,7 +28,7 @@ interface FormProcessoProps {
 const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProcessoUpdate>({});
-  const { getAllProcesso } = useContextTable()
+  const { setArrayProcesso } = useContextTable()
   const { getOneProcessoDetails, processoDetails } = useFetchListData(id)
   const [expanded, setExpanded] = useState(false);
   const [processo, setProcesso] = useState<ProcessoUpdate>()
@@ -49,9 +49,15 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
   }
 
   const onSubmit = (processo: ProcessoUpdate) => {
+    const processoId = id;
     api.patch(`/processo/${id}`, processo).then(response => {
       TypeAlert(response.data.message, 'success')
-      getAllProcesso()
+      setArrayProcesso(prevArray => {
+        const updatedArray = prevArray.map(item => 
+          item.id === processoId ? {...item, ...processo} : item
+        )
+        return updatedArray;
+      })
       closeModal()
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');

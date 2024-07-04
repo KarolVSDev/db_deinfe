@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { Interessado, Jurisd, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
+import { Interessado, Jurisd, ListData, PessoaFisica, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
+import { useContextTable } from "../context/TableContext";
 
 
 
@@ -14,6 +15,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
   const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
+  const {setArrayPessoaFisica} = useContextTable()
 
 
   const getIntByPessoa = async () => {
@@ -141,6 +143,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       TypeAlert(error.response.data.message, 'error')
     }
   }
+
   
 
   useEffect(() => {
@@ -166,7 +169,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     getProcessoByJurisd,
     getProcessoByProc,
     getProcessoByRelator,
-    getOneProcessoDetails
+    getOneProcessoDetails,
   }
 
 

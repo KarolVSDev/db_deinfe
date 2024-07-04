@@ -18,7 +18,7 @@ interface FormRelatorProps {
 
 const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<Relator>({});
-    const { getAllRelator } = useContextTable()
+    const { getAllRelator, setArrayRelator} = useContextTable()
     const [relator, setRelator] = useState<Relator>()
     const {getProcessoByRelator, arrayListData, onDelete} = useFetchListData(id)
     const [buttonType, setButtonType] = useState<string>('processo')
@@ -34,10 +34,15 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
     }
 
     const onSubmit = (data: Relator) => {  
+        const relatorId = id;
         api.patch(`/relator/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success');
-            reset()
-            getAllRelator()
+            setArrayRelator(prevArray => {
+                const updatedArray = prevArray.map(item => 
+                    item.id === relatorId ? {...item, ...data} : item
+                )
+                return updatedArray;
+            })
             closeModal()
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');

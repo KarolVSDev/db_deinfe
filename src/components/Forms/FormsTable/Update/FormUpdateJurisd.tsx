@@ -28,7 +28,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
-    const { getAllJurisd } = useContextTable()
+    const {  setArrayJurisd } = useContextTable()
     const { arrayListData, onDelete, getProcessoByJurisd } = useFetchListData(id)
     const [buttonType, setButtonType] = useState<string>('processo')
 
@@ -62,9 +62,16 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     })
 
     const onSubmit = (data: Jurisd) => {
+        const jurisdId = id
+        console.log(jurisdId)
         api.patch(`/jurisd/update/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success')
-            getAllJurisd()
+            setArrayJurisd(prevArray => {
+                const updatedArray = prevArray.map(item =>
+                    item.id === jurisdId ? { ...item, ...data } : item
+                )
+                return updatedArray;
+            })
             closeModal()
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');

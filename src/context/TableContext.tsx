@@ -23,11 +23,6 @@ interface TableContextType {
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
     setArrayProcurador: Dispatch<SetStateAction<Procurador[]>>;
     setArrayRelator: Dispatch<SetStateAction<Relator[]>>;
-    getAllPessoaFisica:() => void;
-    getAllJurisd: () => void;
-    getAllProcesso: () => void;
-    getAllProcurador: () => void;
-    getAllRelator: () => void;
     getAllNatAchado: () => void;
     getAllAreaAchado: () => void;
     getAllDivAchado: () => void;
@@ -48,7 +43,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayRelator, setArrayRelator] = useState<Relator[]>([]);
     const [arrayProcurador, setArrayProcurador] = useState<Procurador[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
-    const [arrayApenso, setArrayApenso] = useState([]);
+    const [arrayApenso, setArrayApenso] = useState<Apenso[]>([]);
     const [arrayNatAchado, setArrayNatAchado] = useState<NatAchado[]>([]);
     const [arrayAreaAchado, setArrayAreaAchado] = useState<AreaAchado[]>([]);
     const [arrayDivAchado, setArrayDivAchado] = useState<DivAchado[]>([]);
@@ -214,6 +209,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         getAllDivAchado()
         getAllAchados()
     }, [])
+
+    
  
     return (
         <TableContext.Provider value={{
@@ -235,11 +232,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setArrayProcesso,
             setArrayRelator,
             setArrayProcurador,
-            getAllPessoaFisica,
-            getAllJurisd,
-            getAllProcesso,
-            getAllProcurador,
-            getAllRelator,
             getAllNatAchado,
             getAllAreaAchado,
             getAllDivAchado,

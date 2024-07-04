@@ -18,7 +18,7 @@ interface FormProcProps {
 const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Procurador>({});
     const [procurador, setProcurador] = useState<Procurador>()
-    const { getAllProcurador } = useContextTable()
+    const { setArrayProcurador} = useContextTable()
     const { arrayListData, onDelete, getProcessoByProc } = useFetchListData(id)
     const [buttonType, setButtonType] = useState<string>('processo')
 
@@ -33,9 +33,15 @@ const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
 
 
     const onSubmit = (data: Procurador) => {
+        const procuradorId = id;
         api.patch(`/procurador/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success');
-            getAllProcurador()
+            setArrayProcurador(prevArray => {
+                const updatedArray = prevArray.map(item => 
+                    item.id === procuradorId ? {...item, ...data} : item
+                )
+                return updatedArray;
+            })
             closeModal()
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');

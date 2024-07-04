@@ -201,28 +201,28 @@ export default function DatabaseTable() {
 
   //esse bloco atualiza a visualização de pessoa física
 
-  // useEffect(() => {
-  //   switch (dataType) {
-  //     case 'pessoafisica':
-  //       setRows(createRows(arrayPessoaFisica))
-  //       break;
-  //     case 'jurisd':
-  //       setRows(createRows(arrayJurisd))
-  //       break;
-  //     case 'processo':
-  //       setRows(createRows(arrayProcesso))
-  //       break;
-  //     case 'procurador':
-  //       setRows(createRows(arrayProcurador))
-  //       break;
-  //     case 'relator':
-  //       getAllRelator()
-  //       setRows(createRows(arrayRelator))
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }, [ arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
+  useEffect(() => {
+    switch (dataType) {
+      case 'pessoafisica':
+        setRows(createRows(arrayPessoaFisica))
+        break;
+      case 'jurisd':
+        setRows(createRows(arrayJurisd))
+        break;
+      case 'processo':
+        setRows(createRows(arrayProcesso))
+        break;
+      case 'procurador':
+        setRows(createRows(arrayProcurador))
+        break;
+      case 'relator':
+        getAllRelator()
+        setRows(createRows(arrayRelator))
+        break;
+      default:
+        break;
+    }
+  }, [ arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
 
 
   return (
@@ -274,7 +274,7 @@ export default function DatabaseTable() {
                 },
               },
             }}
-            pageSizeOptions={[6]}
+            pageSizeOptions={[5, 10]}
             checkboxSelection={false}
             disableRowSelectionOnClick
             onRowClick={(params: GridRowParams) => {
