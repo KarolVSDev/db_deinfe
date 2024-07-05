@@ -47,7 +47,6 @@ const useFetchListData = (id: GridRowId | undefined) => {
   };
 
   const onDelete = (id: string, type: string) => {
-    console.log(id, type)
       api.delete(`/${type}/${id}`).then(() => {
         const updatedList = arrayListData.filter(item => item.id !== id);
         setArrayListData(updatedList)
