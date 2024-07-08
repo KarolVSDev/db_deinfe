@@ -17,6 +17,7 @@ import InnerAccordion from '../../../Accordion/InnerAccordion';
 import FormJurisd_Jurisd from '../Register/FormJurisd_Jurisd';
 import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import useFetchListData from '../../../../hooks/useFetchListData';
+import GetDataButton from '../../../Buttons/GetDataButton';
 
 
 interface FormJurisdProps {
@@ -28,9 +29,10 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
-    const {  setArrayJurisd } = useContextTable()
-    const { arrayListData, onDelete, getProcessoByJurisd } = useFetchListData(id)
+    const { setArrayJurisd } = useContextTable()
+    const { arrayListData, onDelete, getProcessoByJurisd,getPessoaJByJurisd } = useFetchListData(id)
     const [buttonType, setButtonType] = useState<string>('processo')
+
 
 
     const handleDelete = (id: string, type: string) => {
@@ -54,13 +56,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
         }
     }
 
-    useEffect(() => {
-        if (id) {
-            getOneJurisd(id)
-            getProcessoByJurisd(id)
-        }
-    })
-
+    
     const onSubmit = (data: Jurisd) => {
         const jurisdId = id
         console.log(jurisdId)
@@ -77,6 +73,20 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
             TypeAlert(error.response.data.message, 'warning');
         })
     }
+    
+    const getProccessoList = async () => {
+        await getProcessoByJurisd(id)
+    }
+
+    const getJurisdList = async () => {
+        await getPessoaJByJurisd()
+    }
+    
+    useEffect(() => {
+        if (id) {
+            getOneJurisd(id)
+        }
+    })
 
     return (
         <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }}>
@@ -569,9 +579,12 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                     <FormJurisd_Jurisd />
                 </InnerAccordion>
             </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 5 }}>
+                <GetDataButton handleClick={getProccessoList} id={id} name={'Lista de Processos'} />
+                <GetDataButton handleClick={getJurisdList} id={id} name={'Lista de Jurisdicionados'} />
+            </Box>
             <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
-                    <Typography variant='h6' sx={{ color: '#1e293b', fontWeight: 'bold' }}>Lista de Processos</Typography>
                 </Box>
                 <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
             </Box>

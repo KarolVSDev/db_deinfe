@@ -14,6 +14,7 @@ const FormJurisd_Jurisd = () => {
     api.post('/jurisd-jurisd', data).then(response => {
       TypeAlert(response.data.message, 'success');
     }).catch((error) => {
+      console.log(error)
       TypeAlert(error.response.data.message, 'warning');
     });
   };

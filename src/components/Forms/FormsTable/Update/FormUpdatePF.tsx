@@ -38,7 +38,6 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
     onDelete(id, type)
   }
 
-
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/pessoafisica/${id}`)

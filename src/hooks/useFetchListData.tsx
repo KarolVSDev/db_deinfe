@@ -46,6 +46,20 @@ const useFetchListData = (id: GridRowId | undefined) => {
     }
   };
 
+  const getPessoaJByJurisd = async () => {
+    try {
+      const response = await api.get(`/pessoajurisd/jurisd/${id}`);
+      const data = response.data.result.map((item: PessoaJurisd) => ({
+        id: item.id,
+        type:'pessoajurisd',
+        value1: item.cargo,
+      }))
+      setArrayListData(data);
+    } catch (error: any) {
+      TypeInfo(error, 'error');
+    }
+  };
+
   const onDelete = (id: string, type: string) => {
       api.delete(`/${type}/${id}`).then(() => {
         const updatedList = arrayListData.filter(item => item.id !== id);
@@ -80,6 +94,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/jurisd/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
+        type:'processo',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,
@@ -150,6 +165,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     if (id) {
       getIntByPessoa()
       getJurisdByPessoa()
+      getPessoaJByJurisd()
       getProcessoByPessoa(id)
       getProcessoByJurisd(id)
       getProcessoByProc(id)
@@ -163,6 +179,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     processoDetails,
     getIntByPessoa,
     getJurisdByPessoa,
+    getPessoaJByJurisd,
     onDelete,
     arrayProcesso,
     getProcessoByPessoa,

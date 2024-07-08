@@ -34,7 +34,8 @@ const styleChip = {
 const InfoPaperProcessos: React.FC<PaperIntProps> = ({ arrayData, handleDelete, stateType }) => {
     return (
         <Box >
-            <Grid container spacing={3} sx={{ pb: 1, mt: 1 }}>
+            {arrayData.length > 0 ? (
+                <Grid container spacing={3} sx={{ pb: 1, mt: 1 }}>
                 {arrayData.map((item) => (
                     <Grid item xs={12} sm={6} key={item.id}>
                         <Paper key={item.id} sx={stylePaper} elevation={3}>
@@ -57,6 +58,10 @@ const InfoPaperProcessos: React.FC<PaperIntProps> = ({ arrayData, handleDelete, 
                     </Grid>
                 ))}
             </Grid>
+            ) : (
+                <Typography>Sem Dados</Typography>
+            )}
+            
         </Box>
     );
 }

@@ -11,6 +11,7 @@ import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useContextTable } from '../../../../context/TableContext';
+import { useEffect } from 'react';
 
 
 const FormJurisd = () => {
@@ -29,6 +30,7 @@ const FormJurisd = () => {
       TypeAlert(error.response.data.message, 'warning');
     })
   }
+
 
   return (
     <Container maxWidth="xs" sx={{ mb: 2 }} >
