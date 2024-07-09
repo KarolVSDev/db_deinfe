@@ -202,7 +202,7 @@ export type ColumnConfig = {
 
 export type ListData = {
   id:string;
-  type:'processo' | 'pessoajurisd';
+  type:'processo' | 'pessoajurisd' | 'procurador' | 'relator';
   value1:string,
   value2:string;
   value3:string;

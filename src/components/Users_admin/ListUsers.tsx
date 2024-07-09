@@ -5,19 +5,15 @@ import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { api } from '../../service/api';
-import { useState, useEffect } from 'react';
-import { AllUsers } from '../../types/types';
+import {  useEffect } from 'react';
 import { Box, Button, Grid } from '@mui/material';
 import { TypeInfo } from '../../hooks/TypeAlert';
 import ModalAddUser from '../Modais/UserModals/ModalAddUser';
 import ModalUpdateUser from '../Modais/UserModals/ModalUpdateUser';
 import useFetchUsers from '../../hooks/useFetchUsers';
 
-interface ListProps {
-    dataState:any[];
-};
 
-export default function ListUsers(data:ListProps) {
+export default function ListUsers() {
 
     const {users, getUsers} = useFetchUsers() 
 

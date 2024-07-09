@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { Interessado, Jurisd, ListData, PessoaFisica, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
+import { Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
@@ -9,13 +9,12 @@ import { useContextTable } from "../context/TableContext";
 
 
 const useFetchListData = (id: GridRowId | undefined) => {
-  const [arrayInteressado, setArrayInteressado] = useState<Interessado[]>([]);
-  const [arrayPessoaJurisd, setArrayPessoaJurisd] = useState<PessoaJurisd[]>([]);
-  const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
-  const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
+  
+  const [arrayProcessos] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
   const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
-  const {setArrayPessoaFisica} = useContextTable()
+  const {setArrayProcesso, arrayProcesso} = useContextTable();
+  
 
 
   const getIntByPessoa = async () => {
@@ -63,7 +62,9 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const onDelete = (id: string, type: string) => {
       api.delete(`/${type}/${id}`).then(() => {
         const updatedList = arrayListData.filter(item => item.id !== id);
+        const updatedList2 = arrayProcesso.filter(item => item.id !== id);
         setArrayListData(updatedList)
+        setArrayProcesso(updatedList2)
       }).catch((error) => {
         TypeAlert(error.response.data.messsage, 'error')
       })
@@ -114,6 +115,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/procurador/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
+        type:'procurador',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,
@@ -133,6 +135,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/relator/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
+        type:'relator',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,
@@ -148,6 +151,16 @@ const useFetchListData = (id: GridRowId | undefined) => {
   };
 
   const getOneProcessoDetails = async (id: GridRowId | undefined) => {
+    try {
+      const response = await api.get(`/processo/relations/${id}`)
+      const data = response.data
+      if(data){
+        setProcessoDetails(data)
+      }
+    } catch (error: any) {
+      TypeAlert(error.response.data.message, 'error')
+    }
+    
     try {
       const response = await api.get(`/processo/relations/${id}`)
       const data = response.data
@@ -181,7 +194,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     getJurisdByPessoa,
     getPessoaJByJurisd,
     onDelete,
-    arrayProcesso,
+    arrayProcessos,
     getProcessoByPessoa,
     getProcessoByJurisd,
     getProcessoByProc,

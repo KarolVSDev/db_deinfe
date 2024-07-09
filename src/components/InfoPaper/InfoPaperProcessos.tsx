@@ -2,7 +2,7 @@ import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { ListData } from '../../types/types';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useEffect } from 'react';
+
 
 
 interface PaperIntProps {
@@ -45,6 +45,12 @@ const InfoPaperProcessos: React.FC<PaperIntProps> = ({ arrayData, handleDelete, 
                                 )}
                                 {item.type === 'pessoajurisd' && (
                                     <Typography > Cargo: {item.value1}</Typography>
+                                )}
+                                {item.type === 'procurador' && (
+                                    <Typography > Nº processo: {item.value1}</Typography>
+                                )}
+                                {item.type === 'relator' && (
+                                    <Typography > Nº processo: {item.value1}</Typography>
                                 )}
                                 <Chip
                                     label={'remover'}

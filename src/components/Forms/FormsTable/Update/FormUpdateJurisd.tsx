@@ -27,11 +27,11 @@ interface FormJurisdProps {
 
 const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm<Jurisd>({});
+    const { register, handleSubmit, formState: { errors } } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
     const { setArrayJurisd } = useContextTable()
     const { arrayListData, onDelete, getProcessoByJurisd,getPessoaJByJurisd } = useFetchListData(id)
-    const [buttonType, setButtonType] = useState<string>('processo')
+    const [buttonType] = useState<string>('processo')
 
 
 

@@ -9,6 +9,7 @@ import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
+import GetDataButton from '../../../Buttons/GetDataButton';
 
 
 interface FormRelatorProps {
@@ -18,9 +19,9 @@ interface FormRelatorProps {
 
 const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<Relator>({});
-    const { setArrayRelator} = useContextTable()
+    const { setArrayRelator } = useContextTable()
     const [relator, setRelator] = useState<Relator>()
-    const {getProcessoByRelator, arrayListData, onDelete} = useFetchListData(id)
+    const { getProcessoByRelator, arrayListData, onDelete } = useFetchListData(id)
     const [buttonType, setButtonType] = useState<string>('processo')
 
 
@@ -33,13 +34,13 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
         }
     }
 
-    const onSubmit = (data: Relator) => {  
+    const onSubmit = (data: Relator) => {
         const relatorId = id;
         api.patch(`/relator/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success');
             setArrayRelator(prevArray => {
-                const updatedArray = prevArray.map(item => 
-                    item.id === relatorId ? {...item, ...data} : item
+                const updatedArray = prevArray.map(item =>
+                    item.id === relatorId ? { ...item, ...data } : item
                 )
                 return updatedArray;
             })
@@ -49,14 +50,17 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
         });
     };
 
-    const handleDelete = (id:string, type:string) => {
+    const handleDelete = (id: string, type: string) => {
         onDelete(id, type);
+    }
+
+    const getProccessoList = async () => {
+        await  getProcessoByRelator(id)
     }
 
     useEffect(() => {
         if (id) {
             getOneRelator(id)
-            getProcessoByRelator(id)
         }
     }, [])
 
@@ -112,6 +116,9 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
                     <RegisterButton text="Registrar" />
                 </Box>
             )}
+            <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 5 }}>
+                <GetDataButton handleClick={getProccessoList} id={id} name={'Lista de Processos'} />
+            </Box>
             <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
                     <Typography variant='h6' sx={{ color: '#1e293b', fontWeight: 'bold' }}>Lista de Processos</Typography>
