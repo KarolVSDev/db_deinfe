@@ -173,6 +173,21 @@ export interface Apenso {
   apensado: string;
 }
 
+export interface ApensoProcesso {
+  id: string;
+  numero: string;
+  ano: string;
+  natureza: string;
+  exercicio: string;
+  objeto: string;
+  arquivamento: string;
+}
+
+export interface ApensoProcessoPai {
+  id: string;
+  apensado: ApensoProcesso;
+}
+
 export interface Interessado {
   id: string;
   interesse: string;
@@ -223,7 +238,7 @@ export type ProcessoDetails = {
   jurisd:Jurisd;
   relator:Relator;
   procurador:Procurador;
-  apensados:Apenso[];
+  apensados:ApensoProcessoPai[];
   interessados:Interessado[];
 }
 
