@@ -195,6 +195,12 @@ export interface Interessado {
   pessoa: string;
 }
 
+export interface InteressadoPessoa {
+  id:string;
+  interesse:string;
+  pessoa:PessoaFisica;
+}
+
 //esse type é para o formulário de criação de pessoaJurisd obs: datas aqui são string, pra retorno vai ter que ser date
 export interface PessoaJurisd {
   id: string;
@@ -239,7 +245,7 @@ export type ProcessoDetails = {
   relator:Relator;
   procurador:Procurador;
   apensados:ApensoProcessoPai[];
-  interessados:Interessado[];
+  interessados:InteressadoPessoa[];
 }
 
 

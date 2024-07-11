@@ -1,8 +1,12 @@
-import { Box, Collapse, Grid, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { Box, Button, Chip, Collapse, Grid, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { ProcessoDetails } from '../../types/types';
 import { useState } from 'react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import useFetchListData from '../../hooks/useFetchListData';
+import { GridRowId } from '@mui/x-data-grid';
+import ModalShowDetailProcesso from '../Modais/DataTableModals/ModalShowDetailProcesso';
 
 
 interface DetailsProps {
@@ -19,11 +23,48 @@ const stylePaper = {
 
 const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) => {
 
-    const [open, setOpen] = useState(false);
+    const [openApensados, setOpenApensados] = useState(false);
+    const [openInteressados, setOpenInteressados] = useState(false);
+    const {onDelete} = useFetchListData(processoDetails?.id)
+    const [openModal, setOpenModal] = useState(false)
+    const [buttonType, setButtonType] = useState('')
+    const [typeId, setTypeId] = useState('')
 
-    const handleClick = () => {
-        setOpen(!open);
+    const handleApensadosClick = () => {
+        setOpenApensados(!openApensados);
     };
+
+    const handleInteressadosClick = () => {
+        setOpenInteressados(!openInteressados)
+    }
+
+    const handleDelete = (id:string, state:string) => {
+        onDelete(id, state)
+    }
+
+    const handleModal = (valueButton:string) => {
+        setButtonType(valueButton)
+        setOpenModal(true)
+    }
+
+    const handleClose = () => {
+        setOpenModal(false)
+    }
+
+    const styleChip = {
+        position: 'relative',
+        bottom: 0,
+        left: 0,
+        color: '#c23232',
+        '& .MuiChip-deleteIcon': {
+            color: '#c23232',
+            '&:hover': {
+                color: '#b12a2c',
+            },
+        },
+    };
+
+   
 
     return (
         <Box >
@@ -37,48 +78,17 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
                             <Typography sx={{ fontSize: 15 }}><strong>Advogado(a):</strong> {processoDetails.advogado.nome}</Typography>
                             <Typography sx={{ fontSize: 15 }}><strong>Unidade Gestora:</strong> {processoDetails.jurisd.nome}</Typography>
                             {processoDetails.apensados && processoDetails.apensados.length !== 0 && (
-                                <Box sx={{ mt:2}}>
-                                        <List>
-                                            <ListItem>
-                                                <ListItemButton id='apensado' onClick={handleClick}>
-                                                    <ListItemText  sx={{ color: '#991b1b', fontWeight: 'bold', fontSize: 16 }} primary="Processos Apensados"/>
-                                                    {open ? <ExpandLess /> : <ExpandMore />}
-                                                </ListItemButton>
-                                            </ListItem>
-                                    {processoDetails.apensados.map((apenso, index) => (
-                                        <Collapse in={open} timeout="auto" unmountOnExit>
-                                        <List key={apenso.apensado.id} component="div" disablePadding>
-                                          <ListItemButton  sx={{ pl: 4, py:0 }}>
-                                            <ListItemText primary={`Número: ${apenso.apensado.numero} `} />
-                                          </ListItemButton>
-                                        </List>
-                                      </Collapse>
-                                    ))}
-                                        </List>
-                                        <List>
-                                            <ListItem>
-                                                <ListItemButton id='interessado' onClick={handleClick}>
-                                                    <ListItemText  sx={{ color: '#991b1b', fontWeight: 'bold', fontSize: 16 }} primary="Interessados"/>
-                                                    {open ? <ExpandLess /> : <ExpandMore />}
-                                                </ListItemButton>
-                                            </ListItem>
-                                    {processoDetails.interessados.map((interesse, index) => (
-                                        <Collapse in={open} timeout="auto" unmountOnExit>
-                                        <List component="div" disablePadding>
-                                          <ListItemButton sx={{ pl: 4, py:0 }}>
-                                            <ListItemText primary={`Interesse: ${interesse.interesse} `} />
-                                            <ListItemText primary={`Interessado: ${interesse.pessoa.nome} `} />
-                                          </ListItemButton>
-                                        </List>
-                                      </Collapse>
-                                    ))}
-                                        </List>
+                                <Box sx={{ mt: 2 }}>
+                                    <Button  onClick={() => handleModal('apenso')}>Processos Apensados</Button>
+                                    <Button  onClick={() => handleModal('interesse')}>Interessados</Button>
                                 </Box>
                             )}
                         </Paper>
                     </Grid>
                 </Grid>
             )}
+            <ModalShowDetailProcesso id={typeId} dataType={buttonType} open={openModal} onClose={handleClose}            
+            />
         </Box>
 
     );

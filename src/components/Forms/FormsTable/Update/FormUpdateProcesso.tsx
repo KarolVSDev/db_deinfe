@@ -274,7 +274,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
           <FormApenso />
         </InnerAccordion>
       </Box>
-      <InfoPaperProcessoDetails processoDetails={processoDetails} />
+      <InfoPaperProcessoDetails processoDetails={processoDetails}/>
 
     </Container>
   )
