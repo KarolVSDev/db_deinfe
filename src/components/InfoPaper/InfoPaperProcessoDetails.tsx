@@ -25,10 +25,9 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
 
     const [openApensados, setOpenApensados] = useState(false);
     const [openInteressados, setOpenInteressados] = useState(false);
-    const {onDelete} = useFetchListData(processoDetails?.id)
+    const { onDelete } = useFetchListData(processoDetails?.id)
     const [openModal, setOpenModal] = useState(false)
     const [buttonType, setButtonType] = useState('')
-    const [typeId, setTypeId] = useState('')
 
     const handleApensadosClick = () => {
         setOpenApensados(!openApensados);
@@ -38,11 +37,11 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
         setOpenInteressados(!openInteressados)
     }
 
-    const handleDelete = (id:string, state:string) => {
+    const handleDelete = (id: string, state: string) => {
         onDelete(id, state)
     }
 
-    const handleModal = (valueButton:string) => {
+    const handleModal = (valueButton: string) => {
         setButtonType(valueButton)
         setOpenModal(true)
     }
@@ -64,7 +63,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
         },
     };
 
-   
+
 
     return (
         <Box >
@@ -79,15 +78,19 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
                             <Typography sx={{ fontSize: 15 }}><strong>Unidade Gestora:</strong> {processoDetails.jurisd.nome}</Typography>
                             {processoDetails.apensados && processoDetails.apensados.length !== 0 && (
                                 <Box sx={{ mt: 2 }}>
-                                    <Button  onClick={() => handleModal('apenso')}>Processos Apensados</Button>
-                                    <Button  onClick={() => handleModal('interesse')}>Interessados</Button>
+                                    <Button onClick={() => handleModal('apenso')}>Processos Apensados</Button>
+                                </Box>
+                            )}
+                            {processoDetails.interessados && processoDetails.interessados.length !== 0 && (
+                                <Box sx={{ mt: 2 }}>
+                                    <Button onClick={() => handleModal('interesse')}>Interessados</Button>
                                 </Box>
                             )}
                         </Paper>
                     </Grid>
                 </Grid>
             )}
-            <ModalShowDetailProcesso id={typeId} dataType={buttonType} open={openModal} onClose={handleClose}            
+            <ModalShowDetailProcesso processoDetails={processoDetails} dataType={buttonType} open={openModal} onClose={handleClose}
             />
         </Box>
 

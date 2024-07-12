@@ -102,7 +102,6 @@ export const processoHeader = [
 export const interessadoHeader = [
     {id:'interesse', label:'Interesse', minWidth:150},
     {id:'pessoa', label:'Pessoa Física', minWidth:150},
-    {id:'processo', label:'Processo', minWidth:150}
 ]
 
 export const pessoaJurisdHeader = [

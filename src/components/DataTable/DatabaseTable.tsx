@@ -52,11 +52,12 @@ export default function DatabaseTable() {
       width: header.minWidth,
       editable: false,
       renderCell: (params) => {
-        if (header.id === 'pessoa') {
-          return params.value ? params.value.nome : '';
-        } else if (header.id === 'processo') {
-          return params.value ? params.value.numero : '';
-        }
+        // if (header.id === 'pessoa') {
+        //   return params.value ? params.value.nome : '';
+        // } else if (header.id === 'processo') {
+        //   return params.value ? params.value.numero : '';
+        // testei pra saber se precisava disso,
+        // se não deu erro aí no futuro é pq eu não preciso mesmo}
         return params.value;
       }
     }));

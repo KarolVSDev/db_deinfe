@@ -5,19 +5,16 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import FormUpdatePF from '../../Forms/FormsTable/Update/FormUpdatePF';
-import { GridRowId } from '@mui/x-data-grid';
-import FormUpdateJurisd from '../../Forms/FormsTable/Update/FormUpdateJurisd';
-import FormUpdateProcesso from '../../Forms/FormsTable/Update/FormUpdateProcesso';
-import FormUpdateProcurador from '../../Forms/FormsTable/Update/FormUpdateProcurador';
-import FormUpdateRelator from '../../Forms/FormsTable/Update/FormUpdateRelator';
+import { ProcessoDetails } from '../../../types/types';
+import DataProcessoDetails from '../../DataTable/DataProcessoDetails';
+
 
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 750,
+  width: 'fit-content',
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
@@ -29,13 +26,13 @@ const style = {
 };
 
 interface ModalShowDetailProps {
-  id: GridRowId;
   dataType: string;
   open: boolean;
   onClose: () => void;
+  processoDetails:ProcessoDetails | undefined;
 }
 
-const ModalShowDetailProcesso: React.FC<ModalShowDetailProps> = ({ id, dataType, open, onClose }) => {
+const ModalShowDetailProcesso: React.FC<ModalShowDetailProps> = ({ processoDetails,  dataType, open, onClose }) => {
 
 
   return (
@@ -55,14 +52,16 @@ const ModalShowDetailProcesso: React.FC<ModalShowDetailProps> = ({ id, dataType,
       >
         <Fade in={open}>
           <Box sx={style}>
-            <IconButton onClick={onClose} sx={{
-              ml: 80, mr: 0, '&:hover': {
-                bgcolor: '#1e293b', color: '#ffffff',
-              }
-            }}>
-              <CloseIcon />
-            </IconButton>
-            {dataType}
+            <Box sx={{display:'flex', justifyContent:'flex-end', p:1}}>
+              <IconButton onClick={onClose} sx={{
+                mb: 2, '&:hover': {
+                  bgcolor: '#1e293b', color: '#ffffff',
+                }
+              }}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            {<DataProcessoDetails dataType={dataType} processoDetails={processoDetails}/>}
           </Box>
         </Fade>
       </Modal>
