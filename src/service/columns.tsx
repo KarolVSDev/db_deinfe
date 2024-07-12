@@ -98,8 +98,18 @@ export const processoHeader = [
     {id:'objeto', label:'Objeto', minWidth:150},
     {id:'arquivamento', label:'Arquivamento', minWidth:150},
 ]
+export const apensoHeader = [
+    {id:'remover', label:'Remover', minWidth:150},
+    {id:'numero', label:'Número', minWidth:150},
+    {id:'ano', label:'Ano', minWidth:150},
+    {id:'natureza', label:'Natureza', minWidth:150},
+    {id:'exercicio', label:'Exercício', minWidth:150},
+    {id:'objeto', label:'Objeto', minWidth:150},
+    {id:'arquivamento', label:'Arquivamento', minWidth:150},
+]
 
 export const interessadoHeader = [
+    {id:'remover', label:'Remover', minWidth:150},
     {id:'interesse', label:'Interesse', minWidth:150},
     {id:'pessoa', label:'Pessoa Física', minWidth:150},
 ]

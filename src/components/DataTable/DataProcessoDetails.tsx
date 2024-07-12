@@ -1,9 +1,10 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridFooter } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { ColumnConfig, ProcessoDetails } from '../../types/types';
-import { processoHeader, interessadoHeader } from '../../service/columns';
+import { processoHeader, interessadoHeader, apensoHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
+import DeleteDataButton from '../Buttons/DeleteButton';
 
 export interface DataProcessoDetailsProps {
     dataType: string;
@@ -23,7 +24,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, pro
             editable: false,
             renderCell: (params) => {
                 return params.value;
-            }
+            },
         }));
     };
 
@@ -38,7 +39,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, pro
 
     useEffect(() => {
         if (dataType === "apenso") {
-            setColumns(createGridColumns(processoHeader));
+            setColumns(createGridColumns(apensoHeader));
             if(processoDetails){
                 setRows(createRows(processoDetails.apensados.map(apenso => apenso.apensado)));
             }
@@ -60,6 +61,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, pro
                 rows={rows}
                 columns={columns}
                 localeText={handleLocalization}
+              
                 initialState={{
                     pagination: {
                         paginationModel: {
@@ -67,8 +69,9 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, pro
                         },
                     },
                 }}
+                sx={{bgcolor:'white'}}
                 pageSizeOptions={[5]}
-                disableRowSelectionOnClick
+                disableRowSelectionOnClick = {false}
             />
         </Box>
     );
