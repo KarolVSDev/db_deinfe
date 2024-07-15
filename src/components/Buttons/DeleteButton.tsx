@@ -1,11 +1,11 @@
 import { Button, styled } from '@mui/material'
-import React from 'react'
-import { GridRowId } from '@mui/x-data-grid';
-
+import React, { useEffect, useState } from 'react'
+import DeleteIcon from '@mui/icons-material/Delete';
+import { ProcessoDetails } from '../../types/types';
 interface buttonInterface {
-    type: string;
-    id: GridRowId | undefined;
-    handleDelete: () => void;
+    stateType: string;
+    handleDelete: (type: string, id: string) => void;
+    details: ProcessoDetails;
 }
 
 const StyledButtonDelete = styled(Button)({
@@ -16,10 +16,30 @@ const StyledButtonDelete = styled(Button)({
     padding: '0 30px',
 })
 
-const DeleteDataButton: React.FC<buttonInterface> = ({ type, id, handleDelete }) => {
+const DeleteDataButton: React.FC<buttonInterface> = ({ handleDelete, details, stateType }) => {
+
+    const [idState, setIdState] = useState<string>()
+
+
+    useEffect(() => {
+        if (details.apensados) {
+            details.apensados.forEach(apenso => setIdState(apenso.id));
+        } else if (details?.interessados) {
+            details.interessados.forEach(interesse => setIdState(interesse.id));
+        }
+    });
+
 
     return (
-        <StyledButtonDelete onClick={handleDelete} ></StyledButtonDelete>
+        <StyledButtonDelete onClick={handleDelete(stateType, idState)}><DeleteIcon sx={{
+            color: '#c23232',
+            '& .MuiChip-deleteIcon': {
+                color: '#c23232',
+                '&:hover': {
+                    color: '#b12a2c',
+                },
+            },
+        }} /></StyledButtonDelete>
     )
 }
 
