@@ -7,6 +7,7 @@ import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
 import { Button, Divider } from '@mui/material';
 import useFetchListData from '../../hooks/useFetchListData';
+import {formateDateToPtBr} from '../../hooks/DateFormate';
 
 export interface DataProcessoDetailsProps {
     dataType: string;
@@ -42,7 +43,6 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, pro
         return data.map((item, index) => ({
             id: item.id,
             ...item,
-            remover: 
         }));
     };
 
@@ -52,13 +52,23 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, pro
         if (dataType === "apenso") {
             setColumns(createGridColumns(apensoHeader));
             if(processoDetails){
-                setRows(createRows(processoDetails.apensados.map(apenso => apenso.apensado)));
+                setRows(createRows(processoDetails.apensados.map(apenso => ({
+                    id:apenso.id,
+                    remover:<DeleteDataButton  stateType={dataType} itemId={apenso.id} handleDelete={handleDelete} />,
+                    numero:apenso.apensado.numero,
+                    ano:apenso.apensado.ano,
+                    natureza:apenso.apensado.natureza,
+                    exercicio:apenso.apensado.exercicio,
+                    objeto:apenso.apensado.objeto,
+                    arquivamento: formateDateToPtBr(apenso.apensado.arquivamento)
+                }))));
             }
-        } else if (dataType === "interesse") {
+        } else if (dataType === "interessado") {
             setColumns(createGridColumns(interessadoHeader));
             if(processoDetails?.interessados){
                setRows(processoDetails.interessados.map(interessado => ({
                 id: interessado.id,
+                remover: <DeleteDataButton  stateType={dataType} itemId={interessado.id} handleDelete={handleDelete} />,
                 interesse: interessado.interesse,
                 pessoa: interessado.pessoa.nome,
             })))

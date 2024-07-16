@@ -30,6 +30,8 @@ import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdatePF';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
+import {formateDateToPtBr} from '../../hooks/DateFormate';
+import useExportToExcel from '../../hooks/useExportToExcel';
 
 
 export default function DatabaseTable() {
@@ -42,6 +44,7 @@ export default function DatabaseTable() {
     setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, setArrayProcurador, setArrayRelator } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
+  const {exportToExcel} = useExportToExcel()
 
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
@@ -52,12 +55,6 @@ export default function DatabaseTable() {
       width: header.minWidth,
       editable: false,
       renderCell: (params) => {
-        // if (header.id === 'pessoa') {
-        //   return params.value ? params.value.nome : '';
-        // } else if (header.id === 'processo') {
-        //   return params.value ? params.value.numero : '';
-        // testei pra saber se precisava disso,
-        // se não deu erro aí no futuro é pq eu não preciso mesmo}
         return params.value;
       }
     }));
@@ -90,7 +87,10 @@ export default function DatabaseTable() {
         break;
       case 'processo':
         setColumns(createGridColumns(processoHeader));
-        setRows(createRows(arrayProcesso));
+        setRows(createRows(arrayProcesso.map(objetoProcesso => ({
+          ...objetoProcesso,
+          arquivamento: formateDateToPtBr(objetoProcesso.arquivamento)
+        }))));
         break;
       case 'procurador':
         setColumns(createGridColumns(procuradorHeader));
@@ -125,26 +125,6 @@ export default function DatabaseTable() {
     }
     return gridState
   }
-
-
-  //export
-  interface GridState {
-    columns: GridColDef[];
-    rows: any[];
-  }
-  const exportToExcel = (gridState: GridState) => {
-    const { columns, rows } = gridState
-    const exportRows = rows.map((row) => {
-      const {id, ...exportRow} = row;
-
-      return exportRow;
-    });
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(exportRows);
-    XLSX.utils.book_append_sheet(wb, ws, 'Data');
-    XLSX.writeFile(wb, 'data.xlsx');
-  };
 
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
@@ -194,9 +174,7 @@ export default function DatabaseTable() {
     }
   }
 
-
   //esse bloco atualiza a visualização de pessoa física
-
   useEffect(() => {
     switch (dataType) {
       case 'pessoafisica':
@@ -240,7 +218,7 @@ export default function DatabaseTable() {
           <Box>
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
               const gridState = captureDataGridState();
-              exportToExcel(gridState)
+              exportToExcel(gridState, 'data.xlsx')
             }}>
               <FileDownloadIcon />
             </Button>

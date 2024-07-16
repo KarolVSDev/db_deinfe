@@ -66,7 +66,8 @@ const useFetchListData = (id: GridRowId | undefined) => {
         setArrayListData(updatedList)
         setArrayProcesso(updatedList2)
       }).catch((error) => {
-        TypeAlert(error.response.data.messsage, 'error')
+        console.log(error)
+        TypeAlert(error.response.data.message, 'error')
       })
   }
 

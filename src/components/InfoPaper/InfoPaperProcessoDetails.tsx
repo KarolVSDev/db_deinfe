@@ -1,13 +1,11 @@
-import { Box, Button, Chip, Collapse, Grid, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { ProcessoDetails } from '../../types/types';
 import { useState } from 'react';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import useFetchListData from '../../hooks/useFetchListData';
-import { GridRowId } from '@mui/x-data-grid';
 import ModalShowDetailProcesso from '../Modais/DataTableModals/ModalShowDetailProcesso';
-
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import useExportToExcel from '../../hooks/useExportToExcel';
 
 interface DetailsProps {
     processoDetails: ProcessoDetails | undefined;
@@ -28,6 +26,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
     const { onDelete } = useFetchListData(processoDetails?.id)
     const [openModal, setOpenModal] = useState(false)
     const [buttonType, setButtonType] = useState('')
+    const { exportProcessoToExcel } = useExportToExcel()
 
     const handleApensadosClick = () => {
         setOpenApensados(!openApensados);
@@ -78,14 +77,20 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
                             <Typography sx={{ fontSize: 15 }}><strong>Unidade Gestora:</strong> {processoDetails.jurisd.nome}</Typography>
                             {processoDetails.apensados && processoDetails.apensados.length !== 0 && (
                                 <Box sx={{ mt: 2 }}>
-                                    <Button onClick={() => handleModal('apenso')}>Processos Apensados</Button>
+                                    <Button variant='outlined' sx={{}} onClick={() => handleModal('apenso')}>Processos Apensados</Button>
                                 </Box>
                             )}
                             {processoDetails.interessados && processoDetails.interessados.length !== 0 && (
                                 <Box sx={{ mt: 2 }}>
-                                    <Button onClick={() => handleModal('interesse')}>Interessados</Button>
+                                    <Button variant='outlined' onClick={() => handleModal('interessado')}>Interessados</Button>
                                 </Box>
                             )}
+                            <Box sx={{ mt: 2 }}>
+                                <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }}
+                                    onClick={() => exportProcessoToExcel(processoDetails, 'detalhes_do_processo.xlsx')}>
+                                    <FileDownloadIcon sx={{ pr: 1 }} /> Exportar dados do processo
+                                </Button>
+                            </Box>
                         </Paper>
                     </Grid>
                 </Grid>

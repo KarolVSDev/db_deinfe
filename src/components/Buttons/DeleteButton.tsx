@@ -5,7 +5,7 @@ import { ProcessoDetails } from '../../types/types';
 interface buttonInterface {
     stateType: string;
     handleDelete: (type: string, id: string) => void;
-    details: ProcessoDetails;
+    itemId:string;
 }
 
 const StyledButtonDelete = styled(Button)({
@@ -16,22 +16,10 @@ const StyledButtonDelete = styled(Button)({
     padding: '0 30px',
 })
 
-const DeleteDataButton: React.FC<buttonInterface> = ({ handleDelete, details, stateType }) => {
-
-    const [idState, setIdState] = useState<string>()
-
-
-    useEffect(() => {
-        if (details.apensados) {
-            details.apensados.forEach(apenso => setIdState(apenso.id));
-        } else if (details?.interessados) {
-            details.interessados.forEach(interesse => setIdState(interesse.id));
-        }
-    });
-
+const DeleteDataButton: React.FC<buttonInterface> = ({ handleDelete, itemId, stateType }) => {
 
     return (
-        <StyledButtonDelete onClick={handleDelete(stateType, idState)}><DeleteIcon sx={{
+        <StyledButtonDelete onClick={() => handleDelete(itemId, stateType)}><DeleteIcon sx={{
             color: '#c23232',
             '& .MuiChip-deleteIcon': {
                 color: '#c23232',
