@@ -1,14 +1,15 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { ProcessoDetails } from '../../types/types';
+import { ProcessoDetails, ProcessoUpdate } from '../../types/types';
 import { useState } from 'react';
 import useFetchListData from '../../hooks/useFetchListData';
-import ModalShowDetailProcesso from '../Modais/DataTableModals/ModalShowDetailProcesso';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import useExportToExcel from '../../hooks/useExportToExcel';
+import ModalShowDetails from '../Modais/DataTableModals/ModalShowDetails';
 
 interface DetailsProps {
     processoDetails: ProcessoDetails | undefined;
+    processoPrincipal: ProcessoUpdate | { message: string } | undefined;
 }
 
 const stylePaper = {
@@ -19,13 +20,14 @@ const stylePaper = {
 };
 
 
-const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) => {
+const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, processoPrincipal }) => {
 
     const [openApensados, setOpenApensados] = useState(false);
     const [openInteressados, setOpenInteressados] = useState(false);
     const { onDelete } = useFetchListData(processoDetails?.id)
     const [openModal, setOpenModal] = useState(false)
     const [buttonType, setButtonType] = useState('')
+    const [processoCompleto, setProcessoCompleto] = useState<ProcessoDetails>()
     const { exportProcessoToExcel } = useExportToExcel()
 
     const handleApensadosClick = () => {
@@ -49,6 +51,27 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
         setOpenModal(false)
     }
 
+    const mergeData = () => {
+        if (processoDetails && processoPrincipal) {
+            let novoProcessoCompleto:ProcessoDetails;
+            if('numero' in processoPrincipal){
+                novoProcessoCompleto = {
+                    ...processoDetails, 
+                    processoPrincipal:processoPrincipal.numero
+                }
+            } else{
+                novoProcessoCompleto = {
+                    ...processoDetails,
+                    processoPrincipal:processoPrincipal.message
+                }
+            }  
+            setProcessoCompleto(novoProcessoCompleto)
+            console.log(novoProcessoCompleto)
+            exportProcessoToExcel(novoProcessoCompleto, 'detalhes_do_processo.xlsx')
+        }
+    }
+
+    
     const styleChip = {
         position: 'relative',
         bottom: 0,
@@ -75,19 +98,24 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
                             <Typography sx={{ fontSize: 15 }}><strong>Procurador(a):</strong> {processoDetails.procurador.nome}</Typography>
                             <Typography sx={{ fontSize: 15 }}><strong>Advogado(a):</strong> {processoDetails.advogado.nome}</Typography>
                             <Typography sx={{ fontSize: 15 }}><strong>Unidade Gestora:</strong> {processoDetails.jurisd.nome}</Typography>
+                            {processoPrincipal && (
+                                <Typography sx={{ fontSize: 15 }}><strong>Processo Apenso:</strong> {processoPrincipal && 'message' in processoPrincipal
+                                    ? processoPrincipal.message : processoPrincipal.numero
+                                }</Typography>
+                            )}
+                             {processoDetails.interessados && processoDetails.interessados.length !== 0 && (
+                                <Box sx={{ mt: 2 }}>
+                                    <Button variant='outlined' onClick={() => handleModal('interessado')}>Interessados</Button>
+                                </Box>
+                            )}
                             {processoDetails.apensados && processoDetails.apensados.length !== 0 && (
                                 <Box sx={{ mt: 2 }}>
                                     <Button variant='outlined' sx={{}} onClick={() => handleModal('apenso')}>Processos Apensados</Button>
                                 </Box>
                             )}
-                            {processoDetails.interessados && processoDetails.interessados.length !== 0 && (
-                                <Box sx={{ mt: 2 }}>
-                                    <Button variant='outlined' onClick={() => handleModal('interessado')}>Interessados</Button>
-                                </Box>
-                            )}
                             <Box sx={{ mt: 2 }}>
                                 <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }}
-                                    onClick={() => exportProcessoToExcel(processoDetails, 'detalhes_do_processo.xlsx')}>
+                                    onClick={mergeData}>
                                     <FileDownloadIcon sx={{ pr: 1 }} /> Exportar dados do processo
                                 </Button>
                             </Box>
@@ -95,7 +123,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails }) =
                     </Grid>
                 </Grid>
             )}
-            <ModalShowDetailProcesso processoDetails={processoDetails} dataType={buttonType} open={openModal} onClose={handleClose}
+            <ModalShowDetails processoDetails={processoDetails} dataType={buttonType} open={openModal} onClose={handleClose}
             />
         </Box>
 

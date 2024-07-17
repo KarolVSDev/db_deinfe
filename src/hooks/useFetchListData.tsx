@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails } from "../types/types";
+import { Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
@@ -13,6 +13,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [arrayProcessos] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
   const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
+  const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | {message:string}>()
   const {setArrayProcesso, arrayProcesso} = useContextTable();
   
 
@@ -151,21 +152,18 @@ const useFetchListData = (id: GridRowId | undefined) => {
     }
   };
 
+  const getApensoByApensado = async (id: GridRowId | undefined) => {
+    const processoPrincipal = await api.get(`/apenso/apensado/${id}`);
+      return processoPrincipal.data
+  }
+
   const getOneProcessoDetails = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/processo/relations/${id}`)
       const data = response.data
       if(data){
-        setProcessoDetails(data)
-      }
-    } catch (error: any) {
-      TypeAlert(error.response.data.message, 'error')
-    }
-    
-    try {
-      const response = await api.get(`/processo/relations/${id}`)
-      const data = response.data
-      if(data){
+        const processoPincipal = await  getApensoByApensado(id)
+        setProcessoPincipal(processoPincipal)
         setProcessoDetails(data)
       }
     } catch (error: any) {
@@ -191,6 +189,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   return {
     arrayListData,
     processoDetails,
+    processoPrincipal,
     getIntByPessoa,
     getJurisdByPessoa,
     getPessoaJByJurisd,

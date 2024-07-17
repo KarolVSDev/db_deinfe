@@ -19,6 +19,7 @@ import useFetchListData from '../../../../hooks/useFetchListData';
 import FormPessoaJurisd from '../Register/FormPessoaJurisd';
 import { useContextTable } from '../../../../context/TableContext';
 import GetDataButton from '../../../Buttons/GetDataButton';
+import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
 
 interface FormPFProps {
   id?: GridRowId;
@@ -460,11 +461,11 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
         <GetDataButton  handleClick={getProccessoList} id={id} name={'Lista de Processos'} />
         <GetDataButton  handleClick={getJurisdList} id={id} name={'Lista de Jurisdicionados'} />
       </Box>
-      <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
+      {/* <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
         <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
         </Box>
         <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
-      </Box>
+      </Box> */}
     </Container>
   )
 }

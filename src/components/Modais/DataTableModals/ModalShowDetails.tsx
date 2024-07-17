@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ProcessoDetails } from '../../../types/types';
+import { ListData, ProcessoDetails } from '../../../types/types';
 import DataProcessoDetails from '../../DataTable/DataProcessoDetails';
 
 
@@ -32,7 +32,7 @@ interface ModalShowDetailProps {
   processoDetails:ProcessoDetails | undefined;
 }
 
-const ModalShowDetailProcesso: React.FC<ModalShowDetailProps> = ({ processoDetails,  dataType, open, onClose }) => {
+const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ processoDetails,  dataType, open, onClose }) => {
 
 
   return (
@@ -69,4 +69,4 @@ const ModalShowDetailProcesso: React.FC<ModalShowDetailProps> = ({ processoDetai
   );
 }
 
-export default ModalShowDetailProcesso;
+export default ModalShowDetails;

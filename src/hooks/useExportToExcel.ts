@@ -1,7 +1,8 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import * as  XLSX from 'xlsx';
-import { Apenso } from "../types/types";
+import { ApensoProcessoPai, InteressadoPessoa, ProcessoDetails } from "../types/types";
+import { formateDateToPtBr } from "./DateFormate";
 
 interface GridState {
     columns:GridColDef[];
@@ -22,18 +23,19 @@ const useExportToExcel = () => {
         XLSX.writeFile(wb, fileName)
     }
 
-    const exportProcessoToExcel = useCallback((data: any, fileName: string = 'export.xlsx') => {
+    const exportProcessoToExcel = useCallback((data: ProcessoDetails, fileName: string = 'export.xlsx') => {
         const exportData = {
           numero: data.numero,
           ano: data.ano,
           natureza: data.natureza,
           exercicio: data.exercicio,
           objeto: data.objeto,
-          arquivamento: data.arquivamento,
-          advogado: data.advogado,
-          jurisd: data.jurisd,
-          relator: data.relator,
-          procurador: data.procurador,
+          arquivamento: formateDateToPtBr(data.arquivamento),
+          advogado: data.advogado.nome,
+          jurisd: data.jurisd.nome,
+          relator: data.relator.nome,
+          procurador: data.procurador.nome,
+          processoPrincipal:data.processoPrincipal?.toString()
         };
     
         // Criar planilha principal
@@ -43,13 +45,13 @@ const useExportToExcel = () => {
     
         // Criar planilha para apensos
         if (data.apensados && data.apensados.length > 0) {
-            const apensadosData = data.apensados.map((apensado: any) => ({
+            const apensadosData = data.apensados.map((apensado: ApensoProcessoPai) => ({
                 numero: apensado.apensado.numero,
                 ano: apensado.apensado.ano,
                 natureza: apensado.apensado.natureza,
                 exercicio: apensado.apensado.exercicio,
                 objeto: apensado.apensado.objeto,
-                arquivamento: apensado.apensado.arquivamento,
+                arquivamento: formateDateToPtBr(apensado.apensado.arquivamento),
             }));
         
             const apensadosSheet = XLSX.utils.json_to_sheet(apensadosData);
@@ -58,7 +60,7 @@ const useExportToExcel = () => {
     
         // Criar planilha para interessados
         if (data.interessados && data.interessados.length > 0) {
-            const interessadosData = data.interessados.map((interessado: any) => ({
+            const interessadosData = data.interessados.map((interessado: InteressadoPessoa) => ({
                 interesse: interessado.interesse,
                 nome: interessado.pessoa.nome,
                 cpf: interessado.pessoa.cpf,

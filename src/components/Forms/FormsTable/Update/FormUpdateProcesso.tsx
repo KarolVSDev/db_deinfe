@@ -29,7 +29,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProcessoUpdate>({});
   const { setArrayProcesso } = useContextTable()
-  const { getOneProcessoDetails, processoDetails } = useFetchListData(id)
+  const { getOneProcessoDetails, processoDetails, processoPrincipal } = useFetchListData(id)
   const [expanded, setExpanded] = useState(false);
   const [processo, setProcesso] = useState<ProcessoUpdate>()
 
@@ -274,7 +274,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
           <FormApenso />
         </InnerAccordion>
       </Box>
-      <InfoPaperProcessoDetails processoDetails={processoDetails}/>
+      <InfoPaperProcessoDetails processoDetails={processoDetails} processoPrincipal={processoPrincipal}/>
 
     </Container>
   )

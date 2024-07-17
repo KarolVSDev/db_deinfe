@@ -7,7 +7,6 @@ export interface User {
   ativo: string;
   senha: string;
 }
-
 export interface AllUsers {
   id: string;
   nome: string;
@@ -28,12 +27,10 @@ export interface UserLogin {
   email: string;
   password: string;
 }
-
 export interface AuthData {
   token: string;
   email: string;
 }
-
 export interface PessoaFisica {
   id?: string;
   nome: string;
@@ -86,12 +83,10 @@ export interface Relator {
   cargo: string;
   ativo?: string;
 }
-
 export interface NatAchado {
   id: string;
   descricao: string;
 }
-
 export interface DivAchado {
   id: string;
   descricao: string;
@@ -102,7 +97,6 @@ export interface AreaAchado {
   descricao: string;
   natureza: string | null;
 }
-
 export interface Achado {
   id: string;
   titulo: string;
@@ -111,7 +105,6 @@ export interface Achado {
   ativo: string;
   divisao: string;
 }
-
 export interface Jurisd {
   id?: string;
   nome: string;
@@ -136,7 +129,6 @@ export interface Jurisd {
   ativo?: string;
   uf: string;
 }
-
 export interface Jurisd_Jurisd {
   principal: string;
   subordinado: string;
@@ -156,7 +148,6 @@ export interface Processo {
   apensado: string;
   interessado: string;
 }
-
 export interface ProcessoUpdate extends Processo{
   id?: string;
   numero: string;
@@ -166,13 +157,11 @@ export interface ProcessoUpdate extends Processo{
   objeto: string;
   arquivamento: string;
 }
-
 export interface Apenso {
   id: string
   principal: string;
   apensado: string;
 }
-
 export interface ApensoProcesso {
   id: string;
   numero: string;
@@ -182,26 +171,21 @@ export interface ApensoProcesso {
   objeto: string;
   arquivamento: string;
 }
-
 export interface ApensoProcessoPai {
   id: string;
   apensado: ApensoProcesso;
 }
-
 export interface Interessado {
   id: string;
   interesse: string;
   processo: string;
   pessoa: string;
 }
-
 export interface InteressadoPessoa {
   id:string;
   interesse:string;
   pessoa:PessoaFisica;
 }
-
-//esse type é para o formulário de criação de pessoaJurisd obs: datas aqui são string, pra retorno vai ter que ser date
 export interface PessoaJurisd {
   id: string;
   cargo: string;
@@ -244,8 +228,10 @@ export type ProcessoDetails = {
   jurisd:Jurisd;
   relator:Relator;
   procurador:Procurador;
+  processoPrincipal?:string | {message:string};
   apensados:ApensoProcessoPai[];
   interessados:InteressadoPessoa[];
 }
+
 
 

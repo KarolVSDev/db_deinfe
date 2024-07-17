@@ -14,14 +14,14 @@ const StyledButton = styled(Button)({
     border: 0,
     borderRadius: 3,
     color: 'white',
-    height: 48,
+    height: 40,
     padding: '0 30px',
 })
 
 const GetDataButton: React.FC<buttonInterface> = ({ name, id, handleClick }) => {
 
     return (
-        <StyledButton onClick={handleClick} >{name}</StyledButton>
+        <StyledButton  onClick={handleClick} >{name}</StyledButton>
     )
 }
 
