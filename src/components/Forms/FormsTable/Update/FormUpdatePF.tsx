@@ -11,7 +11,7 @@ import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useContextTable } from '../../../../context/TableContext';
 import GetDataButton from '../../../Buttons/GetDataButton';
@@ -34,7 +34,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const handleClose = () => {
     setOpenModal(false)
-}
+  }
 
   // const handleDelete = (id: string, type: string) => {
   //   onDelete(id, type)
@@ -79,9 +79,9 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
     api.get(`/pessoafisica/relations/${id}`).then(response => {
       const pessoarelations = response.data;
       setPessoaRelation(pessoarelations)
-      }
-    ).catch((error:any) => {
-        TypeAlert(`Erro ao fazer relação ${error}`, 'error')
+    }
+    ).catch((error: any) => {
+      TypeAlert(`Erro ao fazer relação ${error}`, 'error')
     })
   }
 
@@ -467,15 +467,15 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           <RegisterButton text="Atualizar" />
         </Box>
       )}
-      <Box sx={{ mt: 2 }}>
-        <Button variant='outlined' sx={{}} onClick={() => handleModal('processos')}>Relação de Processos</Button>
-      </Box>
-      <ModalShowDetails arrayRelation={pessoaRelation} dataType={buttonType} open={openModal} onClose={handleClose} />
-      {/* <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
+      <Paper sx={{bgcolor:'white', p:2}}>
+        <Box >
+          <Button variant='outlined' sx={{}} onClick={() => handleModal('processos')}>Relação de Processos</Button>
         </Box>
-        <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
-      </Box> */}
+        <Box sx={{ mt: 2 }}>
+          <Button variant='outlined' sx={{}} onClick={() => handleModal('processos')}>Relação de Jurisdicionados</Button>
+        </Box>
+      </Paper>
+      <ModalShowDetails arrayRelation={pessoaRelation} dataType={buttonType} open={openModal} onClose={handleClose} />
     </Container>
   )
 }
