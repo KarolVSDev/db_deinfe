@@ -5,18 +5,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { PessoaFisica, UpdatePessoaFisica } from '../../../../types/types'
+import { PessoaFisica, UpdatePessoaFisica, dataRelation } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
-import InnerAccordion from '../../../Accordion/InnerAccordion';
 import { useEffect, useState } from 'react';
-import FormInteresse from '../Register/FormInteresse';
-import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import { Button } from '@mui/material';
 import useFetchListData from '../../../../hooks/useFetchListData';
-import FormPessoaJurisd from '../Register/FormPessoaJurisd';
 import { useContextTable } from '../../../../context/TableContext';
 import GetDataButton from '../../../Buttons/GetDataButton';
 import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
@@ -29,15 +25,20 @@ interface FormPFProps {
 const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
-  const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica | null>(null)
-  const [buttonType, setButtonType] = useState<string>('processo')
-  const { onDelete, arrayListData, getProcessoByPessoa, getJurisdByPessoa } = useFetchListData(id)
+  const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica>()
+  const [pessoaRelation, setPessoaRelation] = useState<dataRelation>()
+  const [buttonType, setButtonType] = useState<string>('')
+  const [openModal, setOpenModal] = useState(false)
   const { setArrayPessoaFisica } = useContextTable()
 
 
-  const handleDelete = (id: string, type: string) => {
-    onDelete(id, type)
-  }
+  const handleClose = () => {
+    setOpenModal(false)
+}
+
+  // const handleDelete = (id: string, type: string) => {
+  //   onDelete(id, type)
+  // }
 
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
@@ -74,11 +75,20 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
     })
   }
 
-  const getProccessoList = async () => {
-    await getProcessoByPessoa(id)
+  const setPessoaRelations = () => {
+    api.get(`/pessoafisica/relations/${id}`).then(response => {
+      const pessoarelations = response.data;
+      setPessoaRelation(pessoarelations)
+      }
+    ).catch((error:any) => {
+        TypeAlert(`Erro ao fazer relação ${error}`, 'error')
+    })
   }
-  const getJurisdList = async () => {
-    await getJurisdByPessoa()
+
+  const handleModal = (valueButton: string) => {
+    setPessoaRelations()
+    setButtonType(valueButton)
+    setOpenModal(true)
   }
 
   useEffect(() => {
@@ -457,10 +467,10 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           <RegisterButton text="Atualizar" />
         </Box>
       )}
-      <Box sx={{display:'flex', justifyContent:'space-around', mt:5}}>
-        <GetDataButton  handleClick={getProccessoList} id={id} name={'Lista de Processos'} />
-        <GetDataButton  handleClick={getJurisdList} id={id} name={'Lista de Jurisdicionados'} />
+      <Box sx={{ mt: 2 }}>
+        <Button variant='outlined' sx={{}} onClick={() => handleModal('processos')}>Relação de Processos</Button>
       </Box>
+      <ModalShowDetails arrayRelation={pessoaRelation} dataType={buttonType} open={openModal} onClose={handleClose} />
       {/* <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
         <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
         </Box>

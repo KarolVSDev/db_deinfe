@@ -30,13 +30,13 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, pro
     const [processoCompleto, setProcessoCompleto] = useState<ProcessoDetails>()
     const { exportProcessoToExcel } = useExportToExcel()
 
-    const handleApensadosClick = () => {
-        setOpenApensados(!openApensados);
-    };
+    // const handleApensadosClick = () => {
+    //     setOpenApensados(!openApensados);
+    // };
 
-    const handleInteressadosClick = () => {
-        setOpenInteressados(!openInteressados)
-    }
+    // const handleInteressadosClick = () => {
+    //     setOpenInteressados(!openInteressados)
+    // }
 
     const handleDelete = (id: string, state: string) => {
         onDelete(id, state)
@@ -123,7 +123,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, pro
                     </Grid>
                 </Grid>
             )}
-            <ModalShowDetails processoDetails={processoDetails} dataType={buttonType} open={openModal} onClose={handleClose}
+            <ModalShowDetails Details={processoDetails} dataType={buttonType} open={openModal} onClose={handleClose}
             />
         </Box>
 

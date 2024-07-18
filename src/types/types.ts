@@ -72,6 +72,12 @@ export interface UpdatePessoaFisica {
   ramal: string;
   email: string;
 }
+
+export interface dataRelation {
+    main: UpdatePessoaFisica | Jurisd;
+    processos: ApensoProcesso[];
+    pessoaJurisds: PessoaJurisd[];
+}
 export interface Procurador {
   id?: string;
   nome: string;
