@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
+import { dataRelation, Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
@@ -14,6 +14,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
   const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
   const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | {message:string}>()
+  const [pessoaRelation, setPessoaRelation] = useState<dataRelation>()
   const {setArrayProcesso, arrayProcesso} = useContextTable();
   
 
@@ -171,6 +172,16 @@ const useFetchListData = (id: GridRowId | undefined) => {
     }
   }
 
+  const setPessoaRelations = async () => {
+    await api.get(`/pessoafisica/relations/${id}`).then(response => {
+      const pessoarelations = response.data;
+      setPessoaRelation(pessoarelations)
+    }
+    ).catch((error: any) => {
+      TypeAlert(`Erro ao fazer relação ${error}`, 'error')
+    })
+  }
+
   
 
   useEffect(() => {
@@ -190,6 +201,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     arrayListData,
     processoDetails,
     processoPrincipal,
+    pessoaRelation,
     getIntByPessoa,
     getJurisdByPessoa,
     getPessoaJByJurisd,
@@ -200,6 +212,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     getProcessoByProc,
     getProcessoByRelator,
     getOneProcessoDetails,
+    setPessoaRelations
   }
 
 

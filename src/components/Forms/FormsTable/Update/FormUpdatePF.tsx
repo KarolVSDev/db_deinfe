@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator'
 import { useForm } from 'react-hook-form';
-import { PessoaFisica, UpdatePessoaFisica, dataRelation } from '../../../../types/types'
+import { PessoaFisica, UpdatePessoaFisica } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -14,9 +14,9 @@ import { useEffect, useState } from 'react';
 import { Button, Paper } from '@mui/material';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useContextTable } from '../../../../context/TableContext';
-import GetDataButton from '../../../Buttons/GetDataButton';
 import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
-
+import useExportToExcel from '../../../../hooks/useExportToExcel';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 interface FormPFProps {
   id?: GridRowId;
   closeModal: () => void;
@@ -26,20 +26,18 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PessoaFisica>({});
   const [pessoaFifica, setPessoaFisica] = useState<PessoaFisica>()
-  const [pessoaRelation, setPessoaRelation] = useState<dataRelation>()
   const [buttonType, setButtonType] = useState<string>('')
   const [openModal, setOpenModal] = useState(false)
   const { setArrayPessoaFisica } = useContextTable()
+  const { setPessoaRelations, pessoaRelation } = useFetchListData(id)
+  const { exportPessoaToExcel } = useExportToExcel()
 
 
   const handleClose = () => {
     setOpenModal(false)
   }
 
-  // const handleDelete = (id: string, type: string) => {
-  //   onDelete(id, type)
-  // }
-
+ 
   const getOnePF = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/pessoafisica/${id}`)
@@ -75,25 +73,21 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
     })
   }
 
-  const setPessoaRelations = () => {
-    api.get(`/pessoafisica/relations/${id}`).then(response => {
-      const pessoarelations = response.data;
-      setPessoaRelation(pessoarelations)
-    }
-    ).catch((error: any) => {
-      TypeAlert(`Erro ao fazer relação ${error}`, 'error')
-    })
-  }
 
   const handleModal = (valueButton: string) => {
-    setPessoaRelations()
     setButtonType(valueButton)
     setOpenModal(true)
   }
 
+  const handleExport = () => {
+    exportPessoaToExcel(pessoaRelation, 'pessoafisica.xlsx')
+  }
+
+
   useEffect(() => {
     if (id) {
       getOnePF(id);
+      setPessoaRelations()
     }
   }, []);
 
@@ -467,15 +461,25 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           <RegisterButton text="Atualizar" />
         </Box>
       )}
-      <Paper sx={{bgcolor:'white', p:2}}>
+      <Paper sx={{ bgcolor: 'white', p: 2 }}>
         <Box >
-          <Button variant='outlined' sx={{}} onClick={() => handleModal('processos')}>Relação de Processos</Button>
+          <Button variant='outlined' sx={{}} onClick={() => handleModal('processo')}>Relação de Processos</Button>
         </Box>
         <Box sx={{ mt: 2 }}>
-          <Button variant='outlined' sx={{}} onClick={() => handleModal('processos')}>Relação de Jurisdicionados</Button>
+          <Button variant='outlined' sx={{}} onClick={() => handleModal('pessoajurisd')}>Relação de Jurisdicionados</Button>
+        </Box>
+        <Box sx={{ mt: 2 }}>
+          <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }}
+            onClick={() => handleExport()}>
+            <FileDownloadIcon sx={{ pr: 1 }} /> Exportar dados
+          </Button>
         </Box>
       </Paper>
-      <ModalShowDetails arrayRelation={pessoaRelation} dataType={buttonType} open={openModal} onClose={handleClose} />
+      <ModalShowDetails
+        arrayRelation={pessoaRelation}
+        dataType={buttonType}
+        open={openModal}
+        onClose={handleClose} />
     </Container>
   )
 }

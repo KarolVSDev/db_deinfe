@@ -1,12 +1,11 @@
 import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { ProcessoDetails, ProcessoUpdate } from '../../../../types/types'
+import { ProcessoUpdate } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';

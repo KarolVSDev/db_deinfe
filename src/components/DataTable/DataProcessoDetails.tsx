@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridFooter, GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { ColumnConfig, dataRelation, ProcessoDetails } from '../../types/types';
-import { interessadoHeader, apensoHeader, processoHeader } from '../../service/columns';
+import { interessadoHeader, apensoHeader, pessoaJurisdHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
 import { Button, Divider, Typography } from '@mui/material';
@@ -75,7 +75,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
                     pessoa: interessado.pessoa.nome,
                 })))
             }
-        } else if (dataType === "processos") {
+        } else if (dataType === "processo") {
             setColumns(createGridColumns(apensoHeader));
             if (arrayRelation?.processos) {
                 setRows(arrayRelation.processos.map(processo => ({
@@ -88,11 +88,27 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
                     objeto: processo.objeto,
                     arquivamento: formateDateToPtBr(processo.arquivamento)
                 })));
-                
+
+            }
+        } else if (dataType === "pessoajurisd") {
+            setColumns(createGridColumns(pessoaJurisdHeader));
+            if (arrayRelation?.pessoaJurisds) {
+                setRows(arrayRelation.pessoaJurisds.map(pessoaJurisd => ({
+                    id: pessoaJurisd.id,
+                    remover: <DeleteDataButton stateType={dataType} itemId={pessoaJurisd.id} handleDelete={handleDelete} />,
+                    cargo: pessoaJurisd.cargo,
+                    mandato: pessoaJurisd.mandato,
+                    normaNomeacao: pessoaJurisd.normaNomeacao,
+                    dataNomeacao: formateDateToPtBr(pessoaJurisd.dataNomeacao),
+                    normaExoneracao: pessoaJurisd.normaExoneracao,
+                    dataExoneracao: formateDateToPtBr(pessoaJurisd.dataExoneracao),
+                    gestor: pessoaJurisd.gestor
+
+                })))
             }
         }
     })
-   
+
     return (
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid

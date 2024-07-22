@@ -22,25 +22,10 @@ const stylePaper = {
 
 const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, processoPrincipal }) => {
 
-    const [openApensados, setOpenApensados] = useState(false);
-    const [openInteressados, setOpenInteressados] = useState(false);
-    const { onDelete } = useFetchListData(processoDetails?.id)
     const [openModal, setOpenModal] = useState(false)
     const [buttonType, setButtonType] = useState('')
     const [processoCompleto, setProcessoCompleto] = useState<ProcessoDetails>()
     const { exportProcessoToExcel } = useExportToExcel()
-
-    // const handleApensadosClick = () => {
-    //     setOpenApensados(!openApensados);
-    // };
-
-    // const handleInteressadosClick = () => {
-    //     setOpenInteressados(!openInteressados)
-    // }
-
-    const handleDelete = (id: string, state: string) => {
-        onDelete(id, state)
-    }
 
     const handleModal = (valueButton: string) => {
         setButtonType(valueButton)
@@ -116,7 +101,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, pro
                             <Box sx={{ mt: 2 }}>
                                 <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }}
                                     onClick={mergeData}>
-                                    <FileDownloadIcon sx={{ pr: 1 }} /> Exportar dados do processo
+                                    <FileDownloadIcon sx={{ pr: 1 }} /> Exportar dados
                                 </Button>
                             </Box>
                         </Paper>

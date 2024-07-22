@@ -115,6 +115,7 @@ export const interessadoHeader = [
 ]
 
 export const pessoaJurisdHeader = [
+    {id:'remover', label:'Remover', minWidth:150},
     {id:'cargo', label:'Cargo', minWidth:150},
     {id:'mandato', label:'Mandato', minWidth:150},
     {id:'normaNomeacao', label:'Norma Nomeação', minWidth:150},

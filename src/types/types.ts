@@ -74,9 +74,25 @@ export interface UpdatePessoaFisica {
 }
 
 export interface dataRelation {
-    main: UpdatePessoaFisica | Jurisd;
-    processos: ApensoProcesso[];
-    pessoaJurisds: PessoaJurisd[];
+  id?: string;
+  ativo?: string;
+  nome: string;
+  cpf: string;
+  rg: string;
+  profissao: string;
+  genero: string;
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  numero: string;
+  cidade: string;
+  uf: string;
+  telefone1: string;
+  telefone2: string;
+  ramal: string;
+  email: string;
+  processos: ApensoProcesso[];
+  pessoaJurisds: PessoaJurisd[];
 }
 export interface Procurador {
   id?: string;
@@ -154,7 +170,7 @@ export interface Processo {
   apensado: string;
   interessado: string;
 }
-export interface ProcessoUpdate extends Processo{
+export interface ProcessoUpdate extends Processo {
   id?: string;
   numero: string;
   ano: string;
@@ -188,9 +204,9 @@ export interface Interessado {
   pessoa: string;
 }
 export interface InteressadoPessoa {
-  id:string;
-  interesse:string;
-  pessoa:PessoaFisica;
+  id: string;
+  interesse: string;
+  pessoa: PessoaFisica;
 }
 export interface PessoaJurisd {
   id: string;
@@ -212,14 +228,14 @@ export type ColumnConfig = {
 };
 
 export type ListData = {
-  id:string;
-  type:'processo' | 'pessoajurisd' | 'procurador' | 'relator';
-  value1:string,
-  value2:string;
-  value3:string;
-  value4:string;
-  value5:string;
-  value6:string;
+  id: string;
+  type: 'processo' | 'pessoajurisd' | 'procurador' | 'relator';
+  value1: string,
+  value2: string;
+  value3: string;
+  value4: string;
+  value5: string;
+  value6: string;
 }
 
 export type ProcessoDetails = {
@@ -231,12 +247,12 @@ export type ProcessoDetails = {
   objeto: string;
   arquivamento: string;
   advogado: PessoaFisica;
-  jurisd:Jurisd;
-  relator:Relator;
-  procurador:Procurador;
-  processoPrincipal?:string | {message:string};
-  apensados:ApensoProcessoPai[];
-  interessados:InteressadoPessoa[];
+  jurisd: Jurisd;
+  relator: Relator;
+  procurador: Procurador;
+  processoPrincipal?: string | { message: string };
+  apensados: ApensoProcessoPai[];
+  interessados: InteressadoPessoa[];
 }
 
 
