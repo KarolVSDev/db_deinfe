@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import GetDataButton from '../../../Buttons/GetDataButton';
+import InfoPaperDetails from '../../../InfoPaper/InfoPaperDetails';
 
 
 interface FormRelatorProps {
@@ -116,15 +117,7 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
                     <RegisterButton text="Registrar" />
                 </Box>
             )}
-            <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 5 }}>
-                <GetDataButton handleClick={getProccessoList} id={id} name={'Lista de Processos'} />
-            </Box>
-            <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
-                    <Typography variant='h6' sx={{ color: '#1e293b', fontWeight: 'bold' }}>Lista de Processos</Typography>
-                </Box>
-                <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
-            </Box>
+            <InfoPaperDetails arrayListData={arrayListData}/>
         </Container>
     );
 }

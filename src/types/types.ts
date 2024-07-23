@@ -98,6 +98,7 @@ export interface Procurador {
   id?: string;
   nome: string;
   ativo?: string;
+  processos?:ProcessoUpdate;
 }
 export interface Relator {
   id?: string;

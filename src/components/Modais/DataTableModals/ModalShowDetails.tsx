@@ -31,9 +31,10 @@ interface ModalShowDetailProps {
   onClose: () => void;
   Details?:ProcessoDetails | undefined;
   arrayRelation?: dataRelation;
+  arrayListData?:ListData[];
 }
 
-const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,  dataType, open, onClose, arrayRelation }) => {
+const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,  dataType, open, onClose, arrayRelation, arrayListData }) => {
 
 
   return (
@@ -62,7 +63,7 @@ const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,  dataType, 
                 <CloseIcon />
               </IconButton>
             </Box>
-            {<DataProcessoDetails dataType={dataType} Details={Details} arrayRelation={arrayRelation}/>}
+            {<DataProcessoDetails arrayListData={arrayListData} dataType={dataType} Details={Details} arrayRelation={arrayRelation}/>}
           </Box>
         </Fade>
       </Modal>

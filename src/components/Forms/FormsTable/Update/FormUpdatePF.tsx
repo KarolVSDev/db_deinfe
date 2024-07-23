@@ -17,7 +17,7 @@ import { useContextTable } from '../../../../context/TableContext';
 import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import InfoPaperPFDetails from '../../../InfoPaper/InfoPaperPFDetails';
+import InfoPaperDetails from '../../../InfoPaper/InfoPaperDetails';
 interface FormPFProps {
   id?: GridRowId;
   closeModal: () => void;
@@ -457,7 +457,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           <RegisterButton text="Atualizar" />
         </Box>
       )}    
-      <InfoPaperPFDetails pessoaRelation={pessoaRelation}/>
+      <InfoPaperDetails pessoaRelation={pessoaRelation}/>
     </Container>
   )
 }

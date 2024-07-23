@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridFooter, GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { ColumnConfig, dataRelation, ProcessoDetails } from '../../types/types';
+import { ColumnConfig, dataRelation, ListData, ProcessoDetails } from '../../types/types';
 import { interessadoHeader, apensoHeader, pessoaJurisdHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
@@ -14,18 +14,19 @@ export interface DataProcessoDetailsProps {
     dataType: string;
     Details: ProcessoDetails | undefined;
     arrayRelation: dataRelation | undefined;
+    arrayListData?: ListData[];
 }
-const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Details, arrayRelation }) => {
+const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Details, arrayRelation, arrayListData }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
     const { onDelete } = useFetchListData(Details?.id)
 
-
+    console.log(arrayListData)
     const handleDelete = (id: string, type: string) => {
         onDelete(id, type)
     }
-
+   
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
         return headers.map(header => ({
@@ -40,14 +41,12 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
     };
 
 
-
     const createRows = (data: any[]): any[] => {
         return data.map((item, index) => ({
             id: item.id,
             ...item,
         }));
     };
-
 
 
     useEffect(() => {
@@ -104,6 +103,21 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
                     dataExoneracao: formateDateToPtBr(pessoaJurisd.dataExoneracao),
                     gestor: pessoaJurisd.gestor
 
+                })))
+            }
+        } 
+        if (arrayListData) {
+            if (arrayListData[0].type === 'procurador' || arrayListData[0].type === 'relator') {
+                setColumns(createGridColumns(apensoHeader))
+                setRows(arrayListData.map(processo => ({
+                    id: processo.id,
+                    remover: <DeleteDataButton stateType={dataType} itemId={processo.id} handleDelete={handleDelete} />,
+                    numero: processo.value1,
+                    ano: processo.value2,
+                    natureza: processo.value3,
+                    exercicio: processo.value4,
+                    objeto: processo.value5,
+                    arquivamento: processo.value6
                 })))
             }
         }

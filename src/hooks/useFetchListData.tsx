@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { dataRelation, Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate } from "../types/types";
+import { dataRelation, Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate, Procurador } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
@@ -16,6 +16,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | {message:string}>()
   const [pessoaRelation, setPessoaRelation] = useState<dataRelation>()
   const {setArrayProcesso, arrayProcesso} = useContextTable();
+  const [procuradorRelation, setProcuradorRelation] = useState<Procurador>()
   
 
 
@@ -63,6 +64,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
 
   const onDelete = (id: string, type: string) => {
       api.delete(`/${type}/${id}`).then(() => {
+        console.log(type, id)
         const updatedList = arrayListData.filter(item => item.id !== id);
         const updatedList2 = arrayProcesso.filter(item => item.id !== id);
         setArrayListData(updatedList)

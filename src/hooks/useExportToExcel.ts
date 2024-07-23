@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import * as  XLSX from 'xlsx';
-import { ApensoProcessoPai, dataRelation, InteressadoPessoa, ProcessoDetails } from "../types/types";
+import { ApensoProcessoPai, dataRelation, InteressadoPessoa, ListData, ProcessoDetails } from "../types/types";
 import { formateDateToPtBr } from "./DateFormate";
 import { getEnvironmentData } from "worker_threads";
 
@@ -147,10 +147,26 @@ const useExportToExcel = () => {
             XLSX.writeFile(wb, fileName)
         }
 
-
     }, [])
 
-    return { exportToExcel, exportProcessoToExcel, exportPessoaToExcel }
+    const exportListData = useCallback((data:ListData[] | undefined, fileName:string) => {
+        if(data) {
+            const exportData = data.map(processo => ({
+                numero: processo.value1,
+                ano: processo.value2,
+                natureza: processo.value3,
+                exercicio: processo.value4,
+                objeto: processo.value5,
+                arquivamento: formateDateToPtBr(processo.value6)
+            }));
+            const processoSheet = XLSX.utils.json_to_sheet(exportData)
+            const wb = XLSX.utils.book_new()
+            XLSX.utils.book_append_sheet(wb, processoSheet, 'Processos')
+            XLSX.writeFile(wb,fileName)
+        }
+    }, [])
+
+    return { exportToExcel, exportProcessoToExcel, exportPessoaToExcel, exportListData }
 }
 
 export default useExportToExcel;
