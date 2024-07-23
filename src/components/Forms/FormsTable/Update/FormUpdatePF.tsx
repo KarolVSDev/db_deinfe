@@ -17,6 +17,7 @@ import { useContextTable } from '../../../../context/TableContext';
 import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import InfoPaperPFDetails from '../../../InfoPaper/InfoPaperPFDetails';
 interface FormPFProps {
   id?: GridRowId;
   closeModal: () => void;
@@ -30,9 +31,9 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const [openModal, setOpenModal] = useState(false)
   const { setArrayPessoaFisica } = useContextTable()
   const { setPessoaRelations, pessoaRelation } = useFetchListData(id)
-  const { exportPessoaToExcel } = useExportToExcel()
+  
 
-
+  setPessoaRelations()
   const handleClose = () => {
     setOpenModal(false)
   }
@@ -79,15 +80,10 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
     setOpenModal(true)
   }
 
-  const handleExport = () => {
-    exportPessoaToExcel(pessoaRelation, 'pessoafisica.xlsx')
-  }
-
 
   useEffect(() => {
     if (id) {
       getOnePF(id);
-      setPessoaRelations()
     }
   }, []);
 
@@ -460,26 +456,8 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
           </Grid>
           <RegisterButton text="Atualizar" />
         </Box>
-      )}
-      <Paper sx={{ bgcolor: 'white', p: 2 }}>
-        <Box >
-          <Button variant='outlined' sx={{}} onClick={() => handleModal('processo')}>Relação de Processos</Button>
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <Button variant='outlined' sx={{}} onClick={() => handleModal('pessoajurisd')}>Relação de Jurisdicionados</Button>
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }}
-            onClick={() => handleExport()}>
-            <FileDownloadIcon sx={{ pr: 1 }} /> Exportar dados
-          </Button>
-        </Box>
-      </Paper>
-      <ModalShowDetails
-        arrayRelation={pessoaRelation}
-        dataType={buttonType}
-        open={openModal}
-        onClose={handleClose} />
+      )}    
+      <InfoPaperPFDetails pessoaRelation={pessoaRelation}/>
     </Container>
   )
 }

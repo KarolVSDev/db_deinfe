@@ -2,7 +2,6 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { ProcessoDetails, ProcessoUpdate } from '../../types/types';
 import { useState } from 'react';
-import useFetchListData from '../../hooks/useFetchListData';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import ModalShowDetails from '../Modais/DataTableModals/ModalShowDetails';
@@ -38,25 +37,25 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, pro
 
     const mergeData = () => {
         if (processoDetails && processoPrincipal) {
-            let novoProcessoCompleto:ProcessoDetails;
-            if('numero' in processoPrincipal){
-                novoProcessoCompleto = {
-                    ...processoDetails, 
-                    processoPrincipal:processoPrincipal.numero
-                }
-            } else{
+            let novoProcessoCompleto: ProcessoDetails;
+            if ('numero' in processoPrincipal) {
                 novoProcessoCompleto = {
                     ...processoDetails,
-                    processoPrincipal:processoPrincipal.message
+                    processoPrincipal: processoPrincipal.numero
                 }
-            }  
+            } else {
+                novoProcessoCompleto = {
+                    ...processoDetails,
+                    processoPrincipal: processoPrincipal.message
+                }
+            }
             setProcessoCompleto(novoProcessoCompleto)
             console.log(novoProcessoCompleto)
             exportProcessoToExcel(novoProcessoCompleto, 'detalhes_do_processo.xlsx')
         }
     }
 
-    
+
     const styleChip = {
         position: 'relative',
         bottom: 0,
@@ -88,7 +87,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, pro
                                     ? processoPrincipal.message : processoPrincipal.numero
                                 }</Typography>
                             )}
-                             {processoDetails.interessados && processoDetails.interessados.length !== 0 && (
+                            {processoDetails.interessados && processoDetails.interessados.length !== 0 && (
                                 <Box sx={{ mt: 2 }}>
                                     <Button variant='outlined' onClick={() => handleModal('interessado')}>Interessados</Button>
                                 </Box>
