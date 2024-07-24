@@ -152,12 +152,17 @@ export interface Jurisd {
   ativo?: string;
   uf: string;
 }
+
+export interface jurisdRelation extends Jurisd{
+  processos:Processo[];
+  pessoaJurisds:PessoaJurisd[];
+}
 export interface Jurisd_Jurisd {
   principal: string;
   subordinado: string;
 }
 export interface Processo {
-  id?: string;
+  id: string;
   numero: string;
   ano: string;
   natureza: string;
@@ -172,7 +177,7 @@ export interface Processo {
   interessado: string;
 }
 export interface ProcessoUpdate extends Processo {
-  id?: string;
+  id: string;
   numero: string;
   ano: string;
   natureza: string;
@@ -218,17 +223,17 @@ export interface PessoaJurisd {
   normaExoneracao: string;
   dataExoneracao: string;
   gestor: string;
-  jurisd: string;
-  pessoa: string | undefined
+  jurisd?: string;
+  pessoa?: string | undefined
 }
 
-export type ColumnConfig = {
+export interface ColumnConfig  {
   id: string;
   label: string;
   minWidth: number;
 };
 
-export type ListData = {
+export interface ListData  {
   id: string;
   type: 'processo' | 'pessoajurisd' | 'procurador' | 'relator';
   value1: string,
@@ -239,7 +244,7 @@ export type ListData = {
   value6: string;
 }
 
-export type ProcessoDetails = {
+export interface ProcessoDetails  {
   id?: string;
   numero: string;
   ano: string;

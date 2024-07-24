@@ -1,14 +1,16 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { ProcessoDetails, ProcessoUpdate } from '../../types/types';
+import { jurisdRelation, ProcessoDetails, ProcessoUpdate } from '../../types/types';
 import { useState } from 'react';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import ModalShowDetails from '../Modais/DataTableModals/ModalShowDetails';
 
 interface DetailsProps {
-    processoDetails: ProcessoDetails | undefined;
-    processoPrincipal: ProcessoUpdate | { message: string } | undefined;
+    processoDetails?: ProcessoDetails | undefined;
+    processoPrincipal?: ProcessoUpdate | { message: string } | undefined;
+    jurisdDetails?:jurisdRelation;
+    jurisdPrincipal?:string | {message:string}
 }
 
 const stylePaper = {
@@ -19,7 +21,7 @@ const stylePaper = {
 };
 
 
-const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, processoPrincipal }) => {
+const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({jurisdPrincipal, processoDetails, processoPrincipal, jurisdDetails }) => {
 
     const [openModal, setOpenModal] = useState(false)
     const [buttonType, setButtonType] = useState('')
@@ -55,22 +57,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, pro
         }
     }
 
-
-    const styleChip = {
-        position: 'relative',
-        bottom: 0,
-        left: 0,
-        color: '#c23232',
-        '& .MuiChip-deleteIcon': {
-            color: '#c23232',
-            '&:hover': {
-                color: '#b12a2c',
-            },
-        },
-    };
-
-
-
+    console.log(jurisdPrincipal)
     return (
         <Box >
             {processoDetails && (
@@ -105,10 +92,41 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({ processoDetails, pro
                             </Box>
                         </Paper>
                     </Grid>
+                    <ModalShowDetails Details={processoDetails} dataType={buttonType} open={openModal} onClose={handleClose}
+                    />
                 </Grid>
             )}
-            <ModalShowDetails Details={processoDetails} dataType={buttonType} open={openModal} onClose={handleClose}
-            />
+            {jurisdDetails && (
+                  <Grid container spacing={3} sx={{ pb: 1, mt: 1 }}>
+                  <Grid item xs={12} sm={12} >
+                      <Paper sx={stylePaper} elevation={3}>
+                          <Typography variant='h6' sx={{ color: '#991b1b', fontWeight: 'bold', mb:2 }}>Detalhes da Unidade Gestora:</Typography>
+                        
+                          {jurisdPrincipal && (
+                              <Typography sx={{ fontSize: 15 }}><strong>Unidade Principal:</strong> {typeof jurisdPrincipal === 'string'? jurisdPrincipal : jurisdPrincipal.message}</Typography>
+                          )}
+                          {jurisdDetails.processos && jurisdDetails.processos.length !== 0 && (
+                              <Box sx={{ mt: 2 }}>
+                                  <Button variant='outlined' onClick={() => handleModal('processo')}>relação de processos</Button>
+                              </Box>
+                          )}
+                          {jurisdDetails.pessoaJurisds && jurisdDetails.pessoaJurisds.length !== 0 && (
+                              <Box sx={{ mt: 2 }}>
+                                  <Button variant='outlined'  onClick={() => handleModal('pessoajurisd')}>relação de Jurisdicionados</Button>
+                              </Box>
+                          )}
+                          <Box sx={{ mt: 2 }}>
+                              <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }}
+                                  onClick={mergeData}>
+                                  <FileDownloadIcon sx={{ pr: 1 }} /> Exportar dados
+                              </Button>
+                          </Box>
+                      </Paper>
+                  </Grid>
+                  <ModalShowDetails jurisdDetails={jurisdDetails} dataType={buttonType} open={openModal} onClose={handleClose}
+                    />
+              </Grid>
+            )}
         </Box>
 
     );

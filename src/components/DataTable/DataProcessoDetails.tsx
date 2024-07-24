@@ -1,30 +1,32 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridFooter, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { ColumnConfig, dataRelation, ListData, ProcessoDetails } from '../../types/types';
+import { ColumnConfig, dataRelation, jurisdRelation, ListData, ProcessoDetails } from '../../types/types';
 import { interessadoHeader, apensoHeader, pessoaJurisdHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
-import { Button, Divider, Typography } from '@mui/material';
 import useFetchListData from '../../hooks/useFetchListData';
 import { formateDateToPtBr } from '../../hooks/DateFormate';
 
 
 export interface DataProcessoDetailsProps {
     dataType: string;
-    Details: ProcessoDetails | undefined;
-    arrayRelation: dataRelation | undefined;
+    Details?: ProcessoDetails | undefined;
+    arrayRelation?: dataRelation | undefined;
     arrayListData?: ListData[];
+    jursidDetails?:jurisdRelation | undefined;
 }
-const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Details, arrayRelation, arrayListData }) => {
+const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Details, arrayRelation, arrayListData, jursidDetails }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
     const { onDelete } = useFetchListData(Details?.id)
 
-    console.log(arrayListData)
+    console.log(jursidDetails)
     const handleDelete = (id: string, type: string) => {
-        onDelete(id, type)
+        if(id){
+            onDelete(id, type)
+        }
     }
    
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
@@ -87,12 +89,36 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
                     objeto: processo.objeto,
                     arquivamento: formateDateToPtBr(processo.arquivamento)
                 })));
-
+            } else if(jursidDetails?.processos) {
+                setRows(jursidDetails.processos.map(processo => ({
+                    id: processo.id,
+                    remover: <DeleteDataButton stateType={dataType} itemId={processo.id} handleDelete={handleDelete} />,
+                    numero: processo.numero,
+                    ano: processo.ano,
+                    natureza: processo.natureza,
+                    exercicio: processo.exercicio,
+                    objeto: processo.objeto,
+                    arquivamento: formateDateToPtBr(processo.arquivamento)
+                })));
             }
+
         } else if (dataType === "pessoajurisd") {
             setColumns(createGridColumns(pessoaJurisdHeader));
             if (arrayRelation?.pessoaJurisds) {
                 setRows(arrayRelation.pessoaJurisds.map(pessoaJurisd => ({
+                    id: pessoaJurisd.id,
+                    remover: <DeleteDataButton stateType={dataType} itemId={pessoaJurisd.id} handleDelete={handleDelete} />,
+                    cargo: pessoaJurisd.cargo,
+                    mandato: pessoaJurisd.mandato,
+                    normaNomeacao: pessoaJurisd.normaNomeacao,
+                    dataNomeacao: formateDateToPtBr(pessoaJurisd.dataNomeacao),
+                    normaExoneracao: pessoaJurisd.normaExoneracao,
+                    dataExoneracao: formateDateToPtBr(pessoaJurisd.dataExoneracao),
+                    gestor: pessoaJurisd.gestor
+
+                })))
+            } else if(jursidDetails?.pessoaJurisds) {
+                setRows(jursidDetails.pessoaJurisds.map(pessoaJurisd => ({
                     id: pessoaJurisd.id,
                     remover: <DeleteDataButton stateType={dataType} itemId={pessoaJurisd.id} handleDelete={handleDelete} />,
                     cargo: pessoaJurisd.cargo,

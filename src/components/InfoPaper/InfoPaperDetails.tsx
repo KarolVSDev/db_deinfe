@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { dataRelation, ListData, ProcessoDetails, ProcessoUpdate } from '../../types/types';
+import { dataRelation, ListData } from '../../types/types';
 import { useState } from 'react';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import useExportToExcel from '../../hooks/useExportToExcel';
@@ -38,19 +38,6 @@ const InfoPaperDetails: React.FC<DetailsProps> = ({ pessoaRelation, arrayListDat
         exportPessoaToExcel(pessoaRelation, 'pessoafisica.xlsx')
         exportListData(arrayListData, 'Processos.xlsx')
     }
-
-    const styleChip = {
-        position: 'relative',
-        bottom: 0,
-        left: 0,
-        color: '#c23232',
-        '& .MuiChip-deleteIcon': {
-            color: '#c23232',
-            '&:hover': {
-                color: '#b12a2c',
-            },
-        },
-    };
 
     return (
         <Box>

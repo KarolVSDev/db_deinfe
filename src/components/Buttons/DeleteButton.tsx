@@ -1,7 +1,6 @@
 import { Button, styled } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ProcessoDetails } from '../../types/types';
 interface buttonInterface {
     stateType: string;
     handleDelete: (type: string, id: string) => void;

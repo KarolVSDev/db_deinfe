@@ -18,6 +18,7 @@ import FormJurisd_Jurisd from '../Register/FormJurisd_Jurisd';
 import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import GetDataButton from '../../../Buttons/GetDataButton';
+import InfoPaperProcessoDetails from '../../../InfoPaper/InfoPaperProcessoDetails';
 
 
 interface FormJurisdProps {
@@ -30,11 +31,10 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
     const { setArrayJurisd } = useContextTable()
-    const { arrayListData, onDelete, getProcessoByJurisd,getPessoaJByJurisd } = useFetchListData(id)
-    const [buttonType] = useState<string>('processo')
+    const { onDelete, setJurisdRelations, jurisdRelation, jurisdPrincipal } = useFetchListData(id)
 
-
-
+    setJurisdRelations()
+    console.log(jurisdPrincipal)
     const handleDelete = (id: string, type: string) => {
         onDelete(id, type)
     }
@@ -74,13 +74,6 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
         })
     }
     
-    const getProccessoList = async () => {
-        await getProcessoByJurisd(id)
-    }
-
-    const getJurisdList = async () => {
-        await getPessoaJByJurisd()
-    }
     
     useEffect(() => {
         if (id) {
@@ -579,15 +572,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                     <FormJurisd_Jurisd />
                 </InnerAccordion>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 5 }}>
-                <GetDataButton handleClick={getProccessoList} id={id} name={'Lista de Processos'} />
-                <GetDataButton handleClick={getJurisdList} id={id} name={'Lista de Jurisdicionados'} />
-            </Box>
-            <Box sx={{ border: '1px solid #ccc', mt: 2, p: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'start', gap: 1 }} >
-                </Box>
-                <InfoPaperProcessos arrayData={arrayListData} handleDelete={handleDelete} stateType={buttonType} />
-            </Box>
+            <InfoPaperProcessoDetails jurisdDetails={jurisdRelation} jurisdPrincipal={jurisdPrincipal} />
         </Container>
     )
 }

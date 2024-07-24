@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { dataRelation, Interessado, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate, Procurador } from "../types/types";
+import { dataRelation, Interessado, jurisdRelation, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate, Procurador } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
@@ -14,9 +14,10 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
   const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
   const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | {message:string}>()
+  const [jurisdPrincipal, setJurisdPrincipal] = useState<string | {message:string}>()
   const [pessoaRelation, setPessoaRelation] = useState<dataRelation>()
+  const [jurisdRelation, setJurisdRelation] = useState<jurisdRelation>()
   const {setArrayProcesso, arrayProcesso} = useContextTable();
-  const [procuradorRelation, setProcuradorRelation] = useState<Procurador>()
   
 
 
@@ -159,6 +160,10 @@ const useFetchListData = (id: GridRowId | undefined) => {
     const processoPrincipal = await api.get(`/apenso/apensado/${id}`);
       return processoPrincipal.data
   }
+  const getJurisdPrincipal = async (id: GridRowId | undefined) => {
+    const jurisdPrincipal = await api.get(`/jurisd-jurisd/subordinado/${id}`);
+      return setJurisdPrincipal(jurisdPrincipal.data)
+  }
 
   const getOneProcessoDetails = async (id: GridRowId | undefined) => {
     try {
@@ -183,8 +188,16 @@ const useFetchListData = (id: GridRowId | undefined) => {
       TypeAlert(`Erro ao fazer relação ${error}`, 'error')
     })
   }
+  const setJurisdRelations = async () => {
+    await api.get(`/jurisd/relations/${id}`).then(response => {
+      const jurisdrelations = response.data;
+      setJurisdRelation(jurisdrelations)
+    }
+    ).catch((error: any) => {
+      TypeAlert(`Erro ao fazer relação ${error}`, 'error')
+    })
+  }
 
-  
 
   useEffect(() => {
     if (id) {
@@ -196,6 +209,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       getProcessoByProc(id)
       getProcessoByRelator(id)
       getOneProcessoDetails(id)
+      getJurisdPrincipal(id)
     }
   }, [id])
 
@@ -204,6 +218,8 @@ const useFetchListData = (id: GridRowId | undefined) => {
     processoDetails,
     processoPrincipal,
     pessoaRelation,
+    jurisdRelation,
+    jurisdPrincipal,
     getIntByPessoa,
     getJurisdByPessoa,
     getPessoaJByJurisd,
@@ -214,7 +230,9 @@ const useFetchListData = (id: GridRowId | undefined) => {
     getProcessoByProc,
     getProcessoByRelator,
     getOneProcessoDetails,
-    setPessoaRelations
+    setPessoaRelations,
+    setJurisdRelations,
+    getJurisdPrincipal
   }
 
 
