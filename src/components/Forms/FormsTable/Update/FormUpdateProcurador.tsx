@@ -1,4 +1,4 @@
-import { Box, Grid, Autocomplete, TextField, Typography, Container } from '@mui/material';
+import { Box, Grid, TextField, Typography, Container } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { Procurador } from '../../../../types/types';
@@ -7,9 +7,7 @@ import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import useFetchListData from '../../../../hooks/useFetchListData';
-import GetDataButton from '../../../Buttons/GetDataButton';
 import InfoPaperDetails from '../../../InfoPaper/InfoPaperDetails';
 
 interface FormProcProps {

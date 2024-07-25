@@ -66,28 +66,29 @@ export default function SignInSide() {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item 
-          xs={12} 
-          sm={8} 
-          md={5} 
-          component={Paper} 
-          elevation={6}  
+        <Grid item
+          xs={12}
+          sm={8}
+          md={5}
+          component={Paper}
+          elevation={6}
           square
           sx={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: { xs: 2, sm: 3, md: 4 }}}>
+            padding: { xs: 2, sm: 3, md: 4 }
+          }}>
           <Box
-           sx={{
-            my: 8,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%', 
-            maxWidth: '400px', 
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              maxWidth: '400px',
 
             }}
           >
@@ -97,7 +98,7 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Entrar
             </Typography>
-            <Box component="form" name='signinForm' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, flex: 'col', display: 'flex', flexDirection: 'column', alignItems: 'start', width:'100%', height:'100%' }}>
+            <Box component="form" name='signinForm' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, flex: 'col', display: 'flex', flexDirection: 'column', alignItems: 'start', width: '100%', height: '100%' }}>
               <TextField
                 margin="normal"
                 fullWidth

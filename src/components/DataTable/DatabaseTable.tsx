@@ -26,7 +26,7 @@ import * as XLSX from 'xlsx';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdatePF';
+import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdateForms';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';

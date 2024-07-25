@@ -1,9 +1,9 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import * as  XLSX from 'xlsx';
-import { ApensoProcessoPai, dataRelation, InteressadoPessoa, ListData, ProcessoDetails } from "../types/types";
+import { ApensoProcesso, ApensoProcessoPai, dataRelation, InteressadoPessoa, jurisdRelation, ListData, PessoaJurisd, ProcessoDetails } from "../types/types";
 import { formateDateToPtBr } from "./DateFormate";
-import { getEnvironmentData } from "worker_threads";
+
 
 interface GridState {
     columns: GridColDef[];
@@ -24,7 +24,7 @@ const useExportToExcel = () => {
         XLSX.writeFile(wb, fileName)
     }
 
-    const exportProcessoToExcel = useCallback((data: ProcessoDetails, fileName: string = 'export.xlsx') => {
+    const exportProcessoToExcel = useCallback((data: ProcessoDetails, fileName: string) => {
         const exportData = {
             numero: data.numero,
             ano: data.ano,
@@ -89,6 +89,72 @@ const useExportToExcel = () => {
         XLSX.writeFile(wb, fileName);
     }, []);
 
+    const exportJurisdToExcel = useCallback((data: jurisdRelation, fileName: string) => {
+        const exportData = {
+            nome: data.nome,
+            sigla: data.sigla,
+            cnpj: data.cnpj,
+            ug: data.ug,
+            cep: data.cep,
+            logradouro: data.logradouro,
+            complemento: data.complemento,
+            numero: data.numero,
+            cidade: data.cidade,
+            uf: data.uf,
+            telefone1: data.telefone1,
+            telefone2: data.telefone2,
+            email: data.email,
+            site: data.site,
+            cargoGestor: data.cargoGestor,
+            normaCriacao: data.normaCriacao,
+            dataCriacao: formateDateToPtBr(data.dataCriacao),
+            normaExtincao: data.normaExtincao,
+            dataExtincao: formateDateToPtBr(data.dataExtincao),
+            poder: data.poder,
+            ativo: data.ativo,
+            jurisdPrincipal:data.jurisdPrincipal
+        };
+
+        // Criar planilha principal
+        const mainSheet = XLSX.utils.json_to_sheet([exportData]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, mainSheet, 'Unidade Gestora');
+
+        // Criar planilha para processos
+        if (data.processos && data.processos.length > 0) {
+            const processosData = data.processos.map((processo: ApensoProcesso) => ({
+                numero: processo.numero,
+                ano: processo.ano,
+                natureza: processo.natureza,
+                exercicio: processo.exercicio,
+                objeto: processo.objeto,
+                arquivamento: formateDateToPtBr(processo.arquivamento),
+            }));
+
+            const apensadosSheet = XLSX.utils.json_to_sheet(processosData);
+            XLSX.utils.book_append_sheet(wb, apensadosSheet, 'Processos');
+        }
+
+        // Criar planilha para jurisdicionados
+        if (data.pessoaJurisds && data.pessoaJurisds.length > 0) {
+            const pessoaJurisdsData = data.pessoaJurisds.map((jurisdicionado: PessoaJurisd) => ({
+                cargo: jurisdicionado.cargo,
+                mandato: jurisdicionado.mandato,
+                normaNomeacao: jurisdicionado.normaNomeacao,
+                dataNomeacao: formateDateToPtBr(jurisdicionado.dataNomeacao),
+                normaExoneracao: jurisdicionado.normaExoneracao,
+                dataExoneracao:formateDateToPtBr(jurisdicionado.dataExoneracao),
+                gestor: jurisdicionado.gestor,
+            }));
+
+            const interessadosSheet = XLSX.utils.json_to_sheet(pessoaJurisdsData);
+            XLSX.utils.book_append_sheet(wb, interessadosSheet, 'Jurisdicionados');
+        }
+
+        // Escrever o arquivo
+        XLSX.writeFile(wb, fileName);
+    }, []);
+
     const exportPessoaToExcel = useCallback((data: dataRelation | undefined, fileName: string) => {
         if (data) {
             const exportData = {
@@ -113,8 +179,8 @@ const useExportToExcel = () => {
             const mainSheet = XLSX.utils.json_to_sheet([exportData])
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, mainSheet, 'Pessoa Física')
-            
-            
+
+
             if (data.processos && data.processos.length > 0) {
                 const processosData = data.processos.map(processo => ({
                     numero: processo.numero,
@@ -124,24 +190,24 @@ const useExportToExcel = () => {
                     objeto: processo.objeto,
                     arquivamento: formateDateToPtBr(processo.arquivamento)
                 }))
-                
+
                 const processosSheet = XLSX.utils.json_to_sheet(processosData)
-                XLSX.utils.book_append_sheet(wb, processosSheet, 'Processos' )
+                XLSX.utils.book_append_sheet(wb, processosSheet, 'Processos')
             }
 
             if (data.pessoaJurisds && data.pessoaJurisds.length > 0) {
                 const pessoaJurisdsData = data.pessoaJurisds.map(pessoaJurisd => ({
-                    cargo:pessoaJurisd.cargo,
+                    cargo: pessoaJurisd.cargo,
                     ano: pessoaJurisd.mandato,
                     normaNomeacao: pessoaJurisd.normaNomeacao,
                     dataNomeacao: formateDateToPtBr(pessoaJurisd.dataNomeacao),
                     normaExoneracao: pessoaJurisd.normaExoneracao,
                     dataExoneracao: formateDateToPtBr(pessoaJurisd.dataExoneracao),
-                    gestor:pessoaJurisd.gestor
+                    gestor: pessoaJurisd.gestor
                 }))
-                
-                const pessoaJurisdsSheet = XLSX.utils.json_to_sheet(pessoaJurisdsData)  
-                XLSX.utils.book_append_sheet(wb, pessoaJurisdsSheet, 'Pessoa Jurisdicionada' )
+
+                const pessoaJurisdsSheet = XLSX.utils.json_to_sheet(pessoaJurisdsData)
+                XLSX.utils.book_append_sheet(wb, pessoaJurisdsSheet, 'Pessoa Jurisdicionada')
             }
 
             XLSX.writeFile(wb, fileName)
@@ -149,8 +215,8 @@ const useExportToExcel = () => {
 
     }, [])
 
-    const exportListData = useCallback((data:ListData[] | undefined, fileName:string) => {
-        if(data) {
+    const exportListData = useCallback((data: ListData[] | undefined, fileName: string) => {
+        if (data) {
             const exportData = data.map(processo => ({
                 numero: processo.value1,
                 ano: processo.value2,
@@ -162,11 +228,11 @@ const useExportToExcel = () => {
             const processoSheet = XLSX.utils.json_to_sheet(exportData)
             const wb = XLSX.utils.book_new()
             XLSX.utils.book_append_sheet(wb, processoSheet, 'Processos')
-            XLSX.writeFile(wb,fileName)
+            XLSX.writeFile(wb, fileName)
         }
     }, [])
 
-    return { exportToExcel, exportProcessoToExcel, exportPessoaToExcel, exportListData }
+    return { exportToExcel, exportProcessoToExcel, exportPessoaToExcel, exportListData, exportJurisdToExcel }
 }
 
 export default useExportToExcel;

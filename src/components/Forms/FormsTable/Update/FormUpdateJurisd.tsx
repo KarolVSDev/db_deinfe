@@ -15,10 +15,9 @@ import { useEffect, useState } from 'react';
 import { useContextTable } from '../../../../context/TableContext';
 import InnerAccordion from '../../../Accordion/InnerAccordion';
 import FormJurisd_Jurisd from '../Register/FormJurisd_Jurisd';
-import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
 import useFetchListData from '../../../../hooks/useFetchListData';
-import GetDataButton from '../../../Buttons/GetDataButton';
 import InfoPaperProcessoDetails from '../../../InfoPaper/InfoPaperProcessoDetails';
+
 
 
 interface FormJurisdProps {
@@ -31,13 +30,9 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
     const { setArrayJurisd } = useContextTable()
-    const { onDelete, setJurisdRelations, jurisdRelation, jurisdPrincipal } = useFetchListData(id)
+    const { setJurisdRelations, jurisdRelation, jurisdPrincipal } = useFetchListData(id)
 
     setJurisdRelations()
-    console.log(jurisdPrincipal)
-    const handleDelete = (id: string, type: string) => {
-        onDelete(id, type)
-    }
 
     const getOneJurisd = async (id: GridRowId | undefined) => {
         try {

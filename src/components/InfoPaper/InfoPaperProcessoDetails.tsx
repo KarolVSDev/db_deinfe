@@ -26,7 +26,7 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({jurisdPrincipal, proc
     const [openModal, setOpenModal] = useState(false)
     const [buttonType, setButtonType] = useState('')
     const [processoCompleto, setProcessoCompleto] = useState<ProcessoDetails>()
-    const { exportProcessoToExcel } = useExportToExcel()
+    const { exportProcessoToExcel, exportJurisdToExcel } = useExportToExcel()
 
     const handleModal = (valueButton: string) => {
         setButtonType(valueButton)
@@ -52,12 +52,26 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({jurisdPrincipal, proc
                 }
             }
             setProcessoCompleto(novoProcessoCompleto)
-            console.log(novoProcessoCompleto)
             exportProcessoToExcel(novoProcessoCompleto, 'detalhes_do_processo.xlsx')
+        }
+
+        if(jurisdDetails && jurisdPrincipal) {
+            let jurisdCompleto:jurisdRelation;
+            if(typeof jurisdPrincipal === 'string'){
+                jurisdCompleto = {
+                    ...jurisdDetails,
+                    jurisdPrincipal
+                }
+            }else {
+                jurisdCompleto = {
+                    ...jurisdDetails,
+                    jurisdPrincipal
+                }
+            }
+            exportJurisdToExcel(jurisdCompleto, 'UgData.xlsx')
         }
     }
 
-    console.log(jurisdPrincipal)
     return (
         <Box >
             {processoDetails && (

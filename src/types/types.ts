@@ -151,6 +151,7 @@ export interface Jurisd {
   poder: string;
   ativo?: string;
   uf: string;
+  jurisdPrincipal?:string | {message:string}
 }
 
 export interface jurisdRelation extends Jurisd{
