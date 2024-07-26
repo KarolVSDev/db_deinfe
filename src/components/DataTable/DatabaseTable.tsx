@@ -30,13 +30,15 @@ import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdateForms';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
-import {formateDateToPtBr} from '../../hooks/DateFormate';
+import { formateDateToPtBr } from '../../hooks/DateFormate';
 import useExportToExcel from '../../hooks/useExportToExcel';
+
 
 
 export default function DatabaseTable() {
 
   const [dataType, setDataType] = useState('pesquisa');
+  const [achadosType, setAchadosType] = useState('')
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
@@ -44,7 +46,7 @@ export default function DatabaseTable() {
     setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, setArrayProcurador, setArrayRelator } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
-  const {exportToExcel} = useExportToExcel()
+  const { exportToExcel } = useExportToExcel()
 
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
@@ -100,9 +102,12 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(relatorHeader));
         setRows(createRows(arrayRelator))
         break;
-      case 'nat-achado':
+      case 'achados':
         setColumns(createGridColumns(natAchadoHeader));
-        setRows(createRows(arrayNatAchado))
+        if (dataType === 'nat-achados') {
+          console.log(dataType)
+          setRows(createRows(arrayNatAchado))
+        }
         break
       default:
         setColumns([]);
@@ -133,7 +138,14 @@ export default function DatabaseTable() {
     { value: 'processo', string: 'Processo' },
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
-    { value: 'nat-achado', string: 'Natureza do Achado' },
+    { value: 'achados', string: 'Achados' },
+  ]
+
+  const optionAchados = [
+    { value: 'nat-achados', string: 'Natureza do Achado' },
+    { value: 'area-achados', string: 'Area do Achado' },
+    { value: 'div-achados', string: 'Divisão do Achado' },
+    { value: 'achado', string: 'Achado' },
   ]
 
 
@@ -195,7 +207,7 @@ export default function DatabaseTable() {
       default:
         break;
     }
-  }, [ arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
+  }, [arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
 
 
   return (
@@ -209,9 +221,20 @@ export default function DatabaseTable() {
           Base de dados Secex
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height: '48px' }}>
-          <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px', }}>
+          <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
             {optionsSelect.map((option) => (
-              <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>{option.string}</MenuItem>
+              <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>
+                {option.string}
+                {option.value === 'achados' && (
+                  <Select value={achadosType} onChange={handleDataTypeChange}>
+                    {optionAchados.map(optionAchado => (
+                      <MenuItem>
+                        {optionAchado.string}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              </MenuItem>
             ))}
           </Select>
           <ModalAddData />
@@ -225,7 +248,7 @@ export default function DatabaseTable() {
           </Box>
           {selectedRow !== null && (
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-              <IconButton color='primary'  onClick={() => handleUpdate(selectedRow)}>
+              <IconButton color='primary' onClick={() => handleUpdate(selectedRow)}>
                 <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
               </IconButton>
               <IconButton color='error' onClick={() => handleDelete(selectedRow, dataType)}>

@@ -8,8 +8,6 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
-import InfoPaperProcessos from '../../../InfoPaper/InfoPaperProcessos';
-import GetDataButton from '../../../Buttons/GetDataButton';
 import InfoPaperDetails from '../../../InfoPaper/InfoPaperDetails';
 
 
@@ -19,11 +17,10 @@ interface FormRelatorProps {
 }
 
 const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<Relator>({});
+    const { register, handleSubmit, formState: { errors } } = useForm<Relator>({});
     const { setArrayRelator } = useContextTable()
     const [relator, setRelator] = useState<Relator>()
-    const { getProcessoByRelator, arrayListData, onDelete } = useFetchListData(id)
-    const [buttonType, setButtonType] = useState<string>('processo')
+    const {  arrayListData } = useFetchListData(id)
 
 
     const getOneRelator = async (id: GridRowId) => {
@@ -51,13 +48,6 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
         });
     };
 
-    const handleDelete = (id: string, type: string) => {
-        onDelete(id, type);
-    }
-
-    const getProccessoList = async () => {
-        await  getProcessoByRelator(id)
-    }
 
     useEffect(() => {
         if (id) {
