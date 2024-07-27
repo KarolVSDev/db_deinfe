@@ -157,6 +157,7 @@ export interface Jurisd {
 export interface jurisdRelation extends Jurisd{
   processos:Processo[];
   pessoaJurisds:PessoaJurisd[];
+  jurisdJurisds:{id:string, subordinado:Jurisd}[];
 }
 export interface Jurisd_Jurisd {
   principal: string;

@@ -14,13 +14,14 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 800,
+  width: 'fit-content',
+  maxWidth:1400,
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
   p: 4,
   overflowY: 'auto',
-  height: '95vh',
+  height: 'fit-content',
   scrollbarWidth: 'thin',
   background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };

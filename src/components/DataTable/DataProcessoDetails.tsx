@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { ColumnConfig, dataRelation, jurisdRelation, ListData, ProcessoDetails } from '../../types/types';
-import { interessadoHeader, apensoHeader, pessoaJurisdHeader } from '../../service/columns';
+import { interessadoHeader, apensoHeader, pessoaJurisdHeader, jurisdHeader, juridJurisdHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
 import useFetchListData from '../../hooks/useFetchListData';
@@ -131,7 +131,15 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
 
                 })))
             }
-        } 
+        } else if(dataType === 'jurisd-jurisd'){
+            setColumns(createGridColumns(juridJurisdHeader));
+            if(jursidDetails?.jurisdJurisds){
+                setRows(jursidDetails.jurisdJurisds.map(objeto => ({
+                    id:objeto.id,
+                    remover:<DeleteDataButton stateType={dataType} itemId={objeto.id} handleDelete={handleDelete} />,
+                })))
+            }
+        }
         if (arrayListData) {
             if (arrayListData[0].type === 'procurador' || arrayListData[0].type === 'relator') {
                 setColumns(createGridColumns(apensoHeader))

@@ -23,6 +23,7 @@ interface TableContextType {
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
     setArrayProcurador: Dispatch<SetStateAction<Procurador[]>>;
     setArrayRelator: Dispatch<SetStateAction<Relator[]>>;
+    setArrayNatAchado: Dispatch<SetStateAction<NatAchado[]>>;
     getAllNatAchado: () => void;
     getAllAreaAchado: () => void;
     getAllDivAchado: () => void;
@@ -129,15 +130,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     };
 
-    const getAllApenso = async () => {
-        try {
-            const response = await api.get('/apenso');
-            setArrayApenso(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    };
-
     const getAllNatAchado = async () => {
         try {
             const response = await api.get('/nat-achado');
@@ -184,16 +176,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         }
     };
 
-    const getIntByPessoa = async (id: any) => {
-        try {
-            const response = await api.get(`/interessado/pessoa/${id}`)
-            setArrayInteressados(response.data)
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    }
-
-
     useEffect(() => {
         getAllJurisd()
         getAllPessoaFisica()
@@ -232,6 +214,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setArrayProcesso,
             setArrayRelator,
             setArrayProcurador,
+            setArrayNatAchado,
             getAllNatAchado,
             getAllAreaAchado,
             getAllDivAchado,

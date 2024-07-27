@@ -90,6 +90,30 @@ export const jurisdHeader = [
     {id:'ativo', label:'Ativo', minWidth:150},
 ]
 
+
+export const juridJurisdHeader = [
+    {id:'remover', label:'Remover', minWidth:150},
+    {id:'nome', label:'Nome', minWidth:150},
+    {id:'sigla', label:'Sigla', minWidth:150},
+    {id:'cnpj', label:'CNPJ', minWidth:150},
+    {id:'ug', label:'UG', minWidth:150},
+    {id:'cep', label:'CEP', minWidth:150},
+    {id:'logradouro', label:'Logradouro', minWidth:150},
+    {id:'complemento', label:'Complemento', minWidth:150},
+    {id:'numero', label:'Número', minWidth:150},
+    {id:'cidade', label:'Ciade', minWidth:150},
+    {id:'telefone1', label:'Telefone1', minWidth:150},
+    {id:'telefone2', label:'Telefone2', minWidth:150},
+    {id:'email', label:'E-mail', minWidth:150},
+    {id:'site', label:'Site', minWidth:150},
+    {id:'cargoGestor', label:'Cargo Gestor', minWidth:150},
+    {id:'normaCriacao', label:'Norma Criação', minWidth:150},
+    {id:'dataCriacao', label:'Data Criação', minWidth:150},
+    {id:'normaExtincao', label:'Norma Extinção', minWidth:150},
+    {id:'dataExtincao', label:'Data Extinção', minWidth:150},
+    {id:'poder', label:'Poder', minWidth:150},
+    {id:'ativo', label:'Ativo', minWidth:150},
+]
 export const processoHeader = [
     {id:'numero', label:'Número', minWidth:150},
     {id:'ano', label:'Ano', minWidth:150},

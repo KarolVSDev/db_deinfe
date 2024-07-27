@@ -15,7 +15,7 @@ const FormJurisd_Jurisd = () => {
       TypeAlert(response.data.message, 'success');
     }).catch((error) => {
       console.log(error)
-      TypeAlert(error.response.data.message, 'warning');
+      TypeAlert(error.response.data.message, 'error');
     });
   };
 

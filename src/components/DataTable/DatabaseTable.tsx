@@ -22,7 +22,6 @@ import {
   arrayRelationsHeader
 } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
-import * as XLSX from 'xlsx';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -38,12 +37,12 @@ import useExportToExcel from '../../hooks/useExportToExcel';
 export default function DatabaseTable() {
 
   const [dataType, setDataType] = useState('pesquisa');
-  const [achadosType, setAchadosType] = useState('')
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
     arrayProcurador, arrayRelator, handleLocalization, arrayNatAchado,
-    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso, setArrayProcurador, setArrayRelator } = useContextTable();
+    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso,
+    setArrayProcurador, setArrayRelator, setArrayNatAchado } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
@@ -102,12 +101,9 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(relatorHeader));
         setRows(createRows(arrayRelator))
         break;
-      case 'achados':
+      case 'nat-achado':
         setColumns(createGridColumns(natAchadoHeader));
-        if (dataType === 'nat-achados') {
-          console.log(dataType)
-          setRows(createRows(arrayNatAchado))
-        }
+        setRows(createRows(arrayNatAchado))
         break
       default:
         setColumns([]);
@@ -139,13 +135,9 @@ export default function DatabaseTable() {
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
     { value: 'achados', string: 'Achados' },
-  ]
-
-  const optionAchados = [
-    { value: 'nat-achados', string: 'Natureza do Achado' },
-    { value: 'area-achados', string: 'Area do Achado' },
-    { value: 'div-achados', string: 'Divisão do Achado' },
-    { value: 'achado', string: 'Achado' },
+    { value: 'div-achados', string: 'Divisão dos Achados' },
+    { value: 'area-achados', string: 'Área dos Achados' },
+    { value: 'nat-achado', string: 'Natureza dos Achados' },
   ]
 
 
@@ -177,6 +169,9 @@ export default function DatabaseTable() {
           break;
         case 'relator':
           setArrayRelator(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
+        case 'nat-achado':
+          setArrayNatAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
           break;
         default:
           break;
@@ -225,15 +220,6 @@ export default function DatabaseTable() {
             {optionsSelect.map((option) => (
               <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>
                 {option.string}
-                {option.value === 'achados' && (
-                  <Select value={achadosType} onChange={handleDataTypeChange}>
-                    {optionAchados.map(optionAchado => (
-                      <MenuItem>
-                        {optionAchado.string}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
               </MenuItem>
             ))}
           </Select>

@@ -124,6 +124,11 @@ const InfoPaperProcessoDetails: React.FC<DetailsProps> = ({jurisdPrincipal, proc
                                   <Button variant='outlined' onClick={() => handleModal('processo')}>relação de processos</Button>
                               </Box>
                           )}
+                          {jurisdDetails.jurisdJurisds && jurisdDetails.jurisdJurisds.length !== 0 && (
+                              <Box sx={{ mt: 2 }}>
+                                  <Button variant='outlined' onClick={() => handleModal('jurisd-jurisd')}>Relação de Subordinados</Button>
+                              </Box>
+                          )}
                           {jurisdDetails.pessoaJurisds && jurisdDetails.pessoaJurisds.length !== 0 && (
                               <Box sx={{ mt: 2 }}>
                                   <Button variant='outlined'  onClick={() => handleModal('pessoajurisd')}>relação de Jurisdicionados</Button>
