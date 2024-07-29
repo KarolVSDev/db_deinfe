@@ -9,14 +9,15 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormAreaAchado = () => {
     const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<AreaAchado>({});
-    const { arrayNatAchado, getAllAreaAchado} = useContextTable();
+    const {arrayNatAchado, setArrayAreaAchado} = useContextTable();
 
     const onSubmit = (data: AreaAchado) => {
         api.post('/area-achado', data).then(response => {
+            const newAreaAchado = response.data.areaAchado;
             TypeAlert(response.data.message, 'success');
             reset();
-            getAllAreaAchado()
             setValue('natureza', null);
+            setArrayAreaAchado(prevArray => [...prevArray, newAreaAchado])
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
             setValue('natureza', null);

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState, useReducer } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
 import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate, Achado } from "../types/types";
@@ -14,6 +14,7 @@ interface TableContextType {
     arrayNatAchado: NatAchado[];
     arrayAreaAchado: AreaAchado[];
     arrayDivAchado: DivAchado[];
+    arrayAchado:Achado[];
     arrayRelations: PessoaFisica[];
     arrayRelationpp: Interessado[];
     arrayInteressados: Interessado[];
@@ -24,10 +25,9 @@ interface TableContextType {
     setArrayProcurador: Dispatch<SetStateAction<Procurador[]>>;
     setArrayRelator: Dispatch<SetStateAction<Relator[]>>;
     setArrayNatAchado: Dispatch<SetStateAction<NatAchado[]>>;
-    getAllNatAchado: () => void;
-    getAllAreaAchado: () => void;
-    getAllDivAchado: () => void;
-    getAllAchados: () => void;
+    setArrayAreaAchado: Dispatch<SetStateAction<AreaAchado[]>>;
+    setArrayDivAchado: Dispatch<SetStateAction<DivAchado[]>>;
+    setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
 }
 
 interface Props {
@@ -205,6 +205,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayNatAchado,
             arrayAreaAchado,
             arrayDivAchado,
+            arrayAchado,
             arrayRelations,
             arrayRelationpp,
             arrayInteressados,
@@ -215,10 +216,9 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setArrayRelator,
             setArrayProcurador,
             setArrayNatAchado,
-            getAllNatAchado,
-            getAllAreaAchado,
-            getAllDivAchado,
-            getAllAchados,
+            setArrayAreaAchado,
+            setArrayDivAchado,
+            setArrayAchado,
         }}>
             {children}
         </TableContext.Provider>

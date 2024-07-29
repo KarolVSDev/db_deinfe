@@ -65,7 +65,11 @@ const useFetchListData = (id: GridRowId | undefined) => {
 
   const onDelete = (id: string, type: string) => {
       api.delete(`/${type}/${id}`).then(() => {
-        console.log(type, id)
+        if(type === 'apenso' || type === 'jurisd-jurisd'){
+          TypeAlert('Relação removida', 'success')
+        }else{
+          TypeAlert('Dado removido', 'success')
+        }
         const updatedList = arrayListData.filter(item => item.id !== id);
         const updatedList2 = arrayProcesso.filter(item => item.id !== id);
         setArrayListData(updatedList)
@@ -160,6 +164,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     const processoPrincipal = await api.get(`/apenso/apensado/${id}`);
       return processoPrincipal.data
   }
+  
   const getJurisdPrincipal = async (id: GridRowId | undefined) => {
     const jurisdPrincipal = await api.get(`/jurisd-jurisd/subordinado/${id}`);
       return setJurisdPrincipal(jurisdPrincipal.data)
@@ -188,6 +193,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       TypeAlert(`Erro ao fazer relação ${error}`, 'error')
     })
   }
+
   const setJurisdRelations = async () => {
     await api.get(`/jurisd/relations/${id}`).then(response => {
       const jurisdrelations = response.data;
@@ -196,6 +202,10 @@ const useFetchListData = (id: GridRowId | undefined) => {
     ).catch((error: any) => {
       TypeAlert(`Erro ao fazer relação ${error}`, 'error')
     })
+  }
+
+  const setAchadoReation = async () => {
+    
   }
 
 

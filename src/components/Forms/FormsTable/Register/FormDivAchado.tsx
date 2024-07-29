@@ -9,12 +9,13 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormDivAchado = () => {
     const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<DivAchado>({});
-    const { arrayAreaAchado, getAllDivAchado } = useContextTable()
+    const { arrayAreaAchado, setArrayDivAchado } = useContextTable()
     const onSubmit = (data: DivAchado) => {
         api.post('/div-area-achado', data).then(response => {
+            const newDivAchado = response.data.divAreaAchado;
             TypeAlert(response.data.message, 'success');
             reset();
-            getAllDivAchado()
+            setArrayDivAchado(prevArray => [...prevArray, newDivAchado]);
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
         });

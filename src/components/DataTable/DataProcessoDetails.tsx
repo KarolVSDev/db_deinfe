@@ -137,6 +137,27 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
                 setRows(jursidDetails.jurisdJurisds.map(objeto => ({
                     id:objeto.id,
                     remover:<DeleteDataButton stateType={dataType} itemId={objeto.id} handleDelete={handleDelete} />,
+                    nome: objeto.subordinado.nome,
+                    sigla:objeto.subordinado.sigla,
+                    cnpj:objeto.subordinado.cnpj,
+                    ug:objeto.subordinado.ug,
+                    cep:objeto.subordinado.cep,
+                    logradouro:objeto.subordinado.logradouro,
+                    complemento:objeto.subordinado.complemento,
+                    numero:objeto.subordinado.numero,
+                    cidade:objeto.subordinado.cidade,
+                    telefone1: objeto.subordinado.telefone1,
+                    telefone2: objeto.subordinado.telefone2,
+                    email:objeto.subordinado.email,
+                    site:objeto.subordinado.site,
+                    cargoGestor:objeto.subordinado.cargoGestor,
+                    normaCriacao:objeto.subordinado.normaCriacao,
+                    dataCriacao: formateDateToPtBr(objeto.subordinado.dataCriacao),
+                    normaExtincao:objeto.subordinado.normaExtincao,
+                    dataExtincao:formateDateToPtBr(objeto.subordinado.dataExtincao),
+                    poder: objeto.subordinado.poder,
+                    ativo:objeto.subordinado.ativo
+
                 })))
             }
         }

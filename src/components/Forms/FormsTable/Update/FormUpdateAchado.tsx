@@ -12,10 +12,12 @@ import { Autocomplete } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
 
 
-const FormAchado = () => {
+const FormUpdateAchado = () => {
 
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Achado>({});
   const { arrayDivAchado, setArrayAchado } = useContextTable()
+
+  
 
   const onSubmit = (data: Achado) => {
     api.post('/achado', data).then(response => {
@@ -139,6 +141,6 @@ const FormAchado = () => {
   )
 }
 
-export default FormAchado;
+export default FormUpdateAchado;
 
 

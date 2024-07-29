@@ -9,12 +9,14 @@ import { useContextTable } from '../../../../context/TableContext';
 
 const FormNatAchado = () => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<NatAchado>({});
-  const {getAllNatAchado} = useContextTable()
+  const { setArrayNatAchado } = useContextTable()
   const onSubmit = (data: NatAchado) => {
     api.post('/nat-achado', data).then(response => {
+      const newNatAchado = response.data.natachado
+      console.log(newNatAchado)
       TypeAlert(response.data.message, 'success');
       reset()
-      getAllNatAchado()
+      setArrayNatAchado(prevArray => [...prevArray, newNatAchado])
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });
@@ -45,7 +47,7 @@ const FormNatAchado = () => {
         )}
 
       </Grid>
-      <RegisterButton text="Registrar"/>
+      <RegisterButton text="Registrar" />
     </Box>
   );
 }

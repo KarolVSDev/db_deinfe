@@ -12,8 +12,6 @@ import {
   procuradorHeader,
   relatorHeader,
   natAchadoHeader,
-  divAreaAchadoHeader,
-  areaAchadoHeader,
   achadoHeader,
   jurisdHeader,
   processoHeader,
@@ -41,6 +39,7 @@ export default function DatabaseTable() {
   const [rows, setRows] = useState<any[]>([]);
   const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
     arrayProcurador, arrayRelator, handleLocalization, arrayNatAchado,
+    arrayAreaAchado, arrayDivAchado, arrayAchado,
     setArrayPessoaFisica, setArrayJurisd, setArrayProcesso,
     setArrayProcurador, setArrayRelator, setArrayNatAchado } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
@@ -105,6 +104,18 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(natAchadoHeader));
         setRows(createRows(arrayNatAchado))
         break
+      case 'area-achado':
+        setColumns(createGridColumns(natAchadoHeader));
+        setRows(createRows(arrayAreaAchado))
+        break
+      case 'div-achado':
+        setColumns(createGridColumns(natAchadoHeader));
+        setRows(createRows(arrayDivAchado))
+        break
+      case 'achado':
+        setColumns(createGridColumns(achadoHeader));
+        setRows(createRows(arrayAchado))
+        break
       default:
         setColumns([]);
         setRows([])
@@ -134,9 +145,9 @@ export default function DatabaseTable() {
     { value: 'processo', string: 'Processo' },
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
-    { value: 'achados', string: 'Achados' },
-    { value: 'div-achados', string: 'Divisão dos Achados' },
-    { value: 'area-achados', string: 'Área dos Achados' },
+    { value: 'achado', string: 'Achados' },
+    { value: 'div-achado', string: 'Divisão dos Achados' },
+    { value: 'area-achado', string: 'Área dos Achados' },
     { value: 'nat-achado', string: 'Natureza dos Achados' },
   ]
 
@@ -176,6 +187,8 @@ export default function DatabaseTable() {
         default:
           break;
       }
+      setSelectedRow(null)
+      
     } catch (error: any) {
       TypeAlert('Erro ao tentar excluir', 'error')
     }
@@ -199,10 +212,24 @@ export default function DatabaseTable() {
       case 'relator':
         setRows(createRows(arrayRelator))
         break;
+      case 'nat-achado':
+        setRows(createRows(arrayNatAchado))
+        break;
+      case 'area-achado':
+        setRows(createRows(arrayAreaAchado))
+        break;
+      case 'div-achado':
+        setRows(createRows(arrayDivAchado))
+        break;
+      case 'achado':
+        setRows(createRows(arrayAchado))
+        break;
       default:
         break;
     }
-  }, [arrayJurisd, arrayPessoaFisica, arrayProcesso, arrayProcurador, arrayRelator])
+  }, [arrayJurisd, arrayPessoaFisica,
+    arrayProcesso, arrayProcurador, arrayRelator,
+    arrayNatAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
 
 
   return (

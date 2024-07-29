@@ -73,27 +73,6 @@ const FormJurisd = () => {
                 autoComplete="given-name"
                 required
                 fullWidth
-                id="email"
-                label="E-mail"
-                type="email"
-                autoFocus
-                error={!!errors?.email}
-                {...register("email", { required: 'Campo obrigatório', validate: (value) => validator.isEmail(value) || 'Insira um E-mail válido' })}
-              />
-
-              {errors?.email && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.email.message}
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid item xs={12} sm={4} >
-              <TextField
-                variant='filled'
-                autoComplete="given-name"
-                required
-                fullWidth
                 placeholder='SECEX'
                 id="sigla"
                 label="Sigla"
@@ -204,6 +183,31 @@ const FormJurisd = () => {
               {errors?.logradouro && (
                 <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
                   {errors.logradouro.message}
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                variant='filled'
+                autoComplete="given-name"
+                type="text"
+                required
+                fullWidth
+                id="numero"
+                label="Número"
+                autoFocus
+                error={errors?.numero?.type === 'required'}
+                {...register('numero', {
+                  required: 'Campo obrigatório',
+                  maxLength: {
+                    value: 6,
+                    message: 'Número inválido'
+                  }
+                })}
+              />
+              {errors?.numero && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+                  {errors.numero?.message}
                 </Typography>
               )}
             </Grid>
@@ -346,6 +350,27 @@ const FormJurisd = () => {
               )}
             </Grid>
 
+             <Grid item xs={12} sm={4} >
+              <TextField
+                variant='filled'
+                autoComplete="given-name"
+                required
+                fullWidth
+                id="email"
+                label="E-mail"
+                type="email"
+                autoFocus
+                error={!!errors?.email}
+                {...register("email", { required: 'Campo obrigatório', validate: (value) => validator.isEmail(value) || 'Insira um E-mail válido' })}
+              />
+
+              {errors?.email && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.email.message}
+                </Typography>
+              )}
+            </Grid>
+
             <Grid item xs={12} sm={4}>
               <TextField
                 variant='filled'
@@ -479,32 +504,6 @@ const FormJurisd = () => {
                 </Typography>
               )}
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                variant='filled'
-                autoComplete="given-name"
-                type="text"
-                required
-                fullWidth
-                id="numero"
-                label="Número"
-                autoFocus
-                error={errors?.numero?.type === 'required'}
-                {...register('numero', {
-                  required: 'Campo obrigatório',
-                  maxLength: {
-                    value: 6,
-                    message: 'Número inválido'
-                  }
-                })}
-              />
-              {errors?.numero && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                  {errors.numero?.message}
-                </Typography>
-              )}
-            </Grid>
-
           </Grid>
           <RegisterButton text="Registrar" />
         </Box>

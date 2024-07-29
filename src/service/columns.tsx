@@ -52,14 +52,6 @@ export const natAchadoHeader = [
     {id:'descricao', label:'Descrição', minWidth:150}
 ]
 
-export const divAreaAchadoHeader = [
-    {id:'descricao', label:'Descrição', minWidth:150},
-]
-
-export const areaAchadoHeader = [
-    {id:'descricao', label:'Descrição', minWidth:150},
-]
-
 export const achadoHeader = [
     {id:'titulo', label:'Título', minWidth:150},
     {id:'texto', label:'Texto', minWidth:150},
