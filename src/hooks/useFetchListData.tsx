@@ -20,7 +20,7 @@ const useFetchListData = () => {
   const { setArrayProcesso,
     arrayProcesso, setArrayPessoaFisica, setArrayJurisd,
     setArrayProcurador, setArrayRelator, setArrayAchado,
-    setArrayNatAchado, setArrayDivAchado, setArrayAreaAchado } = useContextTable();
+    setArrayNatAchado, setArrayDivAchado, setArrayAreaAchado, setNatAchadoUp } = useContextTable();
 
 
   const getAllPessoaFisica = async () => {
@@ -105,6 +105,7 @@ const useFetchListData = () => {
       TypeInfo(error.response.data.message, 'error')
     }
   };
+
   const getJurisdByPessoa = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/pessoajurisd/pessoa/${id}`);
@@ -274,8 +275,13 @@ const useFetchListData = () => {
     })
   }
 
-  const setAchadoReation = async () => {
-
+  const getNatAchadoRelation = async (id: GridRowId | undefined) => {
+    await api(`nat-achado/relation/${id}`).then(response => {
+      const natAchadoR = response.data;
+      setNatAchadoUp(natAchadoR)  
+    }).catch((error:any) => {
+      TypeAlert(error, 'error')
+    })
   }
 
 
@@ -306,7 +312,9 @@ const useFetchListData = () => {
     getOneProcessoDetails,
     setPessoaRelations,
     setJurisdRelations,
-    getJurisdPrincipal
+    getJurisdPrincipal,
+    getNatAchadoRelation
+    
   }
 
 

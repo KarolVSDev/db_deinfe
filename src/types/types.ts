@@ -107,8 +107,14 @@ export interface Relator {
   ativo?: string;
 }
 export interface NatAchado {
-  id: string;
+  id: String;
   descricao: string;
+}
+
+export interface NatRelation {
+  id:string;
+  descricao:string;
+  areas:{id:string, descricao:string, divisoes:[]}[];
 }
 export interface DivAchado {
   id: string;
@@ -127,6 +133,32 @@ export interface Achado {
   criterio: string;
   ativo: string;
   divisao: string;
+}
+
+export interface AchadoUp {
+  id: string;
+  titulo: string;
+  texto: string;
+  criterio: string;
+  ativo: string;
+}
+
+export interface DivAreaAchadoUp {
+  id: string;
+  descricao: string;
+  achados: AchadoUp[];
+}
+
+export interface AreaAchadoUp {
+  id: string;
+  descricao: string;
+  divisoes: DivAreaAchadoUp[];
+}
+
+export interface NatAchadoUp {
+  id: string;
+  descricao: string;
+  areas: AreaAchadoUp[];
 }
 export interface Jurisd {
   id?: string;

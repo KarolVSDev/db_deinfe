@@ -54,7 +54,6 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     
     const onSubmit = (data: Jurisd) => {
         const jurisdId = id
-        console.log(jurisdId)
         api.patch(`/jurisd/update/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success')
             setArrayJurisd(prevArray => {

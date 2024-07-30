@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
-import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate, Achado } from "../types/types";
+import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate, Achado, NatAchadoUp } from "../types/types";
 import useFetchListData from "../hooks/useFetchListData";
 
 interface TableContextType {
@@ -18,6 +18,7 @@ interface TableContextType {
     arrayRelations: PessoaFisica[];
     arrayRelationpp: Interessado[];
     arrayInteressados: Interessado[];
+    natAchadoUp:NatAchadoUp | undefined;
     handleLocalization: {};
     setArrayPessoaFisica: Dispatch<SetStateAction<PessoaFisica[]>>;
     setArrayJurisd: Dispatch<SetStateAction<Jurisd[]>>;
@@ -25,9 +26,11 @@ interface TableContextType {
     setArrayProcurador: Dispatch<SetStateAction<Procurador[]>>;
     setArrayRelator: Dispatch<SetStateAction<Relator[]>>;
     setArrayNatAchado: Dispatch<SetStateAction<NatAchado[]>>;
+    setNatAchadoUp: Dispatch<SetStateAction<NatAchadoUp | undefined>>;
     setArrayAreaAchado: Dispatch<SetStateAction<AreaAchado[]>>;
     setArrayDivAchado: Dispatch<SetStateAction<DivAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
+
 }
 
 interface Props {
@@ -51,6 +54,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayRelations, setArrayRelations] = useState([]);
     const [arrayRelationpp, setArrayRelationpp] = useState([]);
     const [arrayInteressados, setArrayInteressados] = useState([]);
+    const [natAchadoUp, setNatAchadoUp] = useState<NatAchadoUp>()
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -92,6 +96,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayProcesso,
             arrayApenso,
             arrayNatAchado,
+            natAchadoUp,
             arrayAreaAchado,
             arrayDivAchado,
             arrayAchado,
@@ -105,6 +110,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setArrayRelator,
             setArrayProcurador,
             setArrayNatAchado,
+            setNatAchadoUp,
             setArrayAreaAchado,
             setArrayDivAchado,
             setArrayAchado,
