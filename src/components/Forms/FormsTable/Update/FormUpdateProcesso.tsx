@@ -28,7 +28,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProcessoUpdate>({});
   const { setArrayProcesso } = useContextTable()
-  const { getOneProcessoDetails, processoDetails, processoPrincipal } = useFetchListData(id)
+  const { getOneProcessoDetails, processoDetails, processoPrincipal } = useFetchListData()
   const [expanded, setExpanded] = useState(false);
   const [processo, setProcesso] = useState<ProcessoUpdate>()
 

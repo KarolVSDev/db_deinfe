@@ -29,6 +29,7 @@ import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
 import { formateDateToPtBr } from '../../hooks/DateFormate';
 import useExportToExcel from '../../hooks/useExportToExcel';
+import useFetchListData from '../../hooks/useFetchListData';
 
 
 
@@ -45,6 +46,9 @@ export default function DatabaseTable() {
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
+  const { getAllPessoaFisica, getAllJurisd, getAllProcesso,
+    getAllProcurador, getAllRelator, getAllAchados, getAllNatAchado, getAllDivAchado, getAllAreaAchado } = useFetchListData()
+
 
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
@@ -78,14 +82,23 @@ export default function DatabaseTable() {
 
     switch (value) {
       case 'pessoafisica':
+        if (arrayPessoaFisica.length <= 0) {
+          getAllPessoaFisica()
+        }
         setColumns(createGridColumns(pessoaFisicaHeader));
         setRows(createRows(arrayPessoaFisica));
         break;
       case 'jurisd':
+        if (arrayJurisd.length <= 0) {
+          getAllJurisd()
+        }
         setColumns(createGridColumns(jurisdHeader));
         setRows(createRows(arrayJurisd))
         break;
       case 'processo':
+        if (arrayProcesso.length <= 0) {
+          getAllProcesso()
+        }
         setColumns(createGridColumns(processoHeader));
         setRows(createRows(arrayProcesso.map(objetoProcesso => ({
           ...objetoProcesso,
@@ -93,28 +106,46 @@ export default function DatabaseTable() {
         }))));
         break;
       case 'procurador':
+        if (arrayProcesso.length <= 0) {
+          getAllProcurador()
+        }
         setColumns(createGridColumns(procuradorHeader));
         setRows(createRows(arrayProcurador))
         break;
       case 'relator':
+        if (arrayRelator.length <= 0) {
+          getAllRelator()
+        }
         setColumns(createGridColumns(relatorHeader));
         setRows(createRows(arrayRelator))
         break;
-      case 'nat-achado':
-        setColumns(createGridColumns(natAchadoHeader));
-        setRows(createRows(arrayNatAchado))
-        break
-      case 'area-achado':
-        setColumns(createGridColumns(natAchadoHeader));
-        setRows(createRows(arrayAreaAchado))
+      case 'achado':
+        if (arrayAchado.length <= 0) {
+          getAllAchados()
+        }
+        setColumns(createGridColumns(achadoHeader));
+        setRows(createRows(arrayAchado))
         break
       case 'div-achado':
+        if (arrayDivAchado.length <= 0) {
+          getAllDivAchado()
+        }
         setColumns(createGridColumns(natAchadoHeader));
         setRows(createRows(arrayDivAchado))
         break
-      case 'achado':
-        setColumns(createGridColumns(achadoHeader));
-        setRows(createRows(arrayAchado))
+      case 'area-achado':
+        if (arrayAreaAchado.length <= 0) {
+          getAllAreaAchado()
+        }
+        setColumns(createGridColumns(natAchadoHeader));
+        setRows(createRows(arrayAreaAchado))
+        break
+      case 'nat-achado':
+        if (arrayNatAchado.length <= 0) {
+          getAllNatAchado()
+        }
+        setColumns(createGridColumns(natAchadoHeader));
+        setRows(createRows(arrayNatAchado))
         break
       default:
         setColumns([]);
@@ -188,7 +219,7 @@ export default function DatabaseTable() {
           break;
       }
       setSelectedRow(null)
-      
+
     } catch (error: any) {
       TypeAlert('Erro ao tentar excluir', 'error')
     }

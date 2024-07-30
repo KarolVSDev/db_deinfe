@@ -19,7 +19,7 @@ const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Procurador>({});
     const [procurador, setProcurador] = useState<Procurador>()
     const { setArrayProcurador} = useContextTable()
-    const { arrayListData, getProcessoByProc } = useFetchListData(id)
+    const { arrayListData, getProcessoByProc } = useFetchListData()
 
     const getOneProcurador = async (id: GridRowId) => {
         try {

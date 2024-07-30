@@ -5,8 +5,7 @@ import { Interessado, PessoaFisica, Processo } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import { useState } from 'react';
-import useFetchListData from '../../../../hooks/useFetchListData';
+
 
 const FormInteresse = () => {
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<Interessado>({});

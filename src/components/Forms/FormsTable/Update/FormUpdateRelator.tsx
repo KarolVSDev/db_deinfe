@@ -20,7 +20,7 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Relator>({});
     const { setArrayRelator } = useContextTable()
     const [relator, setRelator] = useState<Relator>()
-    const {  arrayListData, getProcessoByRelator } = useFetchListData(id)
+    const {  arrayListData, getProcessoByRelator } = useFetchListData()
 
 
     const getOneRelator = async (id: GridRowId) => {

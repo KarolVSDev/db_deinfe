@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, createContext, useContext, useEffect, useStat
 import { api } from "../service/api";
 import { TypeInfo } from "../hooks/TypeAlert";
 import { Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado, Interessado, ProcessoUpdate, Achado } from "../types/types";
-
+import useFetchListData from "../hooks/useFetchListData";
 
 interface TableContextType {
     arrayPessoaFisica: PessoaFisica[];
@@ -32,7 +32,6 @@ interface TableContextType {
 
 interface Props {
     children: React.ReactNode;
-    getAllJurisd: () => Jurisd;
 }
 
 const TableContext = createContext<TableContextType | undefined>(undefined);
@@ -83,117 +82,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
                 : `${count.toLocaleString()} linha selecionada`,
     };
 
-    const getAllPessoaFisica = async () => {
-        try {
-            const response = await api.get('/pessoafisica');
-            setArrayPessoaFisica(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error');
-            return [];
-        }
-    };
 
-    const getAllJurisd = async () => {
-        try {
-            const response = await api.get('/jurisd');
-            setArrayJurisd(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error');
-            return [];
-        }
-    };
-
-    const getAllRelator = async () => {
-        try {
-            const response = await api.get('/relator');
-            setArrayRelator(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    };
-
-    const getAllProcurador = async () => {
-        try {
-            const response = await api.get('/procurador');
-            setArrayProcurador(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    };
-
-    const getAllProcesso = async () => {
-        try {
-            const response = await api.get('/processo');
-            setArrayProcesso(response.data)
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    };
-
-    const getAllNatAchado = async () => {
-        try {
-            const response = await api.get('/nat-achado');
-            setArrayNatAchado(response.data)
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error');
-        }
-    };
-
-    const getAllAreaAchado = async () => {
-        try {
-            const response = await api.get('/area-achado');
-            setArrayAreaAchado(response.data)
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    };
-
-    const getAllDivAchado = async () => {
-        try {
-            const response = await api.get('/div-area-achado');
-            setArrayDivAchado(response.data)
-        } catch (error:any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    };
-
-    const getAllAchados = async () => {
-        try {
-            const response = await api.get('/achado');
-            setArrayAchado(response.data)
-        } catch (error:any) {
-            TypeInfo(error.response.data.message, 'error')
-        }
-    }
-
-    const getRelationPF = async () => {
-        try {
-            const response = await api.get('/pessoafisica/relations');
-            setArrayRelations(response.data);
-        } catch (error: any) {
-            TypeInfo(error.response.data.message, 'error');
-            return [];
-        }
-    };
-
-    useEffect(() => {
-        getAllJurisd()
-        getAllPessoaFisica()
-        getAllRelator()
-        getAllProcurador()
-        getAllProcesso()
-        getAllNatAchado()
-        getAllAreaAchado()
-        getAllDivAchado()
-        getRelationPF()
-        getAllNatAchado()
-        getAllAreaAchado()
-        getAllDivAchado()
-        getAllAchados()
-    }, [])
-
-    
- 
     return (
         <TableContext.Provider value={{
             arrayPessoaFisica,

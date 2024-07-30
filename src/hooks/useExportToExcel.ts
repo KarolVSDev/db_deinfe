@@ -112,7 +112,7 @@ const useExportToExcel = () => {
             dataExtincao: formateDateToPtBr(data.dataExtincao),
             poder: data.poder,
             ativo: data.ativo,
-            jurisdPrincipal:data.jurisdPrincipal
+            jurisdPrincipal: data.jurisdPrincipal
         };
 
         // Criar planilha principal
@@ -143,12 +143,42 @@ const useExportToExcel = () => {
                 normaNomeacao: jurisdicionado.normaNomeacao,
                 dataNomeacao: formateDateToPtBr(jurisdicionado.dataNomeacao),
                 normaExoneracao: jurisdicionado.normaExoneracao,
-                dataExoneracao:formateDateToPtBr(jurisdicionado.dataExoneracao),
+                dataExoneracao: formateDateToPtBr(jurisdicionado.dataExoneracao),
                 gestor: jurisdicionado.gestor,
             }));
 
-            const interessadosSheet = XLSX.utils.json_to_sheet(pessoaJurisdsData);
-            XLSX.utils.book_append_sheet(wb, interessadosSheet, 'Jurisdicionados');
+            const pessoaJurisdSheet = XLSX.utils.json_to_sheet(pessoaJurisdsData);
+            XLSX.utils.book_append_sheet(wb, pessoaJurisdSheet, 'Jurisdicionados');
+        }
+
+        //criar planilha de subordinados
+        if (data.jurisdJurisds && data.jurisdJurisds.length > 0) {
+            const jurisdJurisds = data.jurisdJurisds.map(subordinado => ({
+                nome: subordinado.subordinado.nome,
+                sigla: subordinado.subordinado.sigla,
+                cnpj: subordinado.subordinado.cnpj,
+                ug: subordinado.subordinado.ug,
+                cep: subordinado.subordinado.cep,
+                logradouro: subordinado.subordinado.logradouro,
+                complemento: subordinado.subordinado.complemento,
+                numero: subordinado.subordinado.numero,
+                cidade: subordinado.subordinado.cidade,
+                uf: subordinado.subordinado.uf,
+                telefone1: subordinado.subordinado.telefone1,
+                telefone2: subordinado.subordinado.telefone2,
+                email: subordinado.subordinado.email,
+                site: subordinado.subordinado.site,
+                cargoGestor: subordinado.subordinado.cargoGestor,
+                normaCriacao: subordinado.subordinado.normaCriacao,
+                dataCriacao: formateDateToPtBr(subordinado.subordinado.dataCriacao),
+                normaExtincao: subordinado.subordinado.normaExtincao,
+                dataExtincao: formateDateToPtBr(subordinado.subordinado.dataExtincao),
+                poder: subordinado.subordinado.poder,
+                ativo: subordinado.subordinado.ativo,
+            }));
+
+            const subordinadoSheets = XLSX.utils.json_to_sheet(jurisdJurisds);
+            XLSX.utils.book_append_sheet(wb, subordinadoSheets, 'Subordinados')
         }
 
         // Escrever o arquivo

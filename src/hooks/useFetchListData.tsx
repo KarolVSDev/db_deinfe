@@ -8,24 +8,109 @@ import { useContextTable } from "../context/TableContext";
 
 
 
-const useFetchListData = (id: GridRowId | undefined) => {
-  
+const useFetchListData = () => {
+
   const [arrayProcessos] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
   const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
-  const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | {message:string}>()
-  const [jurisdPrincipal, setJurisdPrincipal] = useState<string | {message:string}>()
+  const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | { message: string }>()
+  const [jurisdPrincipal, setJurisdPrincipal] = useState<string | { message: string }>()
   const [pessoaRelation, setPessoaRelation] = useState<dataRelation>()
   const [jurisdRelation, setJurisdRelation] = useState<jurisdRelation>()
-  const {setArrayProcesso, arrayProcesso} = useContextTable();
-  
+  const { setArrayProcesso,
+    arrayProcesso, setArrayPessoaFisica, setArrayJurisd,
+    setArrayProcurador, setArrayRelator, setArrayAchado,
+    setArrayNatAchado, setArrayDivAchado, setArrayAreaAchado } = useContextTable();
 
-  const getJurisdByPessoa = async () => {
+
+  const getAllPessoaFisica = async () => {
+    try {
+      const response = await api.get('/pessoafisica');
+      setArrayPessoaFisica(response.data);
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error');
+      return [];
+    }
+  };
+
+  const getAllJurisd = async () => {
+    try {
+      const response = await api.get('/jurisd');
+      setArrayJurisd(response.data);
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error');
+      return [];
+    }
+  };
+
+  const getAllProcesso = async () => {
+    try {
+      const response = await api.get('/processo');
+      setArrayProcesso(response.data)
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error')
+    }
+  };
+
+  const getAllProcurador = async () => {
+    try {
+      const response = await api.get('/procurador');
+      setArrayProcurador(response.data);
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error')
+    }
+  };
+
+  const getAllRelator = async () => {
+    try {
+      const response = await api.get('/relator');
+      setArrayRelator(response.data);
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error')
+    }
+  };
+
+  const getAllAchados = async () => {
+    try {
+      const response = await api.get('/achado');
+      setArrayAchado(response.data)
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error')
+    }
+  }
+
+  const getAllNatAchado = async () => {
+    try {
+      const response = await api.get('/nat-achado');
+      setArrayNatAchado(response.data)
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error');
+    }
+  };
+
+  const getAllDivAchado = async () => {
+    try {
+      const response = await api.get('/div-area-achado');
+      setArrayDivAchado(response.data)
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error')
+    }
+  };
+
+  const getAllAreaAchado = async () => {
+    try {
+      const response = await api.get('/area-achado');
+      setArrayAreaAchado(response.data)
+    } catch (error: any) {
+      TypeInfo(error.response.data.message, 'error')
+    }
+  };
+  const getJurisdByPessoa = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/pessoajurisd/pessoa/${id}`);
       const data = response.data.result.map((item: PessoaJurisd) => ({
         id: item.id,
-        type:'pessoajurisd',
+        type: 'pessoajurisd',
         value1: item.cargo,
       }))
       setArrayListData(data);
@@ -34,12 +119,12 @@ const useFetchListData = (id: GridRowId | undefined) => {
     }
   };
 
-  const getPessoaJByJurisd = async () => {
+  const getPessoaJByJurisd = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/pessoajurisd/jurisd/${id}`);
       const data = response.data.result.map((item: PessoaJurisd) => ({
         id: item.id,
-        type:'pessoajurisd',
+        type: 'pessoajurisd',
         value1: item.cargo,
       }))
       setArrayListData(data);
@@ -49,20 +134,20 @@ const useFetchListData = (id: GridRowId | undefined) => {
   };
 
   const onDelete = (id: string, type: string) => {
-      api.delete(`/${type}/${id}`).then(() => {
-        if(type === 'apenso' || type === 'jurisd-jurisd'){
-          TypeAlert('Relação removida', 'success')
-        }else{
-          TypeAlert('Dado removido', 'success')
-        }
-        const updatedList = arrayListData.filter(item => item.id !== id);
-        const updatedList2 = arrayProcesso.filter(item => item.id !== id);
-        setArrayListData(updatedList)
-        setArrayProcesso(updatedList2)
-      }).catch((error) => {
-        console.log(error)
-        TypeAlert(error.response.data.message, 'error')
-      })
+    api.delete(`/${type}/${id}`).then(() => {
+      if (type === 'apenso' || type === 'jurisd-jurisd') {
+        TypeAlert('Relação removida', 'success')
+      } else {
+        TypeAlert('Dado removido', 'success')
+      }
+      const updatedList = arrayListData.filter(item => item.id !== id);
+      const updatedList2 = arrayProcesso.filter(item => item.id !== id);
+      setArrayListData(updatedList)
+      setArrayProcesso(updatedList2)
+    }).catch((error) => {
+      console.log(error)
+      TypeAlert(error.response.data.message, 'error')
+    })
   }
 
   const getProcessoByPessoa = async (id: GridRowId | undefined) => {
@@ -70,7 +155,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/pessoa/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
-        type:'processo',
+        type: 'processo',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,
@@ -90,7 +175,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/jurisd/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
-        type:'processo',
+        type: 'processo',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,
@@ -110,7 +195,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/procurador/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
-        type:'procurador',
+        type: 'procurador',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,
@@ -130,7 +215,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
       const response = await api.get(`/processo/relator/${id}`);
       const data = response.data.map((item: Processo) => ({
         id: item.id,
-        type:'relator',
+        type: 'relator',
         value1: item.numero,
         value2: item.ano,
         value3: item.natureza,
@@ -147,20 +232,20 @@ const useFetchListData = (id: GridRowId | undefined) => {
 
   const getApensoByApensado = async (id: GridRowId | undefined) => {
     const processoPrincipal = await api.get(`/apenso/apensado/${id}`);
-      return processoPrincipal.data
+    return processoPrincipal.data
   }
-  
+
   const getJurisdPrincipal = async (id: GridRowId | undefined) => {
     const jurisdPrincipal = await api.get(`/jurisd-jurisd/subordinado/${id}`);
-      return setJurisdPrincipal(jurisdPrincipal.data)
+    return setJurisdPrincipal(jurisdPrincipal.data)
   }
 
   const getOneProcessoDetails = async (id: GridRowId | undefined) => {
     try {
       const response = await api.get(`/processo/relations/${id}`)
       const data = response.data
-      if(data){
-        const processoPincipal = await  getApensoByApensado(id)
+      if (data) {
+        const processoPincipal = await getApensoByApensado(id)
         setProcessoPincipal(processoPincipal)
         setProcessoDetails(data)
       }
@@ -169,7 +254,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     }
   }
 
-  const setPessoaRelations = async () => {
+  const setPessoaRelations = async (id: GridRowId | undefined) => {
     await api.get(`/pessoafisica/relations/${id}`).then(response => {
       const pessoarelations = response.data;
       setPessoaRelation(pessoarelations)
@@ -179,7 +264,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
     })
   }
 
-  const setJurisdRelations = async () => {
+  const setJurisdRelations = async (id: GridRowId | undefined) => {
     await api.get(`/jurisd/relations/${id}`).then(response => {
       const jurisdrelations = response.data;
       setJurisdRelation(jurisdrelations)
@@ -190,7 +275,7 @@ const useFetchListData = (id: GridRowId | undefined) => {
   }
 
   const setAchadoReation = async () => {
-    
+
   }
 
 
@@ -201,10 +286,19 @@ const useFetchListData = (id: GridRowId | undefined) => {
     pessoaRelation,
     jurisdRelation,
     jurisdPrincipal,
+    arrayProcessos,
+    getAllPessoaFisica,
+    getAllJurisd,
+    getAllProcesso,
+    getAllProcurador,
+    getAllRelator,
+    getAllAchados,
+    getAllNatAchado,
+    getAllDivAchado,
+    getAllAreaAchado,
     getJurisdByPessoa,
     getPessoaJByJurisd,
     onDelete,
-    arrayProcessos,
     getProcessoByPessoa,
     getProcessoByJurisd,
     getProcessoByProc,

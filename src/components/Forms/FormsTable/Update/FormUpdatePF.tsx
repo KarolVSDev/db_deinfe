@@ -30,7 +30,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   const [buttonType, setButtonType] = useState<string>('')
   const [openModal, setOpenModal] = useState(false)
   const { setArrayPessoaFisica } = useContextTable()
-  const { setPessoaRelations, pessoaRelation } = useFetchListData(id)
+  const { setPessoaRelations, pessoaRelation } = useFetchListData()
   
 
   
@@ -84,7 +84,7 @@ const FormUpdatePF: React.FC<FormPFProps> = ({ id, closeModal }) => {
   useEffect(() => {
     if (id) {
       getOnePF(id);
-      setPessoaRelations()
+      setPessoaRelations(id)
     }
   }, []);
 

@@ -20,9 +20,8 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
-    const { onDelete } = useFetchListData(Details?.id)
+    const { onDelete } = useFetchListData()
 
-    console.log(jursidDetails)
     const handleDelete = (id: string, type: string) => {
         if(id){
             onDelete(id, type)
