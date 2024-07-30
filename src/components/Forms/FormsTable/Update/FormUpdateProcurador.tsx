@@ -20,9 +20,6 @@ const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
     const [procurador, setProcurador] = useState<Procurador>()
     const { setArrayProcurador} = useContextTable()
     const { arrayListData, getProcessoByProc } = useFetchListData(id)
-    
-
-    getProcessoByProc(id)
 
     const getOneProcurador = async (id: GridRowId) => {
         try {
@@ -54,8 +51,9 @@ const FormUpdateProcurador: React.FC<FormProcProps> = ({ id, closeModal }) => {
     useEffect(() => {
         if (id) {
             getOneProcurador(id)
+            getProcessoByProc(id)
         }
-    })
+    },[])
 
     return (
         <Container  >

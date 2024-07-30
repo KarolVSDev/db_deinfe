@@ -20,21 +20,6 @@ const useFetchListData = (id: GridRowId | undefined) => {
   const {setArrayProcesso, arrayProcesso} = useContextTable();
   
 
-
-  const getIntByPessoa = async () => {
-    try {
-      const response = await api.get(`/interessado/pessoa/${id}`);
-      const data = response.data.map((item: Interessado) => ({
-        label: item.interesse,
-        value: item.interesse,
-        id: item.id
-      }))
-      setArrayListData(data);
-    } catch (error: any) {
-      TypeInfo(error.response.data.message, 'error');
-    }
-  };
-
   const getJurisdByPessoa = async () => {
     try {
       const response = await api.get(`/pessoajurisd/pessoa/${id}`);
@@ -209,20 +194,6 @@ const useFetchListData = (id: GridRowId | undefined) => {
   }
 
 
-  useEffect(() => {
-    if (id) {
-      getIntByPessoa()
-      getJurisdByPessoa()
-      getPessoaJByJurisd()
-      getProcessoByPessoa(id)
-      getProcessoByJurisd(id)
-      getProcessoByProc(id)
-      getProcessoByRelator(id)
-      getOneProcessoDetails(id)
-      getJurisdPrincipal(id)
-    }
-  }, [id])
-
   return {
     arrayListData,
     processoDetails,
@@ -230,7 +201,6 @@ const useFetchListData = (id: GridRowId | undefined) => {
     pessoaRelation,
     jurisdRelation,
     jurisdPrincipal,
-    getIntByPessoa,
     getJurisdByPessoa,
     getPessoaJByJurisd,
     onDelete,

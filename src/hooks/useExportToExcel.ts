@@ -31,7 +31,7 @@ const useExportToExcel = () => {
             natureza: data.natureza,
             exercicio: data.exercicio,
             objeto: data.objeto,
-            arquivamento: formateDateToPtBr(data.arquivamento),
+            arquivamento: data.arquivamento,
             advogado: data.advogado.nome,
             jurisd: data.jurisd.nome,
             relator: data.relator.nome,

@@ -20,7 +20,7 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<Relator>({});
     const { setArrayRelator } = useContextTable()
     const [relator, setRelator] = useState<Relator>()
-    const {  arrayListData } = useFetchListData(id)
+    const {  arrayListData, getProcessoByRelator } = useFetchListData(id)
 
 
     const getOneRelator = async (id: GridRowId) => {
@@ -52,6 +52,7 @@ const FormUpdateRelator: React.FC<FormRelatorProps> = ({ id, closeModal }) => {
     useEffect(() => {
         if (id) {
             getOneRelator(id)
+            getProcessoByRelator(id)
         }
     }, [])
 

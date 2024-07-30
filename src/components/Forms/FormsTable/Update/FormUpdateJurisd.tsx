@@ -32,7 +32,7 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     const { setArrayJurisd } = useContextTable()
     const { setJurisdRelations, jurisdRelation, jurisdPrincipal } = useFetchListData(id)
 
-    setJurisdRelations()
+    
 
     const getOneJurisd = async (id: GridRowId | undefined) => {
         try {
@@ -73,8 +73,9 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     useEffect(() => {
         if (id) {
             getOneJurisd(id)
+            setJurisdRelations()
         }
-    })
+    },[])
 
     return (
         <Container maxWidth="xl" sx={{ mb: 2, background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)', height: 'fit-content', pb: 2 }}>

@@ -32,7 +32,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
   const [expanded, setExpanded] = useState(false);
   const [processo, setProcesso] = useState<ProcessoUpdate>()
 
-  getOneProcessoDetails(id)
+  
 
   const getOneProcesso = async (id: GridRowId) => {
     try {
@@ -71,6 +71,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
   useEffect(() => {
     if (id) {
       getOneProcesso(id);
+      getOneProcessoDetails(id)
     }
   }, []);
 
