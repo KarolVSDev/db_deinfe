@@ -3,8 +3,6 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import {
   ColumnConfig,
-  Interessado,
-  Jurisd
 } from '../../types/types';
 import { useEffect, useState } from 'react';
 import {
@@ -15,9 +13,6 @@ import {
   achadoHeader,
   jurisdHeader,
   processoHeader,
-  interessadoHeader,
-  pessoaJurisdHeader,
-  arrayRelationsHeader
 } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -106,7 +101,7 @@ export default function DatabaseTable() {
         }))));
         break;
       case 'procurador':
-        if (arrayProcesso.length <= 0) {
+        if (arrayProcurador.length <= 0) {
           getAllProcurador()
         }
         setColumns(createGridColumns(procuradorHeader));

@@ -16,41 +16,56 @@ interface NatAchadoProp {
 
 const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<NatAchado>({});
-  const { setArrayNatAchado, natAchadoUp } = useContextTable()
+  const { setArrayNatAchado, natAchadoUp, arrayNatAchado } = useContextTable()
   const { getNatAchadoRelation } = useFetchListData()
+  const [natAchado, setNatAchado] = useState<NatAchado>()
 
 
-  useEffect(() => {
-    if (id) {
-      getNatAchadoRelation(id);
+  const  getNatAchado = () => {
+    const natachado = arrayNatAchado.find(item => item.id === id);
+    if(natachado){
+      setNatAchado(natachado)
+    }else{
+      return console.log('natChado não encontrado')
     }
-  }, [])
+  }
 
 
   const onSubmit = (data: NatAchado) => {
     const NatId = id
-    api.patch(`/nat-achado/update${id}`, data).then(response => {    
+    api.patch(`/nat-achado/update/${id}`, data).then(response => {    
       TypeAlert(response.data.message, 'success');
       reset()
+      setArrayNatAchado(prevArray => {
+        const updatedArray = prevArray.map(item => 
+          item.id === NatId ? {...item, ...data} : item
+        ) 
+        return updatedArray
+      })
       closeModal()
-      setArrayNatAchado(prevArray => [...prevArray, data])
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });
 
   };
 
+  useEffect(() => {
+    if (id) {
+      getNatAchadoRelation(id);
+      getNatAchado()
+    }
+  }, [])
 
   return (
     <Container>
-      {natAchadoUp && (
+      {natAchado && (
         <Box component="form" name='formNatAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
            <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Natureza do Achado</Typography>
           <Grid item xs={12} sm={4}>
             <TextField
               variant='filled'
               required
-              defaultValue={natAchadoUp?.descricao}
+              defaultValue={natAchado.descricao}
               fullWidth
               autoFocus
               id="descricao"

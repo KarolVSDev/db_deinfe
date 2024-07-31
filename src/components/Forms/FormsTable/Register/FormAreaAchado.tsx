@@ -1,15 +1,43 @@
 import { Autocomplete, Box, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormRegister } from 'react-hook-form';
 import { AreaAchado, NatAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
+import React, { useEffect } from 'react';
+import useFetchListData from '../../../../hooks/useFetchListData';
+
+
+export const AutocompleteNatAchado = React.forwardRef<
+    HTMLDivElement,
+    { label: string; options: NatAchado[] } & ReturnType<UseFormRegister<any>>
+>(({ onChange, onBlur, name, label, options }, ref) => (
+    <>
+        <Autocomplete
+            disablePortal
+            options={options}
+            getOptionLabel={(option: NatAchado) => option.descricao}
+            onChange={(event, value) => onChange({ target: { name, value: value?.id ?? '' } })}
+            renderInput={(params) => (
+                <TextField
+                variant='filled'
+                    {...params}
+                    label={label}
+                    onBlur={onBlur}
+                    inputRef={ref}
+                />
+            )}
+        />
+    </>
+));
+
 
 
 const FormAreaAchado = () => {
     const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<AreaAchado>({});
-    const {arrayNatAchado, setArrayAreaAchado} = useContextTable();
+    const { arrayNatAchado, setArrayAreaAchado } = useContextTable();
+    const {getAllNatAchado} = useFetchListData()
 
     const onSubmit = (data: AreaAchado) => {
         api.post('/area-achado', data).then(response => {
@@ -24,6 +52,12 @@ const FormAreaAchado = () => {
         });
 
     };
+
+    useEffect(() => {
+        if(arrayNatAchado.length <= 0){
+            getAllNatAchado()
+        }
+    },[])
 
     return (
         <Box component="form" name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -48,18 +82,16 @@ const FormAreaAchado = () => {
                     </Typography>
                 )}
             </Grid>
-
             <Grid item xs={12} sm={4} >
-                <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
+                <AutocompleteNatAchado
+                    label="Natureza"
                     options={arrayNatAchado}
-                    getOptionLabel={(option: NatAchado) => option.descricao}
-                    onChange={(event, value) => setValue('natureza', value?.id ?? '')}
-                    renderInput={(params) => <TextField variant='filled' {...params} label="Natureza" />}
+                    {...register('natureza', {
+                        required: 'Campo obrigatório'
+                    })}
                 />
             </Grid>
-            <RegisterButton text="Registrar"/>
+            <RegisterButton text="Registrar" />
         </Box>
     );
 }

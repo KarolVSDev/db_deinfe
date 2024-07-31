@@ -12,6 +12,7 @@ import FormUpdateProcesso from '../../Forms/FormsTable/Update/FormUpdateProcesso
 import FormUpdateProcurador from '../../Forms/FormsTable/Update/FormUpdateProcurador';
 import FormUpdateRelator from '../../Forms/FormsTable/Update/FormUpdateRelator';
 import FormUpdateNatAchado from '../../Forms/FormsTable/Update/FormUpdateNatAchado';
+import FormUpdateAreaAchado from '../../Forms/FormsTable/Update/FormUpdateAreaAchado';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -57,6 +58,9 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
 
       case 'nat-achado':
         return <FormUpdateNatAchado closeModal={onClose} id={id} />
+
+      case 'area-achado':
+        return <FormUpdateAreaAchado closeModal={onClose} id={id} />
     }
   }
 
