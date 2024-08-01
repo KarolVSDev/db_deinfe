@@ -1,22 +1,24 @@
 import { Autocomplete, Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm, UseFormRegister } from 'react-hook-form';
-import { AreaAchado, NatAchado } from '../../../../types/types';
+import { AreaAchado, AreaAchadoUp, NatAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import React, { useEffect, useState } from 'react';
 import { GridRowId } from '@mui/x-data-grid';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 
 export const AutocompleteNatAchado = React.forwardRef<
     HTMLDivElement,
-    { label: string; options: NatAchado[] } & ReturnType<UseFormRegister<any>>
->(({ onChange, onBlur, name, label, options }, ref) => (
+    { label: string; options: NatAchado[], value: NatAchado | undefined } & ReturnType<UseFormRegister<any>>
+>(({ onChange, onBlur, name, label, options, value }, ref) => (
     <>
         <Autocomplete
             disablePortal
             options={options}
+            defaultValue={value}
             getOptionLabel={(option: NatAchado) => option.descricao}
             onChange={(event, value) => onChange({ target: { name, value: value?.id ?? '' } })}
             renderInput={(params) => (
@@ -39,25 +41,50 @@ interface AreaAchadoProps {
 
 const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => {
     const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<AreaAchado>({});
-    const { arrayNatAchado, setArrayAreaAchado, arrayAreaAchado } = useContextTable();
-    const [areaAchado, setAreaAchado] = useState<AreaAchado>()
+    const { arrayNatAchado, setArrayAreaAchado, areaAchadoUp } = useContextTable();
 
-    const getNatAchado = () => {
-        const areachado = arrayAreaAchado.find(item => item.id === id);
-        if (areachado) {
-            setAreaAchado(areachado)
-        } else {
-            return console.log('Area não encontrado')
+    const [natAchado, setNatAchado] = useState<NatAchado>()
+    const [areaAchado, setAreaAchado] = useState<AreaAchado>()
+    const { getAllNatAchado, getAreaAchadoRelation } = useFetchListData()
+    const { arrayAreaAchado } = useContextTable()
+
+
+    const setArea = () =>{
+        try {
+            if(areaAchadoUp){
+                const area = arrayAreaAchado.find(area => area.id === areaAchadoUp.id)
+                setAreaAchado(area)
+            }
+        } catch (error) {
+            console.log(error)
         }
-    }
+    };
+
+    useEffect(() => {
+        getAllNatAchado()
+        if (id) {
+            getAreaAchadoRelation(id)
+            setNatAchado(areaAchadoUp?.natureza)
+            setArea()
+        }
+    }, [areaAchado, areaAchadoUp])
+
+   
+
 
     const onSubmit = (data: AreaAchado) => {
-        api.post('/area-achado', data).then(response => {
-            const newAreaAchado = response.data.areaAchado;
+        const areaId = id;
+        api.patch(`/area-achado/update/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success');
             reset();
             setValue('natureza', null);
-            setArrayAreaAchado(prevArray => [...prevArray, newAreaAchado])
+            setArrayAreaAchado(prevArray => {
+                const updatedArray = prevArray.map(item => 
+                    item.id === areaId ? {...item, ...data} : item
+                )
+                
+                return updatedArray
+            })
             closeModal()
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
@@ -66,19 +93,16 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
 
     };
 
-    useEffect(() => {
-        getNatAchado()
-    }, [])
 
     return (
         <Container>
-            {areaAchado && (
+            {(areaAchadoUp && areaAchado)&& (
                 <Box component="form" name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
                     <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Área do Achado</Typography>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             variant='filled'
-                            defaultValue={areaAchado.descricao}
+                            defaultValue={areaAchado?.descricao}
                             required
                             autoFocus
                             fullWidth
@@ -102,6 +126,7 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
                         <AutocompleteNatAchado
                             label="Natureza"
                             options={arrayNatAchado}
+                            value={natAchado}
                             {...register('natureza', {
                                 required: 'Campo obrigatório'
                             })}

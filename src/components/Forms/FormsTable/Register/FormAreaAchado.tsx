@@ -11,7 +11,7 @@ import useFetchListData from '../../../../hooks/useFetchListData';
 
 export const AutocompleteNatAchado = React.forwardRef<
     HTMLDivElement,
-    { label: string; options: NatAchado[] } & ReturnType<UseFormRegister<any>>
+    { label: string; options: NatAchado[]} & ReturnType<UseFormRegister<any>>
 >(({ onChange, onBlur, name, label, options }, ref) => (
     <>
         <Autocomplete

@@ -152,6 +152,7 @@ export interface DivAreaAchadoUp {
 export interface AreaAchadoUp {
   id: string;
   descricao: string;
+  natureza:NatAchado;
   divisoes: DivAreaAchadoUp[];
 }
 
