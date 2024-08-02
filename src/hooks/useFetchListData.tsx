@@ -21,7 +21,7 @@ const useFetchListData = () => {
     arrayProcesso, setArrayPessoaFisica, setArrayJurisd,
     setArrayProcurador, setArrayRelator, setArrayAchado,
     setArrayNatAchado, setArrayDivAchado, setArrayAreaAchado,
-     setNatAchadoUp, setAreaAchadoUp } = useContextTable();
+     setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp } = useContextTable();
 
 
   const getAllPessoaFisica = async () => {
@@ -294,6 +294,15 @@ const useFetchListData = () => {
     })
   }
 
+  const getDivAchadoRelation = async (id: GridRowId | undefined) => {
+    await api(`div-area-achado/relation/${id}`).then(response => {
+      const divAchadoR = response.data.result;
+      setDivAchadoUp(divAchadoR)  
+    }).catch((error:any) => {
+      TypeAlert(error, 'error')
+    })
+  }
+
 
   return {
     arrayListData,
@@ -324,7 +333,8 @@ const useFetchListData = () => {
     setJurisdRelations,
     getJurisdPrincipal,
     getNatAchadoRelation,
-    getAreaAchadoRelation
+    getAreaAchadoRelation,
+    getDivAchadoRelation
     
   }
 

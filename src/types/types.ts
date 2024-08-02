@@ -143,9 +143,10 @@ export interface AchadoUp {
   ativo: string;
 }
 
-export interface DivAreaAchadoUp {
+export interface DivAchadoUp {
   id: string;
   descricao: string;
+  area:AreaAchado;
   achados: AchadoUp[];
 }
 
@@ -153,7 +154,7 @@ export interface AreaAchadoUp {
   id: string;
   descricao: string;
   natureza:NatAchado;
-  divisoes: DivAreaAchadoUp[];
+  divisoes: DivAchadoUp[];
 }
 
 export interface NatAchadoUp {
