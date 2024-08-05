@@ -53,11 +53,11 @@ const FormAreaAchado = () => {
 
     };
 
-    useEffect(() => {
-        if(arrayNatAchado.length <= 0){
-            getAllNatAchado()
-        }
-    },[])
+    // useEffect(() => {
+    //     if(arrayNatAchado.length <= 0){
+    //         getAllNatAchado()
+    //     }
+    // },[])
 
     return (
         <Box component="form" name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>

@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 import {
     Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado,
-    Interessado, Achado, NatAchadoUp, AreaAchadoUp, DivAchadoUp
+    Interessado, Achado, NatAchadoUp, AreaAchadoUp, DivAchadoUp,
+    AchadoUp
 } from "../types/types";
 
 
@@ -22,6 +23,7 @@ interface TableContextType {
     natAchadoUp: NatAchadoUp | undefined;
     areaAchadoUp: AreaAchadoUp | undefined;
     divAchadoUp: DivAchadoUp | undefined;
+    achadoUp: AchadoUp | undefined;
     handleLocalization: {};
     setArrayPessoaFisica: Dispatch<SetStateAction<PessoaFisica[]>>;
     setArrayJurisd: Dispatch<SetStateAction<Jurisd[]>>;
@@ -32,6 +34,7 @@ interface TableContextType {
     setNatAchadoUp: Dispatch<SetStateAction<NatAchadoUp | undefined>>;
     setAreaAchadoUp: Dispatch<SetStateAction<AreaAchadoUp | undefined>>;
     setDivAchadoUp: Dispatch<SetStateAction<DivAchadoUp | undefined>>;
+    setAchadoUp: Dispatch<SetStateAction<AchadoUp | undefined>>;
     setArrayAreaAchado: Dispatch<SetStateAction<AreaAchado[]>>;
     setArrayDivAchado: Dispatch<SetStateAction<DivAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
@@ -62,6 +65,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [natAchadoUp, setNatAchadoUp] = useState<NatAchadoUp>()
     const [areaAchadoUp, setAreaAchadoUp] = useState<AreaAchadoUp>()
     const [divAchadoUp, setDivAchadoUp] = useState<DivAchadoUp>()
+    const [achadoUp, setAchadoUp] = useState<AchadoUp>()
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -106,6 +110,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             natAchadoUp,
             areaAchadoUp,
             divAchadoUp,
+            achadoUp,
             arrayAreaAchado,
             arrayDivAchado,
             arrayAchado,
@@ -125,6 +130,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setNatAchadoUp,
             setAreaAchadoUp,
             setDivAchadoUp,
+            setAchadoUp
         }}>
             {children}
         </TableContext.Provider>

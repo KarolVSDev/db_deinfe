@@ -8,59 +8,70 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
+import { achadoHeader } from '../../../../service/columns';
 
 interface DivAchadoProps {
-    closeModal: () => void;
-    id: GridRowId | undefined;
+  closeModal: () => void;
+  id: GridRowId | undefined;
 }
 const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
-    const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Achado>({});
+  const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Achado>({});
 
-    const { arrayDivAchado, setArrayDivAchado, setArrayAchado} = useContextTable()
-    const { getAllAreaAchado, getDivAchadoRelation } = useFetchListData()
-    const [areaAchado, setAreaAchado] = useState<AreaAchado>()
-    const [divAchado, setDiviAchado] = useState<DivAchado>()
+  const { arrayDivAchado, setArrayDivAchado, setArrayAchado, achadoUp } = useContextTable()
+  const { getAllDivAchado, getAchadoRelation } = useFetchListData()
+  const [areaAchado, setAreaAchado] = useState<AreaAchado>()
+  const [divAchado, setDivAchado] = useState<DivAchado>()
 
-
-    // const setDiv = () => {
-    //     try {
-    //         if (divAchadoUp) {
-    //             const div = arrayDivAchado.find(div => div.id === divAchadoUp.id)
-    //             setDiviAchado(div)
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // };
-
-    useEffect(() => {
-        getAllAreaAchado()
-        if (id) {
-            getDivAchadoRelation(id)
-            //setDiv()
-        }
-    }, [divAchado])
-
-
-    const onSubmit = (data: Achado) => {
-      api.post('/achado', data).then(response => {
-        const newAchado = response.data.achado;
-        TypeAlert(response.data.message, 'success')
-        reset()
-        setArrayAchado(prevArray => [...prevArray, newAchado])
-      }).catch((error) => {
-        TypeAlert(error.response.data.message, 'warning');
-      })
+  useEffect(() => {
+    getAllDivAchado()
+    if (id) {
+      getAchadoRelation(id)
+      setDiv()
     }
+  }, [achadoUp, divAchado])
+
+  const setDiv = () => {
+      try {
+          if (achadoUp) {
+              const div =  {
+                id:achadoUp.divisao.id,
+                descricao:achadoUp.divisao.descricao
+              }
+              setDivAchado(div)
+          }
+      } catch (error) {
+          console.log(error)
+      }
+  };
 
 
-    return (
-        <Container>
-          <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
+  const onSubmit = (data: Achado) => {
+    const idAchado = id;
+    api.patch(`/achado/update/${idAchado}`, data).then(response => {
+      TypeAlert(response.data.message, 'success')
+      reset()
+      setArrayAchado(prevArray => {
+        const updatedArray = prevArray.map(item => 
+          item.id === idAchado ? {...item, ...data} : item
+        )
+        return updatedArray
+      });
+      closeModal()
+    }).catch((error) => {
+      TypeAlert(error.response.data.message, 'warning');
+    })
+  }
+
+
+  return (
+    <Container>
+      {(achadoUp && divAchado) && (
+        <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
           <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro do Achado</Typography>
           <TextField
             variant='filled'
             autoComplete="given-name"
+            defaultValue={achadoUp.titulo}
             type="text"
             required
             fullWidth
@@ -84,6 +95,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             autoComplete="given-name"
             required
             fullWidth
+            defaultValue={achadoUp.texto}
             id="texto"
             label="Texto"
             type="text"
@@ -102,6 +114,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             variant='filled'
             required
             fullWidth
+            defaultValue={achadoUp.criterio}
             id="criterio"
             label="Critério"
             type="text"
@@ -121,6 +134,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             variant='filled'
             required
             fullWidth
+            defaultValue={achadoUp.ativo}
             id="ativo"
             label="Ativo"
             type="text"
@@ -144,6 +158,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             disablePortal
             id="combo-box-demo"
             options={arrayDivAchado}
+            defaultValue={divAchado}
             getOptionLabel={(option: DivAchado) => option.descricao}
             onChange={(event, value) => setValue('divisao', value?.id ?? '')}
             renderInput={(params) => <TextField variant='filled' {...params} label="Divisão" />}
@@ -152,8 +167,9 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
 
           <RegisterButton text="Registrar" />
         </Box>
-        </Container>
-    );
+      )}
+    </Container>
+  );
 }
 
 export default FormUpdateAchados;

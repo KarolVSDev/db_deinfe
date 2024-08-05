@@ -37,7 +37,7 @@ export default function DatabaseTable() {
     arrayProcurador, arrayRelator, handleLocalization, arrayNatAchado,
     arrayAreaAchado, arrayDivAchado, arrayAchado,
     setArrayPessoaFisica, setArrayJurisd, setArrayProcesso,
-    setArrayProcurador, setArrayRelator, setArrayNatAchado } = useContextTable();
+    setArrayProcurador, setArrayRelator, setArrayNatAchado, setArrayAreaAchado, setArrayDivAchado, setArrayAchado} = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
@@ -121,7 +121,7 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(achadoHeader));
         setRows(createRows(arrayAchado))
         break
-      case 'div-achado':
+      case 'div-area-achado':
         if (arrayDivAchado.length <= 0) {
           getAllDivAchado()
         }
@@ -172,7 +172,7 @@ export default function DatabaseTable() {
     { value: 'procurador', string: 'Procurador' },
     { value: 'relator', string: 'Relator' },
     { value: 'achado', string: 'Achados' },
-    { value: 'div-achado', string: 'Divisão dos Achados' },
+    { value: 'div-area-achado', string: 'Divisão dos Achados' },
     { value: 'area-achado', string: 'Área dos Achados' },
     { value: 'nat-achado', string: 'Natureza dos Achados' },
   ]
@@ -210,12 +210,23 @@ export default function DatabaseTable() {
         case 'nat-achado':
           setArrayNatAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
           break;
+        case 'area-achado':
+          setArrayAreaAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
+        case 'div-area-achado':
+          setArrayDivAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          await getAllAchados();
+          break;
+        case 'achado':
+          setArrayAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          break;
         default:
           break;
       }
       setSelectedRow(null)
 
     } catch (error: any) {
+      console.log(error)
       TypeAlert('Erro ao tentar excluir', 'error')
     }
   }
@@ -244,7 +255,7 @@ export default function DatabaseTable() {
       case 'area-achado':
         setRows(createRows(arrayAreaAchado))
         break;
-      case 'div-achado':
+      case 'div-area-achado':
         setRows(createRows(arrayDivAchado))
         break;
       case 'achado':

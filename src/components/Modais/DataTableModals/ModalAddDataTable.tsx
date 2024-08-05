@@ -19,6 +19,8 @@ import FormJurisd_Jurisd from '../../Forms/FormsTable/Register/FormJurisd_Jurisd
 import StepperV from '../../Stepper/Stepper';
 import FormProcurador from '../../Forms/FormsTable/Register/FormProcurador';
 import FormRelator from '../../Forms/FormsTable/Register/FormRelator';
+import { useContextTable } from '../../../context/TableContext';
+import useFetchListData from '../../../hooks/useFetchListData';
 
 
 
@@ -35,7 +37,7 @@ const style = {
   overflowY: 'auto',
   height: '95vh',
   scrollbarWidth: 'thin',
-  background:'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
+  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };
 
 
@@ -44,11 +46,23 @@ export default function ModalAddData() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const { getAllNatAchado, getAllDivAchado, 
+    getAllAreaAchado, getAllJurisd, getAllRelator, getAllProcurador,
+     getAllPessoaFisica, getAllProcesso} = useFetchListData()
+
   const handleSubmit = () => {
     setOpen(false)
   }
 
   useEffect(() => {
+    getAllJurisd()
+    getAllRelator()
+    getAllProcurador()
+    getAllPessoaFisica()
+    getAllProcesso()
+    getAllNatAchado()
+    getAllAreaAchado()
+    getAllDivAchado()
 
   }, [open])
 

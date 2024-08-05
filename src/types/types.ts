@@ -98,7 +98,7 @@ export interface Procurador {
   id?: string;
   nome: string;
   ativo?: string;
-  processos?:ProcessoUpdate;
+  processos?: ProcessoUpdate;
 }
 export interface Relator {
   id?: string;
@@ -112,19 +112,24 @@ export interface NatAchado {
 }
 
 export interface NatRelation {
-  id:string;
-  descricao:string;
-  areas:{id:string, descricao:string, divisoes:[]}[];
+  id: string;
+  descricao: string;
+  areas: { id: string, descricao: string, divisoes: [] }[];
 }
 export interface DivAchado {
   id: string;
   descricao: string;
-  area: string;
+  area?: string;
 }
 export interface AreaAchado {
   id: string;
   descricao: string;
-  natureza: string | null;
+  natureza: string;
+}
+export interface AreaAchado2 {
+  id: string;
+  descricao: string;
+  natureza: {id:string, descricao:string};
 }
 export interface Achado {
   id: string;
@@ -141,19 +146,31 @@ export interface AchadoUp {
   texto: string;
   criterio: string;
   ativo: string;
+  divisao: {
+    id: string;
+    descricao: string;
+    area: {
+      id: string;
+      descricao: string;
+      natureza: {
+        id: string;
+        descricao: string;
+      }
+    }
+  }
 }
 
 export interface DivAchadoUp {
   id: string;
   descricao: string;
-  area:AreaAchado;
+  area: AreaAchado;
   achados: AchadoUp[];
 }
 
 export interface AreaAchadoUp {
   id: string;
   descricao: string;
-  natureza:NatAchado;
+  natureza: NatAchado;
   divisoes: DivAchadoUp[];
 }
 
@@ -185,13 +202,13 @@ export interface Jurisd {
   poder: string;
   ativo?: string;
   uf: string;
-  jurisdPrincipal?:string | {message:string}
+  jurisdPrincipal?: string | { message: string }
 }
 
-export interface jurisdRelation extends Jurisd{
-  processos:Processo[];
-  pessoaJurisds:PessoaJurisd[];
-  jurisdJurisds:{id:string, subordinado:Jurisd}[];
+export interface jurisdRelation extends Jurisd {
+  processos: Processo[];
+  pessoaJurisds: PessoaJurisd[];
+  jurisdJurisds: { id: string, subordinado: Jurisd }[];
 }
 export interface Jurisd_Jurisd {
   principal: string;
@@ -263,13 +280,13 @@ export interface PessoaJurisd {
   pessoa?: string | undefined
 }
 
-export interface ColumnConfig  {
+export interface ColumnConfig {
   id: string;
   label: string;
   minWidth: number;
 };
 
-export interface ListData  {
+export interface ListData {
   id: string;
   type: 'processo' | 'pessoajurisd' | 'procurador' | 'relator';
   value1: string,
@@ -280,7 +297,7 @@ export interface ListData  {
   value6: string;
 }
 
-export interface ProcessoDetails  {
+export interface ProcessoDetails {
   id?: string;
   numero: string;
   ano: string;

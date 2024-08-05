@@ -14,7 +14,6 @@ import FormUpdateRelator from '../../Forms/FormsTable/Update/FormUpdateRelator';
 import FormUpdateNatAchado from '../../Forms/FormsTable/Update/FormUpdateNatAchado';
 import FormUpdateAreaAchado from '../../Forms/FormsTable/Update/FormUpdateAreaAchado';
 import FormUpdateDivAchado from '../../Forms/FormsTable/Update/FormUpdateDivAchado';
-import FormUpdateAchado from '../../Forms/FormsTable/Update/FormUpdateAchado';
 import FormUpdateAchados from '../../Forms/FormsTable/Update/FormUpdateAchados';
 
 const style = {
@@ -65,7 +64,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
       case 'area-achado':
         return <FormUpdateAreaAchado closeModal={onClose} id={id} />
 
-      case 'div-achado':
+      case 'div-area-achado':
         return <FormUpdateDivAchado closeModal={onClose} id={id} />
 
       case 'achado':

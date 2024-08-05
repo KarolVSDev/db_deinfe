@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm, UseFormRegister } from 'react-hook-form';
-import { AreaAchado, AreaAchadoUp, NatAchado } from '../../../../types/types';
+import { AreaAchado, AreaAchado2, AreaAchadoUp, NatAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -44,32 +44,29 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
     const { arrayNatAchado, setArrayAreaAchado, areaAchadoUp } = useContextTable();
 
     const [natAchado, setNatAchado] = useState<NatAchado>()
-    const [areaAchado, setAreaAchado] = useState<AreaAchado>()
-    const { getAllNatAchado, getAreaAchadoRelation } = useFetchListData()
-    const { arrayAreaAchado } = useContextTable()
+    const [areaAchado, setAreaAchado] = useState<AreaAchado2>()
+    const { getAllNatAchado, getAreaAchadoRelation} = useFetchListData()
+   
 
-
-    const setArea = () =>{
-        try {
-            if(areaAchadoUp){
-                const area = arrayAreaAchado.find(area => area.id === areaAchadoUp.id)
-                setAreaAchado(area)
-            }
-        } catch (error) {
+    const getAreaAchado = () => {
+        api.get(`area-achado/${id}`).then(response => {
+            setAreaAchado(response.data)
+        }).catch((error) => {
             console.log(error)
-        }
-    };
+            TypeAlert('Erro ao buscar a área do Achado', 'error')
+        })
+    }
 
     useEffect(() => {
         getAllNatAchado()
         if (id) {
+            getAreaAchado()
             getAreaAchadoRelation(id)
-            setNatAchado(areaAchadoUp?.natureza)
-            setArea()
+            setNatAchado(areaAchado?.natureza);
         }
-    }, [areaAchado, areaAchadoUp])
+    }, [])
 
-   
+    console.log(areaAchado)
 
 
     const onSubmit = (data: AreaAchado) => {
@@ -77,7 +74,6 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
         api.patch(`/area-achado/update/${id}`, data).then(response => {
             TypeAlert(response.data.message, 'success');
             reset();
-            setValue('natureza', null);
             setArrayAreaAchado(prevArray => {
                 const updatedArray = prevArray.map(item => 
                     item.id === areaId ? {...item, ...data} : item
@@ -88,7 +84,6 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
             closeModal()
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
-            setValue('natureza', null);
         });
 
     };
@@ -96,13 +91,13 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
 
     return (
         <Container>
-            {(areaAchadoUp && areaAchado)&& (
+            {areaAchado && (
                 <Box component="form" name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
                     <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Área do Achado</Typography>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             variant='filled'
-                            defaultValue={areaAchado?.descricao}
+                            defaultValue={areaAchado.descricao}
                             required
                             autoFocus
                             fullWidth
@@ -126,7 +121,7 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
                         <AutocompleteNatAchado
                             label="Natureza"
                             options={arrayNatAchado}
-                            value={natAchado}
+                            value={areaAchado.natureza}
                             {...register('natureza', {
                                 required: 'Campo obrigatório'
                             })}
