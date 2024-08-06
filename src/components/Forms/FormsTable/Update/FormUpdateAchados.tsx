@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { Achado, AreaAchado, DivAchado } from '../../../../types/types';
+import { Achado, Achado2, AreaAchado, DivAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -17,32 +17,26 @@ interface DivAchadoProps {
 const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
   const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Achado>({});
 
-  const { arrayDivAchado, setArrayDivAchado, setArrayAchado, achadoUp } = useContextTable()
+  const { arrayDivAchado, setArrayAchado, achadoUp } = useContextTable()
   const { getAllDivAchado, getAchadoRelation } = useFetchListData()
-  const [areaAchado, setAreaAchado] = useState<AreaAchado>()
-  const [divAchado, setDivAchado] = useState<DivAchado>()
+  const [achado, setAchado] = useState<Achado2>()
+
+  const getAchado = () => {
+    api.get(`achado/${id}`).then(response => {
+      console.log(response.data)
+      setAchado(response.data)
+    }).catch((error) =>{
+      console.log(error)
+      TypeAlert('Erro ao Resgata Achado', 'error')
+    })
+  }
 
   useEffect(() => {
     getAllDivAchado()
     if (id) {
-      getAchadoRelation(id)
-      setDiv()
+      getAchado()
     }
-  }, [achadoUp, divAchado])
-
-  const setDiv = () => {
-      try {
-          if (achadoUp) {
-              const div =  {
-                id:achadoUp.divisao.id,
-                descricao:achadoUp.divisao.descricao
-              }
-              setDivAchado(div)
-          }
-      } catch (error) {
-          console.log(error)
-      }
-  };
+  }, [])
 
 
   const onSubmit = (data: Achado) => {
@@ -65,13 +59,13 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
 
   return (
     <Container>
-      {(achadoUp && divAchado) && (
+      {achado && (
         <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
           <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro do Achado</Typography>
           <TextField
             variant='filled'
             autoComplete="given-name"
-            defaultValue={achadoUp.titulo}
+            defaultValue={achado.titulo}
             type="text"
             required
             fullWidth
@@ -95,7 +89,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             autoComplete="given-name"
             required
             fullWidth
-            defaultValue={achadoUp.texto}
+            defaultValue={achado.texto}
             id="texto"
             label="Texto"
             type="text"
@@ -114,7 +108,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             variant='filled'
             required
             fullWidth
-            defaultValue={achadoUp.criterio}
+            defaultValue={achado.criterio}
             id="criterio"
             label="Critério"
             type="text"
@@ -134,7 +128,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             variant='filled'
             required
             fullWidth
-            defaultValue={achadoUp.ativo}
+            defaultValue={achado.ativo}
             id="ativo"
             label="Ativo"
             type="text"
@@ -158,7 +152,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
             disablePortal
             id="combo-box-demo"
             options={arrayDivAchado}
-            defaultValue={divAchado}
+            defaultValue={achado.divisao}
             getOptionLabel={(option: DivAchado) => option.descricao}
             onChange={(event, value) => setValue('divisao', value?.id ?? '')}
             renderInput={(params) => <TextField variant='filled' {...params} label="Divisão" />}

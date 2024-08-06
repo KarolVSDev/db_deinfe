@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { ColumnConfig, dataRelation, jurisdRelation, ListData, ProcessoDetails } from '../../types/types';
+import { ColumnConfig, dataRelation, jurisdRelation, ListData, NatAchadoUp, ProcessoDetails } from '../../types/types';
 import { interessadoHeader, apensoHeader, pessoaJurisdHeader, jurisdHeader, juridJurisdHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
@@ -15,8 +15,9 @@ export interface DataProcessoDetailsProps {
     arrayRelation?: dataRelation | undefined;
     arrayListData?: ListData[];
     jursidDetails?:jurisdRelation | undefined;
+    natAchadoRelations?:NatAchadoUp;
 }
-const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Details, arrayRelation, arrayListData, jursidDetails }) => {
+const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({natAchadoRelations, dataType, Details, arrayRelation, arrayListData, jursidDetails }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
@@ -176,7 +177,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ dataType, Det
             }
         }
     })
-
+    console.log(natAchadoRelations)
     return (
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid

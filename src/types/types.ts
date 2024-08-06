@@ -72,7 +72,6 @@ export interface UpdatePessoaFisica {
   ramal: string;
   email: string;
 }
-
 export interface dataRelation {
   id?: string;
   ativo?: string;
@@ -110,7 +109,6 @@ export interface NatAchado {
   id: String;
   descricao: string;
 }
-
 export interface NatRelation {
   id: string;
   descricao: string;
@@ -121,10 +119,15 @@ export interface DivAchado {
   descricao: string;
   area?: string;
 }
+export interface DivAchado2 {
+  id: string;
+  descricao: string;
+  area: {id:string, descricao:string};
+}
 export interface AreaAchado {
   id: string;
   descricao: string;
-  natureza: string;
+  natureza?: string;
 }
 export interface AreaAchado2 {
   id: string;
@@ -139,6 +142,14 @@ export interface Achado {
   ativo: string;
   divisao: string;
 }
+export interface Achado2 {
+  id: string;
+  titulo: string;
+  texto: string;
+  criterio: string;
+  ativo: string;
+  divisao: {id:string, descricao:string};
+}
 
 export interface AchadoUp {
   id: string;
@@ -146,18 +157,6 @@ export interface AchadoUp {
   texto: string;
   criterio: string;
   ativo: string;
-  divisao: {
-    id: string;
-    descricao: string;
-    area: {
-      id: string;
-      descricao: string;
-      natureza: {
-        id: string;
-        descricao: string;
-      }
-    }
-  }
 }
 
 export interface DivAchadoUp {
@@ -279,13 +278,11 @@ export interface PessoaJurisd {
   jurisd?: string;
   pessoa?: string | undefined
 }
-
 export interface ColumnConfig {
   id: string;
   label: string;
   minWidth: number;
 };
-
 export interface ListData {
   id: string;
   type: 'processo' | 'pessoajurisd' | 'procurador' | 'relator';
@@ -296,7 +293,6 @@ export interface ListData {
   value5: string;
   value6: string;
 }
-
 export interface ProcessoDetails {
   id?: string;
   numero: string;

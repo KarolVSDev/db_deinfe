@@ -1,4 +1,4 @@
-import { Box, Container, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { NatAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
@@ -8,6 +8,7 @@ import { useContextTable } from '../../../../context/TableContext';
 import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
+import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
 
 interface NatAchadoProp {
   closeModal: () => void;
@@ -19,6 +20,7 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
   const { setArrayNatAchado, natAchadoUp, arrayNatAchado } = useContextTable()
   const { getNatAchadoRelation } = useFetchListData()
   const [natAchado, setNatAchado] = useState<NatAchado>()
+  const [openModal, setOpenModal] = useState(false)
 
 
   const  getNatAchado = () => {
@@ -51,10 +53,18 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
 
   useEffect(() => {
     if (id) {
-      getNatAchadoRelation(id);
       getNatAchado()
     }
   }, [])
+
+  const handleModal = () => {
+    getNatAchadoRelation(id);
+    setOpenModal(true)
+  }
+
+  const handleClose = () => {
+    setOpenModal(false)
+  }
 
   return (
     <Container>
@@ -87,6 +97,10 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
           <RegisterButton text="Registrar" />
         </Box>
       )}
+        <Box sx={{mt:4}}>
+          <Button  onClick={handleModal} sx={{width:'100%'}} variant={'contained'}>Tabela de relações</Button>
+        </Box>
+        <ModalShowDetails dataType={'nat-achado'} natAchadoRelations={natAchadoUp} onClose={handleClose} open ={openModal}/>
     </Container>
   );
 }

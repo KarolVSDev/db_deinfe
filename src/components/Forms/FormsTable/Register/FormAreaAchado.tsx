@@ -44,20 +44,14 @@ const FormAreaAchado = () => {
             const newAreaAchado = response.data.areaAchado;
             TypeAlert(response.data.message, 'success');
             reset();
-            setValue('natureza', null);
+            setValue('natureza', '');
             setArrayAreaAchado(prevArray => [...prevArray, newAreaAchado])
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
-            setValue('natureza', null);
+            setValue('natureza', '');
         });
 
     };
-
-    // useEffect(() => {
-    //     if(arrayNatAchado.length <= 0){
-    //         getAllNatAchado()
-    //     }
-    // },[])
 
     return (
         <Box component="form" name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>

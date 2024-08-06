@@ -37,7 +37,7 @@ export default function DatabaseTable() {
     arrayProcurador, arrayRelator, handleLocalization, arrayNatAchado,
     arrayAreaAchado, arrayDivAchado, arrayAchado,
     setArrayPessoaFisica, setArrayJurisd, setArrayProcesso,
-    setArrayProcurador, setArrayRelator, setArrayNatAchado, setArrayAreaAchado, setArrayDivAchado, setArrayAchado} = useContextTable();
+    setArrayProcurador, setArrayRelator, setArrayNatAchado, setArrayAreaAchado, setArrayDivAchado, setArrayAchado } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
@@ -187,9 +187,11 @@ export default function DatabaseTable() {
     setOpenModal(false);
   };
 
+  //função de delete
   const handleDelete = async (selectedRow: GridRowId, dataType: string) => {
     try {
       const response = await api.delete(`/${dataType}/${selectedRow}`)
+      console.log(response)
       TypeAlert(response.data.message, 'success')
       switch (dataType) {
         case 'pessoafisica':
@@ -209,9 +211,14 @@ export default function DatabaseTable() {
           break;
         case 'nat-achado':
           setArrayNatAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          await getAllAreaAchado()
+          await getAllDivAchado()
+          await getAllAchados()
           break;
         case 'area-achado':
           setArrayAreaAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          await getAllDivAchado()
+          await getAllAchados()
           break;
         case 'div-area-achado':
           setArrayDivAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
@@ -231,7 +238,7 @@ export default function DatabaseTable() {
     }
   }
 
-  //esse bloco atualiza a visualização de pessoa física
+  //esse bloco atualiza a visualização dos dados
   useEffect(() => {
     switch (dataType) {
       case 'pessoafisica':

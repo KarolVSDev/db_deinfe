@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ListData, dataRelation, ProcessoDetails, jurisdRelation } from '../../../types/types';
+import { ListData, dataRelation, ProcessoDetails, jurisdRelation, NatAchadoUp } from '../../../types/types';
 import DataProcessoDetails from '../../DataTable/DataProcessoDetails';
 
 
@@ -15,7 +15,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 'fit-content',
-  maxWidth:1200,
+  maxWidth: 1200,
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
@@ -30,15 +30,16 @@ interface ModalShowDetailProps {
   dataType: string;
   open: boolean;
   onClose: () => void;
-  Details?:ProcessoDetails | undefined;
+  Details?: ProcessoDetails | undefined;
   arrayRelation?: dataRelation;
-  arrayListData?:ListData[];
-  jurisdDetails?:jurisdRelation;
+  arrayListData?: ListData[];
+  jurisdDetails?: jurisdRelation;
+  natAchadoRelations?: NatAchadoUp;
 }
 
-const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,  dataType, open, onClose, arrayRelation, arrayListData, jurisdDetails }) => {
+const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details, dataType, open, onClose, arrayRelation, arrayListData, jurisdDetails, natAchadoRelations }) => {
+  
 
- 
   return (
     <div>
       <Modal
@@ -56,7 +57,7 @@ const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,  dataType, 
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Box sx={{display:'flex', justifyContent:'flex-end', p:1}}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
               <IconButton onClick={onClose} sx={{
                 mb: 2, '&:hover': {
                   bgcolor: '#1e293b', color: '#ffffff',
@@ -65,7 +66,14 @@ const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,  dataType, 
                 <CloseIcon />
               </IconButton>
             </Box>
-            {<DataProcessoDetails arrayListData={arrayListData} dataType={dataType} Details={Details} arrayRelation={arrayRelation} jursidDetails={jurisdDetails}/>}
+            {<DataProcessoDetails
+              arrayListData={arrayListData}
+              dataType={dataType}
+              Details={Details}
+              arrayRelation={arrayRelation}
+              jursidDetails={jurisdDetails}
+              natAchadoRelations={natAchadoRelations}
+               />}
           </Box>
         </Fade>
       </Modal>

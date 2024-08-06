@@ -347,8 +347,6 @@ const useFetchListData = () => {
     getAchadoRelation
     
   }
-
-
 }
 
 export default useFetchListData;

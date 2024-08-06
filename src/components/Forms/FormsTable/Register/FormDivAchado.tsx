@@ -15,9 +15,11 @@ const FormDivAchado = () => {
             const newDivAchado = response.data.divAreaAchado;
             TypeAlert(response.data.message, 'success');
             reset();
+            setValue('area', '')
             setArrayDivAchado(prevArray => [...prevArray, newDivAchado]);
         }).catch((error) => {
             TypeAlert(error.response.data.message, 'warning');
+            setValue('area', '')
         });
 
     };
