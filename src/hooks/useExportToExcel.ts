@@ -1,8 +1,9 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import * as  XLSX from 'xlsx';
-import { ApensoProcesso, ApensoProcessoPai, dataRelation, InteressadoPessoa, jurisdRelation, ListData, PessoaJurisd, ProcessoDetails } from "../types/types";
+import { ApensoProcesso, ApensoProcessoPai, dataRelation, InteressadoPessoa, jurisdRelation, ListData, NatAchadoUp, NatRelation, PessoaJurisd, ProcessoDetails } from "../types/types";
 import { formateDateToPtBr } from "./DateFormate";
+import useFormData from "./useFormData";
 
 
 interface GridState {
@@ -11,7 +12,9 @@ interface GridState {
 }
 
 const useExportToExcel = () => {
-    
+
+    const {transformNat} = useFormData()
+
     const exportToExcel = (gridState: GridState, fileName: 'data.xlsx') => {
         const { columns, rows } = gridState;
         const exportRows = rows.map((row) => {
@@ -263,7 +266,22 @@ const useExportToExcel = () => {
         }
     }, [])
 
-    return { exportToExcel, exportProcessoToExcel, exportPessoaToExcel, exportListData, exportJurisdToExcel }
+    const exportNatRelations = useCallback((data: NatAchadoUp, fileName: string) => {
+        const exportData = transformNat(data, false)
+        const natRelationSheet = XLSX.utils.json_to_sheet(exportData)
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, natRelationSheet, 'Tabela de Relacções')
+        XLSX.writeFile(wb, fileName)
+    }, [])
+
+    return {
+        exportToExcel,
+        exportProcessoToExcel,
+        exportPessoaToExcel,
+        exportListData,
+        exportJurisdToExcel,
+        exportNatRelations
+    }
 }
 
 export default useExportToExcel;

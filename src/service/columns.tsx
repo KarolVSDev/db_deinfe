@@ -140,3 +140,12 @@ export const pessoaJurisdHeader = [
     {id:'dataExoneracao', label:'Data Exoneração', minWidth:150},
     {id:'gestor', label:'Gestor', minWidth:150},
 ]
+export const natAchadoRelationHeader = [
+    {id:'natureza', label:'Naturea', minWidth:150},
+    {id:'area', label:'Area', minWidth:150},
+    {id:'divisao', label:'Divisão', minWidth:150},
+    {id:'titulo', label:'Títutlo do Achado', minWidth:150},
+    {id:'texto', label:'Texto do Achado', minWidth:150},
+    {id:'criterio', label:'Critério do Achado', minWidth:150},
+    {id:'ativo', label:'Ativo', minWidth:150},
+]

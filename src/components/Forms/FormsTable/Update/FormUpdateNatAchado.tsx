@@ -9,6 +9,8 @@ import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
+import HandleModalButton from '../../../Buttons/HandleTypeButton';
+import useExportToExcel from '../../../../hooks/useExportToExcel';
 
 interface NatAchadoProp {
   closeModal: () => void;
@@ -21,13 +23,14 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
   const { getNatAchadoRelation } = useFetchListData()
   const [natAchado, setNatAchado] = useState<NatAchado>()
   const [openModal, setOpenModal] = useState(false)
+  const {exportNatRelations} = useExportToExcel()
 
 
-  const  getNatAchado = () => {
+  const getNatAchado = () => {
     const natachado = arrayNatAchado.find(item => item.id === id);
-    if(natachado){
+    if (natachado) {
       setNatAchado(natachado)
-    }else{
+    } else {
       return console.log('natChado não encontrado')
     }
   }
@@ -35,13 +38,13 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
 
   const onSubmit = (data: NatAchado) => {
     const NatId = id
-    api.patch(`/nat-achado/update/${id}`, data).then(response => {    
+    api.patch(`/nat-achado/update/${id}`, data).then(response => {
       TypeAlert(response.data.message, 'success');
       reset()
       setArrayNatAchado(prevArray => {
-        const updatedArray = prevArray.map(item => 
-          item.id === NatId ? {...item, ...data} : item
-        ) 
+        const updatedArray = prevArray.map(item =>
+          item.id === NatId ? { ...item, ...data } : item
+        )
         return updatedArray
       })
       closeModal()
@@ -66,11 +69,19 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
     setOpenModal(false)
   }
 
+  const handleExport = () => {
+    getNatAchadoRelation(id);
+    console.log(natAchadoUp)
+    if(natAchadoUp){
+      exportNatRelations(natAchadoUp, 'relacoes.xlsx')
+    }
+  }
+
   return (
     <Container>
       {natAchado && (
         <Box component="form" name='formNatAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-           <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Natureza do Achado</Typography>
+          <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro de Natureza do Achado</Typography>
           <Grid item xs={12} sm={4}>
             <TextField
               variant='filled'
@@ -97,10 +108,10 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
           <RegisterButton text="Registrar" />
         </Box>
       )}
-        <Box sx={{mt:4}}>
-          <Button  onClick={handleModal} sx={{width:'100%'}} variant={'contained'}>Tabela de relações</Button>
-        </Box>
-        <ModalShowDetails dataType={'nat-achado'} natAchadoRelations={natAchadoUp} onClose={handleClose} open ={openModal}/>
+      <HandleModalButton handleModal={handleModal} />
+      <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width:'100%',mt:1 }}>Exportar</Button>
+
+      <ModalShowDetails dataType={'nat-achado'} natAchadoRelations={natAchadoUp} onClose={handleClose} open={openModal} />
     </Container>
   );
 }

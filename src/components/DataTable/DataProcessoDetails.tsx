@@ -2,11 +2,12 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { ColumnConfig, dataRelation, jurisdRelation, ListData, NatAchadoUp, ProcessoDetails } from '../../types/types';
-import { interessadoHeader, apensoHeader, pessoaJurisdHeader, jurisdHeader, juridJurisdHeader } from '../../service/columns';
+import { interessadoHeader, apensoHeader, pessoaJurisdHeader, jurisdHeader, juridJurisdHeader, natAchadoRelationHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
 import useFetchListData from '../../hooks/useFetchListData';
 import { formateDateToPtBr } from '../../hooks/DateFormate';
+import useFormData from '../../hooks/useFormData';
 
 
 export interface DataProcessoDetailsProps {
@@ -14,21 +15,22 @@ export interface DataProcessoDetailsProps {
     Details?: ProcessoDetails | undefined;
     arrayRelation?: dataRelation | undefined;
     arrayListData?: ListData[];
-    jursidDetails?:jurisdRelation | undefined;
-    natAchadoRelations?:NatAchadoUp;
+    jursidDetails?: jurisdRelation | undefined;
+    natAchadoRelations?: NatAchadoUp;
 }
-const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({natAchadoRelations, dataType, Details, arrayRelation, arrayListData, jursidDetails }) => {
+const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRelations, dataType, Details, arrayRelation, arrayListData, jursidDetails }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
     const { onDelete } = useFetchListData()
+    const {transformNat} = useFormData()
 
     const handleDelete = (id: string, type: string) => {
-        if(id){
+        if (id) {
             onDelete(id, type)
         }
     }
-   
+
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
         return headers.map(header => ({
@@ -49,6 +51,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({natAchadoRelat
             ...item,
         }));
     };
+
 
 
     useEffect(() => {
@@ -89,7 +92,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({natAchadoRelat
                     objeto: processo.objeto,
                     arquivamento: formateDateToPtBr(processo.arquivamento)
                 })));
-            } else if(jursidDetails?.processos) {
+            } else if (jursidDetails?.processos) {
                 setRows(jursidDetails.processos.map(processo => ({
                     id: processo.id,
                     remover: <DeleteDataButton stateType={dataType} itemId={processo.id} handleDelete={handleDelete} />,
@@ -117,7 +120,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({natAchadoRelat
                     gestor: pessoaJurisd.gestor
 
                 })))
-            } else if(jursidDetails?.pessoaJurisds) {
+            } else if (jursidDetails?.pessoaJurisds) {
                 setRows(jursidDetails.pessoaJurisds.map(pessoaJurisd => ({
                     id: pessoaJurisd.id,
                     remover: <DeleteDataButton stateType={dataType} itemId={pessoaJurisd.id} handleDelete={handleDelete} />,
@@ -131,32 +134,32 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({natAchadoRelat
 
                 })))
             }
-        } else if(dataType === 'jurisd-jurisd'){
+        } else if (dataType === 'jurisd-jurisd') {
             setColumns(createGridColumns(juridJurisdHeader));
-            if(jursidDetails?.jurisdJurisds){
+            if (jursidDetails?.jurisdJurisds) {
                 setRows(jursidDetails.jurisdJurisds.map(objeto => ({
-                    id:objeto.id,
-                    remover:<DeleteDataButton stateType={dataType} itemId={objeto.id} handleDelete={handleDelete} />,
+                    id: objeto.id,
+                    remover: <DeleteDataButton stateType={dataType} itemId={objeto.id} handleDelete={handleDelete} />,
                     nome: objeto.subordinado.nome,
-                    sigla:objeto.subordinado.sigla,
-                    cnpj:objeto.subordinado.cnpj,
-                    ug:objeto.subordinado.ug,
-                    cep:objeto.subordinado.cep,
-                    logradouro:objeto.subordinado.logradouro,
-                    complemento:objeto.subordinado.complemento,
-                    numero:objeto.subordinado.numero,
-                    cidade:objeto.subordinado.cidade,
+                    sigla: objeto.subordinado.sigla,
+                    cnpj: objeto.subordinado.cnpj,
+                    ug: objeto.subordinado.ug,
+                    cep: objeto.subordinado.cep,
+                    logradouro: objeto.subordinado.logradouro,
+                    complemento: objeto.subordinado.complemento,
+                    numero: objeto.subordinado.numero,
+                    cidade: objeto.subordinado.cidade,
                     telefone1: objeto.subordinado.telefone1,
                     telefone2: objeto.subordinado.telefone2,
-                    email:objeto.subordinado.email,
-                    site:objeto.subordinado.site,
-                    cargoGestor:objeto.subordinado.cargoGestor,
-                    normaCriacao:objeto.subordinado.normaCriacao,
+                    email: objeto.subordinado.email,
+                    site: objeto.subordinado.site,
+                    cargoGestor: objeto.subordinado.cargoGestor,
+                    normaCriacao: objeto.subordinado.normaCriacao,
                     dataCriacao: formateDateToPtBr(objeto.subordinado.dataCriacao),
-                    normaExtincao:objeto.subordinado.normaExtincao,
-                    dataExtincao:formateDateToPtBr(objeto.subordinado.dataExtincao),
+                    normaExtincao: objeto.subordinado.normaExtincao,
+                    dataExtincao: formateDateToPtBr(objeto.subordinado.dataExtincao),
                     poder: objeto.subordinado.poder,
-                    ativo:objeto.subordinado.ativo
+                    ativo: objeto.subordinado.ativo
 
                 })))
             }
@@ -176,8 +179,16 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({natAchadoRelat
                 })))
             }
         }
+        if (dataType === 'nat-achado') {
+            setColumns(createGridColumns(natAchadoRelationHeader));
+            if (natAchadoRelations) {
+                const transformedRows = transformNat(natAchadoRelations, true);
+                setRows(transformedRows);
+            }
+        }
     })
-    console.log(natAchadoRelations)
+
+
     return (
         <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid
