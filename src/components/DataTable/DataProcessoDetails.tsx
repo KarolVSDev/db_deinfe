@@ -1,13 +1,14 @@
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { ColumnConfig, dataRelation, jurisdRelation, ListData, NatAchadoUp, ProcessoDetails } from '../../types/types';
+import { AreaAchadoUp, ColumnConfig, dataRelation, jurisdRelation, ListData, NatAchadoUp, ProcessoDetails } from '../../types/types';
 import { interessadoHeader, apensoHeader, pessoaJurisdHeader, jurisdHeader, juridJurisdHeader, natAchadoRelationHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import DeleteDataButton from '../Buttons/DeleteButton';
 import useFetchListData from '../../hooks/useFetchListData';
 import { formateDateToPtBr } from '../../hooks/DateFormate';
 import useFormData from '../../hooks/useFormData';
+import { Button, Divider, Paper } from '@mui/material';
 
 
 export interface DataProcessoDetailsProps {
@@ -17,13 +18,20 @@ export interface DataProcessoDetailsProps {
     arrayListData?: ListData[];
     jursidDetails?: jurisdRelation | undefined;
     natAchadoRelations?: NatAchadoUp;
+    areaAchadoRelations?: AreaAchadoUp;
 }
-const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRelations, dataType, Details, arrayRelation, arrayListData, jursidDetails }) => {
+const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRelations,
+    dataType,
+    Details,
+    arrayRelation,
+    arrayListData,
+    jursidDetails,
+    areaAchadoRelations }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
     const { onDelete } = useFetchListData()
-    const {transformNat} = useFormData()
+    const { transformNat, transformAreaAchado } = useFormData()
 
     const handleDelete = (id: string, type: string) => {
         if (id) {
@@ -51,7 +59,6 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRela
             ...item,
         }));
     };
-
 
 
     useEffect(() => {
@@ -185,9 +192,16 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRela
                 const transformedRows = transformNat(natAchadoRelations, true);
                 setRows(transformedRows);
             }
+        } else if (dataType === 'area-achado') {
+            setColumns(createGridColumns(natAchadoRelationHeader));
+            if (areaAchadoRelations) {
+                const transformedRows = transformAreaAchado(areaAchadoRelations, true)
+                setRows(transformedRows)
+            }
         }
     })
 
+    
 
     return (
         <Box sx={{ height: 400, width: '100%' }}>
@@ -202,7 +216,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRela
                         },
                     },
                 }}
-                sx={{ bgcolor: 'white' }}
+                sx={{ bgcolor: 'white', mb: 2 }}
                 pageSizeOptions={[5, 10]}
                 disableRowSelectionOnClick={true}
             />

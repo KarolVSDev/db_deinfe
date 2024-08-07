@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import * as  XLSX from 'xlsx';
-import { ApensoProcesso, ApensoProcessoPai, dataRelation, InteressadoPessoa, jurisdRelation, ListData, NatAchadoUp, NatRelation, PessoaJurisd, ProcessoDetails } from "../types/types";
+import { ApensoProcesso, ApensoProcessoPai, AreaAchadoUp, dataRelation, InteressadoPessoa, jurisdRelation, ListData, NatAchadoUp, NatRelation, PessoaJurisd, ProcessoDetails } from "../types/types";
 import { formateDateToPtBr } from "./DateFormate";
 import useFormData from "./useFormData";
 
@@ -13,7 +13,7 @@ interface GridState {
 
 const useExportToExcel = () => {
 
-    const {transformNat} = useFormData()
+    const {transformNat, transformAreaAchado} = useFormData()
 
     const exportToExcel = (gridState: GridState, fileName: 'data.xlsx') => {
         const { columns, rows } = gridState;
@@ -270,7 +270,15 @@ const useExportToExcel = () => {
         const exportData = transformNat(data, false)
         const natRelationSheet = XLSX.utils.json_to_sheet(exportData)
         const wb = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(wb, natRelationSheet, 'Tabela de Relacções')
+        XLSX.utils.book_append_sheet(wb, natRelationSheet, 'Tabela de Relações por Natureza')
+        XLSX.writeFile(wb, fileName)
+    }, [])
+
+    const exportAreaRelations = useCallback((data: AreaAchadoUp, fileName: string) => {
+        const exportData = transformAreaAchado(data, false)
+        const natRelationSheet = XLSX.utils.json_to_sheet(exportData)
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, natRelationSheet, 'Tabela de Relações por Área')
         XLSX.writeFile(wb, fileName)
     }, [])
 
@@ -280,7 +288,8 @@ const useExportToExcel = () => {
         exportPessoaToExcel,
         exportListData,
         exportJurisdToExcel,
-        exportNatRelations
+        exportNatRelations,
+        exportAreaRelations
     }
 }
 

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import {
     Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado,
     Interessado, Achado, NatAchadoUp, AreaAchadoUp, DivAchadoUp,
@@ -96,6 +96,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
                 ? `${count.toLocaleString()} linhas selecionadas`
                 : `${count.toLocaleString()} linha selecionada`,
     };
+
 
 
     return (

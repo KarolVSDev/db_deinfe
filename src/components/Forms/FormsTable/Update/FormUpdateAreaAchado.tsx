@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Container, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm, UseFormRegister } from 'react-hook-form';
 import { AreaAchado, AreaAchado2, AreaAchadoUp, NatAchado } from '../../../../types/types';
@@ -8,6 +8,10 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 import React, { useEffect, useState } from 'react';
 import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
+import HandleModalButton from '../../../Buttons/HandleTypeButton';
+import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
+import useFormData from '../../../../hooks/useFormData';
+import useExportToExcel from '../../../../hooks/useExportToExcel';
 
 
 export const AutocompleteNatAchado = React.forwardRef<
@@ -45,8 +49,10 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
 
     const [natAchado, setNatAchado] = useState<NatAchado>()
     const [areaAchado, setAreaAchado] = useState<AreaAchado2>()
-    const { getAllNatAchado, getAreaAchadoRelation} = useFetchListData()
-   
+    const { getAllNatAchado, getAreaAchadoRelation } = useFetchListData()
+    const [openModal, setOpenModal] = useState(false)
+    const { exportAreaRelations } = useExportToExcel()
+
 
     const getAreaAchado = () => {
         api.get(`area-achado/${id}`).then(response => {
@@ -61,12 +67,27 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
         getAllNatAchado()
         if (id) {
             getAreaAchado()
-            getAreaAchadoRelation(id)
+
             setNatAchado(areaAchado?.natureza);
         }
     }, [])
 
-    console.log(areaAchado)
+    const handleModal = () => {
+        getAreaAchadoRelation(id)
+        setOpenModal(true)
+    }
+
+    const handleClose = () => {
+        setOpenModal(false)
+    }
+
+    const handleExport = () => {
+        console.log(id)
+        getAreaAchadoRelation(id);
+        if (areaAchadoUp) {
+            exportAreaRelations(areaAchadoUp, 'relacoes.xlsx')
+        }
+    }
 
 
     const onSubmit = (data: AreaAchado) => {
@@ -75,10 +96,10 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
             TypeAlert(response.data.message, 'success');
             reset();
             setArrayAreaAchado(prevArray => {
-                const updatedArray = prevArray.map(item => 
-                    item.id === areaId ? {...item, ...data} : item
+                const updatedArray = prevArray.map(item =>
+                    item.id === areaId ? { ...item, ...data } : item
                 )
-                
+
                 return updatedArray
             })
             closeModal()
@@ -135,6 +156,9 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
                     <RegisterButton text="Registrar" />
                 </Box>
             )}
+            <HandleModalButton handleModal={handleModal} />
+            <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width: '100%', mt: 1 }}>Exportar</Button>
+            <ModalShowDetails dataType={'area-achado'} areaAchadoRelations={areaAchadoUp} onClose={handleClose} open={openModal} />
         </Container>
     );
 }

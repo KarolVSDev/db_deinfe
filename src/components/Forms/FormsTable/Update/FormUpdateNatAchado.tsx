@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
 import HandleModalButton from '../../../Buttons/HandleTypeButton';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
+import ButtonExport from '../../../Buttons/ButtonExport';
 
 interface NatAchadoProp {
   closeModal: () => void;
@@ -25,7 +26,7 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
   const [openModal, setOpenModal] = useState(false)
   const {exportNatRelations} = useExportToExcel()
 
-
+  console.log(id)
   const getNatAchado = () => {
     const natachado = arrayNatAchado.find(item => item.id === id);
     if (natachado) {
@@ -58,7 +59,7 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
     if (id) {
       getNatAchado()
     }
-  }, [])
+  }, [natAchadoUp])
 
   const handleModal = () => {
     getNatAchadoRelation(id);
@@ -71,11 +72,10 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
 
   const handleExport = () => {
     getNatAchadoRelation(id);
-    console.log(natAchadoUp)
     if(natAchadoUp){
       exportNatRelations(natAchadoUp, 'relacoes.xlsx')
     }
-  }
+}
 
   return (
     <Container>
@@ -109,8 +109,7 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
         </Box>
       )}
       <HandleModalButton handleModal={handleModal} />
-      <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width:'100%',mt:1 }}>Exportar</Button>
-
+      <ButtonExport handleExport={handleExport}/>
       <ModalShowDetails dataType={'nat-achado'} natAchadoRelations={natAchadoUp} onClose={handleClose} open={openModal} />
     </Container>
   );

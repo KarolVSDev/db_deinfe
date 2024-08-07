@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../service/api";
-import { dataRelation, Interessado, jurisdRelation, ListData, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate, Procurador } from "../types/types";
+import { dataRelation, Interessado, jurisdRelation, ListData, NatAchadoUp, PessoaJurisd, Processo, ProcessoDetails, ProcessoUpdate, Procurador } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { formateDateToPtBr } from "./DateFormate";
