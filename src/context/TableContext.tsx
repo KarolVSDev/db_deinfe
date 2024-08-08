@@ -4,6 +4,9 @@ import {
     Interessado, Achado, NatAchadoUp, AreaAchadoUp, DivAchadoUp,
     AchadoUp
 } from "../types/types";
+import useFetchListData from "../hooks/useFetchListData";
+import { TypeInfo } from "../hooks/TypeAlert";
+import { api } from "../service/api";
 
 
 interface TableContextType {
@@ -97,8 +100,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
                 : `${count.toLocaleString()} linha selecionada`,
     };
 
-
-
+    
     return (
         <TableContext.Provider value={{
             arrayPessoaFisica,

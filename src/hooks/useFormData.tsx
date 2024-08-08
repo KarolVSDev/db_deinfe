@@ -1,4 +1,4 @@
-import { AreaAchadoUp, NatAchadoUp } from "../types/types";
+import { AchadoUp, AreaAchadoUp, DivAchadoUp, NatAchadoUp } from "../types/types";
 
 
 const useFormData = () => {
@@ -114,10 +114,85 @@ const useFormData = () => {
         }
         return rows;
     };
-  return {
-      transformNat,
-      transformAreaAchado
-  }
+
+    const transformDivAchado = (data: DivAchadoUp | undefined, includeId: boolean): any[] => {
+        const rows: any[] = []
+        if (data) {
+            const { area, achados, descricao, id } = data;
+            if (Array.isArray(achados) && achados.length > 0) {
+                achados.forEach(achado => {
+                    const row: any = {
+                        natureza: area.natureza.descricao || '',
+                        area: area.descricao || '',
+                        divisao: descricao || '',
+                        titulo: achado.titulo || '',
+                        texto: achado.texto || '',
+                        criterio: achado.criterio || '',
+                        ativo: achado.ativo || '',
+                    }
+                    if (includeId) {
+                        row.id = achado.id
+                    }
+                    rows.push(row)
+                })
+            } else {
+                rows.push({
+                    natureza: area.natureza.descricao || '',
+                    area: area.descricao || '',
+                    divisao: descricao || '',
+                    titulo: '',
+                    texto: '',
+                    criterio: '',
+                    ativo: '',
+                    id: includeId ? `no-id-${id}` : undefined
+                })
+            }
+        }
+        return rows;
+    }
+
+    const transformAchado = (data: AchadoUp | undefined, includeId: boolean): any[] => {
+        const rows: any[] = []
+        if(data){
+            const {titulo, texto, criterio, ativo, divisao} = data;
+            if(divisao){
+                const { descricao: divisaoDescricao, area } = divisao;
+                const { descricao: areaDescricao, natureza } = area;
+                const row: any = {
+                    natureza: natureza.descricao,
+                    area:areaDescricao,
+                    divisao:divisaoDescricao,
+                    titulo:titulo,
+                    texto:texto,
+                    criterio:criterio,
+                    ativo:ativo
+                }
+                if(includeId){
+                    row.id = data.id
+                }
+                rows.push(row)
+            }else{
+                rows.push({
+                    natureza: '',
+                    area:'',
+                    divisao:'',
+                    titulo:titulo,
+                    texto:texto,
+                    criterio:criterio,
+                    ativo:ativo,
+                    id:includeId ? `no-id${data.id}` : undefined
+                })
+            }
+        }
+        return rows;
+    }
+
+    return {
+        transformNat,
+        transformAreaAchado,
+        transformDivAchado,
+        transformAchado
+    }
 
 }
 

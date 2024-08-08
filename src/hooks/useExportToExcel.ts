@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { useCallback } from "react";
 import * as  XLSX from 'xlsx';
-import { ApensoProcesso, ApensoProcessoPai, AreaAchadoUp, dataRelation, InteressadoPessoa, jurisdRelation, ListData, NatAchadoUp, NatRelation, PessoaJurisd, ProcessoDetails } from "../types/types";
+import { AchadoUp, ApensoProcesso, ApensoProcessoPai, AreaAchadoUp, dataRelation, DivAchadoUp, InteressadoPessoa, jurisdRelation, ListData, NatAchadoUp, NatRelation, PessoaJurisd, ProcessoDetails } from "../types/types";
 import { formateDateToPtBr } from "./DateFormate";
 import useFormData from "./useFormData";
 
@@ -13,7 +13,7 @@ interface GridState {
 
 const useExportToExcel = () => {
 
-    const {transformNat, transformAreaAchado} = useFormData()
+    const {transformNat, transformAreaAchado, transformDivAchado, transformAchado} = useFormData()
 
     const exportToExcel = (gridState: GridState, fileName: 'data.xlsx') => {
         const { columns, rows } = gridState;
@@ -282,6 +282,22 @@ const useExportToExcel = () => {
         XLSX.writeFile(wb, fileName)
     }, [])
 
+    const exportDivRelations = useCallback((data: DivAchadoUp, fileName: string) => {
+        const exportData = transformDivAchado(data, false)
+        const natRelationSheet = XLSX.utils.json_to_sheet(exportData)
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, natRelationSheet, 'Tabela de Relações por Divisão')
+        XLSX.writeFile(wb, fileName)
+    }, [])
+
+    const exportAchadoRelations = useCallback((data: AchadoUp, fileName: string) => {
+        const exportData = transformAchado(data, false)
+        const natRelationSheet = XLSX.utils.json_to_sheet(exportData)
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, natRelationSheet, 'Tabela de Relações por Achado')
+        XLSX.writeFile(wb, fileName)
+    }, [])
+
     return {
         exportToExcel,
         exportProcessoToExcel,
@@ -289,7 +305,9 @@ const useExportToExcel = () => {
         exportListData,
         exportJurisdToExcel,
         exportNatRelations,
-        exportAreaRelations
+        exportAreaRelations,
+        exportDivRelations,
+        exportAchadoRelations
     }
 }
 

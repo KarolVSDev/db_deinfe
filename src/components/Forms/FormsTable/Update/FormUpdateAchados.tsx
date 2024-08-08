@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Container, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
 import { Achado, Achado2, AreaAchado, DivAchado } from '../../../../types/types';
@@ -9,6 +9,10 @@ import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import { achadoHeader } from '../../../../service/columns';
+import HandleModalButton from '../../../Buttons/HandleTypeButton';
+import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
+import useFormData from '../../../../hooks/useFormData';
+import useExportToExcel from '../../../../hooks/useExportToExcel';
 
 interface DivAchadoProps {
   closeModal: () => void;
@@ -20,12 +24,14 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
   const { arrayDivAchado, setArrayAchado, achadoUp } = useContextTable()
   const { getAllDivAchado, getAchadoRelation } = useFetchListData()
   const [achado, setAchado] = useState<Achado2>()
+  const [openModal, setOpenModal] = useState(false)
+  const {exportAchadoRelations} = useExportToExcel()
 
   const getAchado = () => {
     api.get(`achado/${id}`).then(response => {
       console.log(response.data)
       setAchado(response.data)
-    }).catch((error) =>{
+    }).catch((error) => {
       console.log(error)
       TypeAlert('Erro ao Resgata Achado', 'error')
     })
@@ -35,9 +41,22 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
     getAllDivAchado()
     if (id) {
       getAchado()
+      getAchadoRelation(id)
     }
   }, [])
 
+  const handleModal = () => {
+    setOpenModal(true)
+  }
+  const handleClose = () => {
+    setOpenModal(false)
+  }
+
+  const handleExport = () => {
+    if(achadoUp){
+      exportAchadoRelations(achadoUp, 'relacoes.xlsx')
+    }
+  }
 
   const onSubmit = (data: Achado) => {
     const idAchado = id;
@@ -45,8 +64,8 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
       TypeAlert(response.data.message, 'success')
       reset()
       setArrayAchado(prevArray => {
-        const updatedArray = prevArray.map(item => 
-          item.id === idAchado ? {...item, ...data} : item
+        const updatedArray = prevArray.map(item =>
+          item.id === idAchado ? { ...item, ...data } : item
         )
         return updatedArray
       });
@@ -162,6 +181,9 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
           <RegisterButton text="Registrar" />
         </Box>
       )}
+      <HandleModalButton handleModal={handleModal} />
+      <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width: '100%', mt: 1 }}>Exportar</Button>
+      <ModalShowDetails dataType={'achado'} open={openModal} onClose={handleClose} achadoRelation={achadoUp} />
     </Container>
   );
 }

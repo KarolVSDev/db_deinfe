@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ListData, dataRelation, ProcessoDetails, jurisdRelation, NatAchadoUp, AreaAchadoUp } from '../../../types/types';
+import { ListData, dataRelation, ProcessoDetails, jurisdRelation, NatAchadoUp, AreaAchadoUp, DivAchadoUp, AchadoUp } from '../../../types/types';
 import DataProcessoDetails from '../../DataTable/DataProcessoDetails';
 
 
@@ -36,6 +36,8 @@ interface ModalShowDetailProps {
   jurisdDetails?: jurisdRelation;
   natAchadoRelations?: NatAchadoUp;
   areaAchadoRelations?: AreaAchadoUp;
+  divAchadoRelation?: DivAchadoUp;
+  achadoRelation?: AchadoUp;
 }
 
 const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,
@@ -46,7 +48,9 @@ const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,
   arrayListData,
   jurisdDetails,
   natAchadoRelations,
-  areaAchadoRelations }) => {
+  areaAchadoRelations,
+  divAchadoRelation,
+  achadoRelation }) => {
 
 
   return (
@@ -83,6 +87,8 @@ const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,
               jursidDetails={jurisdDetails}
               natAchadoRelations={natAchadoRelations}
               areaAchadoRelations={areaAchadoRelations}
+              divAchadoRelation={divAchadoRelation}
+              achadoRelation={achadoRelation}
             />}
           </Box>
         </Fade>

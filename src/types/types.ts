@@ -122,7 +122,7 @@ export interface DivAchado {
 export interface DivAchado2 {
   id: string;
   descricao: string;
-  area: {id:string, descricao:string};
+  area: { id: string, descricao: string };
 }
 export interface AreaAchado {
   id: string;
@@ -132,7 +132,7 @@ export interface AreaAchado {
 export interface AreaAchado2 {
   id: string;
   descricao: string;
-  natureza: {id:string, descricao:string};
+  natureza: { id: string, descricao: string };
 }
 export interface Achado {
   id: string;
@@ -148,7 +148,7 @@ export interface Achado2 {
   texto: string;
   criterio: string;
   ativo: string;
-  divisao: {id:string, descricao:string};
+  divisao: { id: string, descricao: string };
 }
 
 export interface AchadoUp {
@@ -157,12 +157,19 @@ export interface AchadoUp {
   texto: string;
   criterio: string;
   ativo: string;
+  divisao?: {
+    id: string, descricao: string,
+    area: {
+      id: string, descricao: string,
+      natureza: { id: string, descricao: string }
+    }
+  }
 }
 
 export interface DivAchadoUp {
   id: string;
   descricao: string;
-  area: AreaAchado;
+  area: AreaAchado2;
   achados: AchadoUp[];
 }
 

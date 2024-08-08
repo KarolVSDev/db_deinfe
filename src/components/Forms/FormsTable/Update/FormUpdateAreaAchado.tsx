@@ -44,10 +44,8 @@ interface AreaAchadoProps {
 }
 
 const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => {
-    const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<AreaAchado>({});
+    const { handleSubmit, register, formState: { errors }, reset } = useForm<AreaAchado>({});
     const { arrayNatAchado, setArrayAreaAchado, areaAchadoUp } = useContextTable();
-
-    const [natAchado, setNatAchado] = useState<NatAchado>()
     const [areaAchado, setAreaAchado] = useState<AreaAchado2>()
     const { getAllNatAchado, getAreaAchadoRelation } = useFetchListData()
     const [openModal, setOpenModal] = useState(false)
@@ -67,13 +65,11 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
         getAllNatAchado()
         if (id) {
             getAreaAchado()
-
-            setNatAchado(areaAchado?.natureza);
+            getAreaAchadoRelation(id)
         }
     }, [])
 
     const handleModal = () => {
-        getAreaAchadoRelation(id)
         setOpenModal(true)
     }
 
@@ -82,8 +78,6 @@ const FormUpdateAreaAchado: React.FC<AreaAchadoProps> = ({ closeModal, id }) => 
     }
 
     const handleExport = () => {
-        console.log(id)
-        getAreaAchadoRelation(id);
         if (areaAchadoUp) {
             exportAreaRelations(areaAchadoUp, 'relacoes.xlsx')
         }

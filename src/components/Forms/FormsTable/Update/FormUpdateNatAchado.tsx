@@ -58,11 +58,11 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
   useEffect(() => {
     if (id) {
       getNatAchado()
+      getNatAchadoRelation(id);
     }
   }, [natAchadoUp])
 
   const handleModal = () => {
-    getNatAchadoRelation(id);
     setOpenModal(true)
   }
 
@@ -71,7 +71,6 @@ const FormUpdateNatAchado: React.FC<NatAchadoProp> = ({ closeModal, id }) => {
   }
 
   const handleExport = () => {
-    getNatAchadoRelation(id);
     if(natAchadoUp){
       exportNatRelations(natAchadoUp, 'relacoes.xlsx')
     }
