@@ -29,8 +29,8 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
 
     const { register, handleSubmit, formState: { errors } } = useForm<Jurisd>({});
     const [jurisd, setJurisd] = useState<Jurisd>()
-    const { setArrayJurisd } = useContextTable()
-    const { setJurisdRelations, jurisdRelation, jurisdPrincipal, getJurisdPrincipal } = useFetchListData()
+    const { setArrayJurisd, jurisdRelation } = useContextTable()
+    const { setJurisdRelations, jurisdPrincipal, getJurisdPrincipal } = useFetchListData()
 
     
 
@@ -70,10 +70,12 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
     
     
     useEffect(() => {
+        jurisdRelation
         if (id) {
             getOneJurisd(id)
             setJurisdRelations(id)
             getJurisdPrincipal(id)
+            
         }
     },[id])
 
@@ -563,11 +565,11 @@ const FormUpdateJurisd: React.FC<FormJurisdProps> = ({ id, closeModal }) => {
                 </Box>
 
             )}
-            <Box sx={{ mt: 2, textAlign: 'left' }}>
+            {/* <Box sx={{ mt: 2, textAlign: 'left' }}>
                 <InnerAccordion title={'Adicionar Relação'}>
                     <FormJurisd_Jurisd />
                 </InnerAccordion>
-            </Box>
+            </Box> */}
             <InfoPaperProcessoDetails jurisdDetails={jurisdRelation} jurisdPrincipal={jurisdPrincipal} />
         </Container>
     )

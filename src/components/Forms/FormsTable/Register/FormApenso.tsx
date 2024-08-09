@@ -8,7 +8,7 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 
 const FormApenso = () => {
   const { handleSubmit, setValue, formState: { errors }, reset } = useForm<Apenso>({});
-  const { arrayProcesso } = useContextTable();
+  const { arrayProcesso,  } = useContextTable();
 
   const onSubmit = (data: Apenso) => {
     api.post('/apenso', data).then(response => {

@@ -12,16 +12,14 @@ const useFetchListData = () => {
 
   const [arrayProcessos] = useState<Processo[]>([]);
   const [arrayListData, setArrayListData] = useState<ListData[]>([])
-  const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
-  const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | { message: string }>()
+
   const [jurisdPrincipal, setJurisdPrincipal] = useState<string | { message: string }>()
   const [pessoaRelation, setPessoaRelation] = useState<dataRelation>()
-  const [jurisdRelation, setJurisdRelation] = useState<jurisdRelation>()
-  const { setArrayProcesso,
-    arrayProcesso, setArrayPessoaFisica, setArrayJurisd,
+  const { setArrayProcesso, arrayProcesso, setArrayPessoaFisica, setArrayJurisd,
     setArrayProcurador, setArrayRelator, setArrayAchado,
     setArrayNatAchado, setArrayDivAchado, setArrayAreaAchado,
-     setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp, setAchadoUp } = useContextTable();
+    setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp, setAchadoUp,
+    setProcessoDetails, setProcessoPincipal, setJurisdRelation } = useContextTable();
 
 
   const getAllPessoaFisica = async () => {
@@ -279,8 +277,8 @@ const useFetchListData = () => {
   const getNatAchadoRelation = async (id: GridRowId | undefined) => {
     await api(`nat-achado/relation/${id}`).then(response => {
       const natAchadoR = response.data;
-      setNatAchadoUp(natAchadoR)  
-    }).catch((error:any) => {
+      setNatAchadoUp(natAchadoR)
+    }).catch((error: any) => {
       TypeAlert(error, 'error')
     })
   }
@@ -288,8 +286,8 @@ const useFetchListData = () => {
   const getAreaAchadoRelation = async (id: GridRowId | undefined) => {
     await api(`area-achado/relation/${id}`).then(response => {
       const areaAchadoR = response.data.result;
-      setAreaAchadoUp(areaAchadoR)  
-    }).catch((error:any) => {
+      setAreaAchadoUp(areaAchadoR)
+    }).catch((error: any) => {
       TypeAlert(error, 'error')
     })
   }
@@ -297,8 +295,8 @@ const useFetchListData = () => {
   const getDivAchadoRelation = async (id: GridRowId | undefined) => {
     await api(`div-area-achado/relation/${id}`).then(response => {
       const divAchadoR = response.data.result;
-      setDivAchadoUp(divAchadoR)  
-    }).catch((error:any) => {
+      setDivAchadoUp(divAchadoR)
+    }).catch((error: any) => {
       TypeAlert(error, 'error')
     })
   }
@@ -306,19 +304,16 @@ const useFetchListData = () => {
   const getAchadoRelation = async (id: GridRowId | undefined) => {
     await api(`achado/relation/${id}`).then(response => {
       const achadoR = response.data;
-      setAchadoUp(achadoR)  
-    }).catch((error:any) => {
+      setAchadoUp(achadoR)
+    }).catch((error: any) => {
       TypeAlert(error, 'error')
     })
   }
- 
+
 
   return {
     arrayListData,
-    processoDetails,
-    processoPrincipal,
     pessoaRelation,
-    jurisdRelation,
     jurisdPrincipal,
     arrayProcessos,
     getAllPessoaFisica,
@@ -345,7 +340,7 @@ const useFetchListData = () => {
     getAreaAchadoRelation,
     getDivAchadoRelation,
     getAchadoRelation
-    
+
   }
 }
 

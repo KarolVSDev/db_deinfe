@@ -2,7 +2,9 @@ import { Dispatch, SetStateAction, createContext, useContext, useEffect, useStat
 import {
     Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado,
     Interessado, Achado, NatAchadoUp, AreaAchadoUp, DivAchadoUp,
-    AchadoUp
+    AchadoUp,
+    ProcessoDetails,
+    ProcessoUpdate, jurisdRelation
 } from "../types/types";
 import useFetchListData from "../hooks/useFetchListData";
 import { TypeInfo } from "../hooks/TypeAlert";
@@ -27,6 +29,9 @@ interface TableContextType {
     areaAchadoUp: AreaAchadoUp | undefined;
     divAchadoUp: DivAchadoUp | undefined;
     achadoUp: AchadoUp | undefined;
+    processoDetails:ProcessoDetails | undefined;
+    processoPrincipal:ProcessoUpdate | { message: string} | undefined;
+    jurisdRelation:jurisdRelation | undefined;
     handleLocalization: {};
     setArrayPessoaFisica: Dispatch<SetStateAction<PessoaFisica[]>>;
     setArrayJurisd: Dispatch<SetStateAction<Jurisd[]>>;
@@ -41,6 +46,10 @@ interface TableContextType {
     setArrayAreaAchado: Dispatch<SetStateAction<AreaAchado[]>>;
     setArrayDivAchado: Dispatch<SetStateAction<DivAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
+    setJurisdRelation: Dispatch<SetStateAction<jurisdRelation | undefined>>;
+    setProcessoDetails: Dispatch<SetStateAction<ProcessoDetails | undefined>>;
+    setProcessoPincipal: Dispatch<SetStateAction<ProcessoUpdate | { message: string} | undefined>>;
+    
 
 }
 
@@ -69,7 +78,9 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [areaAchadoUp, setAreaAchadoUp] = useState<AreaAchadoUp>()
     const [divAchadoUp, setDivAchadoUp] = useState<DivAchadoUp>()
     const [achadoUp, setAchadoUp] = useState<AchadoUp>()
-
+    const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
+    const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | { message: string }>()
+    const [jurisdRelation, setJurisdRelation] = useState<jurisdRelation>()
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
         columnMenuSortAsc: 'Ordenar por ASC',
@@ -120,6 +131,9 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayRelations,
             arrayRelationpp,
             arrayInteressados,
+            processoDetails,
+            processoPrincipal,
+            jurisdRelation,
             handleLocalization,
             setArrayPessoaFisica,
             setArrayJurisd,
@@ -133,7 +147,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setNatAchadoUp,
             setAreaAchadoUp,
             setDivAchadoUp,
-            setAchadoUp
+            setAchadoUp,
+            setProcessoDetails,
+            setProcessoPincipal,
+            setJurisdRelation
         }}>
             {children}
         </TableContext.Provider>

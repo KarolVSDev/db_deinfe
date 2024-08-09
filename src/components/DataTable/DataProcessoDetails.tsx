@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AchadoUp, AreaAchadoUp, ColumnConfig, dataRelation, DivAchadoUp, jurisdRelation, ListData, NatAchadoUp, ProcessoDetails } from '../../types/types';
 import { interessadoHeader, apensoHeader, pessoaJurisdHeader, jurisdHeader, juridJurisdHeader, natAchadoRelationHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
@@ -30,18 +30,14 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRela
     jursidDetails,
     areaAchadoRelations,
     divAchadoRelation,
-    achadoRelation }) => {
+    achadoRelation,
+     }) => {
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
     const { onDelete } = useFetchListData()
     const { transformNat, transformAreaAchado, transformDivAchado, transformAchado } = useFormData()
 
-    const handleDelete = (id: string, type: string) => {
-        if (id) {
-            onDelete(id, type)
-        }
-    }
 
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
@@ -64,6 +60,12 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({ natAchadoRela
         }));
     };
 
+    const handleDelete = useCallback((id: string, type: string) => {
+        if (id) {
+            onDelete(id, type); 
+            setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+        }
+    }, [onDelete]);
 
     useEffect(() => {
         if (dataType === "apenso") {

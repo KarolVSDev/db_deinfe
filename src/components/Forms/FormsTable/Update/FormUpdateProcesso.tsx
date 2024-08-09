@@ -27,8 +27,8 @@ interface FormProcessoProps {
 const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<ProcessoUpdate>({});
-  const { setArrayProcesso } = useContextTable()
-  const { getOneProcessoDetails, processoDetails, processoPrincipal } = useFetchListData()
+  const { setArrayProcesso, processoDetails, processoPrincipal } = useContextTable()
+  const { getOneProcessoDetails } = useFetchListData()
   const [expanded, setExpanded] = useState(false);
   const [processo, setProcesso] = useState<ProcessoUpdate>()
 
@@ -64,14 +64,14 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
   }
 
 
-  const handleExpansion = () => {
-    setExpanded((prevExpanded) => !prevExpanded);
-  };
+  
 
   useEffect(() => {
     if (id) {
       getOneProcesso(id);
       getOneProcessoDetails(id)
+      processoDetails
+      processoPrincipal
     }
   }, []);
 
@@ -266,14 +266,14 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
           </Box>
         </Box>
       )}
-      <Box sx={{ mt: 2, textAlign: 'left' }}>
+      {/* <Box sx={{ mt: 2, textAlign: 'left' }}>
         <InnerAccordion title={'Adicionar Interessado'}>
           <FormInteresse />
         </InnerAccordion>
         <InnerAccordion title={'Adicionar Apenso'}>
           <FormApenso />
         </InnerAccordion>
-      </Box>
+      </Box> */}
       <InfoPaperProcessoDetails processoDetails={processoDetails} processoPrincipal={processoPrincipal}/>
 
     </Container>

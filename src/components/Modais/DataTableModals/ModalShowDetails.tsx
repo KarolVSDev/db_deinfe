@@ -7,6 +7,7 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ListData, dataRelation, ProcessoDetails, jurisdRelation, NatAchadoUp, AreaAchadoUp, DivAchadoUp, AchadoUp } from '../../../types/types';
 import DataProcessoDetails from '../../DataTable/DataProcessoDetails';
+import useFetchListData from '../../../hooks/useFetchListData';
 
 
 const style = {
@@ -52,6 +53,13 @@ const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,
   divAchadoRelation,
   achadoRelation }) => {
 
+  const { onDelete } = useFetchListData()
+
+  const handleDelete = (id: string, type: string) => {
+    if (id) {
+      onDelete(id, type)
+    }
+  }
 
   return (
     <div>
