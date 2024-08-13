@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 import {
     Jurisd, PessoaFisica, Relator, Procurador, Processo, Apenso, NatAchado, DivAchado, AreaAchado,
     Interessado, Achado, NatAchadoUp, AreaAchadoUp, DivAchadoUp,
@@ -6,9 +6,6 @@ import {
     ProcessoDetails,
     ProcessoUpdate, jurisdRelation
 } from "../types/types";
-import useFetchListData from "../hooks/useFetchListData";
-import { TypeInfo } from "../hooks/TypeAlert";
-import { api } from "../service/api";
 
 
 interface TableContextType {
