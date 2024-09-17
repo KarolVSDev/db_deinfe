@@ -9,32 +9,19 @@ import {
 
 
 interface TableContextType {
-    arrayPessoaFisica: PessoaFisica[];
-    arrayJurisd: Jurisd[];
-    arrayRelator: Relator[];
-    arrayProcurador: Procurador[];
     arrayProcesso: Processo[];
-    arrayApenso: Apenso[];
     arrayNatAchado: NatAchado[];
     arrayAreaAchado: AreaAchado[];
     arrayDivAchado: DivAchado[];
     arrayAchado: Achado[];
-    arrayRelations: PessoaFisica[];
-    arrayRelationpp: Interessado[];
-    arrayInteressados: Interessado[];
     natAchadoUp: NatAchadoUp | undefined;
     areaAchadoUp: AreaAchadoUp | undefined;
     divAchadoUp: DivAchadoUp | undefined;
     achadoUp: AchadoUp | undefined;
     processoDetails:ProcessoDetails | undefined;
     processoPrincipal:ProcessoUpdate | { message: string} | undefined;
-    jurisdRelation:jurisdRelation | undefined;
     handleLocalization: {};
-    setArrayPessoaFisica: Dispatch<SetStateAction<PessoaFisica[]>>;
-    setArrayJurisd: Dispatch<SetStateAction<Jurisd[]>>;
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
-    setArrayProcurador: Dispatch<SetStateAction<Procurador[]>>;
-    setArrayRelator: Dispatch<SetStateAction<Relator[]>>;
     setArrayNatAchado: Dispatch<SetStateAction<NatAchado[]>>;
     setNatAchadoUp: Dispatch<SetStateAction<NatAchadoUp | undefined>>;
     setAreaAchadoUp: Dispatch<SetStateAction<AreaAchadoUp | undefined>>;
@@ -43,7 +30,6 @@ interface TableContextType {
     setArrayAreaAchado: Dispatch<SetStateAction<AreaAchado[]>>;
     setArrayDivAchado: Dispatch<SetStateAction<DivAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
-    setJurisdRelation: Dispatch<SetStateAction<jurisdRelation | undefined>>;
     setProcessoDetails: Dispatch<SetStateAction<ProcessoDetails | undefined>>;
     setProcessoPincipal: Dispatch<SetStateAction<ProcessoUpdate | { message: string} | undefined>>;
     
@@ -57,27 +43,17 @@ interface Props {
 const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export const TableProvider: React.FC<Props> = ({ children }) => {
-
-    const [arrayPessoaFisica, setArrayPessoaFisica] = useState<PessoaFisica[]>([]);
-    const [arrayJurisd, setArrayJurisd] = useState<Jurisd[]>([]);
-    const [arrayRelator, setArrayRelator] = useState<Relator[]>([]);
-    const [arrayProcurador, setArrayProcurador] = useState<Procurador[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
-    const [arrayApenso, setArrayApenso] = useState<Apenso[]>([]);
     const [arrayNatAchado, setArrayNatAchado] = useState<NatAchado[]>([]);
     const [arrayAreaAchado, setArrayAreaAchado] = useState<AreaAchado[]>([]);
     const [arrayDivAchado, setArrayDivAchado] = useState<DivAchado[]>([]);
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
-    const [arrayRelations, setArrayRelations] = useState([]);
-    const [arrayRelationpp, setArrayRelationpp] = useState([]);
-    const [arrayInteressados, setArrayInteressados] = useState([]);
     const [natAchadoUp, setNatAchadoUp] = useState<NatAchadoUp>()
     const [areaAchadoUp, setAreaAchadoUp] = useState<AreaAchadoUp>()
     const [divAchadoUp, setDivAchadoUp] = useState<DivAchadoUp>()
     const [achadoUp, setAchadoUp] = useState<AchadoUp>()
     const [processoDetails, setProcessoDetails] = useState<ProcessoDetails>()
     const [processoPrincipal, setProcessoPincipal] = useState<ProcessoUpdate | { message: string }>()
-    const [jurisdRelation, setJurisdRelation] = useState<jurisdRelation>()
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
         columnMenuSortAsc: 'Ordenar por ASC',
@@ -111,12 +87,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     
     return (
         <TableContext.Provider value={{
-            arrayPessoaFisica,
-            arrayJurisd,
-            arrayRelator,
-            arrayProcurador,
             arrayProcesso,
-            arrayApenso,
             arrayNatAchado,
             natAchadoUp,
             areaAchadoUp,
@@ -125,18 +96,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayAreaAchado,
             arrayDivAchado,
             arrayAchado,
-            arrayRelations,
-            arrayRelationpp,
-            arrayInteressados,
             processoDetails,
             processoPrincipal,
-            jurisdRelation,
             handleLocalization,
-            setArrayPessoaFisica,
-            setArrayJurisd,
             setArrayProcesso,
-            setArrayRelator,
-            setArrayProcurador,
             setArrayNatAchado,
             setArrayAreaAchado,
             setArrayDivAchado,
@@ -147,7 +110,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             setAchadoUp,
             setProcessoDetails,
             setProcessoPincipal,
-            setJurisdRelation
         }}>
             {children}
         </TableContext.Provider>

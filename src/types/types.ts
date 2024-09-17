@@ -1,4 +1,5 @@
 
+
 export interface User {
   id: string;
   nome: string;
@@ -31,6 +32,8 @@ export interface AuthData {
   token: string;
   email: string;
 }
+
+//Data Table
 export interface PessoaFisica {
   id?: string;
   nome: string;

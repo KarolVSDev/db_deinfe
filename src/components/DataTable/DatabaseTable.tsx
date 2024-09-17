@@ -6,12 +6,8 @@ import {
 } from '../../types/types';
 import { useEffect, useState } from 'react';
 import {
-  pessoaFisicaHeader,
-  procuradorHeader,
-  relatorHeader,
   natAchadoHeader,
   achadoHeader,
-  jurisdHeader,
   processoHeader,
 } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
@@ -33,16 +29,13 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { arrayPessoaFisica, arrayProcesso, arrayJurisd,
-    arrayProcurador, arrayRelator, handleLocalization, arrayNatAchado,
-    arrayAreaAchado, arrayDivAchado, arrayAchado,
-    setArrayPessoaFisica, setArrayJurisd, setArrayProcesso,
-    setArrayProcurador, setArrayRelator, setArrayNatAchado, setArrayAreaAchado, setArrayDivAchado, setArrayAchado } = useContextTable();
+  const {  arrayProcesso, handleLocalization, arrayNatAchado, arrayAreaAchado, arrayDivAchado, arrayAchado,
+    setArrayProcesso, setArrayNatAchado, setArrayAreaAchado, setArrayDivAchado, 
+    setArrayAchado } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
-  const { getAllPessoaFisica, getAllJurisd, getAllProcesso,
-    getAllProcurador, getAllRelator, getAllAchados, getAllNatAchado, getAllDivAchado, getAllAreaAchado } = useFetchListData()
+  const { getAllProcesso, getAllAchados, getAllNatAchado, getAllDivAchado, getAllAreaAchado } = useFetchListData()
 
 
 
@@ -76,20 +69,6 @@ export default function DatabaseTable() {
     setSelectedRow(null);
 
     switch (value) {
-      case 'pessoafisica':
-        if (arrayPessoaFisica.length <= 0) {
-          getAllPessoaFisica()
-        }
-        setColumns(createGridColumns(pessoaFisicaHeader));
-        setRows(createRows(arrayPessoaFisica));
-        break;
-      case 'jurisd':
-        if (arrayJurisd.length <= 0) {
-          getAllJurisd()
-        }
-        setColumns(createGridColumns(jurisdHeader));
-        setRows(createRows(arrayJurisd))
-        break;
       case 'processo':
         if (arrayProcesso.length <= 0) {
           getAllProcesso()
@@ -99,20 +78,6 @@ export default function DatabaseTable() {
           ...objetoProcesso,
           arquivamento: formateDateToPtBr(objetoProcesso.arquivamento)
         }))));
-        break;
-      case 'procurador':
-        if (arrayProcurador.length <= 0) {
-          getAllProcurador()
-        }
-        setColumns(createGridColumns(procuradorHeader));
-        setRows(createRows(arrayProcurador))
-        break;
-      case 'relator':
-        if (arrayRelator.length <= 0) {
-          getAllRelator()
-        }
-        setColumns(createGridColumns(relatorHeader));
-        setRows(createRows(arrayRelator))
         break;
       case 'achado':
         if (arrayAchado.length <= 0) {
@@ -166,11 +131,7 @@ export default function DatabaseTable() {
 
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
-    { value: 'pessoafisica', string: 'Pessoa Física' },
-    { value: 'jurisd', string: 'Unidade Gestora' },
     { value: 'processo', string: 'Processo' },
-    { value: 'procurador', string: 'Procurador' },
-    { value: 'relator', string: 'Relator' },
     { value: 'achado', string: 'Achados' },
     { value: 'div-area-achado', string: 'Divisão dos Achados' },
     { value: 'area-achado', string: 'Área dos Achados' },
@@ -194,20 +155,8 @@ export default function DatabaseTable() {
       console.log(response)
       TypeAlert(response.data.message, 'success')
       switch (dataType) {
-        case 'pessoafisica':
-          setArrayPessoaFisica(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          break;
-        case 'jurisd':
-          setArrayJurisd(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          break;
         case 'processo':
           setArrayProcesso(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          break;
-        case 'procurador':
-          setArrayProcurador(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          break;
-        case 'relator':
-          setArrayRelator(prevArray => prevArray.filter(item => item.id !== selectedRow))
           break;
         case 'nat-achado':
           setArrayNatAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
@@ -241,20 +190,8 @@ export default function DatabaseTable() {
   //esse bloco atualiza a visualização dos dados
   useEffect(() => {
     switch (dataType) {
-      case 'pessoafisica':
-        setRows(createRows(arrayPessoaFisica))
-        break;
-      case 'jurisd':
-        setRows(createRows(arrayJurisd))
-        break;
       case 'processo':
         setRows(createRows(arrayProcesso))
-        break;
-      case 'procurador':
-        setRows(createRows(arrayProcurador))
-        break;
-      case 'relator':
-        setRows(createRows(arrayRelator))
         break;
       case 'nat-achado':
         setRows(createRows(arrayNatAchado))
@@ -271,9 +208,7 @@ export default function DatabaseTable() {
       default:
         break;
     }
-  }, [arrayJurisd, arrayPessoaFisica,
-    arrayProcesso, arrayProcurador, arrayRelator,
-    arrayNatAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
+  }, [arrayProcesso,arrayNatAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
 
 
   return (
