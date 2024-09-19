@@ -5,9 +5,9 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ListData, dataRelation, ProcessoDetails, jurisdRelation, NatAchadoUp, AreaAchadoUp, DivAchadoUp, AchadoUp } from '../../../types/types';
-import DataProcessoDetails from '../../DataTable/DataProcessoDetails';
+import {NatAchadoUp, AreaAchadoUp, DivAchadoUp, AchadoUp } from '../../../types/types';
 import useFetchListData from '../../../hooks/useFetchListData';
+import DataProcessoDetails from '../../DataTable/DataProcessoDetails';
 
 
 const style = {
@@ -31,23 +31,16 @@ interface ModalShowDetailProps {
   dataType: string;
   open: boolean;
   onClose: () => void;
-  Details?: ProcessoDetails | undefined;
-  arrayRelation?: dataRelation;
-  arrayListData?: ListData[];
-  jurisdDetails?: jurisdRelation;
   natAchadoRelations?: NatAchadoUp;
   areaAchadoRelations?: AreaAchadoUp;
   divAchadoRelation?: DivAchadoUp;
   achadoRelation?: AchadoUp;
 }
 
-const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,
+const ModalShowDetails: React.FC<ModalShowDetailProps> = ({
   dataType,
   open,
   onClose,
-  arrayRelation,
-  arrayListData,
-  jurisdDetails,
   natAchadoRelations,
   areaAchadoRelations,
   divAchadoRelation,
@@ -88,11 +81,7 @@ const ModalShowDetails: React.FC<ModalShowDetailProps> = ({ Details,
               </IconButton>
             </Box>
             {<DataProcessoDetails
-              arrayListData={arrayListData}
               dataType={dataType}
-              Details={Details}
-              arrayRelation={arrayRelation}
-              jursidDetails={jurisdDetails}
               natAchadoRelations={natAchadoRelations}
               areaAchadoRelations={areaAchadoRelations}
               divAchadoRelation={divAchadoRelation}

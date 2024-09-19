@@ -7,15 +7,15 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import FormNatAchado from '../Forms/FormsTable/Register/FormNatAchado';
+import FormTopicoAchado from '../Forms/FormsTable/Register/FormTopicoAchado';
 import FormAreaAchado from '../Forms/FormsTable/Register/FormAreaAchado';
 import FormDivAchado from '../Forms/FormsTable/Register/FormDivAchado';
 import FormAchado from '../Forms/FormsTable/Register/FormAchados';
 
 const steps = [
   {
-    label: 'Registro de Natureza do Achado',
-    component: <FormNatAchado />
+    label: 'Registro de Tópico do Achado',
+    component: <FormTopicoAchado />
   },
   {
     label: 'Registro da Área do Achado',

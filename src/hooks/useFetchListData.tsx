@@ -1,32 +1,15 @@
-import { useState } from "react";
 import { api } from "../service/api";
-import { ListData, NatAchadoUp, Processo } from "../types/types";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
-
 import { useContextTable } from "../context/TableContext";
-
-
 
 const useFetchListData = () => {
 
-  const [arrayProcessos] = useState<Processo[]>([]);
-  const [arrayListData, setArrayListData] = useState<ListData[]>([])
-
-  const { setArrayProcesso, arrayProcesso, setArrayAchado,
-    setArrayNatAchado, setArrayDivAchado, setArrayAreaAchado,
+  const { setArrayAchado,
+    setArrayTopicoAchado, setArrayDivAchado, setArrayAreaAchado,
     setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp, setAchadoUp,
-    setProcessoDetails, setProcessoPincipal } = useContextTable();
+} = useContextTable();
 
-
-  const getAllProcesso = async () => {
-    try {
-      const response = await api.get('/processo');
-      setArrayProcesso(response.data)
-    } catch (error: any) {
-      TypeInfo(error.response.data.message, 'error')
-    }
-  };
 
   const getAllAchados = async () => {
     try {
@@ -37,10 +20,10 @@ const useFetchListData = () => {
     }
   }
 
-  const getAllNatAchado = async () => {
+  const getAllTopcioAchado = async () => {
     try {
       const response = await api.get('/nat-achado');
-      setArrayNatAchado(response.data)
+      setArrayTopicoAchado(response.data)
     } catch (error: any) {
       TypeInfo(error.response.data.message, 'error');
     }
@@ -66,33 +49,10 @@ const useFetchListData = () => {
 
   const onDelete = (id: string, type: string) => {
     api.delete(`/${type}/${id}`).then(() => {
-      if (type === 'apenso' || type === 'jurisd-jurisd') {
-        TypeAlert('Relação removida', 'success')
-      } else {
-        TypeAlert('Dado removido', 'success')
-      }
-      const updatedList = arrayListData.filter(item => item.id !== id);
-      const updatedList2 = arrayProcesso.filter(item => item.id !== id);
-      setArrayListData(updatedList)
-      setArrayProcesso(updatedList2)
     }).catch((error) => {
       console.log(error)
       TypeAlert(error.response.data.message, 'error')
     })
-  }
-
-  const getOneProcessoDetails = async (id: GridRowId | undefined) => {
-    try {
-      const response = await api.get(`/processo/relations/${id}`)
-      const data = response.data
-      if (data) {
-        const processoPincipal = await getApensoByApensado(id)
-        setProcessoPincipal(processoPincipal)
-        setProcessoDetails(data)
-      }
-    } catch (error: any) {
-      TypeAlert(error.response.data.message, 'error')
-    }
   }
 
 
@@ -134,14 +94,11 @@ const useFetchListData = () => {
 
 
   return {
-    arrayProcessos,
-    getAllProcesso,
     getAllAchados,
-    getAllNatAchado,
+    getAllTopcioAchado,
     getAllDivAchado,
     getAllAreaAchado,
     onDelete,
-    getOneProcessoDetails,
     getNatAchadoRelation,
     getAreaAchadoRelation,
     getDivAchadoRelation,

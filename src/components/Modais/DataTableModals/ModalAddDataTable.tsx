@@ -5,12 +5,8 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
-
-import AccordionComponent from '../../Accordion/Accordion';
-
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import FormProcesso from '../../Forms/FormsTable/Register/FormProcesso';
 import StepperV from '../../Stepper/Stepper';
 import useFetchListData from '../../../hooks/useFetchListData';
 
@@ -21,7 +17,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 780,
+  width: 'fit-content',
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
@@ -38,21 +34,19 @@ export default function ModalAddData() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { getAllNatAchado, getAllDivAchado, 
-    getAllAreaAchado, getAllProcesso} = useFetchListData()
+  const { getAllTopcioAchado, getAllDivAchado, 
+    getAllAreaAchado} = useFetchListData()
 
   const handleSubmit = () => {
     setOpen(false)
   }
 
   useEffect(() => {
-    getAllProcesso()
-    getAllNatAchado()
+    getAllTopcioAchado()
     getAllAreaAchado()
     getAllDivAchado()
 
   }, [open])
-
 
 
   return (
@@ -76,18 +70,13 @@ export default function ModalAddData() {
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={handleClose} sx={{
-              ml: 85, mb: 4, mr: 0, '&:hover': {
+              ml: 45, mb: 4, mr: 0, '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>
               <CloseIcon />
             </IconButton>
-            <AccordionComponent title={'Registro de Processo'}>
-              <FormProcesso />
-            </AccordionComponent>
-            <AccordionComponent title={'Registro de Achados'}>
               <StepperV />
-            </AccordionComponent>
           </Box>
         </Fade>
       </Modal>

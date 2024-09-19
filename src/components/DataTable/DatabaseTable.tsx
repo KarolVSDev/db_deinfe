@@ -6,9 +6,8 @@ import {
 } from '../../types/types';
 import { useEffect, useState } from 'react';
 import {
-  natAchadoHeader,
+  topicoAchadoHeader,
   achadoHeader,
-  processoHeader,
 } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -18,7 +17,6 @@ import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdateForms';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
-import { formateDateToPtBr } from '../../hooks/DateFormate';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchListData from '../../hooks/useFetchListData';
 
@@ -29,13 +27,12 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const {  arrayProcesso, handleLocalization, arrayNatAchado, arrayAreaAchado, arrayDivAchado, arrayAchado,
-    setArrayProcesso, setArrayNatAchado, setArrayAreaAchado, setArrayDivAchado, 
+  const { handleLocalization, arrayTopicoAchado, arrayAreaAchado, arrayDivAchado, arrayAchado, setArrayTopicoAchado, setArrayAreaAchado, setArrayDivAchado, 
     setArrayAchado } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
-  const { getAllProcesso, getAllAchados, getAllNatAchado, getAllDivAchado, getAllAreaAchado } = useFetchListData()
+  const {getAllAchados, getAllTopcioAchado, getAllDivAchado, getAllAreaAchado } = useFetchListData()
 
 
 
@@ -69,16 +66,6 @@ export default function DatabaseTable() {
     setSelectedRow(null);
 
     switch (value) {
-      case 'processo':
-        if (arrayProcesso.length <= 0) {
-          getAllProcesso()
-        }
-        setColumns(createGridColumns(processoHeader));
-        setRows(createRows(arrayProcesso.map(objetoProcesso => ({
-          ...objetoProcesso,
-          arquivamento: formateDateToPtBr(objetoProcesso.arquivamento)
-        }))));
-        break;
       case 'achado':
         if (arrayAchado.length <= 0) {
           getAllAchados()
@@ -90,22 +77,22 @@ export default function DatabaseTable() {
         if (arrayDivAchado.length <= 0) {
           getAllDivAchado()
         }
-        setColumns(createGridColumns(natAchadoHeader));
+        setColumns(createGridColumns(topicoAchadoHeader));
         setRows(createRows(arrayDivAchado))
         break
       case 'area-achado':
         if (arrayAreaAchado.length <= 0) {
           getAllAreaAchado()
         }
-        setColumns(createGridColumns(natAchadoHeader));
+        setColumns(createGridColumns(topicoAchadoHeader));
         setRows(createRows(arrayAreaAchado))
         break
-      case 'nat-achado':
-        if (arrayNatAchado.length <= 0) {
-          getAllNatAchado()
+      case 'topico-achado':
+        if (arrayTopicoAchado.length <= 0) {
+          getAllTopcioAchado()
         }
-        setColumns(createGridColumns(natAchadoHeader));
-        setRows(createRows(arrayNatAchado))
+        setColumns(createGridColumns(topicoAchadoHeader));
+        setRows(createRows(arrayTopicoAchado))
         break
       default:
         setColumns([]);
@@ -131,11 +118,10 @@ export default function DatabaseTable() {
 
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
-    { value: 'processo', string: 'Processo' },
     { value: 'achado', string: 'Achados' },
     { value: 'div-area-achado', string: 'Divisão dos Achados' },
     { value: 'area-achado', string: 'Área dos Achados' },
-    { value: 'nat-achado', string: 'Natureza dos Achados' },
+    { value: 'topico-achado', string: 'Topico dos Achados' },
   ]
 
 
@@ -155,11 +141,8 @@ export default function DatabaseTable() {
       console.log(response)
       TypeAlert(response.data.message, 'success')
       switch (dataType) {
-        case 'processo':
-          setArrayProcesso(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          break;
-        case 'nat-achado':
-          setArrayNatAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+        case 'topico-achado':
+          setArrayTopicoAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
           await getAllAreaAchado()
           await getAllDivAchado()
           await getAllAchados()
@@ -190,11 +173,8 @@ export default function DatabaseTable() {
   //esse bloco atualiza a visualização dos dados
   useEffect(() => {
     switch (dataType) {
-      case 'processo':
-        setRows(createRows(arrayProcesso))
-        break;
-      case 'nat-achado':
-        setRows(createRows(arrayNatAchado))
+      case 'topico-achado':
+        setRows(createRows(arrayTopicoAchado))
         break;
       case 'area-achado':
         setRows(createRows(arrayAreaAchado))
@@ -208,7 +188,7 @@ export default function DatabaseTable() {
       default:
         break;
     }
-  }, [arrayProcesso,arrayNatAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
+  }, [arrayTopicoAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
 
 
   return (

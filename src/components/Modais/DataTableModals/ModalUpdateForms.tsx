@@ -5,12 +5,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import FormUpdatePF from '../../Forms/FormsTable/Update/FormUpdatePF';
 import { GridRowId } from '@mui/x-data-grid';
-import FormUpdateJurisd from '../../Forms/FormsTable/Update/FormUpdateJurisd';
-import FormUpdateProcesso from '../../Forms/FormsTable/Update/FormUpdateProcesso';
-import FormUpdateProcurador from '../../Forms/FormsTable/Update/FormUpdateProcurador';
-import FormUpdateRelator from '../../Forms/FormsTable/Update/FormUpdateRelator';
 import FormUpdateNatAchado from '../../Forms/FormsTable/Update/FormUpdateNatAchado';
 import FormUpdateAreaAchado from '../../Forms/FormsTable/Update/FormUpdateAreaAchado';
 import FormUpdateDivAchado from '../../Forms/FormsTable/Update/FormUpdateDivAchado';
@@ -43,21 +38,6 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
 
   const renderForm = () => {
     switch (dataType) {
-      case 'pessoafisica':
-        return <FormUpdatePF closeModal={onClose} id={id} />
-
-      case 'jurisd':
-        return <FormUpdateJurisd closeModal={onClose} id={id} />
-
-      case 'processo':
-        return <FormUpdateProcesso closeModal={onClose} id={id} />
-
-      case 'procurador':
-        return <FormUpdateProcurador closeModal={onClose} id={id} />
-
-      case 'relator':
-        return <FormUpdateRelator closeModal={onClose} id={id} />
-
       case 'nat-achado':
         return <FormUpdateNatAchado closeModal={onClose} id={id} />
 

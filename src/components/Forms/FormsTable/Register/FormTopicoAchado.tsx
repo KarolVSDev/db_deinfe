@@ -1,22 +1,22 @@
 import { Box, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { NatAchado } from '../../../../types/types';
+import { TopicoAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useContextTable } from '../../../../context/TableContext';
 
 
-const FormNatAchado = () => {
-  const { handleSubmit, register, formState: { errors }, reset } = useForm<NatAchado>({});
-  const { setArrayNatAchado } = useContextTable()
-  const onSubmit = (data: NatAchado) => {
+const FormTopicoAchado = () => {
+  const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
+  const { setArrayTopicoAchado } = useContextTable()
+  const onSubmit = (data: TopicoAchado) => {
     api.post('/nat-achado', data).then(response => {
-      const newNatAchado = response.data.natachado
-      console.log(newNatAchado)
+      const newTopicoAchado = response.data.natachado
+      console.log(newTopicoAchado)
       TypeAlert(response.data.message, 'success');
       reset()
-      setArrayNatAchado(prevArray => [...prevArray, newNatAchado])
+      setArrayTopicoAchado(prevArray => [...prevArray, newTopicoAchado])
     }).catch((error) => {
       TypeAlert(error.response.data.message, 'warning');
     });
@@ -24,7 +24,7 @@ const FormNatAchado = () => {
   };
 
   return (
-    <Box component="form" name='formNatAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Box component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
       <Grid item xs={12} sm={4}>
         <TextField
           variant='filled'
@@ -32,7 +32,7 @@ const FormNatAchado = () => {
           fullWidth
           autoFocus
           id="descricao"
-          label='Natureza do Achado'
+          label='Tópico do Achado'
           type="text"
           error={!!errors?.descricao}
           {...register('descricao', {
@@ -52,4 +52,4 @@ const FormNatAchado = () => {
   );
 }
 
-export default FormNatAchado;
+export default FormTopicoAchado;
