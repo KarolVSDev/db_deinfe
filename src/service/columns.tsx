@@ -1,5 +1,5 @@
 export const topicoAchadoHeader = [
-    {id:'descricao', label:'Descrição', minWidth:150}
+    {id:'topico', label:'Tópico', minWidth:150}
 ]
 
 export const achadoHeader = [

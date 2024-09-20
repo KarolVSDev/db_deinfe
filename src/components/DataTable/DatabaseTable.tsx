@@ -88,9 +88,9 @@ export default function DatabaseTable() {
         setRows(createRows(arrayAreaAchado))
         break
       case 'topico-achado':
-        if (arrayTopicoAchado.length <= 0) {
-          getAllTopcioAchado()
-        }
+        // if (arrayTopicoAchado.length <= 0) {
+        //   getAllTopcioAchado()
+        // }
         setColumns(createGridColumns(topicoAchadoHeader));
         setRows(createRows(arrayTopicoAchado))
         break
@@ -121,7 +121,7 @@ export default function DatabaseTable() {
     { value: 'achado', string: 'Achados' },
     { value: 'div-area-achado', string: 'Divisão dos Achados' },
     { value: 'area-achado', string: 'Área dos Achados' },
-    { value: 'topico-achado', string: 'Topico dos Achados' },
+    { value: 'topico-achado', string: 'Topicos' },
   ]
 
 
@@ -190,7 +190,7 @@ export default function DatabaseTable() {
     }
   }, [arrayTopicoAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
 
-
+  console.log(rows)
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >

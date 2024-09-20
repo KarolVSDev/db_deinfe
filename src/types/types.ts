@@ -35,8 +35,8 @@ export interface AuthData {
 
 //Data Table
 export interface TopicoAchado {
-  id: String;
-  descricao: string;
+  id?: string;
+  topico: string;
 }
 export interface NatRelation {
   id: string;

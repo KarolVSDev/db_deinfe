@@ -2,13 +2,15 @@ import { api } from "../service/api";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 import { useContextTable } from "../context/TableContext";
+import dataFake from "../service/dataFake";
 
 const useFetchListData = () => {
 
   const { setArrayAchado,
     setArrayTopicoAchado, setArrayDivAchado, setArrayAreaAchado,
-    setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp, setAchadoUp,
+    setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp, setAchadoUp, arrayTopicoAchado
 } = useContextTable();
+
 
 
   const getAllAchados = async () => {
@@ -22,8 +24,9 @@ const useFetchListData = () => {
 
   const getAllTopcioAchado = async () => {
     try {
-      const response = await api.get('/nat-achado');
-      setArrayTopicoAchado(response.data)
+      //const response = await api.get('/nat-achado');
+      //setArrayTopicoAchado(response.data)
+      return arrayTopicoAchado
     } catch (error: any) {
       TypeInfo(error.response.data.message, 'error');
     }

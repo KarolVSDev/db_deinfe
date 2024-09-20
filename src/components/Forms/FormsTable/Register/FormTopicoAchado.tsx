@@ -5,21 +5,27 @@ import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useContextTable } from '../../../../context/TableContext';
-
+import { faker } from '@faker-js/faker';
+import dataFake from '../../../../service/dataFake'
 
 const FormTopicoAchado = () => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
   const { setArrayTopicoAchado } = useContextTable()
+  const {saveData} = dataFake()
+
   const onSubmit = (data: TopicoAchado) => {
-    api.post('/nat-achado', data).then(response => {
-      const newTopicoAchado = response.data.natachado
-      console.log(newTopicoAchado)
-      TypeAlert(response.data.message, 'success');
-      reset()
-      setArrayTopicoAchado(prevArray => [...prevArray, newTopicoAchado])
-    }).catch((error) => {
-      TypeAlert(error.response.data.message, 'warning');
-    });
+    // api.post('/nat-achado', data).then(response => {
+    //   const newTopicoAchado = response.data.natachado
+    //   console.log(newTopicoAchado)
+    //   
+    //   setArrayTopicoAchado(prevArray => [...prevArray, newTopicoAchado])
+    // }).catch((error) => {
+    //   TypeAlert(error.response.data.message, 'warning');
+    // });
+    saveData(data)
+    TypeAlert('Tópico adicionado', 'success');
+    reset()
+
 
   };
 
@@ -31,18 +37,18 @@ const FormTopicoAchado = () => {
           required
           fullWidth
           autoFocus
-          id="descricao"
-          label='Tópico do Achado'
+          id="topico"
+          label='Tópico'
           type="text"
-          error={!!errors?.descricao}
-          {...register('descricao', {
+          error={!!errors?.topico}
+          {...register('topico', {
             required: 'Campo obrigatório'
           })}
         />
 
-        {errors?.descricao && (
+        {errors?.topico && (
           <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-            {errors.descricao.message}
+            {errors.topico.message}
           </Typography>
         )}
 
