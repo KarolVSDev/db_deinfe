@@ -1,17 +1,16 @@
-import { Box, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { useContextTable } from '../../../../context/TableContext';
-import { faker } from '@faker-js/faker';
 import dataFake from '../../../../service/dataFake'
 
 const FormTopicoAchado = () => {
-  const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
+  const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<TopicoAchado>({});
   const { setArrayTopicoAchado } = useContextTable()
-  const {saveData} = dataFake()
+  const { saveData } = dataFake()
 
   const onSubmit = (data: TopicoAchado) => {
     // api.post('/nat-achado', data).then(response => {
@@ -22,9 +21,12 @@ const FormTopicoAchado = () => {
     // }).catch((error) => {
     //   TypeAlert(error.response.data.message, 'warning');
     // });
+    data.situacao = false;
+    
     saveData(data)
     TypeAlert('Tópico adicionado', 'success');
     reset()
+    console.log(data)
 
 
   };
@@ -38,7 +40,7 @@ const FormTopicoAchado = () => {
           fullWidth
           autoFocus
           id="topico"
-          label='Tópico'
+          label='Proposta de Tópico'
           type="text"
           error={!!errors?.topico}
           {...register('topico', {
@@ -51,6 +53,8 @@ const FormTopicoAchado = () => {
             {errors.topico.message}
           </Typography>
         )}
+
+        <input type="hidden"{...register('situacao')} value="false" />
 
       </Grid>
       <RegisterButton text="Registrar" />

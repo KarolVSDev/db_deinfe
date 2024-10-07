@@ -41,6 +41,8 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
         }
     }
 
+
+
     const setCookies = (authData:AuthData) => {
         const cookies = new Cookies()
         cookies.set('focusToken', authData.token, {path:'/'})

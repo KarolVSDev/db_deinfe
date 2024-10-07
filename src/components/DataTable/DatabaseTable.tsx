@@ -36,18 +36,27 @@ export default function DatabaseTable() {
 
 
 
-  const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
+    const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
-    return headers.map(header => ({
-      field: header.id,
-      headerName: header.label,
-      width: header.minWidth,
-      editable: false,
-      renderCell: (params) => {
-        return params.value;
-      }
-    }));
-  };
+      return headers.map(header => ({
+        field: header.id,
+        headerName: header.label,
+        width: header.minWidth,
+        editable: false,
+        renderCell: (params) => {
+          if(typeof params.value == 'boolean'){
+
+            return (
+              <span  style={{background:params.value? '#86efac':'#fcd34d', fontWeight:'bold', padding:'5px 5px', borderRadius:'5px'}}>
+                {params.value? "Aprovado" : "Pendente" }
+              </span>
+            )
+          }
+          return params.value;
+        },
+        filterable: true,
+      }));
+    };
 
 
   //cria table pra dados sem relação
@@ -92,6 +101,7 @@ export default function DatabaseTable() {
         //   getAllTopcioAchado()
         // }
         setColumns(createGridColumns(topicoAchadoHeader));
+        console.log(arrayTopicoAchado)
         setRows(createRows(arrayTopicoAchado))
         break
       default:

@@ -37,6 +37,7 @@ export interface AuthData {
 export interface TopicoAchado {
   id?: string;
   topico: string;
+  situacao:boolean;
 }
 export interface NatRelation {
   id: string;

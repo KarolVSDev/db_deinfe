@@ -6,10 +6,12 @@ import Fade from '@mui/material/Fade';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { GridRowId } from '@mui/x-data-grid';
-import FormUpdateNatAchado from '../../Forms/FormsTable/Update/FormUpdateNatAchado';
+import FormUpdateNatAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
 import FormUpdateAreaAchado from '../../Forms/FormsTable/Update/FormUpdateAreaAchado';
 import FormUpdateDivAchado from '../../Forms/FormsTable/Update/FormUpdateDivAchado';
 import FormUpdateAchados from '../../Forms/FormsTable/Update/FormUpdateAchados';
+import FormTopicoAchado from '../../Forms/FormsTable/Register/FormTopicoAchado';
+import FormUpdateTopicoAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -38,8 +40,8 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
 
   const renderForm = () => {
     switch (dataType) {
-      case 'nat-achado':
-        return <FormUpdateNatAchado closeModal={onClose} id={id} />
+      case 'topico-achado':
+        return <FormUpdateTopicoAchado closeModal={onClose} id={id} />
 
       case 'area-achado':
         return <FormUpdateAreaAchado closeModal={onClose} id={id} />
