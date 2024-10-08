@@ -147,15 +147,13 @@ export default function DatabaseTable() {
   //função de delete
   const handleDelete = async (selectedRow: GridRowId, dataType: string) => {
     try {
-      const response = await api.delete(`/${dataType}/${selectedRow}`)
-      console.log(response)
-      TypeAlert(response.data.message, 'success')
+      //const response = await api.delete(`/${dataType}/${selectedRow}`)
+      //console.log(response)
+      //TypeAlert(response.data.message, 'success')
       switch (dataType) {
         case 'topico-achado':
           setArrayTopicoAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          await getAllAreaAchado()
-          await getAllDivAchado()
-          await getAllAchados()
+          TypeAlert('Tópico removido', 'success')
           break;
         case 'area-achado':
           setArrayAreaAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
@@ -200,7 +198,7 @@ export default function DatabaseTable() {
     }
   }, [arrayTopicoAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
 
-  console.log(rows)
+  console.log(arrayTopicoAchado)
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >

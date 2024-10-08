@@ -18,8 +18,8 @@ interface TopicoAchadoProp {
 const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
   const [topicoAchado, setTopicoAchado] = useState<TopicoAchado | null>(null);
-  const { arrayTopicoAchado } = useContextTable();
-  const [alignment, setAlignment] = useState('web');
+  const { arrayTopicoAchado, setArrayTopicoAchado } = useContextTable();
+  const [situacao, setSituacao] = useState(topicoAchado?.situacao === false? 'Pendente' : 'Aprovado' );
 
   // Função para buscar o tópico do achado
   const getTopicoAchado = () => {
@@ -27,14 +27,33 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
     setTopicoAchado(topico || null);
   };
 
+  
   useEffect(() => {
     if (id) {
       getTopicoAchado();
+      console.log(topicoAchado?.situacao)
     }
-  }, [id, arrayTopicoAchado]);
+  }, [id, arrayTopicoAchado, topicoAchado]);
 
   const onSubmit = (data: TopicoAchado) => {
     // Simulando a atualização (API ou outra lógica aqui)
+    const updateData = {
+      ...data,
+      situacao: situacao === 'Aprovado'? true : false
+    }
+    console.log(updateData)
+
+    const updatedArray = arrayTopicoAchado.map(item => {
+      if(item.id === id){
+        const updateItem = {
+          ...item,
+          situacao:updateData.situacao
+        }
+        return updateItem
+      }
+    }).filter(item => item !== undefined)
+    console.log(updatedArray)
+    setArrayTopicoAchado(updatedArray)
     closeModal();
   };
 
@@ -44,48 +63,50 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
-    newAlignment: string,
+    newSituacao: string,
   ) => {
-    setAlignment(newAlignment);
+    if (newSituacao !== null) {
+      setSituacao(newSituacao);
+    }
   };
+
 
   return (
     <Container>
       <Box component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>
-          Atualizar Registro de Natureza do Achado
+          Atualizar Registro de Tópico
         </Typography>
         <Grid item xs={12} sm={4}>
           <TextField
             variant="filled"
             required
-            defaultValue={topicoAchado.topico} // Certificando-se de que `topicoAchado` está definido
+            defaultValue={topicoAchado.topico} 
             fullWidth
             autoFocus
-            id="descricao"
-            label="Natureza do Achado"
+            id="topico"
+            label="Tópico"
             type="text"
-            error={!!errors?.topico} // Corrigindo o erro
+            error={!!errors?.topico}
             {...register('topico', {
               required: 'Campo obrigatório'
             })}
           />
           {errors?.topico && (
             <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-              {errors.topico?.message} {/* Acessando a mensagem correta */}
+              {errors.topico?.message}
             </Typography>
           )}
-
-          <ToggleButtonGroup
-            color="primary"
-            value={alignment}
-            exclusive
-            onChange={handleChange}
-            aria-label="Platform"
-          >
-            <ToggleButton value={topicoAchado.situacao}>Pendente</ToggleButton>
-            <ToggleButton value='true'>Aprovado</ToggleButton>
-          </ToggleButtonGroup>
+             <ToggleButtonGroup
+             color="primary"
+             value={situacao}
+             exclusive
+             onChange={handleChange}
+             aria-label="Platform"
+           >
+             <ToggleButton value='Pendente' >Pendente</ToggleButton>
+             <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+           </ToggleButtonGroup>
         </Grid>
         <RegisterButton text="Registrar" />
       </Box>
