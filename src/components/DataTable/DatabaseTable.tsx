@@ -19,6 +19,8 @@ import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchListData from '../../hooks/useFetchListData';
+import { useAuth } from '../../context/AuthContext';
+import useFetchUsers from '../../hooks/useFetchUsers';
 
 
 
@@ -33,6 +35,8 @@ export default function DatabaseTable() {
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
   const {getAllAchados, getAllTopcioAchado, getAllDivAchado, getAllAreaAchado } = useFetchListData()
+  const {user} = useAuth()
+  const {getUser} = useFetchUsers()
 
 
 
@@ -67,6 +71,11 @@ export default function DatabaseTable() {
     }));
   };
 
+  //pegando usuário
+  useEffect(() => {
+    getUser()
+  },[])
+  console.log(user)
 
   //controle de ações baseado no tipo de dado
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -198,7 +207,7 @@ export default function DatabaseTable() {
     }
   }, [arrayTopicoAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
 
-  console.log(arrayTopicoAchado)
+  
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >
@@ -228,12 +237,16 @@ export default function DatabaseTable() {
           </Box>
           {selectedRow !== null && (
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-              <IconButton color='primary' onClick={() => handleUpdate(selectedRow)}>
-                <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-              </IconButton>
-              <IconButton color='error' onClick={() => handleDelete(selectedRow, dataType)}>
-                <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-              </IconButton>
+               {user?.cargo === 'Diretor' && (
+                <>
+                  <IconButton color='primary' onClick={() => handleUpdate(selectedRow)}>
+                    <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+                  </IconButton>
+                  <IconButton color='error' onClick={() => handleDelete(selectedRow, dataType)}>
+                    <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+                  </IconButton>
+                </>
+              )}
             </Box>
           )}
         </Box>

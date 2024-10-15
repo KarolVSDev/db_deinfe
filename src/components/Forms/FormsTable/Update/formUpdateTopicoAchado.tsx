@@ -19,7 +19,8 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
   const [topicoAchado, setTopicoAchado] = useState<TopicoAchado | null>(null);
   const { arrayTopicoAchado, setArrayTopicoAchado } = useContextTable();
-  const [situacao, setSituacao] = useState(topicoAchado?.situacao === false? 'Pendente' : 'Aprovado' );
+  const [situacao, setSituacao] = useState<string | null>(null);
+
 
   // Função para buscar o tópico do achado
   const getTopicoAchado = () => {
@@ -31,9 +32,15 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
   useEffect(() => {
     if (id) {
       getTopicoAchado();
-      console.log(topicoAchado?.situacao)
+      
     }
-  }, [id, arrayTopicoAchado, topicoAchado]);
+  }, [id, arrayTopicoAchado]);
+
+  useEffect(() => {
+    if(topicoAchado){
+      setSituacao(topicoAchado?.situacao === false ? 'Pendente' : 'Aprovado');
+    }
+  },[topicoAchado])
 
   const onSubmit = (data: TopicoAchado) => {
     // Simulando a atualização (API ou outra lógica aqui)
@@ -41,19 +48,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
       ...data,
       situacao: situacao === 'Aprovado'? true : false
     }
-    console.log(updateData)
-
-    const updatedArray = arrayTopicoAchado.map(item => {
-      if(item.id === id){
-        const updateItem = {
-          ...item,
-          situacao:updateData.situacao
-        }
-        return updateItem
-      }
-    }).filter(item => item !== undefined)
-    console.log(updatedArray)
-    setArrayTopicoAchado(updatedArray)
+    setArrayTopicoAchado(prevArray => prevArray.map(item => item.id === id? {...item, ...updateData}:item))
     closeModal();
   };
 
@@ -65,7 +60,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
     event: React.MouseEvent<HTMLElement>,
     newSituacao: string,
   ) => {
-    if (newSituacao !== null) {
+    if (newSituacao !== undefined) {
       setSituacao(newSituacao);
     }
   };

@@ -66,55 +66,52 @@ export interface AreaAchado2 {
 }
 export interface Achado {
   id: string;
-  titulo: string;
-  texto: string;
-  criterio: string;
-  ativo: string;
-  divisao: string;
+  descricao:string;
+  situacao:boolean;
 }
-export interface Achado2 {
-  id: string;
-  titulo: string;
-  texto: string;
-  criterio: string;
-  ativo: string;
-  divisao: { id: string, descricao: string };
-}
+// export interface Achado2 {
+//   id: string;
+//   titulo: string;
+//   texto: string;
+//   criterio: string;
+//   ativo: string;
+//   divisao: { id: string, descricao: string };
+// }
 
-export interface AchadoUp {
-  id: string;
-  titulo: string;
-  texto: string;
-  criterio: string;
-  ativo: string;
-  divisao?: {
-    id: string, descricao: string,
-    area: {
-      id: string, descricao: string,
-      natureza: { id: string, descricao: string }
-    }
-  }
-}
+// export interface AchadoUp {
+//   id: string;
+//   titulo: string;
+//   texto: string;
+//   criterio: string;
+//   ativo: string;
+//   divisao?: {
+//     id: string, descricao: string,
+//     area: {
+//       id: string, descricao: string,
+//       natureza: { id: string, descricao: string }
+//     }
+//   }
+// }
 
-export interface DivAchadoUp {
-  id: string;
-  descricao: string;
-  area: AreaAchado2;
-  achados: AchadoUp[];
-}
+// export interface DivAchadoUp {
+//   id: string;
+//   descricao: string;
+//   area: AreaAchado2;
+//   achados: AchadoUp[];
+// }
 
-export interface AreaAchadoUp {
-  id: string;
-  descricao: string;
-  natureza: TopicoAchado;
-  divisoes: DivAchadoUp[];
-}
+// export interface AreaAchadoUp {
+//   id: string;
+//   descricao: string;
+//   natureza: TopicoAchado;
+//   divisoes: DivAchadoUp[];
+// }
 
-export interface NatAchadoUp {
-  id: string;
-  descricao: string;
-  areas: AreaAchadoUp[];
-}
+// export interface NatAchadoUp {
+//   id: string;
+//   descricao: string;
+//   areas: AreaAchadoUp[];
+// }
 export interface ColumnConfig {
   id: string;
   label: string;

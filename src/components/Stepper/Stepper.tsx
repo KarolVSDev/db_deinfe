@@ -14,7 +14,7 @@ import FormAchado from '../Forms/FormsTable/Register/FormAchados';
 
 const steps = [
   {
-    label: 'Registro de Tópico do Achado',
+    label: 'Registro de Tópico',
     component: <FormTopicoAchado />
   },
   {

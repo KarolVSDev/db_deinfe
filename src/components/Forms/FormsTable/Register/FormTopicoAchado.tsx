@@ -10,7 +10,7 @@ import dataFake from '../../../../service/dataFake'
 const FormTopicoAchado = () => {
   const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<TopicoAchado>({});
   const { setArrayTopicoAchado } = useContextTable()
-  const { saveData } = dataFake()
+  const { saveTopico } = dataFake()
 
   const onSubmit = (data: TopicoAchado) => {
     // api.post('/nat-achado', data).then(response => {
@@ -23,7 +23,7 @@ const FormTopicoAchado = () => {
     // });
     data.situacao = false;
     
-    saveData(data)
+    saveTopico(data)
     TypeAlert('Tópico adicionado', 'success');
     reset()
     console.log(data)
