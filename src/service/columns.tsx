@@ -4,10 +4,13 @@ export const topicoAchadoHeader = [
 ]
 
 export const achadoHeader = [
-    {id:'titulo', label:'Título', minWidth:150},
-    {id:'texto', label:'Texto', minWidth:150},
-    {id:'criterio', label:'Critério', minWidth:150},
-    {id:'ativo', label:'Ativo', minWidth:150}
+    {id:'achado', label:'Achado', minWidth:150},
+    {id:'siuacao', label:'Situação', minWidth:150},
+]
+
+export const beneficioHeader = [
+    {id:'beneficio', label:'Benefício', minWidth:150},
+    {id:'siuacao', label:'Situação', minWidth:150},
 ]
 
 export const natAchadoRelationHeader = [

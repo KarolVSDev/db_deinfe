@@ -8,7 +8,8 @@ const useFetchListData = () => {
 
   const { setArrayAchado,
     setArrayTopicoAchado, setArrayDivAchado, setArrayAreaAchado,
-    setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp, setAchadoUp, arrayTopicoAchado
+    //setNatAchadoUp, setAreaAchadoUp, setDivAchadoUp, setAchadoUp, 
+    arrayTopicoAchado
 } = useContextTable();
 
 
@@ -59,41 +60,41 @@ const useFetchListData = () => {
   }
 
 
-  const getNatAchadoRelation = async (id: GridRowId | undefined) => {
-    await api(`nat-achado/relation/${id}`).then(response => {
-      const natAchadoR = response.data;
-      setNatAchadoUp(natAchadoR)
-    }).catch((error: any) => {
-      TypeAlert(error, 'error')
-    })
-  }
+  // const getNatAchadoRelation = async (id: GridRowId | undefined) => {
+  //   await api(`nat-achado/relation/${id}`).then(response => {
+  //     const natAchadoR = response.data;
+  //     setNatAchadoUp(natAchadoR)
+  //   }).catch((error: any) => {
+  //     TypeAlert(error, 'error')
+  //   })
+  // }
 
-  const getAreaAchadoRelation = async (id: GridRowId | undefined) => {
-    await api(`area-achado/relation/${id}`).then(response => {
-      const areaAchadoR = response.data.result;
-      setAreaAchadoUp(areaAchadoR)
-    }).catch((error: any) => {
-      TypeAlert(error, 'error')
-    })
-  }
+  // const getAreaAchadoRelation = async (id: GridRowId | undefined) => {
+  //   await api(`area-achado/relation/${id}`).then(response => {
+  //     const areaAchadoR = response.data.result;
+  //     setAreaAchadoUp(areaAchadoR)
+  //   }).catch((error: any) => {
+  //     TypeAlert(error, 'error')
+  //   })
+  // }
 
-  const getDivAchadoRelation = async (id: GridRowId | undefined) => {
-    await api(`div-area-achado/relation/${id}`).then(response => {
-      const divAchadoR = response.data.result;
-      setDivAchadoUp(divAchadoR)
-    }).catch((error: any) => {
-      TypeAlert(error, 'error')
-    })
-  }
+  // const getDivAchadoRelation = async (id: GridRowId | undefined) => {
+  //   await api(`div-area-achado/relation/${id}`).then(response => {
+  //     const divAchadoR = response.data.result;
+  //     setDivAchadoUp(divAchadoR)
+  //   }).catch((error: any) => {
+  //     TypeAlert(error, 'error')
+  //   })
+  // }
 
-  const getAchadoRelation = async (id: GridRowId | undefined) => {
-    await api(`achado/relation/${id}`).then(response => {
-      const achadoR = response.data;
-      setAchadoUp(achadoR)
-    }).catch((error: any) => {
-      TypeAlert(error, 'error')
-    })
-  }
+  // const getAchadoRelation = async (id: GridRowId | undefined) => {
+  //   await api(`achado/relation/${id}`).then(response => {
+  //     const achadoR = response.data;
+  //     setAchadoUp(achadoR)
+  //   }).catch((error: any) => {
+  //     TypeAlert(error, 'error')
+  //   })
+  // }
 
 
   return {
@@ -102,10 +103,10 @@ const useFetchListData = () => {
     getAllDivAchado,
     getAllAreaAchado,
     onDelete,
-    getNatAchadoRelation,
-    getAreaAchadoRelation,
-    getDivAchadoRelation,
-    getAchadoRelation
+    // getNatAchadoRelation,
+    // getAreaAchadoRelation,
+    // getDivAchadoRelation,
+    // getAchadoRelation
 
   }
 }

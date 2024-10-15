@@ -8,27 +8,27 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import FormTopicoAchado from '../Forms/FormsTable/Register/FormTopicoAchado';
-import FormAreaAchado from '../Forms/FormsTable/Register/FormAreaAchado';
 import FormDivAchado from '../Forms/FormsTable/Register/FormDivAchado';
 import FormAchado from '../Forms/FormsTable/Register/FormAchados';
+import FormBeneficio from '../Forms/FormsTable/Register/FormBeneficio';
 
 const steps = [
   {
-    label: 'Registro de Tópico',
+    label: 'Registro do Tópico',
     component: <FormTopicoAchado />
   },
   {
-    label: 'Registro da Área do Achado',
-    component: <FormAreaAchado />
+    label: 'Registro do Achado',
+    component: <FormAchado />
+  },
+  {
+    label: 'Registro do Benefício',
+    component: <FormBeneficio />
   },
   {
     label: 'Registro da Divisão do Achado',
     component: <FormDivAchado />
   },
-  {
-    label: 'Registro do Achado',
-    component: <FormAchado />
-  }
 ];
 
 export interface StepperProps {

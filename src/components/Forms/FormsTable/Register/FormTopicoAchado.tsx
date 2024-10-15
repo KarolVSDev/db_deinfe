@@ -9,7 +9,7 @@ import dataFake from '../../../../service/dataFake'
 
 const FormTopicoAchado = () => {
   const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<TopicoAchado>({});
-  const { setArrayTopicoAchado } = useContextTable()
+  //const { setArrayTopicoAchado } = useContextTable()
   const { saveTopico } = dataFake()
 
   const onSubmit = (data: TopicoAchado) => {

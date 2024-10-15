@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import {TopicoAchado, DivAchado, AreaAchado, Achado, NatAchadoUp, AreaAchadoUp, DivAchadoUp,
-    AchadoUp,
+import {TopicoAchado, DivAchado, AreaAchado, Achado, Beneficio, //NatAchadoUp, AreaAchadoUp, DivAchadoUp,
+    //AchadoUp,
 } from "../types/types";
 
 
@@ -9,19 +9,21 @@ interface TableContextType {
     arrayAreaAchado: AreaAchado[];
     arrayDivAchado: DivAchado[];
     arrayAchado: Achado[];
-    natAchadoUp: NatAchadoUp | undefined;
-    areaAchadoUp: AreaAchadoUp | undefined;
-    divAchadoUp: DivAchadoUp | undefined;
-    achadoUp: AchadoUp | undefined;
+    arrayBeneficio: Beneficio[];
+    // natAchadoUp: NatAchadoUp | undefined;
+    // areaAchadoUp: AreaAchadoUp | undefined;
+    // divAchadoUp: DivAchadoUp | undefined;
+    // achadoUp: AchadoUp | undefined;
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
-    setNatAchadoUp: Dispatch<SetStateAction<NatAchadoUp | undefined>>;
-    setAreaAchadoUp: Dispatch<SetStateAction<AreaAchadoUp | undefined>>;
-    setDivAchadoUp: Dispatch<SetStateAction<DivAchadoUp | undefined>>;
-    setAchadoUp: Dispatch<SetStateAction<AchadoUp | undefined>>;
+    // setNatAchadoUp: Dispatch<SetStateAction<NatAchadoUp | undefined>>;
+    // setAreaAchadoUp: Dispatch<SetStateAction<AreaAchadoUp | undefined>>;
+    // setDivAchadoUp: Dispatch<SetStateAction<DivAchadoUp | undefined>>;
+    // setAchadoUp: Dispatch<SetStateAction<AchadoUp | undefined>>;
     setArrayAreaAchado: Dispatch<SetStateAction<AreaAchado[]>>;
     setArrayDivAchado: Dispatch<SetStateAction<DivAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
+    setArrayBeneficio: Dispatch<SetStateAction<Beneficio[]>>;
     
 
 }
@@ -36,11 +38,12 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayTopicoAchado, setArrayTopicoAchado] = useState<TopicoAchado[]>([]);
     const [arrayAreaAchado, setArrayAreaAchado] = useState<AreaAchado[]>([]);
     const [arrayDivAchado, setArrayDivAchado] = useState<DivAchado[]>([]);
+    const [arrayBeneficio, setArrayBeneficio] = useState<Beneficio[]>([]);
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
-    const [natAchadoUp, setNatAchadoUp] = useState<NatAchadoUp>()
-    const [areaAchadoUp, setAreaAchadoUp] = useState<AreaAchadoUp>()
-    const [divAchadoUp, setDivAchadoUp] = useState<DivAchadoUp>()
-    const [achadoUp, setAchadoUp] = useState<AchadoUp>()
+    // const [natAchadoUp, setNatAchadoUp] = useState<NatAchadoUp>()
+    // const [areaAchadoUp, setAreaAchadoUp] = useState<AreaAchadoUp>()
+    // const [divAchadoUp, setDivAchadoUp] = useState<DivAchadoUp>()
+    // const [achadoUp, setAchadoUp] = useState<AchadoUp>()
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -76,22 +79,24 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     return (
         <TableContext.Provider value={{
             arrayTopicoAchado,
-            natAchadoUp,
-            areaAchadoUp,
-            divAchadoUp,
-            achadoUp,
+            // natAchadoUp,
+            // areaAchadoUp,
+            // divAchadoUp,
+            // achadoUp,
             arrayAreaAchado,
             arrayDivAchado,
             arrayAchado,
+            arrayBeneficio,
             handleLocalization,
             setArrayTopicoAchado,
             setArrayAreaAchado,
             setArrayDivAchado,
             setArrayAchado,
-            setNatAchadoUp,
-            setAreaAchadoUp,
-            setDivAchadoUp,
-            setAchadoUp,
+            setArrayBeneficio,
+            // setNatAchadoUp,
+            // setAreaAchadoUp,
+            // setDivAchadoUp,
+            // setAchadoUp,
         }}>
             {children}
         </TableContext.Provider>

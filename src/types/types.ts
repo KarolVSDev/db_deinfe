@@ -66,7 +66,12 @@ export interface AreaAchado2 {
 }
 export interface Achado {
   id: string;
-  descricao:string;
+  achado:string;
+  situacao:boolean;
+}
+export interface Beneficio {
+  id: string;
+  beneficio:string;
   situacao:boolean;
 }
 // export interface Achado2 {
@@ -107,11 +112,7 @@ export interface Achado {
 //   divisoes: DivAchadoUp[];
 // }
 
-// export interface NatAchadoUp {
-//   id: string;
-//   descricao: string;
-//   areas: AreaAchadoUp[];
-// }
+
 export interface ColumnConfig {
   id: string;
   label: string;

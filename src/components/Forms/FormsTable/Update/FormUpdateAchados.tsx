@@ -1,7 +1,7 @@
-import { Autocomplete, Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Container, Grid, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { useForm } from 'react-hook-form';
-import { Achado, Achado2, AreaAchado, DivAchado } from '../../../../types/types';
+import { Achado } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -20,30 +20,44 @@ interface DivAchadoProps {
 }
 const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
   const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Achado>({});
-
-  const { arrayDivAchado, setArrayAchado, achadoUp } = useContextTable()
-  const { getAllDivAchado, getAchadoRelation } = useFetchListData()
-  const [achado, setAchado] = useState<Achado2>()
+  const [achado, setAchado] = useState<Achado>()
   const [openModal, setOpenModal] = useState(false)
   const {exportAchadoRelations} = useExportToExcel()
+  const {arrayAchado, setArrayAchado} = useContextTable()
+  const [situacao, setSituacao] = useState<string>();
 
   const getAchado = () => {
-    api.get(`achado/${id}`).then(response => {
-      console.log(response.data)
-      setAchado(response.data)
-    }).catch((error) => {
-      console.log(error)
-      TypeAlert('Erro ao Resgata Achado', 'error')
-    })
+    // api.get(`achado/${id}`).then(response => {
+    //   console.log(response.data)
+    //   setAchado(response.data)
+    // }).catch((error) => {
+    //   console.log(error)
+    //   TypeAlert('Erro ao Resgata Achado', 'error')
+    // })
+    const achado = arrayAchado.find(item => item.id === id)
+    setAchado(achado)
   }
 
   useEffect(() => {
-    getAllDivAchado()
     if (id) {
       getAchado()
-      getAchadoRelation(id)
     }
   }, [])
+
+  useEffect(() => {
+    if(achado){
+      setSituacao(achado.situacao === false ? 'Pendente' : 'Aprovado');
+    }
+  },[achado])
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newSituacao: string,
+  ) => {
+    if (newSituacao !== undefined) {
+      setSituacao(newSituacao);
+    }
+  };
 
   const handleModal = () => {
     setOpenModal(true)
@@ -52,27 +66,35 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
     setOpenModal(false)
   }
 
-  const handleExport = () => {
-    if(achadoUp){
-      exportAchadoRelations(achadoUp, 'relacoes.xlsx')
-    }
-  }
+  // const handleExport = () => {
+  //   if(achadoUp){
+  //     exportAchadoRelations(achadoUp, 'relacoes.xlsx')
+  //   }
+  // }
 
   const onSubmit = (data: Achado) => {
-    const idAchado = id;
-    api.patch(`/achado/update/${idAchado}`, data).then(response => {
-      TypeAlert(response.data.message, 'success')
-      reset()
-      setArrayAchado(prevArray => {
-        const updatedArray = prevArray.map(item =>
-          item.id === idAchado ? { ...item, ...data } : item
-        )
-        return updatedArray
-      });
-      closeModal()
-    }).catch((error) => {
-      TypeAlert(error.response.data.message, 'warning');
-    })
+    // const idAchado = id;
+    // api.patch(`/achado/update/${idAchado}`, data).then(response => {
+    //   TypeAlert(response.data.message, 'success')
+    //   reset()
+    //   setArrayAchado(prevArray => {
+    //     const updatedArray = prevArray.map(item =>
+    //       item.id === idAchado ? { ...item, ...data } : item
+    //     )
+    //     return updatedArray
+    //   });
+    //   closeModal()
+    // }).catch((error) => {
+    //   TypeAlert(error.response.data.message, 'warning');
+    // })
+
+    const updateData = {
+      ...data,
+      situacao:situacao === "Aprovado"? true : false
+    }
+
+    setArrayAchado(prevArray => prevArray.map(item => item.id === id? {...item, ...updateData}:item))
+    closeModal()
   }
 
 
@@ -81,109 +103,46 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
       {achado && (
         <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
           <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro do Achado</Typography>
+          <Grid item xs={12} sm={4}>
           <TextField
             variant='filled'
             autoComplete="given-name"
-            defaultValue={achado.titulo}
+            defaultValue={achado.achado}
             type="text"
             required
             fullWidth
-            id="titulo"
-            label="Título"
+            id="achado"
+            label="Achado"
             autoFocus
-            error={errors?.titulo?.type === 'required'}
-            {...register('titulo', {
+            error={errors?.achado?.type === 'required'}
+            {...register('achado', {
               required: 'Campo obrigatório',
             })}
           />
-          {errors?.titulo && (
+          {errors?.achado && (
             <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-              {errors.titulo?.message}
+              {errors.achado?.message}
             </Typography>
           )}
 
-
-          <TextField
-            variant='filled'
-            autoComplete="given-name"
-            required
-            fullWidth
-            defaultValue={achado.texto}
-            id="texto"
-            label="Texto"
-            type="text"
-            error={!!errors?.texto}
-            {...register("texto", {
-              required: 'Campo obrigatório'
-            })}
-          />
-          {errors?.texto && (
-            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-              {errors.texto.message}
-            </Typography>
-          )}
-
-          <TextField
-            variant='filled'
-            required
-            fullWidth
-            defaultValue={achado.criterio}
-            id="criterio"
-            label="Critério"
-            type="text"
-            error={!!errors?.criterio}
-            {...register('criterio', {
-              required: 'Campo obrigatório',
-            })}
-          />
-          {errors?.criterio && (
-            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-              {errors.criterio.message}
-            </Typography>
-          )}
-
-
-          <TextField
-            variant='filled'
-            required
-            fullWidth
-            defaultValue={achado.ativo}
-            id="ativo"
-            label="Ativo"
-            type="text"
-            error={!!errors?.ativo}
-            {...register('ativo', {
-              required: 'Campo obrigatório', pattern: {
-                value: /^(S|N)$/,
-                message: 'Valor do campo inválido'
-              }
-            })}
-          />
-          {errors?.ativo && (
-            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-              {errors.ativo.message}
-            </Typography>
-          )}
-
-
-
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={arrayDivAchado}
-            defaultValue={achado.divisao}
-            getOptionLabel={(option: DivAchado) => option.descricao}
-            onChange={(event, value) => setValue('divisao', value?.id ?? '')}
-            renderInput={(params) => <TextField variant='filled' {...params} label="Divisão" />}
-          />
-
+          <ToggleButtonGroup
+             color="primary"
+             value={situacao}
+             exclusive
+             onChange={handleChange}
+             aria-label="Platform"
+           >
+             <ToggleButton value='Pendente' >Pendente</ToggleButton>
+             <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+          </ToggleButtonGroup>
+          </Grid>
 
           <RegisterButton text="Registrar" />
         </Box>
       )}
-      <HandleModalButton handleModal={handleModal} />
-      <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width: '100%', mt: 1 }}>Exportar</Button>
-      <ModalShowDetails dataType={'achado'} open={openModal} onClose={handleClose} achadoRelation={achadoUp} />
+       {/*<HandleModalButton handleModal={handleModal} />
+     <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width: '100%', mt: 1 }}>Exportar</Button>
+      <ModalShowDetails dataType={'achado'} open={openModal} onClose={handleClose} achadoRelation={achadoUp} />*/}
     </Container>
   );
 }

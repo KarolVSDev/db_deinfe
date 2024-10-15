@@ -1,14 +1,9 @@
 import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
-import {
-  ColumnConfig,
-} from '../../types/types';
+import {ColumnConfig} from '../../types/types';
 import { useEffect, useState } from 'react';
-import {
-  topicoAchadoHeader,
-  achadoHeader,
-} from '../../service/columns';
+import {topicoAchadoHeader,achadoHeader,beneficioHeader} from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -22,24 +17,60 @@ import useFetchListData from '../../hooks/useFetchListData';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
 
-
-
 export default function DatabaseTable() {
 
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, arrayAreaAchado, arrayDivAchado, arrayAchado, setArrayTopicoAchado, setArrayAreaAchado, setArrayDivAchado, 
-    setArrayAchado } = useContextTable();
+  const { handleLocalization, arrayTopicoAchado, arrayAreaAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado, setArrayAreaAchado, 
+    setArrayAchado, setArrayBeneficio } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
-  const {getAllAchados, getAllTopcioAchado, getAllDivAchado, getAllAreaAchado } = useFetchListData()
+  const {getAllAchados, getAllTopcioAchado, getAllAreaAchado } = useFetchListData()
   const {user} = useAuth()
   const {getUser} = useFetchUsers()
 
 
+  const handleDataTypeChange = (event: { target: { value: string; }; }) => {
+    const value = event.target.value as string;
+    setDataType(value)
+    setSelectedRow(null);
 
+    switch (value) {
+      case 'achado':
+        // if (arrayAchado.length <= 0) {
+          //   getAllAchados()
+          // }
+          console.log(arrayAchado)
+          setColumns(createGridColumns(achadoHeader));
+          setRows(createRows(arrayAchado))
+        break
+      case 'beneficio':
+        setColumns(createGridColumns(beneficioHeader));
+        setRows(createRows(arrayBeneficio))
+        break
+      case 'area-achado':
+        if (arrayAreaAchado.length <= 0) {
+          getAllAreaAchado()
+        }
+        setColumns(createGridColumns(topicoAchadoHeader));
+        setRows(createRows(arrayAreaAchado))
+        break
+      case 'topico-achado':
+        // if (arrayTopicoAchado.length <= 0) {
+        //   getAllTopcioAchado()
+        // }
+        console.log(arrayTopicoAchado)
+        setColumns(createGridColumns(topicoAchadoHeader));
+        setRows(createRows(arrayTopicoAchado))
+        break
+      default:
+        setColumns([]);
+        setRows([])
+    }
+  };
+    
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
       return headers.map(header => ({
@@ -48,13 +79,17 @@ export default function DatabaseTable() {
         width: header.minWidth,
         editable: false,
         renderCell: (params) => {
-          if(typeof params.value == 'boolean'){
-
+          if (header.id === 'situacao' && typeof params.value === 'boolean') {
             return (
-              <span  style={{background:params.value? '#86efac':'#fcd34d', fontWeight:'bold', padding:'5px 5px', borderRadius:'5px'}}>
-                {params.value? "Aprovado" : "Pendente" }
+              <span style={{
+                background: params.value ? '#86efac' : '#fcd34d',
+                fontWeight: 'bold',
+                padding: '5px 5px',
+                borderRadius: '5px'
+              }}>
+                {params.value ? "Aprovado" : "Pendente"}
               </span>
-            )
+            );
           }
           return params.value;
         },
@@ -75,49 +110,10 @@ export default function DatabaseTable() {
   useEffect(() => {
     getUser()
   },[])
-  console.log(user)
+  
 
   //controle de ações baseado no tipo de dado
-  const handleDataTypeChange = (event: { target: { value: string; }; }) => {
-    const value = event.target.value as string;
-    setDataType(value)
-    setSelectedRow(null);
-
-    switch (value) {
-      case 'achado':
-        if (arrayAchado.length <= 0) {
-          getAllAchados()
-        }
-        setColumns(createGridColumns(achadoHeader));
-        setRows(createRows(arrayAchado))
-        break
-      case 'div-area-achado':
-        if (arrayDivAchado.length <= 0) {
-          getAllDivAchado()
-        }
-        setColumns(createGridColumns(topicoAchadoHeader));
-        setRows(createRows(arrayDivAchado))
-        break
-      case 'area-achado':
-        if (arrayAreaAchado.length <= 0) {
-          getAllAreaAchado()
-        }
-        setColumns(createGridColumns(topicoAchadoHeader));
-        setRows(createRows(arrayAreaAchado))
-        break
-      case 'topico-achado':
-        // if (arrayTopicoAchado.length <= 0) {
-        //   getAllTopcioAchado()
-        // }
-        setColumns(createGridColumns(topicoAchadoHeader));
-        console.log(arrayTopicoAchado)
-        setRows(createRows(arrayTopicoAchado))
-        break
-      default:
-        setColumns([]);
-        setRows([])
-    }
-  };
+  
 
   //traduz o dataGrid
   handleLocalization
@@ -137,10 +133,10 @@ export default function DatabaseTable() {
 
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
-    { value: 'achado', string: 'Achados' },
-    { value: 'div-area-achado', string: 'Divisão dos Achados' },
-    { value: 'area-achado', string: 'Área dos Achados' },
     { value: 'topico-achado', string: 'Topicos' },
+    { value: 'achado', string: 'Achados' },
+    { value: 'beneficio', string: 'Benefícios' },
+    { value: 'area-achado', string: 'Área dos Achados' },
   ]
 
 
@@ -166,12 +162,10 @@ export default function DatabaseTable() {
           break;
         case 'area-achado':
           setArrayAreaAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          await getAllDivAchado()
           await getAllAchados()
           break;
-        case 'div-area-achado':
-          setArrayDivAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          await getAllAchados();
+        case 'beneficio':
+          setArrayBeneficio(prevArray => prevArray.filter(item => item.id !== selectedRow))
           break;
         case 'achado':
           setArrayAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
@@ -196,8 +190,8 @@ export default function DatabaseTable() {
       case 'area-achado':
         setRows(createRows(arrayAreaAchado))
         break;
-      case 'div-area-achado':
-        setRows(createRows(arrayDivAchado))
+      case 'beneficio':
+        setRows(createRows(arrayBeneficio))
         break;
       case 'achado':
         setRows(createRows(arrayAchado))
@@ -205,7 +199,7 @@ export default function DatabaseTable() {
       default:
         break;
     }
-  }, [arrayTopicoAchado, arrayAreaAchado, arrayDivAchado, arrayAchado])
+  }, [arrayTopicoAchado, arrayAreaAchado, arrayBeneficio, arrayAchado])
 
   
   return (

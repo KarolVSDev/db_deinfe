@@ -34,7 +34,7 @@ export default function ModalAddData() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { getAllTopcioAchado, getAllDivAchado, 
+  const { getAllTopcioAchado, 
     getAllAreaAchado} = useFetchListData()
 
   const handleSubmit = () => {
@@ -44,7 +44,6 @@ export default function ModalAddData() {
   useEffect(() => {
     getAllTopcioAchado()
     getAllAreaAchado()
-    getAllDivAchado()
 
   }, [open])
 
