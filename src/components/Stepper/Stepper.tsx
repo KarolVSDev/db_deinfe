@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import FormTopicoAchado from '../Forms/FormsTable/Register/FormTopicoAchado';
-import FormDivAchado from '../Forms/FormsTable/Register/FormDivAchado';
+import FormDivAchado from '../Forms/FormsTable/Register/FormCatalogo';
 import FormAchado from '../Forms/FormsTable/Register/FormAchados';
 import FormBeneficio from '../Forms/FormsTable/Register/FormBeneficio';
 

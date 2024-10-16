@@ -32,7 +32,6 @@ const FormBeneficio = () => {
         saveBeneficio(data)
         TypeAlert('Benefício adicionado', 'success');
         reset()
-        console.log(data)
 
     };
 

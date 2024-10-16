@@ -70,7 +70,6 @@ export default function DatabaseTable() {
         setRows([])
     }
   };
-  console.log(catalogoHeader)
     
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 

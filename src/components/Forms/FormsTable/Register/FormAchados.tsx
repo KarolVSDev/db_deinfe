@@ -32,22 +32,11 @@ const FormAchado = () => {
     saveAchado(data)
     TypeAlert('Achado adicionado', 'success');
     reset()
-    console.log(data)
 
   }
 
   return (
-    <Container maxWidth="xs" sx={{ mb: 2 }}>
-      <CssBaseline />
-      <Box
-        sx={{
-
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ width: '360px' }}>
+        <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
           <TextField
             variant='filled'
             autoComplete="given-name"
@@ -72,8 +61,6 @@ const FormAchado = () => {
 
           <RegisterButton text="Registrar" />
         </Box>
-      </Box>
-    </Container>
   )
 }
 
