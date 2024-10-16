@@ -69,7 +69,7 @@ export default function ModalAddData() {
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={handleClose} sx={{
-              ml: 45, mb: 4, mr: 0, '&:hover': {
+              ml: 57, mb: 4, mr: 0, '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>

@@ -8,10 +8,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import { GridRowId } from '@mui/x-data-grid';
 import FormUpdateNatAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
 import FormUpdateAreaAchado from '../../Forms/FormsTable/Update/FormUpdateAreaAchado';
-import FormUpdateDivAchado from '../../Forms/FormsTable/Update/FormUpdateDivAchado';
+import FormUpdateDivAchado from '../../Forms/FormsTable/Update/FormUpdateBeneficio';
 import FormUpdateAchados from '../../Forms/FormsTable/Update/FormUpdateAchados';
 import FormTopicoAchado from '../../Forms/FormsTable/Register/FormTopicoAchado';
 import FormUpdateTopicoAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
+import FormUpdateBeneficio from '../../Forms/FormsTable/Update/FormUpdateBeneficio';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -46,8 +47,8 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
       case 'area-achado':
         return <FormUpdateAreaAchado closeModal={onClose} id={id} />
 
-      case 'div-area-achado':
-        return <FormUpdateDivAchado closeModal={onClose} id={id} />
+      case 'beneficio':
+        return <FormUpdateBeneficio closeModal={onClose} id={id} />
 
       case 'achado':
         return <FormUpdateAchados closeModal={onClose} id={id} />

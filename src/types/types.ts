@@ -39,31 +39,7 @@ export interface TopicoAchado {
   topico: string;
   situacao:boolean;
 }
-export interface NatRelation {
-  id: string;
-  descricao: string;
-  areas: { id: string, descricao: string, divisoes: [] }[];
-}
-export interface DivAchado {
-  id: string;
-  descricao: string;
-  area?: string;
-}
-export interface DivAchado2 {
-  id: string;
-  descricao: string;
-  area: { id: string, descricao: string };
-}
-export interface AreaAchado {
-  id: string;
-  descricao: string;
-  natureza?: string;
-}
-export interface AreaAchado2 {
-  id: string;
-  descricao: string;
-  natureza: { id: string, descricao: string };
-}
+
 export interface Achado {
   id: string;
   achado:string;
@@ -73,6 +49,15 @@ export interface Beneficio {
   id: string;
   beneficio:string;
   situacao:boolean;
+}
+
+export interface Catalogo {
+  catalogo_id:string;
+  analise:string;
+  achado_alternativo:string;
+  topico_id:string;
+  achado_id:string;
+  beneficio_id:string;
 }
 // export interface Achado2 {
 //   id: string;
@@ -111,6 +96,32 @@ export interface Beneficio {
 //   natureza: TopicoAchado;
 //   divisoes: DivAchadoUp[];
 // }
+
+export interface NatRelation {
+  id: string;
+  descricao: string;
+  areas: { id: string, descricao: string, divisoes: [] }[];
+}
+export interface DivAchado {
+  id: string;
+  descricao: string;
+  area?: string;
+}
+export interface DivAchado2 {
+  id: string;
+  descricao: string;
+  area: { id: string, descricao: string };
+}
+export interface AreaAchado {
+  id: string;
+  descricao: string;
+  natureza?: string;
+}
+export interface AreaAchado2 {
+  id: string;
+  descricao: string;
+  natureza: { id: string, descricao: string };
+}
 
 
 export interface ColumnConfig {

@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import {ColumnConfig} from '../../types/types';
 import { useEffect, useState } from 'react';
-import {topicoAchadoHeader,achadoHeader,beneficioHeader} from '../../service/columns';
+import {topicoAchadoHeader,achadoHeader,beneficioHeader, catalogoHeader} from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -36,8 +36,16 @@ export default function DatabaseTable() {
     const value = event.target.value as string;
     setDataType(value)
     setSelectedRow(null);
-
+    
     switch (value) {
+      case 'topico-achado':
+        // if (arrayTopicoAchado.length <= 0) {
+        //   getAllTopcioAchado()
+        // }
+        console.log(arrayTopicoAchado)
+        setColumns(createGridColumns(topicoAchadoHeader));
+        setRows(createRows(arrayTopicoAchado))
+        break
       case 'achado':
         // if (arrayAchado.length <= 0) {
           //   getAllAchados()
@@ -50,26 +58,19 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(beneficioHeader));
         setRows(createRows(arrayBeneficio))
         break
-      case 'area-achado':
-        if (arrayAreaAchado.length <= 0) {
-          getAllAreaAchado()
-        }
-        setColumns(createGridColumns(topicoAchadoHeader));
-        setRows(createRows(arrayAreaAchado))
-        break
-      case 'topico-achado':
-        // if (arrayTopicoAchado.length <= 0) {
-        //   getAllTopcioAchado()
+      case 'catalogo':
+        // if (arrayAreaAchado.length <= 0) {
+        //   getAllAreaAchado()
         // }
-        console.log(arrayTopicoAchado)
-        setColumns(createGridColumns(topicoAchadoHeader));
-        setRows(createRows(arrayTopicoAchado))
+        setColumns(createGridColumns(catalogoHeader));
+        setRows(createRows(arrayAreaAchado))
         break
       default:
         setColumns([]);
         setRows([])
     }
   };
+  console.log(catalogoHeader)
     
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
@@ -113,7 +114,6 @@ export default function DatabaseTable() {
   
 
   //controle de ações baseado no tipo de dado
-  
 
   //traduz o dataGrid
   handleLocalization
@@ -136,7 +136,7 @@ export default function DatabaseTable() {
     { value: 'topico-achado', string: 'Topicos' },
     { value: 'achado', string: 'Achados' },
     { value: 'beneficio', string: 'Benefícios' },
-    { value: 'area-achado', string: 'Área dos Achados' },
+    { value: 'catalogo', string: 'Catálogo' },
   ]
 
 
@@ -166,9 +166,11 @@ export default function DatabaseTable() {
           break;
         case 'beneficio':
           setArrayBeneficio(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          TypeAlert('Benefício removido', 'success')
           break;
         case 'achado':
           setArrayAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          TypeAlert('Achado removido', 'success')
           break;
         default:
           break;
@@ -201,7 +203,6 @@ export default function DatabaseTable() {
     }
   }, [arrayTopicoAchado, arrayAreaAchado, arrayBeneficio, arrayAchado])
 
-  
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >
