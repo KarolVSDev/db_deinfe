@@ -32,6 +32,7 @@ export default function DatabaseTable() {
   const {getUser} = useFetchUsers()
 
 
+
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
@@ -220,7 +221,7 @@ export default function DatabaseTable() {
               </MenuItem>
             ))}
           </Select>
-          <ModalAddData />
+          <ModalAddData dataType={dataType}/>
           <Box>
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
               const gridState = captureDataGridState();

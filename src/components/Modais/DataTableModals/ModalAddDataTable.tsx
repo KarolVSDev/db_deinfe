@@ -9,6 +9,10 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import StepperV from '../../Stepper/Stepper';
 import useFetchListData from '../../../hooks/useFetchListData';
+import FormTopicoAchado from '../../Forms/FormsTable/Register/FormTopicoAchado';
+import FormAchado from '../../Forms/FormsTable/Register/FormAchados';
+import FormBeneficio from '../../Forms/FormsTable/Register/FormBeneficio';
+import FormCatalogo from '../../Forms/FormsTable/Register/FormCatalogo';
 
 
 
@@ -28,11 +32,16 @@ const style = {
   background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };
 
+export interface ModalAddDataProps{
+  dataType:string;
+}
 
-export default function ModalAddData() {
+
+const ModalAddData: React.FC<ModalAddDataProps> = ({dataType}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
   const { getAllTopcioAchado, 
     getAllAreaAchado} = useFetchListData()
@@ -44,13 +53,19 @@ export default function ModalAddData() {
   useEffect(() => {
     getAllTopcioAchado()
     getAllAreaAchado()
+    if (dataType === 'pesquisa') {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false); 
+    }
 
-  }, [open])
+  }, [open, dataType])
 
+ 
 
   return (
     <div>
-      <Button onClick={handleOpen} variant='contained'  >
+      <Button onClick={handleOpen}  disabled={isDisabled} variant='contained'  >
         Adicionar Registro
       </Button>
       <Modal
@@ -75,11 +90,16 @@ export default function ModalAddData() {
             }}>
               <CloseIcon />
             </IconButton>
-              <StepperV />
+             {(dataType === 'topico-achado') && (<FormTopicoAchado/>)}
+             {(dataType === 'achado') && (<FormAchado/>)}
+             {(dataType === 'beneficio') && (<FormBeneficio/>)}
+             {(dataType === 'catalogo') && (<FormCatalogo/>)}
           </Box>
         </Fade>
       </Modal>
     </div>
   );
 }
+
+export default ModalAddData;
 
