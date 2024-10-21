@@ -221,7 +221,7 @@ export default function DatabaseTable() {
               </MenuItem>
             ))}
           </Select>
-          <ModalAddData dataType={dataType}/>
+          <ModalAddData dataType={dataType} user={user}/>
           <Box>
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
               const gridState = captureDataGridState();

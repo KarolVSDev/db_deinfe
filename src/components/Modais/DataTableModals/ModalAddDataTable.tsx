@@ -7,12 +7,12 @@ import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import StepperV from '../../Stepper/Stepper';
 import useFetchListData from '../../../hooks/useFetchListData';
 import FormTopicoAchado from '../../Forms/FormsTable/Register/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Register/FormAchados';
 import FormBeneficio from '../../Forms/FormsTable/Register/FormBeneficio';
 import FormCatalogo from '../../Forms/FormsTable/Register/FormCatalogo';
+import { User } from '../../../types/types';
 
 
 
@@ -27,17 +27,18 @@ const style = {
   boxShadow: 24,
   p: 4,
   overflowY: 'auto',
-  height: '95vh',
+  height: 'fit-content',
   scrollbarWidth: 'thin',
   background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };
 
 export interface ModalAddDataProps{
   dataType:string;
+  user:User | undefined;
 }
 
 
-const ModalAddData: React.FC<ModalAddDataProps> = ({dataType}) => {
+const ModalAddData: React.FC<ModalAddDataProps> = ({dataType, user}) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -84,13 +85,13 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({dataType}) => {
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={handleClose} sx={{
-              ml: 57, mb: 4, mr: 0, '&:hover': {
+              ml: 57, mr: 0, '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>
               <CloseIcon />
             </IconButton>
-             {(dataType === 'topico-achado') && (<FormTopicoAchado/>)}
+             {(dataType === 'topico-achado') && (<FormTopicoAchado closeModal={handleClose} user={user}/>)}
              {(dataType === 'achado') && (<FormAchado/>)}
              {(dataType === 'beneficio') && (<FormBeneficio/>)}
              {(dataType === 'catalogo') && (<FormCatalogo/>)}
