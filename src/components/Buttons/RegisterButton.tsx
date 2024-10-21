@@ -12,11 +12,7 @@ const RegisterButton:React.FC<ButtonProps> = ({text}) => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{
-            bgcolor: '#64748b', '&:hover': {
-                bgcolor: '#475569',
-            }, width: '200px', m: 'auto', mt: 3,
-            }}
+            sx={{ width: '200px', m: 'auto', mt: 5,}}
         >
             {text}
         </Button>

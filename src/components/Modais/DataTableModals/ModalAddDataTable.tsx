@@ -28,6 +28,7 @@ const style = {
   p: 4,
   overflowY: 'auto',
   height: 'fit-content',
+  maxHeight: '95vh',
   scrollbarWidth: 'thin',
   background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
 };
@@ -67,7 +68,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({dataType, user}) => {
   return (
     <div>
       <Button onClick={handleOpen}  disabled={isDisabled} variant='contained'  >
-        Adicionar Registro
+        Cadastrar novo {dataType}
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -85,14 +86,14 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({dataType, user}) => {
         <Fade in={open}>
           <Box sx={style}>
             <IconButton onClick={handleClose} sx={{
-              ml: 57, mr: 0, '&:hover': {
+              ml: 57, mb:2,mr: 0, '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
               }
             }}>
               <CloseIcon />
             </IconButton>
-             {(dataType === 'topico-achado') && (<FormTopicoAchado closeModal={handleClose} user={user}/>)}
-             {(dataType === 'achado') && (<FormAchado/>)}
+             {(dataType === 'topico') && (<FormTopicoAchado closeModal={handleClose} user={user}/>)}
+             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType}/>)}
              {(dataType === 'beneficio') && (<FormBeneficio/>)}
              {(dataType === 'catalogo') && (<FormCatalogo/>)}
           </Box>

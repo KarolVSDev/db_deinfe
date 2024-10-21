@@ -53,43 +53,43 @@ const FormTopicoAchado:React.FC<FormTopicoAchadoProps> = ({closeModal, user}) =>
   };
 
   return (
-    <Box component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-      <Typography variant='h6' sx={{mb:2, color:'rgb(17 24 39)'}}>Registro de Tópico</Typography>
-      <Grid item xs={12} sm={4}>
-        <TextField
-          variant='filled'
-          required
-          fullWidth
-          autoFocus
-          id="topico"
-          label='Proposta de Tópico'
-          type="text"
-          error={!!errors?.topico}
-          {...register('topico', {
-            required: 'Campo obrigatório'
-          })}
-        />
+    <Box sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Typography variant='h6' sx={{mb:2, color:'rgb(17 24 39)'}}>Cadastrar Novo Tópico</Typography>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            variant='filled'
+            required
+            fullWidth
+            autoFocus
+            id="topico"
+            label='Proposta de Tópico'
+            type="text"
+            error={!!errors?.topico}
+            {...register('topico', {
+              required: 'Campo obrigatório'
+            })}
+          />
 
-        {errors?.topico && (
-          <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-            {errors.topico.message}
-          </Typography>
-        )}
-
-        {user?.cargo ==='Diretor'? (<ToggleButtonGroup
-             color="primary"
-             value={situacao}
-             exclusive
-             onChange={handleChange}
-             aria-label="Platform"
-           >
-             <ToggleButton value='Pendente' >Pendente</ToggleButton>
-             <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-           </ToggleButtonGroup>):(
-          <input type="hidden"{...register('situacao')} value="false" />
-        )}
-
-      </Grid>
+          {errors?.topico && (
+            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+              {errors.topico.message}
+            </Typography>
+          )}
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          {user?.cargo ==='Diretor'? (<ToggleButtonGroup
+                color="primary"
+                value={situacao}
+                exclusive
+                onChange={handleChange}
+                aria-label="Platform"
+              >
+                <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+              </ToggleButtonGroup>):(
+              <input type="hidden"{...register('situacao')} value="false" />
+            )}
+        </Grid>
       <RegisterButton text="Registrar" />
     </Box>
   );

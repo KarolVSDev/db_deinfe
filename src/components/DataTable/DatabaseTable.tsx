@@ -39,7 +39,7 @@ export default function DatabaseTable() {
     setSelectedRow(null);
     
     switch (value) {
-      case 'topico-achado':
+      case 'topico':
         // if (arrayTopicoAchado.length <= 0) {
         //   getAllTopcioAchado()
         // }
@@ -133,7 +133,7 @@ export default function DatabaseTable() {
 
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
-    { value: 'topico-achado', string: 'Topicos' },
+    { value: 'topico', string: 'Topicos' },
     { value: 'achado', string: 'Achados' },
     { value: 'beneficio', string: 'Benefícios' },
     { value: 'catalogo', string: 'Catálogo' },
@@ -156,7 +156,7 @@ export default function DatabaseTable() {
       //console.log(response)
       //TypeAlert(response.data.message, 'success')
       switch (dataType) {
-        case 'topico-achado':
+        case 'topico':
           setArrayTopicoAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
           TypeAlert('Tópico removido', 'success')
           break;
@@ -186,7 +186,7 @@ export default function DatabaseTable() {
   //esse bloco atualiza a visualização dos dados
   useEffect(() => {
     switch (dataType) {
-      case 'topico-achado':
+      case 'topico':
         setRows(createRows(arrayTopicoAchado))
         break;
       case 'area-achado':

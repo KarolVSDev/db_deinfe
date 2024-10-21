@@ -42,6 +42,7 @@ export interface TopicoAchado {
 
 export interface Achado {
   id: string;
+  topico_id:string;
   achado:string;
   situacao:boolean;
 }
