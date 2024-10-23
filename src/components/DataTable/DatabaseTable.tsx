@@ -16,6 +16,7 @@ import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchListData from '../../hooks/useFetchListData';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
+import dataFake from '../../service/dataFake';
 
 export default function DatabaseTable() {
 
@@ -30,9 +31,9 @@ export default function DatabaseTable() {
   const {getAllAchados, getAllTopcioAchado, getAllAreaAchado } = useFetchListData()
   const {user} = useAuth()
   const {getUser} = useFetchUsers()
-
-
-
+  const {AchadoFormatado, BeneficioFormatado} = dataFake()
+ 
+  //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
@@ -43,7 +44,6 @@ export default function DatabaseTable() {
         // if (arrayTopicoAchado.length <= 0) {
         //   getAllTopcioAchado()
         // }
-        console.log(arrayTopicoAchado)
         setColumns(createGridColumns(topicoAchadoHeader));
         setRows(createRows(arrayTopicoAchado))
         break
@@ -51,13 +51,14 @@ export default function DatabaseTable() {
         // if (arrayAchado.length <= 0) {
           //   getAllAchados()
           // }
-          console.log(arrayAchado)
+          const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
           setColumns(createGridColumns(achadoHeader));
-          setRows(createRows(arrayAchado))
+          setRows(createRows(achadoComTopico))
         break
       case 'beneficio':
+        const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
         setColumns(createGridColumns(beneficioHeader));
-        setRows(createRows(arrayBeneficio))
+        setRows(createRows(beneficioComAchado))
         break
       case 'catalogo':
         // if (arrayAreaAchado.length <= 0) {
@@ -193,10 +194,12 @@ export default function DatabaseTable() {
         setRows(createRows(arrayAreaAchado))
         break;
       case 'beneficio':
-        setRows(createRows(arrayBeneficio))
+        const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
+        setRows(createRows(beneficioComAchado))
         break;
       case 'achado':
-        setRows(createRows(arrayAchado))
+        const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
+        setRows(createRows(achadoComTopico))
         break;
       default:
         break;

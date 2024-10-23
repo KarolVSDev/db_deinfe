@@ -16,7 +16,7 @@ export interface FormTopicoAchadoProps {
 const FormTopicoAchado:React.FC<FormTopicoAchadoProps> = ({closeModal, user}) => {
   const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<TopicoAchado>({});
   //const { setArrayTopicoAchado } = useContextTable()
-  const { saveTopico } = dataFake()
+  const { saveTopico, getTopico } = dataFake()
   const [situacao, setSituacao] = useState<string | null>(null);
 
   const handleChange = (
@@ -37,6 +37,9 @@ const FormTopicoAchado:React.FC<FormTopicoAchadoProps> = ({closeModal, user}) =>
     // }).catch((error) => {
     //   TypeAlert(error.response.data.message, 'warning');
     // });
+    if(getTopico(data.topico)){
+      return;
+    }
     if(user?.cargo !== 'Diretor'){
       data.situacao = false;
     }
@@ -48,7 +51,6 @@ const FormTopicoAchado:React.FC<FormTopicoAchadoProps> = ({closeModal, user}) =>
     TypeAlert('Tópico adicionado', 'success');
     reset()
     closeModal()
-    console.log(data)
 
   };
 

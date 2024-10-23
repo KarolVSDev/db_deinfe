@@ -1,20 +1,36 @@
-import { Autocomplete, Box, Grid, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Grid, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
-import { useForm, UseFormRegister } from 'react-hook-form';
-import { Beneficio } from '../../../../types/types';
+import { Controller, useForm, UseFormRegister } from 'react-hook-form';
+import { Achado, Beneficio, User } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import dataFake from '../../../../service/dataFake';
+import ButtonNovo from '../../../Buttons/ButtonNovo';
 
+export interface FormBeneficioProps {
+    closeModal:() => void;
+    user:User | undefined;
+    dataType:string;
+    }
 
-const FormBeneficio = () => {
-    const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio>({});
-    const { setArrayBeneficio } = useContextTable();
+const FormBeneficio:React.FC<FormBeneficioProps> = ({user, dataType, closeModal}) => {
+    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio>({});
+    const { setArrayBeneficio, arrayAchado } = useContextTable();
     //const {getAllNatAchado} = useFetchListData()
-    const { saveBeneficio } = dataFake()
+    const { saveBeneficio, getBeneficio } = dataFake()
+    const [situacao, setSituacao] = useState<string | null>(null);
+
+    const handleChange = (
+        event: React.MouseEvent<HTMLElement>,
+        newSituacao: string,
+      ) => {
+        if (newSituacao !== undefined) {
+          setSituacao(newSituacao);
+        }
+      };
 
     const onSubmit = (data: Beneficio) => {
         // api.post('/area-achado', data).then(response => {
@@ -28,16 +44,55 @@ const FormBeneficio = () => {
         //     setValue('natureza', '');
         // });
 
-        data.situacao = false
-        saveBeneficio(data)
+        if(getBeneficio(data.beneficio)){
+            return
+        }
+
+        if(user?.cargo !== 'Diretor'){
+            data.situacao = false
+        }
+        const dataWithSituacao = {
+            ...data,
+            situacao:situacao === 'Aprovado'? true : false
+        }
+        saveBeneficio(dataWithSituacao)
         TypeAlert('Benefício adicionado', 'success');
         reset()
+        closeModal()
 
     };
 
     return (
-        <Box component="form" name='formAreaAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={12} sm={4}>
+        <Box sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Typography variant='h6' sx={{mb:2, color:'rgb(17 24 39)'}}>Cadastrar Novo Benefício</Typography>
+            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+                <Controller
+                name="achado_id"
+                control={control}
+                defaultValue="" 
+                rules={{ required: 'Campo obrigatório' }} 
+                render={({ field }) => (
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={arrayAchado}
+                    getOptionLabel={(option: Achado) => option.achado}
+                    onChange={(event, value) => field.onChange(value?.id || '')} 
+                    renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Achado"
+                        variant="filled"
+                        error={!!errors.achado_id} // Mostra erro
+                        helperText={errors.achado_id?.message} // Mostra a mensagem de erro
+                    />
+                    )}
+                />
+                )}
+                />
+            </Grid>
+            <ButtonNovo dataType={dataType} closeModal={closeModal} user={user}/>
+            <Grid item xs={12} sm={4} sx={{mt:3}}>
                 <TextField
                     variant='filled'
                     required
@@ -57,9 +112,21 @@ const FormBeneficio = () => {
                         {errors.beneficio.message}
                     </Typography>
                 )}
-
-                <input type="hidden"{...register('situacao')} value="false" />
             </Grid>
+            <Grid item xs={12} sm={4}>
+            {user?.cargo ==='Diretor'? (<ToggleButtonGroup
+                  color="primary"
+                  value={situacao}
+                  exclusive
+                  onChange={handleChange}
+                  aria-label="Platform"
+                >
+                  <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                  <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+                </ToggleButtonGroup>):(
+                <input type="hidden"{...register('situacao')} value="false" />
+              )}
+          </Grid>
             <RegisterButton text="Registrar" />
         </Box>
     );

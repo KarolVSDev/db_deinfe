@@ -3,7 +3,6 @@ import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 interface buttonInterface {
     stateType: string;
-    handleDelete: (type: string, id: string) => void;
     itemId:string;
 }
 
@@ -15,10 +14,11 @@ const StyledButtonDelete = styled(Button)({
     padding: '0 30px',
 })
 
-const DeleteDataButton: React.FC<buttonInterface> = ({ handleDelete, itemId, stateType }) => {
+const ShowBeneficios: React.FC<buttonInterface> = ({ itemId, stateType }) => {
 
+    console.log(itemId, stateType)
     return (
-        <StyledButtonDelete onClick={() => handleDelete(itemId, stateType)}><DeleteIcon sx={{
+        <StyledButtonDelete>Delete<DeleteIcon sx={{
             color: '#c23232',
             '& .MuiChip-deleteIcon': {
                 color: '#c23232',
@@ -30,4 +30,4 @@ const DeleteDataButton: React.FC<buttonInterface> = ({ handleDelete, itemId, sta
     )
 }
 
-export default DeleteDataButton
+export default ShowBeneficios

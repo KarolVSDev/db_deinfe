@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, styled, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import FormTopicoAchado from '../Forms/FormsTable/Register/FormTopicoAchado';
 import { User } from '../../types/types';
 import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
 
@@ -29,11 +28,12 @@ const ButtonNovo:React.FC<ButtonNovoProps> = ({dataType, closeModal, user}) => {
     if(dataType === 'achado'){
         dataType = 'topico'
     }
+    if(dataType === 'beneficio'){
+        dataType = 'achado'
+    }
     
   return (
     <ModalAddData dataType={dataType} user={user} />
-
-
   )
 }
 

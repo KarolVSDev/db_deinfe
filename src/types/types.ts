@@ -1,5 +1,5 @@
 
-
+import ShowBeneficios from "../components/Buttons/DeleteButton";
 export interface User {
   id: string;
   nome: string;
@@ -45,9 +45,12 @@ export interface Achado {
   topico_id:string;
   achado:string;
   situacao:boolean;
+  analise:string;
+
 }
 export interface Beneficio {
   id: string;
+  achado_id:string;
   beneficio:string;
   situacao:boolean;
 }
@@ -56,9 +59,7 @@ export interface Catalogo {
   catalogo_id:string;
   analise:string;
   achado_alternativo:string;
-  topico_id:string;
   achado_id:string;
-  beneficio_id:string;
 }
 // export interface Achado2 {
 //   id: string;
