@@ -46,7 +46,15 @@ export interface Achado {
   achado:string;
   situacao:boolean;
   analise:string;
-
+}
+export interface AchadoBeneficio {
+  id: string;
+  topico_id:string;
+  achado:string;
+  situacao:boolean;
+  situacaoB:boolean;
+  analise:string;
+  beneficio:Beneficio;
 }
 export interface Beneficio {
   id: string;

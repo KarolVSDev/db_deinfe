@@ -5,7 +5,7 @@ import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import HandleModalButton from '../../../Buttons/HandleTypeButton';
-import ButtonExport from '../../../Buttons/ButtonExport';
+import ButtonExport from '../../../Modais/DataTableModals/ModalAnalise';
 import { useContextTable } from '../../../../context/TableContext';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -28,27 +28,27 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
     setTopicoAchado(topico || null);
   };
 
-  
+
   useEffect(() => {
     if (id) {
       getTopicoAchado();
-      
+
     }
   }, [id, arrayTopicoAchado]);
 
   useEffect(() => {
-    if(topicoAchado){
+    if (topicoAchado) {
       setSituacao(topicoAchado?.situacao === false ? 'Pendente' : 'Aprovado');
     }
-  },[topicoAchado])
+  }, [topicoAchado])
 
   const onSubmit = (data: TopicoAchado) => {
     // Simulando a atualização (API ou outra lógica aqui)
     const updateData = {
       ...data,
-      situacao: situacao === 'Aprovado'? true : false
+      situacao: situacao === 'Aprovado' ? true : false
     }
-    setArrayTopicoAchado(prevArray => prevArray.map(item => item.id === id? {...item, ...updateData}:item))
+    setArrayTopicoAchado(prevArray => prevArray.map(item => item.id === id ? { ...item, ...updateData } : item))
     closeModal();
   };
 
@@ -76,7 +76,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
           <TextField
             variant="filled"
             required
-            defaultValue={topicoAchado.topico} 
+            defaultValue={topicoAchado.topico}
             fullWidth
             autoFocus
             id="topico"
@@ -92,16 +92,16 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
               {errors.topico?.message}
             </Typography>
           )}
-             <ToggleButtonGroup
-             color="primary"
-             value={situacao}
-             exclusive
-             onChange={handleChange}
-             aria-label="Platform"
-           >
-             <ToggleButton value='Pendente' >Pendente</ToggleButton>
-             <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-           </ToggleButtonGroup>
+          <ToggleButtonGroup
+            color="primary"
+            value={situacao}
+            exclusive
+            onChange={handleChange}
+            aria-label="Platform"
+          >
+            <ToggleButton value='Pendente' >Pendente</ToggleButton>
+            <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+          </ToggleButtonGroup>
         </Grid>
         <RegisterButton text="Registrar" />
       </Box>

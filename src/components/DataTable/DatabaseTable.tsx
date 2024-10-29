@@ -1,9 +1,9 @@
 import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
-import {ColumnConfig} from '../../types/types';
+import { ColumnConfig } from '../../types/types';
 import { useEffect, useState } from 'react';
-import {topicoAchadoHeader,achadoHeader,beneficioHeader, catalogoHeader} from '../../service/columns';
+import { topicoAchadoHeader, achadoHeader, beneficioHeader, catalogoHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -17,28 +17,30 @@ import useFetchListData from '../../hooks/useFetchListData';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
 import dataFake from '../../service/dataFake';
+import ModalBeneficios from '../Modais/DataTableModals/ModalBeneficios';
+import ModalAnalises from '../Modais/DataTableModals/ModalAnalise';
 
 export default function DatabaseTable() {
 
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, arrayAreaAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado, setArrayAreaAchado, 
+  const { handleLocalization, arrayTopicoAchado, arrayAreaAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado, setArrayAreaAchado,
     setArrayAchado, setArrayBeneficio } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
-  const {getAllAchados, getAllTopcioAchado, getAllAreaAchado } = useFetchListData()
-  const {user} = useAuth()
-  const {getUser} = useFetchUsers()
-  const {AchadoFormatado, BeneficioFormatado} = dataFake()
- 
+  const { getAllAchados, getAllTopcioAchado, getAllAreaAchado } = useFetchListData()
+  const { user } = useAuth()
+  const { getUser } = useFetchUsers()
+  const { AchadoFormatado, BeneficioFormatado } = dataFake()
+
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
     setSelectedRow(null);
-    
+
     switch (value) {
       case 'topico':
         // if (arrayTopicoAchado.length <= 0) {
@@ -49,11 +51,11 @@ export default function DatabaseTable() {
         break
       case 'achado':
         // if (arrayAchado.length <= 0) {
-          //   getAllAchados()
-          // }
-          const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
-          setColumns(createGridColumns(achadoHeader));
-          setRows(createRows(achadoComTopico))
+        //   getAllAchados()
+        // }
+        const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
+        setColumns(createGridColumns(achadoHeader));
+        setRows(createRows(achadoComTopico))
         break
       case 'beneficio':
         const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
@@ -72,32 +74,38 @@ export default function DatabaseTable() {
         setRows([])
     }
   };
-    
-    const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
-      return headers.map(header => ({
-        field: header.id,
-        headerName: header.label,
-        width: header.minWidth,
-        editable: false,
-        renderCell: (params) => {
-          if (header.id === 'situacao' && typeof params.value === 'boolean') {
-            return (
-              <span style={{
-                background: params.value ? '#86efac' : '#fcd34d',
-                fontWeight: 'bold',
-                padding: '5px 5px',
-                borderRadius: '5px'
-              }}>
-                {params.value ? "Aprovado" : "Pendente"}
-              </span>
-            );
-          }
-          return params.value;
-        },
-        filterable: true,
-      }));
-    };
+  const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
+
+    return headers.map(header => ({
+      field: header.id,
+      headerName: header.label,
+      width: header.minWidth,
+      editable: false,
+      renderCell: (params) => {
+        if (header.id === 'beneficios') {
+          return <ModalBeneficios achadoId={params.row.id} />;
+        }
+        if (header.id === 'analise') {
+          return <ModalAnalises analise={params.row.analise} />
+        }
+        if (header.id === 'situacao' && typeof params.value === 'boolean') {
+          return (
+            <span style={{
+              background: params.value ? '#86efac' : '#fcd34d',
+              fontWeight: 'bold',
+              padding: '5px 5px',
+              borderRadius: '5px'
+            }}>
+              {params.value ? "Aprovado" : "Pendente"}
+            </span>
+          );
+        }
+        return params.value;
+      },
+      filterable: true,
+    }));
+  };
 
 
   //cria table pra dados sem relação
@@ -111,8 +119,8 @@ export default function DatabaseTable() {
   //pegando usuário
   useEffect(() => {
     getUser()
-  },[])
-  
+  }, [])
+
 
   //controle de ações baseado no tipo de dado
 
@@ -224,7 +232,7 @@ export default function DatabaseTable() {
               </MenuItem>
             ))}
           </Select>
-          <ModalAddData dataType={dataType} user={user}/>
+          <ModalAddData dataType={dataType} user={user} />
           <Box>
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
               const gridState = captureDataGridState();
@@ -235,7 +243,7 @@ export default function DatabaseTable() {
           </Box>
           {selectedRow !== null && (
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-               {user?.cargo === 'Diretor' && (
+              {user?.cargo === 'Diretor' && (
                 <>
                   <IconButton color='primary' onClick={() => handleUpdate(selectedRow)}>
                     <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />

@@ -10,7 +10,7 @@ const dataFake = () => {
         arrayAchado, setArrayBeneficio, arrayBeneficio} = useContextTable()
     
 
-    //register mock topico
+    //mocks de topico
     const saveTopico =  (data:any) => {
         const newData = {
             id: faker.string.uuid(),
@@ -31,8 +31,16 @@ const dataFake = () => {
         return false
     }
 
-    //register mock achado
+    //mocks de achado
     const getAchado = (achado:string): boolean => {
+        const texto = arrayAchado.find(item => item.achado === achado)
+        if(texto){
+            TypeAlert('O Achado já existe no banco de dados', 'info')
+            return true
+        }
+        return false
+    }
+    const getAchadoString = (achado:string): boolean => {
         const texto = arrayAchado.find(item => item.achado === achado)
         if(texto){
             TypeAlert('O Achado já existe no banco de dados', 'info')
@@ -63,6 +71,13 @@ const dataFake = () => {
         })
     }
 
+    const getBeneficiosByAchado = (achadoId:string) => {
+        const beneficios = arrayBeneficio.filter(beneficio => beneficio.achado_id === achadoId)
+        console.log(beneficios)
+        return beneficios
+    }
+
+    //mocks de beneficio
     const saveBeneficio =  (data:any) => {
         const newData = {
             id: faker.string.uuid(),
@@ -96,7 +111,7 @@ const dataFake = () => {
 
   return {saveTopico, saveAchado, 
     saveBeneficio, AchadoFormatado,
-     BeneficioFormatado, getTopico, getAchado, getBeneficio}
+     BeneficioFormatado, getTopico, getAchado, getBeneficio, getBeneficiosByAchado}
   
 }
 

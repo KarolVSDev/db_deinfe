@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, TopicoAchado, User } from '../../../../types/types'
+import { Achado, AchadoBeneficio, Beneficio, TopicoAchado, User } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
@@ -21,10 +21,11 @@ dataType:string;
 }
 const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
 
-  const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<Achado>({});
+  const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<AchadoBeneficio>({});
   //const { setArrayAchado } = useContextTable()
-  const { saveAchado, getAchado } = dataFake()
+  const { saveAchado,saveBeneficio, getAchado } = dataFake()
   const [situacao, setSituacao] = useState<string | null>(null);
+  const [situacaoB, setSituacaoB] = useState<string | null>(null);
   const {arrayTopicoAchado} = useContextTable()
 
   const handleChange = (
@@ -33,10 +34,11 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
   ) => {
     if (newSituacao !== undefined) {
       setSituacao(newSituacao);
+      setSituacaoB(newSituacao);
     }
   };
 
-  const onSubmit = (data: Achado) => {
+  const onSubmit = (data: AchadoBeneficio) => {
     // api.post('/achado', data).then(response => {
     //   const newAchado = response.data.achado;
     //   TypeAlert(response.data.message, 'success')
@@ -45,6 +47,8 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
     // }).catch((error) => {
     //   TypeAlert(error.response.data.message, 'warning');
     // })
+
+    console.log(data)
     
     if(getAchado(data.achado)){
       return
@@ -58,7 +62,13 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
       ...data,
       situacao:situacao === 'Aprovado'? true : false
     }
-    saveAchado(dataWithSituacao)
+    const dataWithsituacaoB = {
+      ...data,
+      situacaoB:situacaoB === 'Aprovado'? true:false
+    }
+    
+    saveAchado(dataWithSituacao)  
+    
     TypeAlert('Achado adicionado', 'success');
     reset()
     closeModal()
@@ -100,29 +110,6 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
               autoComplete="given-name"
               type="text"
               required
-              multiline
-              rows={4}
-              fullWidth
-              id="analise"
-              label="Análise"
-              autoFocus
-              error={errors?.analise?.type === 'required'}
-              {...register('analise', {
-                required: 'Campo obrigatório',
-              })}
-            />
-            {errors?.analise && (
-              <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                {errors.analise?.message}
-              </Typography>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={4} sx={{mt:3}}>
-            <TextField
-              variant='filled'
-              autoComplete="given-name"
-              type="text"
-              required
               fullWidth
               id="achado"
               label="Proposta de Achado"
@@ -151,6 +138,64 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
                 </ToggleButtonGroup>):(
                 <input type="hidden"{...register('situacao')} value="false" />
               )}
+          </Grid>
+          <Grid item xs={12} sm={4} sx={{mt:3}}>
+            <TextField
+              variant='filled'
+              autoComplete="given-name"
+              type="text"
+              multiline
+              rows={4}
+              fullWidth
+              id="analise"
+              label="Análise"
+              autoFocus
+              error={errors?.analise?.type === 'required'}
+              {...register('analise', {
+                required: 'Campo obrigatório',
+              })}
+            />
+            <Grid item xs={12} sm={4} sx={{mt:3}}>
+            <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Cadastrar Novo Benefício</Typography>
+                <TextField
+                    variant='filled'
+                    required
+                    autoFocus
+                    fullWidth
+                    id="beneficio"
+                    label='Benefício'
+                    type="text"
+                    error={!!errors?.beneficio}
+                    {...register('beneficio', {
+                        required: 'Campo obrigatório'
+                    })}
+                />
+
+                {errors?.beneficio && (
+                    <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                        {errors.beneficio.message}
+                    </Typography>
+                )}
+            </Grid>
+            <Grid item xs={12} sm={4}>
+            {user?.cargo ==='Diretor'? (<ToggleButtonGroup
+                  color="primary"
+                  value={situacao}
+                  exclusive
+                  onChange={handleChange}
+                  aria-label="Platform"
+                >
+                  <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                  <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+                </ToggleButtonGroup>):(
+                <input type="hidden"{...register('situacaoB')} value="false" />
+              )}
+          </Grid>
+            {errors?.analise && (
+              <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+                {errors.analise?.message}
+              </Typography>
+            )}
           </Grid>
           <RegisterButton text="Registrar" />
         </Box>
