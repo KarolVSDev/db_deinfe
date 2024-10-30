@@ -32,7 +32,7 @@ const dataFake = () => {
     }
 
     //mocks de achado
-    const getAchado = (achado:string): boolean => {
+    const verifyAchado = (achado:string): boolean => {
         const texto = arrayAchado.find(item => item.achado === achado)
         if(texto){
             TypeAlert('O Achado já existe no banco de dados', 'info')
@@ -40,6 +40,15 @@ const dataFake = () => {
         }
         return false
     }
+    const getAchado = (achado:string):Achado | string => {
+        const objeto = arrayAchado.find(item => item.achado === achado)
+        if(objeto){
+            return objeto
+        }else{
+            return 'Achado não Encontrado'
+        }
+    }
+
     const getAchadoString = (achado:string): boolean => {
         const texto = arrayAchado.find(item => item.achado === achado)
         if(texto){
@@ -111,7 +120,7 @@ const dataFake = () => {
 
   return {saveTopico, saveAchado, 
     saveBeneficio, AchadoFormatado,
-     BeneficioFormatado, getTopico, getAchado, getBeneficio, getBeneficiosByAchado}
+     BeneficioFormatado, getTopico, verifyAchado, getBeneficio, getBeneficiosByAchado}
   
 }
 

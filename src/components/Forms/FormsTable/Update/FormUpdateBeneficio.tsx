@@ -1,25 +1,25 @@
-import { Autocomplete, Box, Button, Container, Grid, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Container, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
-import { useForm } from 'react-hook-form';
-import { AreaAchado, Beneficio, DivAchado, DivAchado2 } from '../../../../types/types';
+import { Controller, useForm } from 'react-hook-form';
+import { Achado, AreaAchado, Beneficio, DivAchado, DivAchado2 } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
-import HandleModalButton from '../../../Buttons/HandleTypeButton';
-import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
-import useExportToExcel from '../../../../hooks/useExportToExcel';
+import CloseIcon from '@mui/icons-material/Close';
+
+
 
 interface DivAchadoProps {
     closeModal: () => void;
     id: GridRowId | undefined;
 }
 const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
-    const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio>({});
+    const {control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio>({});
 
-    const { arrayBeneficio, setArrayBeneficio } = useContextTable()
+    const { arrayBeneficio, setArrayBeneficio, arrayAchado } = useContextTable()
     const [beneficio, setBeneficio] = useState<Beneficio>()
     const [openModal, setOpenModal] = useState(false)
     const [situacao, setSituacao] = useState<string>()
@@ -101,10 +101,46 @@ const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
 
 
     return (
-        <Container>
+        <>
             {beneficio && (
-                <Box component="form" name='formDivAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-                    <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro do Benefício</Typography>
+                <Box sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}}
+                component="form" name='formDivAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+                    <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
+                        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Registro de Benefício</Typography>
+                        <IconButton onClick={closeModal} sx={{
+                        '&:hover': {
+                        bgcolor: '#1e293b', color: '#ffffff',
+                        }
+                        }}>
+                        <CloseIcon />
+                        </IconButton>
+                    </Box>
+                    <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+                        <Controller
+                        name="achado_id"
+                        control={control}
+                        defaultValue="" 
+                        rules={{ required: 'Campo obrigatório' }} 
+                        render={({ field }) => (
+                        <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            options={arrayAchado}
+                            getOptionLabel={(option: Achado) => option.achado}
+                            onChange={(event, value) => field.onChange(value?.id || '')} 
+                            renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Achado"
+                                variant="filled"
+                                error={!!errors.achado_id} // Mostra erro
+                                helperText={errors.achado_id?.message} // Mostra a mensagem de erro
+                            />
+                            )}
+                        />
+                        )}
+                        />
+                    </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             variant='filled'
@@ -143,10 +179,7 @@ const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
                     <RegisterButton text="Registrar" />
                 </Box>
             )}
-           { /*<HandleModalButton handleModal={handleModal}/>
-            <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width: '100%', mt: 1 }}>Exportar</Button>
-            <ModalShowDetails dataType={'div-achado'} divAchadoRelation={divAchadoUp} onClose={handleClose} open={openModal} />*/}
-        </Container>
+        </>
     );
 }
 

@@ -1,18 +1,17 @@
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { Controller, useForm } from 'react-hook-form';
 import { Achado, AchadoBeneficio, Beneficio, TopicoAchado, User } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
-import { Autocomplete, Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import dataFake from '../../../../service/dataFake';
 import { useState } from 'react';
 import ButtonNovo from '../../../Buttons/ButtonNovo';
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface FormAchadoProps {
 closeModal:() => void;
@@ -23,7 +22,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
 
   const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<AchadoBeneficio>({});
   //const { setArrayAchado } = useContextTable()
-  const { saveAchado,saveBeneficio, getAchado } = dataFake()
+  const { saveAchado,saveBeneficio, verifyAchado } = dataFake()
   const [situacao, setSituacao] = useState<string | null>(null);
   const [situacaoB, setSituacaoB] = useState<string | null>(null);
   const {arrayTopicoAchado} = useContextTable()
@@ -50,7 +49,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
 
     console.log(data)
     
-    if(getAchado(data.achado)){
+    if(verifyAchado(data.achado)){
       return
     }
 
@@ -76,7 +75,16 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
 
   return (
         <Box sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Typography variant='h6' sx={{mb:2, color:'rgb(17 24 39)'}}>Cadastrar Novo Achado</Typography>
+         <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
+            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Achado</Typography>
+            <IconButton onClick={closeModal} sx={{
+            '&:hover': {
+              bgcolor: '#1e293b', color: '#ffffff',
+              }
+            }}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
           <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
             <Controller
             name="topico_id"

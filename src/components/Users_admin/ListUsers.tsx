@@ -8,8 +8,8 @@ import { api } from '../../service/api';
 import {  useEffect } from 'react';
 import { Box, Button, Grid } from '@mui/material';
 import { TypeInfo } from '../../hooks/TypeAlert';
-import ModalAddUser from '../Modais/UserModals/ModalAddUser';
-import ModalUpdateUser from '../Modais/UserModals/ModalUpdateUser';
+import ModalAddUser from '../Modals/UserModals/ModalAddUser';
+import ModalUpdateUser from '../Modals/UserModals/ModalUpdateUser';
 import useFetchUsers from '../../hooks/useFetchUsers';
 
 

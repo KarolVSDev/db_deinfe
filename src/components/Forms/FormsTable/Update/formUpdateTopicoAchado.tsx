@@ -1,19 +1,31 @@
-import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
+import { Box, Container, createTheme, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado } from '../../../../types/types';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import HandleModalButton from '../../../Buttons/HandleTypeButton';
-import ButtonExport from '../../../Modais/DataTableModals/ModalAnalise';
 import { useContextTable } from '../../../../context/TableContext';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface TopicoAchadoProp {
   closeModal: () => void;
   id: GridRowId | undefined;
 }
+
+const theme = createTheme({
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          paddingLeft: 0,
+          paddingRight: 0,
+        },
+      },
+    },
+  },
+});
 
 const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
@@ -39,6 +51,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
   useEffect(() => {
     if (topicoAchado) {
       setSituacao(topicoAchado?.situacao === false ? 'Pendente' : 'Aprovado');
+      console.log(id)
     }
   }, [topicoAchado])
 
@@ -67,11 +80,21 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
 
 
   return (
-    <Container>
-      <Box component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>
-          Atualizar Registro de Tópico
-        </Typography>
+      <Box sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} 
+        component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+          <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
+            Atualizar Registro de Tópico
+          </Typography>
+          <IconButton onClick={closeModal} sx={{
+               mr: 0, '&:hover': {
+                bgcolor: '#1e293b', color: '#ffffff',
+              }
+            }}>
+              <CloseIcon />
+            </IconButton>
+
+        </Box>
         <Grid item xs={12} sm={4}>
           <TextField
             variant="filled"
@@ -105,9 +128,6 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
         </Grid>
         <RegisterButton text="Registrar" />
       </Box>
-      <HandleModalButton handleModal={() => { }} />
-      <ButtonExport handleExport={() => { }} />
-    </Container>
   );
 };
 

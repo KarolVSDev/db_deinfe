@@ -14,8 +14,8 @@ import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { formatToInputDate } from '../../../../hooks/DateFormate';
 import InnerAccordion from '../../../Accordion/InnerAccordion';
-import FormInteresse from '../Register/FormInteresse';
-import FormApenso from '../Register/FormApenso';
+import FormInteresse from '../Create/FormInteresse';
+import FormApenso from '../Create/FormApenso';
 import InfoPaperProcessoDetails from '../../../InfoPaper/InfoPaperProcessoDetails';
 import useFetchListData from '../../../../hooks/useFetchListData';
 
@@ -32,7 +32,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
   const [expanded, setExpanded] = useState(false);
   const [processo, setProcesso] = useState<ProcessoUpdate>()
 
-  
+
 
   const getOneProcesso = async (id: GridRowId) => {
     try {
@@ -52,8 +52,8 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
     api.patch(`/processo/${id}`, processo).then(response => {
       TypeAlert(response.data.message, 'success')
       setArrayProcesso(prevArray => {
-        const updatedArray = prevArray.map(item => 
-          item.id === processoId ? {...item, ...processo} : item
+        const updatedArray = prevArray.map(item =>
+          item.id === processoId ? { ...item, ...processo } : item
         )
         return updatedArray;
       })
@@ -64,7 +64,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
   }
 
 
-  
+
 
   useEffect(() => {
     if (id) {
@@ -274,7 +274,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ id, closeModal }) => 
           <FormApenso />
         </InnerAccordion>
       </Box> */}
-      <InfoPaperProcessoDetails processoDetails={processoDetails} processoPrincipal={processoPrincipal}/>
+      <InfoPaperProcessoDetails processoDetails={processoDetails} processoPrincipal={processoPrincipal} />
 
     </Container>
   )

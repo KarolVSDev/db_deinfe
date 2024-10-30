@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Grid, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm, UseFormRegister } from 'react-hook-form';
 import { Achado, Beneficio, User } from '../../../../types/types';
@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import dataFake from '../../../../service/dataFake';
 import ButtonNovo from '../../../Buttons/ButtonNovo';
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface FormBeneficioProps {
     closeModal:() => void;
@@ -64,7 +65,16 @@ const FormBeneficio:React.FC<FormBeneficioProps> = ({user, dataType, closeModal}
 
     return (
         <Box sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Typography variant='h6' sx={{mb:2, color:'rgb(17 24 39)'}}>Cadastrar Novo Benefício</Typography>
+            <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
+                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Benefício</Typography>
+                <IconButton onClick={closeModal} sx={{
+                '&:hover': {
+                bgcolor: '#1e293b', color: '#ffffff',
+                }
+                }}>
+                <CloseIcon />
+                </IconButton>
+            </Box>
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Controller
                 name="achado_id"

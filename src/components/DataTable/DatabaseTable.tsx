@@ -8,17 +8,17 @@ import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ModalUpdatePF from '../Modais/DataTableModals/ModalUpdateForms';
+import ModalUpdatePF from '../Modals/DataTableModals/ModalUpdateForms';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
-import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
+import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchListData from '../../hooks/useFetchListData';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
 import dataFake from '../../service/dataFake';
-import ModalBeneficios from '../Modais/DataTableModals/ModalBeneficios';
-import ModalAnalises from '../Modais/DataTableModals/ModalAnalise';
+import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
+import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 
 export default function DatabaseTable() {
 

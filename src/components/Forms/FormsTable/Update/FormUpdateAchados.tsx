@@ -8,10 +8,6 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
-import { achadoHeader } from '../../../../service/columns';
-import HandleModalButton from '../../../Buttons/HandleTypeButton';
-import ModalShowDetails from '../../../Modais/DataTableModals/ModalShowDetails';
-import useFormData from '../../../../hooks/useFormData';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
 
 interface DivAchadoProps {

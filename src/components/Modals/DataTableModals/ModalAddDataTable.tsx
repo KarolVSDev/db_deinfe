@@ -5,13 +5,11 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
-import { IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import useFetchListData from '../../../hooks/useFetchListData';
-import FormTopicoAchado from '../../Forms/FormsTable/Register/FormTopicoAchado';
-import FormAchado from '../../Forms/FormsTable/Register/FormAchados';
-import FormBeneficio from '../../Forms/FormsTable/Register/FormBeneficio';
-import FormCatalogo from '../../Forms/FormsTable/Register/FormCatalogo';
+import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
+import FormAchado from '../../Forms/FormsTable/Create/FormAchados';
+import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
+import FormCatalogo from '../../Forms/FormsTable/Create/FormCatalogo';
 import { User } from '../../../types/types';
 
 
@@ -25,28 +23,28 @@ const style = {
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
-  p: 4,
   overflowY: 'auto',
   height: 'fit-content',
   maxHeight: '95vh',
   scrollbarWidth: 'thin',
-  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
+  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
+  borderRadius: '10px',
 };
 
-export interface ModalAddDataProps{
-  dataType:string;
-  user:User | undefined;
+export interface ModalAddDataProps {
+  dataType: string;
+  user: User | undefined;
 }
 
 
-const ModalAddData: React.FC<ModalAddDataProps> = ({dataType, user}) => {
+const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
-  const { getAllTopcioAchado, 
-    getAllAreaAchado} = useFetchListData()
+  const { getAllTopcioAchado,
+    getAllAreaAchado } = useFetchListData()
 
   const handleSubmit = () => {
     setOpen(false)
@@ -58,16 +56,16 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({dataType, user}) => {
     if (dataType === 'pesquisa') {
       setIsDisabled(true);
     } else {
-      setIsDisabled(false); 
+      setIsDisabled(false);
     }
 
   }, [open, dataType])
 
- 
+
 
   return (
     <div>
-      <Button onClick={handleOpen}  disabled={isDisabled} variant='contained'  >
+      <Button onClick={handleOpen} disabled={isDisabled} variant='contained'  >
         Cadastrar novo {dataType}
       </Button>
       <Modal
@@ -85,17 +83,10 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({dataType, user}) => {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <IconButton onClick={handleClose} sx={{
-              ml: 57, mb:2,mr: 0, '&:hover': {
-                bgcolor: '#1e293b', color: '#ffffff',
-              }
-            }}>
-              <CloseIcon />
-            </IconButton>
-             {(dataType === 'topico') && (<FormTopicoAchado closeModal={handleClose} user={user}/>)}
-             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType}/>)}
-             {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType}/>)}
-             {(dataType === 'catalogo') && (<FormCatalogo/>)}
+            {(dataType === 'topico') && (<FormTopicoAchado closeModal={handleClose} user={user} />)}
+            {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType} />)}
+            {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType} />)}
+            {(dataType === 'catalogo') && (<FormCatalogo />)}
           </Box>
         </Fade>
       </Modal>

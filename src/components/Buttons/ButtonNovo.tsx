@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, styled, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { User } from '../../types/types';
-import ModalAddData from '../Modais/DataTableModals/ModalAddDataTable';
+import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 
 export interface ButtonNovoProps {
     dataType:string;
