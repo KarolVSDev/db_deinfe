@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, AchadoBeneficio, Beneficio, TopicoAchado, User } from '../../../../types/types'
+import { Achado, achadoBeneficio, Beneficio, TopicoAchado, User } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
@@ -20,24 +20,32 @@ dataType:string;
 }
 const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
 
-  const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<AchadoBeneficio>({});
+  const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<Achado & Beneficio>({});
   //const { setArrayAchado } = useContextTable()
-  const { saveAchado,saveBeneficio, verifyAchado } = dataFake()
-  const [situacao, setSituacao] = useState<string | null>(null);
-  const [situacaoB, setSituacaoB] = useState<string | null>(null);
+  const { saveAchado,saveBeneficio, verifyAchado, getAchadoByString } = dataFake()
+  const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
+  const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const {arrayTopicoAchado} = useContextTable()
 
-  const handleChange = (
+  const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,
-    newSituacao: string,
+    newSituacao: string | null
   ) => {
-    if (newSituacao !== undefined) {
-      setSituacao(newSituacao);
-      setSituacaoB(newSituacao);
+    if (newSituacao !== null) {
+      setSituacaoAchado(newSituacao);
     }
   };
 
-  const onSubmit = (data: AchadoBeneficio) => {
+  const handleChangeSituacaoBeneficio = (
+    event: React.MouseEvent<HTMLElement>,
+    newSituacao: string | null
+  ) => {
+    if (newSituacao !== null) {
+      setSituacaoBeneficio(newSituacao);
+    }
+  };
+
+  const onSubmit = (data: Achado & Beneficio) => {
     // api.post('/achado', data).then(response => {
     //   const newAchado = response.data.achado;
     //   TypeAlert(response.data.message, 'success')
@@ -59,15 +67,12 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
     
     const dataWithSituacao = {
       ...data,
-      situacao:situacao === 'Aprovado'? true : false
-    }
-    const dataWithsituacaoB = {
-      ...data,
-      situacaoB:situacaoB === 'Aprovado'? true:false
-    }
+      situacao: situacaoAchado === 'Aprovado'? true : false,
+      beneficio_id:''
+    };
     
-    saveAchado(dataWithSituacao)  
-    
+    saveAchado(dataWithSituacao) 
+   
     TypeAlert('Achado adicionado', 'success');
     reset()
     closeModal()
@@ -136,10 +141,11 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
           <Grid item xs={12} sm={4}>
             {user?.cargo ==='Diretor'? (<ToggleButtonGroup
                   color="primary"
-                  value={situacao}
+                  value={situacaoAchado}
                   exclusive
-                  onChange={handleChange}
+                  onChange={handleChangeSituacaoAchado}
                   aria-label="Platform"
+                  
                 >
                   <ToggleButton value='Pendente' >Pendente</ToggleButton>
                   <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
@@ -188,15 +194,16 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
             <Grid item xs={12} sm={4}>
             {user?.cargo ==='Diretor'? (<ToggleButtonGroup
                   color="primary"
-                  value={situacao}
+                  value={situacaoBeneficio}
                   exclusive
-                  onChange={handleChange}
+                  onChange={handleChangeSituacaoBeneficio}
                   aria-label="Platform"
+                
                 >
                   <ToggleButton value='Pendente' >Pendente</ToggleButton>
                   <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
                 </ToggleButtonGroup>):(
-                <input type="hidden"{...register('situacaoB')} value="false" />
+                <input type="hidden"{...register('situacao')} value="false" />
               )}
           </Grid>
             {errors?.analise && (

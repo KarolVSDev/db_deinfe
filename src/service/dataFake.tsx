@@ -52,23 +52,25 @@ const dataFake = () => {
         }
     }
 
-    const getAchadoString = (achado:string): boolean => {
-        const texto = arrayAchado.find(item => item.achado === achado)
-        if(texto){
-            TypeAlert('O Achado já existe no banco de dados', 'info')
-            return true
+    const getAchadoByString = (achado:string): Achado | undefined=> {
+        const objeto = arrayAchado.find(item => item.achado === achado)
+        try {
+            if(objeto){
+                return objeto
+            }
+        } catch (error) {
+            console.log('Achado não encontrado', error)
         }
-        return false
     }
 
-    const saveAchado =  (data:any) => {
+    const saveAchado =  (data:Achado) => {
+        
         const newData = {
+            ...data,
             id: faker.string.uuid(),
-            ...data
 
         }
         setArrayAchado((prevData) => [...prevData, newData])
-        localStorage.set
         console.log('dados salvos', newData)
         console.log('Dados do Array', [...arrayAchado, newData])
     }
@@ -83,11 +85,11 @@ const dataFake = () => {
         })
     }
 
-    const getBeneficiosByAchado = (achadoId:string) => {
-        const beneficios = arrayBeneficio.filter(beneficio => beneficio.achado_id === achadoId)
-        console.log(beneficios)
-        return beneficios
-    }
+    // const getBeneficiosByAchado = (achadoId:string) => {
+    //     const beneficios = arrayBeneficio.filter(beneficio => beneficio.achado_id === achadoId)
+    //     console.log(beneficios)
+    //     return beneficios
+    // }
 
     //mocks de beneficio
     const saveBeneficio =  (data:any) => {
@@ -110,21 +112,23 @@ const dataFake = () => {
         }
         return false
     }
-    const BeneficioFormatado = (beneficios:Beneficio[], achados:Achado[]) => {
-        return beneficios.map((beneficio) => {
-            const achadoEncontrado = achados.find(achado => achado.id === beneficio.achado_id);
-            return {
-                ...beneficio,
-                achado_id:achadoEncontrado? achadoEncontrado.achado : 'Achado não encontrado'
-            }
-        })
-    }
+    // const BeneficioFormatado = (beneficios:Beneficio[], achados:Achado[]) => {
+    //     return beneficios.map((beneficio) => {
+    //         const achadoEncontrado = achados.find(achado => achado.id === beneficio.achado_id);
+    //         return {
+    //             ...beneficio,
+    //             achado_id:achadoEncontrado? achadoEncontrado.achado : 'Achado não encontrado'
+    //         }
+    //     })
+    // }
 
 
   return {saveTopico, saveAchado, 
     saveBeneficio, AchadoFormatado,
-     BeneficioFormatado, getTopico, verifyAchado, 
-     getBeneficio, getBeneficiosByAchado, getAchado}
+    getTopico, verifyAchado, 
+    getBeneficio, getAchado, getAchadoByString,
+    //BeneficioFormatado, getBeneficiosByAchado,
+    }
   
 }
 

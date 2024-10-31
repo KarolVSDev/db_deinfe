@@ -32,7 +32,9 @@ export default function DatabaseTable() {
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { AchadoFormatado, BeneficioFormatado } = dataFake()
+  const { AchadoFormatado, 
+    //BeneficioFormatado
+   } = dataFake()
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -56,11 +58,11 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(achadoHeader));
         setRows(createRows(achadoComTopico))
         break
-      case 'beneficio':
-        const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
-        setColumns(createGridColumns(beneficioHeader));
-        setRows(createRows(beneficioComAchado))
-        break
+      // case 'beneficio':
+      //   const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
+      //   setColumns(createGridColumns(beneficioHeader));
+      //   setRows(createRows(beneficioComAchado))
+      //   break
       default:
         setColumns([]);
         setRows([])
@@ -182,10 +184,10 @@ export default function DatabaseTable() {
       case 'topico':
         setRows(createRows(arrayTopicoAchado))
         break;
-      case 'beneficio':
-        const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
-        setRows(createRows(beneficioComAchado))
-        break;
+      // case 'beneficio':
+      //   const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
+      //   setRows(createRows(beneficioComAchado))
+      //   break;
       case 'achado':
         const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
         setRows(createRows(achadoComTopico))
