@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useState } from 'react';
-import { topicoAchadoHeader, achadoHeader, beneficioHeader, catalogoHeader } from '../../service/columns';
+import { topicoAchadoHeader, achadoHeader, beneficioHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,7 +30,6 @@ export default function DatabaseTable() {
   const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
-  const { getAllAchados, getAllTopcioAchado, getAllAreaAchado } = useFetchListData()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
   const { AchadoFormatado, BeneficioFormatado } = dataFake()
@@ -61,13 +60,6 @@ export default function DatabaseTable() {
         const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
         setColumns(createGridColumns(beneficioHeader));
         setRows(createRows(beneficioComAchado))
-        break
-      case 'catalogo':
-        // if (arrayAreaAchado.length <= 0) {
-        //   getAllAreaAchado()
-        // }
-        setColumns(createGridColumns(catalogoHeader));
-        setRows(createRows(arrayAreaAchado))
         break
       default:
         setColumns([]);
@@ -121,9 +113,6 @@ export default function DatabaseTable() {
     getUser()
   }, [])
 
-
-  //controle de ações baseado no tipo de dado
-
   //traduz o dataGrid
   handleLocalization
 
@@ -145,7 +134,6 @@ export default function DatabaseTable() {
     { value: 'topico', string: 'Topicos' },
     { value: 'achado', string: 'Achados' },
     { value: 'beneficio', string: 'Benefícios' },
-    { value: 'catalogo', string: 'Catálogo' },
   ]
 
 
@@ -168,10 +156,6 @@ export default function DatabaseTable() {
         case 'topico':
           setArrayTopicoAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
           TypeAlert('Tópico removido', 'success')
-          break;
-        case 'area-achado':
-          setArrayAreaAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          await getAllAchados()
           break;
         case 'beneficio':
           setArrayBeneficio(prevArray => prevArray.filter(item => item.id !== selectedRow))
@@ -198,9 +182,6 @@ export default function DatabaseTable() {
       case 'topico':
         setRows(createRows(arrayTopicoAchado))
         break;
-      case 'area-achado':
-        setRows(createRows(arrayAreaAchado))
-        break;
       case 'beneficio':
         const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
         setRows(createRows(beneficioComAchado))
@@ -212,7 +193,7 @@ export default function DatabaseTable() {
       default:
         break;
     }
-  }, [arrayTopicoAchado, arrayAreaAchado, arrayBeneficio, arrayAchado])
+  }, [arrayTopicoAchado, arrayBeneficio, arrayAchado])
 
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>

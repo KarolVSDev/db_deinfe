@@ -9,7 +9,6 @@ import useFetchListData from '../../../hooks/useFetchListData';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchados';
 import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
-import FormCatalogo from '../../Forms/FormsTable/Create/FormCatalogo';
 import { User } from '../../../types/types';
 
 
@@ -86,7 +85,6 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
             {(dataType === 'topico') && (<FormTopicoAchado closeModal={handleClose} user={user} />)}
             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType} />)}
-            {(dataType === 'catalogo') && (<FormCatalogo />)}
           </Box>
         </Fade>
       </Modal>

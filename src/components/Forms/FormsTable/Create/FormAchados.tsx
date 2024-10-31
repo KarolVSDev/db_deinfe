@@ -164,7 +164,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
               })}
             />
             <Grid item xs={12} sm={4} sx={{mt:3}}>
-            <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Cadastrar Novo Benefício</Typography>
+            <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Adicionar um Beneficio</Typography>
                 <TextField
                     variant='filled'
                     required

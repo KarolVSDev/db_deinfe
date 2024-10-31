@@ -63,12 +63,6 @@ export interface Beneficio {
   situacao:boolean;
 }
 
-export interface Catalogo {
-  catalogo_id:string;
-  analise:string;
-  achado_alternativo:string;
-  achado_id:string;
-}
 // export interface Achado2 {
 //   id: string;
 //   titulo: string;
