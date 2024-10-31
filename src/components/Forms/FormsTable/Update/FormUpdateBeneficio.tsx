@@ -9,6 +9,7 @@ import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import dataFake from '../../../../service/dataFake';
 
 
 
@@ -23,7 +24,8 @@ const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
     const [beneficio, setBeneficio] = useState<Beneficio>()
     const [openModal, setOpenModal] = useState(false)
     const [situacao, setSituacao] = useState<string>()
-    //const {exportDivRelations} = useExportToExcel()
+    const {getAchado} = dataFake()
+    const [achado, setAchado] = useState<Achado | undefined>()
 
 
     const getBeneficio = () => {
@@ -46,9 +48,12 @@ const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
    
     useEffect(() => {
         if(beneficio){
-          setSituacao(beneficio.situacao === false ? 'Pendente' : 'Aprovado');
+            setSituacao(beneficio.situacao === false ? 'Pendente' : 'Aprovado');
+            const achado = getAchado(beneficio.achado_id)
+            setAchado(achado)
         }
-      },[beneficio])
+    },[beneficio])
+   
 
     const handleModal = () => {
         setOpenModal(true)
@@ -103,7 +108,7 @@ const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
     return (
         <>
             {beneficio && (
-                <Box sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}}
+                <Box sx={{borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}}
                 component="form" name='formDivAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
                     <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
                         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Registro de Benefício</Typography>
@@ -115,32 +120,36 @@ const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
                         <CloseIcon />
                         </IconButton>
                     </Box>
-                    <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                        <Controller
-                        name="achado_id"
-                        control={control}
-                        defaultValue="" 
-                        rules={{ required: 'Campo obrigatório' }} 
-                        render={({ field }) => (
-                        <Autocomplete
-                            disablePortal
-                            id="combo-box-demo"
-                            options={arrayAchado}
-                            getOptionLabel={(option: Achado) => option.achado}
-                            onChange={(event, value) => field.onChange(value?.id || '')} 
-                            renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Achado"
-                                variant="filled"
-                                error={!!errors.achado_id} // Mostra erro
-                                helperText={errors.achado_id?.message} // Mostra a mensagem de erro
+                    {achado && 
+                        <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+                            <Controller
+                            name="achado_id"
+                            control={control}
+                            
+                            rules={{ required: 'Campo obrigatório' }} 
+                            render={({ field }) => (
+                            <Autocomplete
+                                disablePortal
+                                defaultValue={achado}
+                                id="combo-box-demo"
+                                options={arrayAchado}
+                                getOptionLabel={(option: Achado) => option.achado}
+                                onChange={(event, value) => field.onChange(value?.id || '')} 
+                                renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    defaultValue={achado.achado}
+                                    label="Achado"
+                                    variant="filled"
+                                    error={!!errors.achado_id} // Mostra erro
+                                    helperText={errors.achado_id?.message} // Mostra a mensagem de erro
+                                />
+                                )}
                             />
                             )}
-                        />
-                        )}
-                        />
-                    </Grid>
+                            />
+                        </Grid>
+                    }
                     <Grid item xs={12} sm={4}>
                         <TextField
                             variant='filled'

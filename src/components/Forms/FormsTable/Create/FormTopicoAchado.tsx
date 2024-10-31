@@ -56,7 +56,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   };
 
   return (
-    <Box sx={{ border: '1px solid #000', borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Box sx={{borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Tópico</Typography>
         <IconButton onClick={closeModal} sx={{

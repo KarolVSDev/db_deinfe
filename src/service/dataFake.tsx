@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker"
 import { Achado, Beneficio, TopicoAchado } from "../types/types"
 import { useContextTable } from "../context/TableContext";
 import { TypeAlert } from "../hooks/TypeAlert";
+import { GridRowId } from "@mui/x-data-grid";
 
 
 const dataFake = () => {
@@ -40,12 +41,14 @@ const dataFake = () => {
         }
         return false
     }
-    const getAchado = (achado:string):Achado | string => {
-        const objeto = arrayAchado.find(item => item.achado === achado)
-        if(objeto){
-            return objeto
-        }else{
-            return 'Achado não Encontrado'
+    const getAchado = (achado:string):Achado | undefined => {
+        const objeto = arrayAchado.find(item => item.id === achado)
+        try {
+            if(objeto){
+                return objeto
+            }
+        } catch (error) {
+            console.log('Achado não encontrado', error)
         }
     }
 
@@ -120,7 +123,8 @@ const dataFake = () => {
 
   return {saveTopico, saveAchado, 
     saveBeneficio, AchadoFormatado,
-     BeneficioFormatado, getTopico, verifyAchado, getBeneficio, getBeneficiosByAchado}
+     BeneficioFormatado, getTopico, verifyAchado, 
+     getBeneficio, getBeneficiosByAchado, getAchado}
   
 }
 
