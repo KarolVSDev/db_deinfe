@@ -8,7 +8,7 @@ import { GridRowId } from "@mui/x-data-grid";
 const dataFake = () => {
     const {setArrayTopicoAchado, 
         arrayTopicoAchado, setArrayAchado, 
-        arrayAchado, setArrayBeneficio, arrayBeneficio} = useContextTable()
+        arrayAchado, setArrayBeneficio, arrayBeneficio, arrayAchadoBeneficio,setArrayAchadoBeneficio} = useContextTable()
     
 
     //mocks de topico
@@ -19,7 +19,6 @@ const dataFake = () => {
 
         }
         setArrayTopicoAchado((prevData) => [...prevData, newData])
-        localStorage.set
         console.log('dados salvos', newData)
         console.log('Dados do Array', [...arrayTopicoAchado, newData])
     }
@@ -60,6 +59,7 @@ const dataFake = () => {
             }
         } catch (error) {
             console.log('Achado não encontrado', error)
+            return undefined
         }
     }
 
@@ -73,6 +73,7 @@ const dataFake = () => {
         setArrayAchado((prevData) => [...prevData, newData])
         console.log('dados salvos', newData)
         console.log('Dados do Array', [...arrayAchado, newData])
+        return newData
     }
 
     const AchadoFormatado = (achados:Achado[], topicos:TopicoAchado[]) => {
@@ -85,11 +86,13 @@ const dataFake = () => {
         })
     }
 
-    // const getBeneficiosByAchado = (achadoId:string) => {
-    //     const beneficios = arrayBeneficio.filter(beneficio => beneficio.achado_id === achadoId)
-    //     console.log(beneficios)
-    //     return beneficios
-    // }
+    const getBeneficiosByAchado = (achadoId:string):Beneficio[] => {
+        const arrayFiltrado = arrayAchadoBeneficio.filter(item => item.achado_id === achadoId)
+        const beneficios = arrayBeneficio.filter(beneficio => 
+            arrayFiltrado.some(filtro => filtro.beneficio_id === beneficio.id)
+        )
+        return beneficios
+    }
 
     //mocks de beneficio
     const saveBeneficio =  (data:any) => {
@@ -99,12 +102,12 @@ const dataFake = () => {
 
         }
         setArrayBeneficio((prevData) => [...prevData, newData])
-        localStorage.set
         console.log('dados salvos', newData)
         console.log('Dados do Array', [...arrayBeneficio, newData])
+        return newData
     }
 
-    const getBeneficio = (beneficio:string): boolean => {
+    const verifyBeneficio = (beneficio:string): boolean => {
         const texto = arrayBeneficio.find(item => item.beneficio === beneficio)
         if(texto){
             TypeAlert('O Beneficio já existe no banco de dados', 'info')
@@ -122,12 +125,25 @@ const dataFake = () => {
     //     })
     // }
 
+    //mock relacao AchadoBeneficio
+    const saveAchadoBeneficio =  (data:any) => {
+        const newData = {
+            id: faker.string.uuid(),
+            ...data
+
+        }
+        setArrayAchadoBeneficio((prevData) => [...prevData, newData])
+        localStorage.set
+        console.log('dados salvos', newData)
+        console.log('Dados do Array', [...arrayAchadoBeneficio, newData])
+    }
+
 
   return {saveTopico, saveAchado, 
     saveBeneficio, AchadoFormatado,
     getTopico, verifyAchado, 
-    getBeneficio, getAchado, getAchadoByString,
-    //BeneficioFormatado, getBeneficiosByAchado,
+    verifyBeneficio, getAchado, getAchadoByString,saveAchadoBeneficio, getBeneficiosByAchado
+    //BeneficioFormatado, 
     }
   
 }

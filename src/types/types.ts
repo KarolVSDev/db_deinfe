@@ -43,7 +43,7 @@ export interface TopicoAchado {
 export interface Achado {
   id: string;
   achado:string;
-  situacao:boolean;
+  situacaoAchado:boolean;
   analise:string;
   topico_id:string;
 }
@@ -51,10 +51,11 @@ export interface Achado {
 export interface Beneficio {
   id: string;
   beneficio:string;
-  situacao:boolean;
+  situacaoBeneficio:boolean;
 }
 
-export interface achadoBeneficio {
+export interface AchadoBeneficio {
+  id:string;
   achado_id:string;
   beneficio_id:string;
 }

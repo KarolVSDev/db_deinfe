@@ -16,81 +16,90 @@ const style = {
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
-  p: 4,
   overflowY: 'auto',
   height: 'fit-content',
   maxHeight: '95vh',
   scrollbarWidth: 'thin',
-  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
+  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
+  borderRadius: '10px',
 };
 
 export interface ModalAnalisesProps {
-  analise:string
+  analise: string
 }
 
-const ModalAnalises:React.FC<ModalAnalisesProps> = ({analise}) => {
-  const {getBeneficiosByAchado} = dataFake()
+const ModalAnalises: React.FC<ModalAnalisesProps> = ({ analise }) => {
+  const { getBeneficiosByAchado } = dataFake()
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
 
   const isTitle = (text: string) => text.startsWith('# ') && !text.includes('\n');
-  
+
 
   return (
     <>
-      <Button onClick={handleOpen} variant="outlined" sx={{borderColor:'#1e293b', color:'#1e293b', '&:hover':{color:'#fff', borderColor:'#475569', bgcolor:'#1e293b'}}}>Exibir</Button>
+      <Button onClick={handleOpen} variant="outlined" sx={{ borderColor: '#1e293b', color: '#1e293b', '&:hover': { color: '#fff', borderColor: '#475569', bgcolor: '#1e293b' } }}>Exibir</Button>
       <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={open}
-          onClose={handleClose}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{
-            backdrop: {
-              timeout: 500,
-            },
-          }}
-        >
-          <Fade in={open}>
-            <Box sx={style}>
-              <IconButton onClick={handleClose} sx={{
-                ml: 67, mb:2, mr: 0, '&:hover': {
-                  bgcolor: '#1e293b', color: '#ffffff',
-                }
-              }}>
-                <CloseIcon />
-              </IconButton>
-              {analise ? (
-                <>
-                  {analise.split('\n').map((line, index) => (
-                  <Typography
-                    key={index}
-                    sx={{
-                      border: '1px solid #000',
-                      borderRadius: 2,
-                      padding: '10px',
-                      boxShadow: '1px 2px 4px',
-                      textAlign: 'justify',
-                      marginBottom: '8px', 
-                      fontWeight: isTitle(line) ? 'bold' : 'normal'
-                    }}
-                    variant={isTitle(line) ? 'h6' : 'body1'}
-                  >
-                    {isTitle(line) ? line.substring(2) : line}
-                  </Typography>
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            {analise ? (
+              <>
+                <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between',p:1}}>
+                  <Typography variant='h6'>Texto de Análise: </Typography>
+                  <IconButton onClick={handleClose} sx={{
+                     '&:hover': {
+                      bgcolor: '#1e293b', color: '#ffffff',
+                    }
+                  }}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+                <Divider></Divider>
+                {analise.split('\n').map((line, index) => (
+                  <Box sx={{
+                    
+                    borderRadius: 2,
+                    padding: '10px',
+                    textAlign: 'justify',
+                    width:'70vw',
+                    fontWeight: isTitle(line) ? 'bold' : 'normal'
+                  }}>
+
+
+
+                    <Typography
+                      key={index}
+                      sx={{width:'68vw'}}
+                      variant={isTitle(line) ? 'h6' : 'body1'}
+                    >
+                      {isTitle(line) ? line.substring(2) : line}
+                    </Typography>
+                  </Box>
+
                 ))}
-                </>
-                
-              ):(
-                <Typography sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}}>Sem Análise</Typography>
-              )}
-              
-            </Box>
-          </Fade>
-              
-        </Modal>
+              </>
+
+            ) : (
+              <Typography sx={{ border: '1px solid #000', borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>Sem Análise</Typography>
+            )}
+
+          </Box>
+        </Fade>
+
+      </Modal>
     </>
   )
 }

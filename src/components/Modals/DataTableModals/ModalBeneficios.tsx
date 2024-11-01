@@ -16,12 +16,12 @@ const style = {
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
-  p: 4,
   overflowY: 'auto',
   height: 'fit-content',
   maxHeight: '95vh',
   scrollbarWidth: 'thin',
-  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)'
+  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
+  borderRadius: '10px',
 };
 
 export interface ModalBeneficiosProps {
@@ -55,18 +55,21 @@ const ModalBeneficios:React.FC<ModalBeneficiosProps> = ({achadoId}) => {
         >
           <Fade in={open}>
             <Box sx={style}>
-              <IconButton onClick={handleClose} sx={{
-                ml: 67, mb:2, mr: 0, '&:hover': {
-                  bgcolor: '#1e293b', color: '#ffffff',
-                }
-              }}>
-                <CloseIcon />
-              </IconButton>
               {beneficios.length  > 0  ? (
-                <List sx={{border:'1px solid #000', borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}}>
+                <List sx={{ borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}}>
+                 <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between', mb:4}}>
+                    <Typography variant='h6'>Lista de Benefícios:</Typography>
+                    <IconButton onClick={handleClose} sx={{
+                       '&:hover': {
+                        bgcolor: '#1e293b', color: '#ffffff',
+                      }
+                    }}>
+                      <CloseIcon />
+                    </IconButton>
+                 </Box>
                 {beneficios.map(beneficio => (
                   <>
-                    <ListItem><ArticleIcon sx={{ mr:2}}/> {beneficio.beneficio}</ListItem>
+                    <ListItem sx={{width:'70vw',  maxWidthwidth:'70vw'}}><ArticleIcon sx={{ mr:2}}/> {beneficio.beneficio}</ListItem>
                     <Divider/>
                   </>
                 ))}

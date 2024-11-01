@@ -58,11 +58,10 @@ export default function DatabaseTable() {
         setColumns(createGridColumns(achadoHeader));
         setRows(createRows(achadoComTopico))
         break
-      // case 'beneficio':
-      //   const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
-      //   setColumns(createGridColumns(beneficioHeader));
-      //   setRows(createRows(beneficioComAchado))
-      //   break
+      case 'beneficio':
+        setColumns(createGridColumns(beneficioHeader));
+        setRows(createRows(arrayBeneficio))
+        break
       default:
         setColumns([]);
         setRows([])
@@ -83,7 +82,7 @@ export default function DatabaseTable() {
         if (header.id === 'analise') {
           return <ModalAnalises analise={params.row.analise} />
         }
-        if (header.id === 'situacao' && typeof params.value === 'boolean') {
+        if (['situacaoAchado', 'situacao', 'situacaoBeneficio'].includes(header.id) && typeof params.value === 'boolean') {
           return (
             <span style={{
               background: params.value ? '#86efac' : '#fcd34d',
@@ -184,10 +183,9 @@ export default function DatabaseTable() {
       case 'topico':
         setRows(createRows(arrayTopicoAchado))
         break;
-      // case 'beneficio':
-      //   const beneficioComAchado = BeneficioFormatado(arrayBeneficio, arrayAchado)
-      //   setRows(createRows(beneficioComAchado))
-      //   break;
+      case 'beneficio':
+        setRows(createRows(arrayBeneficio))
+        break;
       case 'achado':
         const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
         setRows(createRows(achadoComTopico))

@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, achadoBeneficio, Beneficio, TopicoAchado, User } from '../../../../types/types'
+import { Achado, AchadoBeneficio, Beneficio, TopicoAchado, User } from '../../../../types/types'
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
@@ -22,10 +22,10 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
 
   const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<Achado & Beneficio>({});
   //const { setArrayAchado } = useContextTable()
-  const { saveAchado,saveBeneficio, verifyAchado, getAchadoByString } = dataFake()
+  const { saveAchado,saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const {arrayTopicoAchado} = useContextTable()
+  const {arrayTopicoAchado, arrayBeneficio} = useContextTable()
 
   const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,
@@ -55,23 +55,44 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
     //   TypeAlert(error.response.data.message, 'warning');
     // })
 
-    console.log(data)
-    
+    //bloco que manipula e salva o achado
+    const {beneficio, ...dataSemBeneficio} = data
+
     if(verifyAchado(data.achado)){
+      return
+    }
+    if(verifyBeneficio(data.beneficio)){
       return
     }
 
     if(user?.cargo !== 'Diretor'){
-      data.situacao = false
+      data.situacaoAchado = false
+      data.situacaoBeneficio = false
     }
     
     const dataWithSituacao = {
-      ...data,
-      situacao: situacaoAchado === 'Aprovado'? true : false,
-      beneficio_id:''
+      ...dataSemBeneficio,
+      situacaoAchado: situacaoAchado === 'Aprovado'? true : false,
     };
-    
-    saveAchado(dataWithSituacao) 
+
+    const retornoAchado = saveAchado(dataWithSituacao) 
+
+    //bloco que manipula e salva o beneficio
+    const objBeneficio = {beneficio:data.beneficio, situacaoBeneficio:data.situacaoBeneficio}
+
+    const objBeneficioWithSituacao = {
+      ...objBeneficio,
+      situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false
+    }
+
+    const retornoBeneficio = saveBeneficio(objBeneficioWithSituacao)
+
+    //bloco que manipula e salva o AchadoBeneficio
+   
+    if(retornoAchado && retornoBeneficio){
+      const objAchadoBeneficio = {achado_id:retornoAchado.id, beneficio_id:retornoBeneficio.id}
+      saveAchadoBeneficio(objAchadoBeneficio)
+    }
    
     TypeAlert('Achado adicionado', 'success');
     reset()
@@ -80,7 +101,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
 
   return (
         <Box sx={{borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
-         <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
+         <Box sx={{display:'flex', alignItems:'center', width:'70vw', justifyContent:'space-between'}}>
             <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Achado</Typography>
             <IconButton onClick={closeModal} sx={{
             '&:hover': {
@@ -94,11 +115,13 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
             <Controller
             name="topico_id"
             control={control}
+            
             defaultValue="" // valor inicial para evitar undefined
             rules={{ required: 'Campo obrigatório' }} // Validação do campo
             render={({ field }) => (
               <Autocomplete
                 disablePortal
+                autoFocus={true}
                 id="combo-box-demo"
                 options={arrayTopicoAchado}
                 getOptionLabel={(option: TopicoAchado) => option.topico}
@@ -108,6 +131,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
                     {...params}
                     label="Tópico"
                     variant="filled"
+                    focused={true}
                     error={!!errors.topico_id} // Mostra erro
                     helperText={errors.topico_id?.message} // Mostra a mensagem de erro
                   />
@@ -150,7 +174,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
                   <ToggleButton value='Pendente' >Pendente</ToggleButton>
                   <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
                 </ToggleButtonGroup>):(
-                <input type="hidden"{...register('situacao')} value="false" />
+                <input type="hidden"{...register('situacaoAchado')} value="false" />
               )}
           </Grid>
           <Grid item xs={12} sm={4} sx={{mt:3}}>
@@ -170,14 +194,14 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
               })}
             />
             <Grid item xs={12} sm={4} sx={{mt:3}}>
-            <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Adicionar um Beneficio</Typography>
+                <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Adicionar um Beneficio</Typography>
                 <TextField
                     variant='filled'
                     required
                     autoFocus
                     fullWidth
                     id="beneficio"
-                    label='Benefício'
+                    label='Proposta de Benefício'
                     type="text"
                     error={!!errors?.beneficio}
                     {...register('beneficio', {
@@ -203,7 +227,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
                   <ToggleButton value='Pendente' >Pendente</ToggleButton>
                   <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
                 </ToggleButtonGroup>):(
-                <input type="hidden"{...register('situacao')} value="false" />
+                <input type="hidden"{...register('situacaoBeneficio')} value="false" />
               )}
           </Grid>
             {errors?.analise && (
