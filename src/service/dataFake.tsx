@@ -101,6 +101,7 @@ const dataFake = () => {
             ...data
 
         }
+        
         setArrayBeneficio((prevData) => [...prevData, newData])
         console.log('dados salvos', newData)
         console.log('Dados do Array', [...arrayBeneficio, newData])

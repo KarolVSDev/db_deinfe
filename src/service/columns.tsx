@@ -13,6 +13,6 @@ export const achadoHeader = [
 
 export const beneficioHeader = [
     {id:'beneficio', label:'Benefício', minWidth:150},
-    {id:'achado_id', label:'Achado', minWidth:150},
+    {id:'achados', label:'Achados', minWidth:150},
     {id:'situacaoBeneficio', label:'Situação', minWidth:150},
 ]

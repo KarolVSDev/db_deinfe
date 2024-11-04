@@ -12,28 +12,28 @@ import ButtonNovo from '../../../Buttons/ButtonNovo';
 import CloseIcon from '@mui/icons-material/Close';
 
 export interface FormBeneficioProps {
-    closeModal:() => void;
-    user:User | undefined;
-    dataType:string;
-    }
+    closeModal: () => void;
+    user: User | undefined;
+    dataType: string;
+}
 
-const FormBeneficio:React.FC<FormBeneficioProps> = ({user, dataType, closeModal}) => {
-    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio>({});
+const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModal }) => {
+    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio & Achado>({});
     const { setArrayBeneficio, arrayAchado } = useContextTable();
     //const {getAllNatAchado} = useFetchListData()
-    const { saveBeneficio, getBeneficio } = dataFake()
+    const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio} = dataFake()
     const [situacao, setSituacao] = useState<string | null>(null);
 
     const handleChange = (
         event: React.MouseEvent<HTMLElement>,
         newSituacao: string,
-      ) => {
+    ) => {
         if (newSituacao !== undefined) {
-          setSituacao(newSituacao);
+            setSituacao(newSituacao);
         }
-      };
+    };
 
-    const onSubmit = (data: Beneficio) => {
+    const onSubmit = (data: Beneficio & Achado) => {
         // api.post('/area-achado', data).then(response => {
         //     const newAreaAchado = response.data.areaAchado;
         //     TypeAlert(response.data.message, 'success');
@@ -45,18 +45,28 @@ const FormBeneficio:React.FC<FormBeneficioProps> = ({user, dataType, closeModal}
         //     setValue('natureza', '');
         // });
 
-        if(getBeneficio(data.beneficio)){
+        if (verifyBeneficio(data.beneficio)) {
             return
         }
 
-        if(user?.cargo !== 'Diretor'){
-            data.situacao = false
+        if (user?.cargo !== 'Diretor') {
+            data.situacaoBeneficio = false
         }
         const dataWithSituacao = {
             ...data,
-            situacao:situacao === 'Aprovado'? true : false
+            id: '',
+            situacaoBeneficio: situacao === 'Aprovado' ? true : false
         }
-        saveBeneficio(dataWithSituacao)
+        console.log(dataWithSituacao)
+        const retornoBeneficio = saveBeneficio(dataWithSituacao)
+
+        //bloco que manipula e salva o AchadoBeneficio
+
+        if (retornoBeneficio) {
+            const objAchadoBeneficio = { achado_id: data.id, beneficio_id: retornoBeneficio.id }
+            saveAchadoBeneficio(objAchadoBeneficio)
+        }
+
         TypeAlert('Benefício adicionado', 'success');
         reset()
         closeModal()
@@ -64,45 +74,45 @@ const FormBeneficio:React.FC<FormBeneficioProps> = ({user, dataType, closeModal}
     };
 
     return (
-        <Box sx={{borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
+        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
+            <Box sx={{ display: 'flex', alignItems: 'center',width:'70vw', justifyContent: 'space-between' }}>
                 <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Benefício</Typography>
                 <IconButton onClick={closeModal} sx={{
-                '&:hover': {
-                bgcolor: '#1e293b', color: '#ffffff',
-                }
+                    '&:hover': {
+                        bgcolor: '#1e293b', color: '#ffffff',
+                    }
                 }}>
-                <CloseIcon />
+                    <CloseIcon />
                 </IconButton>
             </Box>
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Controller
-                name="achado_id"
-                control={control}
-                defaultValue="" 
-                rules={{ required: 'Campo obrigatório' }} 
-                render={({ field }) => (
-                <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={arrayAchado}
-                    getOptionLabel={(option: Achado) => option.achado}
-                    onChange={(event, value) => field.onChange(value?.id || '')} 
-                    renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label="Achado"
-                        variant="filled"
-                        error={!!errors.achado_id} // Mostra erro
-                        helperText={errors.achado_id?.message} // Mostra a mensagem de erro
-                    />
+                    name="id"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: 'Campo obrigatório' }}
+                    render={({ field }) => (
+                        <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            options={arrayAchado}
+                            getOptionLabel={(option: Achado) => option.achado}
+                            onChange={(event, value) => field.onChange(value?.id || '')}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Achado"
+                                    variant="filled"
+                                    error={!!errors.id} // Mostra erro
+                                    helperText={errors.id?.message} // Mostra a mensagem de erro
+                                />
+                            )}
+                        />
                     )}
                 />
-                )}
-                />
             </Grid>
-            <ButtonNovo dataType={dataType} closeModal={closeModal} user={user}/>
-            <Grid item xs={12} sm={4} sx={{mt:3}}>
+            <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
+            <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
                 <TextField
                     variant='filled'
                     required
@@ -124,19 +134,19 @@ const FormBeneficio:React.FC<FormBeneficioProps> = ({user, dataType, closeModal}
                 )}
             </Grid>
             <Grid item xs={12} sm={4}>
-            {user?.cargo ==='Diretor'? (<ToggleButtonGroup
-                  color="primary"
-                  value={situacao}
-                  exclusive
-                  onChange={handleChange}
-                  aria-label="Platform"
+                {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
+                    color="primary"
+                    value={situacao}
+                    exclusive
+                    onChange={handleChange}
+                    aria-label="Platform"
                 >
-                  <ToggleButton value='Pendente' >Pendente</ToggleButton>
-                  <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-                </ToggleButtonGroup>):(
-                <input type="hidden"{...register('situacao')} value="false" />
-              )}
-          </Grid>
+                    <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                    <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+                </ToggleButtonGroup>) : (
+                    <input type="hidden"{...register('situacaoBeneficio')} value="false" />
+                )}
+            </Grid>
             <RegisterButton text="Registrar" />
         </Box>
     );

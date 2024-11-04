@@ -76,8 +76,8 @@ export default function DatabaseTable() {
       width: header.minWidth,
       editable: false,
       renderCell: (params) => {
-        if (header.id === 'beneficios') {
-          return <ModalBeneficios achadoId={params.row.id} />;
+        if (header.id === 'beneficios' || header.id === 'achados') {
+          return <ModalBeneficios achadoId={params.row.id}/>;
         }
         if (header.id === 'analise') {
           return <ModalAnalises analise={params.row.analise} />
