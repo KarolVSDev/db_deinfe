@@ -116,6 +116,15 @@ const dataFake = () => {
         }
         return false
     }
+
+    const getAchadoByBeneficio = (Id:string):Achado[] => {
+        const arrayFiltrado = arrayAchadoBeneficio.filter(item => item.beneficio_id === Id)
+        const achados = arrayAchado.filter(achado => 
+            arrayFiltrado.some(filtro => filtro.achado_id === achado.id)
+        )
+        console.log(achados)
+        return achados
+    }
     // const BeneficioFormatado = (beneficios:Beneficio[], achados:Achado[]) => {
     //     return beneficios.map((beneficio) => {
     //         const achadoEncontrado = achados.find(achado => achado.id === beneficio.achado_id);
@@ -143,7 +152,7 @@ const dataFake = () => {
   return {saveTopico, saveAchado, 
     saveBeneficio, AchadoFormatado,
     getTopico, verifyAchado, 
-    verifyBeneficio, getAchado, getAchadoByString,saveAchadoBeneficio, getBeneficiosByAchado
+    verifyBeneficio, getAchado, getAchadoByString,saveAchadoBeneficio, getBeneficiosByAchado, getAchadoByBeneficio
     //BeneficioFormatado, 
     }
   

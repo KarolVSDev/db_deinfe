@@ -1,7 +1,7 @@
-import { Autocomplete, Box, Button, Container, Grid, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Container, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
-import { useForm } from 'react-hook-form';
-import { Achado } from '../../../../types/types';
+import { Controller, useForm } from 'react-hook-form';
+import { Achado, Beneficio, TopicoAchado, User } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -9,18 +9,30 @@ import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
+import CloseIcon from '@mui/icons-material/Close';
+import ButtonNovo from '../../../Buttons/ButtonNovo';
+
 
 interface DivAchadoProps {
   closeModal: () => void;
   id: GridRowId | undefined;
 }
-const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
-  const { handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Achado>({});
+
+export interface FormUpdateAchadoProps {
+  closeModal:() => void;
+  user:User | undefined;
+  id: GridRowId | undefined;
+  dataType:string;
+  }
+const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,user, dataType }) => {
+  const {control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Achado & Beneficio>({});
   const [achado, setAchado] = useState<Achado>()
+  const [topico, setTopico] = useState<TopicoAchado>()
   const [openModal, setOpenModal] = useState(false)
   const {exportAchadoRelations} = useExportToExcel()
-  const {arrayAchado, setArrayAchado} = useContextTable()
-  const [situacao, setSituacao] = useState<string>();
+  const {arrayAchado, setArrayAchado,arrayTopicoAchado} = useContextTable()
+  const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
+  const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
 
   const getAchado = () => {
     // api.get(`achado/${id}`).then(response => {
@@ -33,25 +45,41 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
     const achado = arrayAchado.find(item => item.id === id)
     setAchado(achado)
   }
+  const getTopico = () => {
+    if(achado){
+      const topico = arrayTopicoAchado.find(item => item.id === achado.topico_id)
+      setTopico(topico)
+    }
+  }
 
   useEffect(() => {
     if (id) {
       getAchado()
     }
+    getTopico()
   }, [])
 
   useEffect(() => {
     if(achado){
-      setSituacao(achado.situacao === false ? 'Pendente' : 'Aprovado');
+      setSituacaoAchado(achado.situacaoAchado === false ? 'Pendente' : 'Aprovado');
     }
   },[achado])
 
-  const handleChange = (
+  const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,
-    newSituacao: string,
+    newSituacao: string | null
   ) => {
-    if (newSituacao !== undefined) {
-      setSituacao(newSituacao);
+    if (newSituacao !== null) {
+      setSituacaoAchado(newSituacao);
+    }
+  };
+
+  const handleChangeSituacaoBeneficio = (
+    event: React.MouseEvent<HTMLElement>,
+    newSituacao: string | null
+  ) => {
+    if (newSituacao !== null) {
+      setSituacaoBeneficio(newSituacao);
     }
   };
 
@@ -68,7 +96,7 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
   //   }
   // }
 
-  const onSubmit = (data: Achado) => {
+  const onSubmit = (data: Achado & Beneficio) => {
     // const idAchado = id;
     // api.patch(`/achado/update/${idAchado}`, data).then(response => {
     //   TypeAlert(response.data.message, 'success')
@@ -86,30 +114,68 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
 
     const updateData = {
       ...data,
-      situacao:situacao === "Aprovado"? true : false
+      situacao:situacaoAchado === "Aprovado"? true : false
     }
 
     setArrayAchado(prevArray => prevArray.map(item => item.id === id? {...item, ...updateData}:item))
     closeModal()
   }
 
-
   return (
-    <Container>
+    <>
       {achado && (
-        <Box component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
-          <Typography variant='h5' sx={{ pt: 3, pb: 3, color: '#1e293b', fontWeight: 'bold' }}>Atualizar Registro do Achado</Typography>
-          <Grid item xs={12} sm={4}>
+       <Box sx={{borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
+       <Box sx={{display:'flex', alignItems:'center', width:'70vw', justifyContent:'space-between'}}>
+          <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Achado</Typography>
+          <IconButton onClick={closeModal} sx={{
+          '&:hover': {
+            bgcolor: '#1e293b', color: '#ffffff',
+            }
+          }}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+          <Controller
+          name="topico_id"
+          control={control}
+          
+          defaultValue={topico?.topico || ''}
+          rules={{ required: 'Campo obrigatório' }} // Validação do campo
+          render={({ field }) => (
+            <Autocomplete
+              disablePortal
+              autoFocus
+              id="combo-box-demo"
+              defaultValue={topico}
+              options={arrayTopicoAchado}
+              getOptionLabel={(option: TopicoAchado) => option.topico}
+              onChange={(event, value) => field.onChange(value?.id || '')} // Atualiza o valor do formulário
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Tópico"
+                  variant="filled"
+                  focused={true}
+                  error={!!errors.topico_id} // Mostra erro
+                  helperText={errors.topico_id?.message} // Mostra a mensagem de erro
+                />
+              )}
+            />
+          )}
+        />
+        </Grid>
+        <ButtonNovo dataType={dataType} closeModal={closeModal} user={user}/>
+        <Grid item xs={12} sm={4} sx={{mt:3}}>
           <TextField
             variant='filled'
-            autoComplete="given-name"
             defaultValue={achado.achado}
+            autoComplete="given-name"
             type="text"
             required
             fullWidth
             id="achado"
-            label="Achado"
-            autoFocus
+            label="Proposta de Achado"
             error={errors?.achado?.type === 'required'}
             {...register('achado', {
               required: 'Campo obrigatório',
@@ -120,26 +186,84 @@ const FormUpdateAchados: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
               {errors.achado?.message}
             </Typography>
           )}
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          {user?.cargo ==='Diretor'? (<ToggleButtonGroup
+                color="primary"
+                value={situacaoAchado}
+                exclusive
+                onChange={handleChangeSituacaoAchado}
+                aria-label="Platform"
+                
+              >
+                <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+              </ToggleButtonGroup>):(
+              <input type="hidden"{...register('situacaoAchado')} value="false" />
+            )}
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{mt:3}}>
+          <TextField
+            variant='filled'
+            autoComplete="given-name"
+            defaultValue={achado.analise}
+            type="text"
+            multiline
+            rows={4}
+            fullWidth
+            id="analise"
+            label="Análise"
+            error={errors?.analise?.type === 'required'}
+            {...register('analise', {
+              required: 'Campo obrigatório',
+            })}
+          />
+          <Grid item xs={12} sm={4} sx={{mt:3}}>
+              <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Adicionar um Beneficio</Typography>
+              <TextField
+                  variant='filled'
+                  required
+                  fullWidth
+                  id="beneficio"
+                  label='Proposta de Benefício'
+                  type="text"
+                  error={!!errors?.beneficio}
+                  {...register('beneficio', {
+                      required: 'Campo obrigatório'
+                  })}
+              />
 
-          <ToggleButtonGroup
-             color="primary"
-             value={situacao}
-             exclusive
-             onChange={handleChange}
-             aria-label="Platform"
-           >
-             <ToggleButton value='Pendente' >Pendente</ToggleButton>
-             <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-          </ToggleButtonGroup>
+              {errors?.beneficio && (
+                  <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                      {errors.beneficio.message}
+                  </Typography>
+              )}
           </Grid>
-
-          <RegisterButton text="Registrar" />
-        </Box>
+          <Grid item xs={12} sm={4}>
+          {user?.cargo ==='Diretor'? (<ToggleButtonGroup
+                color="primary"
+                value={situacaoBeneficio}
+                exclusive
+                onChange={handleChangeSituacaoBeneficio}
+                aria-label="Platform"
+              
+              >
+                <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+              </ToggleButtonGroup>):(
+              <input type="hidden"{...register('situacaoBeneficio')} value="false" />
+            )}
+        </Grid>
+          {errors?.analise && (
+            <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+              {errors.analise?.message}
+            </Typography>
+          )}
+        </Grid>
+        <RegisterButton text="Registrar" />
+      </Box>
       )}
-       {/*<HandleModalButton handleModal={handleModal} />
-     <Button onClick={handleExport} variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' }, width: '100%', mt: 1 }}>Exportar</Button>
-      <ModalShowDetails dataType={'achado'} open={openModal} onClose={handleClose} achadoRelation={achadoUp} />*/}
-    </Container>
+    </>
   );
 }
 

@@ -77,7 +77,7 @@ export default function DatabaseTable() {
       editable: false,
       renderCell: (params) => {
         if (header.id === 'beneficios' || header.id === 'achados') {
-          return <ModalBeneficios achadoId={params.row.id}/>;
+          return <ModalBeneficios Id={params.row.id} headerId={header.id}/>;
         }
         if (header.id === 'analise') {
           return <ModalAnalises analise={params.row.analise} />
@@ -289,6 +289,7 @@ export default function DatabaseTable() {
           id={selectedRow}
           dataType={dataType}
           open={openModal}
+          user={user}
           onClose={handleCloseModal}
         />
       )}

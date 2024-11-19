@@ -8,6 +8,7 @@ import FormUpdateAchados from '../../Forms/FormsTable/Update/FormUpdateAchados';
 import FormUpdateTopicoAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
 import FormUpdateBeneficio from '../../Forms/FormsTable/Update/FormUpdateBeneficio';
 import { Padding } from '@mui/icons-material';
+import { User } from '../../../types/types';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -31,10 +32,11 @@ interface ModalUpdateProps {
   dataType: string;
   open: boolean;
   onClose: () => void;
+  user:User | undefined;
 }
 
 
-const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose }) => {
+const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose, user}) => {
 
   const renderForm = () => {
     switch (dataType) {
@@ -45,7 +47,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
         return <FormUpdateBeneficio closeModal={onClose} id={id} />
 
       case 'achado':
-        return <FormUpdateAchados closeModal={onClose} id={id} />
+        return <FormUpdateAchados closeModal={onClose} id={id} user={user} dataType={dataType} />
     }
   }
 
