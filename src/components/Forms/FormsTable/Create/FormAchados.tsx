@@ -26,6 +26,7 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const {arrayTopicoAchado, arrayBeneficio} = useContextTable()
+  
 
   const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,

@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Container, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Autocomplete, AutocompleteGetTagProps , Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
 import { Achado, Beneficio, TopicoAchado, User } from '../../../../types/types';
@@ -11,7 +11,8 @@ import { useEffect, useState } from 'react';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonNovo from '../../../Buttons/ButtonNovo';
-
+import CustomizedHook from '../../../Autocomplete/AutoCompleteComopnent';
+import dataFake from '../../../../service/dataFake';
 
 interface DivAchadoProps {
   closeModal: () => void;
@@ -30,9 +31,11 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,use
   const [topico, setTopico] = useState<TopicoAchado>()
   const [openModal, setOpenModal] = useState(false)
   const {exportAchadoRelations} = useExportToExcel()
-  const {arrayAchado, setArrayAchado,arrayTopicoAchado} = useContextTable()
+  const {arrayAchado, setArrayAchado, arrayTopicoAchado, arrayBeneficio} = useContextTable()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
+  const {getBeneficiosByAchado} = dataFake()
+  const [bda, setbda] = useState<Beneficio[]>([])
 
   const getAchado = () => {
     // api.get(`achado/${id}`).then(response => {
@@ -51,17 +54,20 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,use
       setTopico(topico)
     }
   }
-
+  
   useEffect(() => {
     if (id) {
       getAchado()
     }
     getTopico()
   }, [])
-
+  
+  
   useEffect(() => {
     if(achado){
       setSituacaoAchado(achado.situacaoAchado === false ? 'Pendente' : 'Aprovado');
+      const bda = getBeneficiosByAchado(achado?.id)
+      setbda(bda)
     }
   },[achado])
 
@@ -120,7 +126,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,use
     setArrayAchado(prevArray => prevArray.map(item => item.id === id? {...item, ...updateData}:item))
     closeModal()
   }
-
+ 
   return (
     <>
       {achado && (
@@ -139,15 +145,14 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,use
           <Controller
           name="topico_id"
           control={control}
-          
-          defaultValue={topico?.topico || ''}
+          defaultValue={topico?.topico} 
           rules={{ required: 'Campo obrigatório' }} // Validação do campo
           render={({ field }) => (
             <Autocomplete
               disablePortal
               autoFocus
               id="combo-box-demo"
-              defaultValue={topico}
+              defaultValue={arrayTopicoAchado.find(item => item === topico)}
               options={arrayTopicoAchado}
               getOptionLabel={(option: TopicoAchado) => option.topico}
               onChange={(event, value) => field.onChange(value?.id || '')} // Atualiza o valor do formulário
@@ -221,6 +226,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,use
           <Grid item xs={12} sm={4} sx={{mt:3}}>
               <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Adicionar um Beneficio</Typography>
               <TextField
+                  
                   variant='filled'
                   required
                   fullWidth
@@ -232,13 +238,13 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,use
                       required: 'Campo obrigatório'
                   })}
               />
-
               {errors?.beneficio && (
-                  <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
                       {errors.beneficio.message}
                   </Typography>
               )}
           </Grid>
+          <CustomizedHook beneficios={arrayBeneficio} beneficiosDoAchado ={bda}/>
           <Grid item xs={12} sm={4}>
           {user?.cargo ==='Diretor'? (<ToggleButtonGroup
                 color="primary"
