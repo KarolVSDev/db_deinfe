@@ -223,28 +223,9 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id,use
               required: 'Campo obrigatório',
             })}
           />
-          <Grid item xs={12} sm={4} sx={{mt:3}}>
-              <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Adicionar um Beneficio</Typography>
-              <TextField
-                  
-                  variant='filled'
-                  required
-                  fullWidth
-                  id="beneficio"
-                  label='Proposta de Benefício'
-                  type="text"
-                  error={!!errors?.beneficio}
-                  {...register('beneficio', {
-                      required: 'Campo obrigatório'
-                  })}
-              />
-              {errors?.beneficio && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                      {errors.beneficio.message}
-                  </Typography>
-              )}
-          </Grid>
+          
           <CustomizedHook beneficios={arrayBeneficio} beneficiosDoAchado ={bda}/>
+          
           <Grid item xs={12} sm={4}>
           {user?.cargo ==='Diretor'? (<ToggleButtonGroup
                 color="primary"

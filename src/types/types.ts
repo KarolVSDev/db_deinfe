@@ -60,6 +60,13 @@ export interface AchadoBeneficio {
   beneficio_id:string;
 }
 
+export interface BeneficioComAchado {
+  id: string;
+  beneficio:string;
+  situacaoBeneficio:boolean;
+  achado:Achado;
+}
+
 // export interface Achado2 {
 //   id: string;
 //   titulo: string;

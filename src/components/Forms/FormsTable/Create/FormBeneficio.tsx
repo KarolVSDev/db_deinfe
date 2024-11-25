@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm, UseFormRegister } from 'react-hook-form';
-import { Achado, Beneficio, User } from '../../../../types/types';
+import { Achado, Beneficio, BeneficioComAchado, User } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -18,7 +18,7 @@ export interface FormBeneficioProps {
 }
 
 const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModal }) => {
-    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio & Achado>({});
+    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<BeneficioComAchado>({});
     const { setArrayBeneficio, arrayAchado } = useContextTable();
     //const {getAllNatAchado} = useFetchListData()
     const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio} = dataFake()
@@ -33,7 +33,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         }
     };
 
-    const onSubmit = (data: Beneficio & Achado) => {
+    const onSubmit = (data: BeneficioComAchado) => {
         // api.post('/area-achado', data).then(response => {
         //     const newAreaAchado = response.data.areaAchado;
         //     TypeAlert(response.data.message, 'success');
@@ -44,26 +44,27 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         //     TypeAlert(error.response.data.message, 'warning');
         //     setValue('natureza', '');
         // });
+        const {achado, beneficio} = data; 
 
-        if (verifyBeneficio(data.beneficio)) {
+        if (verifyBeneficio(beneficio)) {
             return
         }
 
         if (user?.cargo !== 'Diretor') {
             data.situacaoBeneficio = false
         }
-        const dataWithSituacao = {
-            ...data,
-            id: '',
-            situacaoBeneficio: situacao === 'Aprovado' ? true : false
+
+        const BeneficioWithSituacao = {
+            beneficio,
+            situacaoBeneficio: situacao === 'Aprovado' ? true : false,
         }
-        console.log(dataWithSituacao)
-        const retornoBeneficio = saveBeneficio(dataWithSituacao)
+
+        //salva o beneficio
+        const retornoBeneficio = saveBeneficio(BeneficioWithSituacao)
 
         //bloco que manipula e salva o AchadoBeneficio
-
         if (retornoBeneficio) {
-            const objAchadoBeneficio = { achado_id: data.id, beneficio_id: retornoBeneficio.id }
+            const objAchadoBeneficio = { achado_id: achado.id, beneficio_id: retornoBeneficio.id }
             saveAchadoBeneficio(objAchadoBeneficio)
         }
 
@@ -87,7 +88,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
             </Box>
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Controller
-                    name="id"
+                    name="achado.id"
                     control={control}
                     defaultValue=""
                     rules={{ required: 'Campo obrigatório' }}
@@ -103,8 +104,8 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                                     {...params}
                                     label="Achado"
                                     variant="filled"
-                                    error={!!errors.id} // Mostra erro
-                                    helperText={errors.id?.message} // Mostra a mensagem de erro
+                                    error={!!errors.achado?.id} // Mostra erro
+                                    helperText={errors.achado?.id?.message} // Mostra a mensagem de erro
                                 />
                             )}
                         />

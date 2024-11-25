@@ -174,7 +174,7 @@ const CustomizedHook: React.FC<AutocompleteProps> = ({ beneficios, beneficiosDoA
   return (
     <Root>
       <div {...getRootProps()}>
-        <Label {...getInputLabelProps()}>Atualizar Benefícios</Label>
+        <Label {...getInputLabelProps()} sx={{fontSize:'20px',mt:3}}>Atualizar Benefícios</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: Beneficio, index: number) => {
             const { key, ...tagProps } = getTagProps({ index });
