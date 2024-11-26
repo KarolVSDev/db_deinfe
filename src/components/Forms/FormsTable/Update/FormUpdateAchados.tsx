@@ -11,8 +11,8 @@ import { useEffect, useState } from 'react';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
 import CloseIcon from '@mui/icons-material/Close';
 import ButtonNovo from '../../../Buttons/ButtonNovo';
-import CustomizedHook from '../../../Autocomplete/AutoCompleteComopnent';
 import dataFake from '../../../../service/dataFake';
+import MultiploAutoComplete from '../../../Autocomplete/AutoCompleteComopnent';
 
 interface DivAchadoProps {
   closeModal: () => void;
@@ -143,7 +143,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               <CloseIcon />
             </IconButton>
           </Box>
-          {topico ? ( <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+          {topico ? (<Grid item xs={12} sm={4} sx={{ mb: 2 }}>
             <Autocomplete
               disablePortal
               id="combo-box-demo"
@@ -159,10 +159,10 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                 {errors.topico_id.message}
               </Typography>
             )}
-          </Grid>):(<></>)}
+          </Grid>) : (<></>)}
 
           <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
-          
+
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
             <TextField
               variant='filled'
@@ -216,7 +216,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               })}
             />
 
-            <CustomizedHook beneficios={arrayBeneficio} beneficiosDoAchado={bda} />
+            <MultiploAutoComplete  />
 
           </Grid>
           <RegisterButton text="Registrar" />
