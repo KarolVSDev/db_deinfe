@@ -127,7 +127,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     setArrayAchado(prevArray => prevArray.map(item => item.id === id ? { ...item, ...updateData } : item))
     closeModal()
   }
-
+  console.log(topico)
+  console.log
   return (
     <>
       {achado && (
@@ -142,34 +143,26 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               <CloseIcon />
             </IconButton>
           </Box>
-          <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-            <Controller
-              name="topico_id" // Nome do campo no formulário
-              control={control} // Controle do React Hook Form
-              defaultValue={topico?.topico || ''} // Valor inicial do tópico
-              rules={{ required: 'Campo obrigatório' }} // Validação
-              render={({ field }) => (
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={arrayTopicoAchado} // Lista de tópicos
-                  getOptionLabel={(option: TopicoAchado) => option.topico} // Definir a label a ser exibida
-                  value={arrayTopicoAchado.find((item) => item.id === field.value) || null} // Define o valor do Autocomplete
-                  onChange={(event, value) => field.onChange(value?.id || '')} // Atualiza o campo 'topico_id' com o id selecionado
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Tópico"
-                      variant="filled"
-                      error={!!errors.topico_id} // Exibe erro, se houver
-                      helperText={errors.topico_id?.message} // Mensagem de erro
-                    />
-                  )}
-                />
-              )}
-            />                                                                                              
-          </Grid>
+          {topico ? ( <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={arrayTopicoAchado}
+              clearOnBlur
+              defaultValue={arrayTopicoAchado.find(item => item.id === topico?.id)}
+              getOptionLabel={(option: TopicoAchado) => option.topico}
+              onChange={(event, value) => setValue('topico_id', value?.id ?? '')}
+              renderInput={(params) => <TextField variant='filled' {...params} label="Topico" />}
+            />
+            {errors.topico_id && (
+              <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                {errors.topico_id.message}
+              </Typography>
+            )}
+          </Grid>):(<></>)}
+
           <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
+          
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
             <TextField
               variant='filled'

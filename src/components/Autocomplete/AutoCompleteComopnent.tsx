@@ -166,11 +166,12 @@ const CustomizedHook: React.FC<AutocompleteProps> = ({ beneficios, beneficiosDoA
     setAnchorEl,
   } = useAutocomplete({
     id: 'customized-hook-demo',
-    defaultValue: beneficios.filter(item => beneficiosDoAchado.map(item2 => item2.id === item.id)),
+    defaultValue: beneficios.filter(item => beneficiosDoAchado.some(item2 => item.id === item2.id)) ,
     multiple: true,
     options: beneficios,
     getOptionLabel: (option) => option.beneficio,
   });
+  
   return (
     <Root>
       <div {...getRootProps()}>
@@ -186,9 +187,9 @@ const CustomizedHook: React.FC<AutocompleteProps> = ({ beneficios, beneficiosDoA
       {groupedOptions.length > 0 ? (
         <Listbox {...getListboxProps()}>
           {(groupedOptions as typeof beneficios).map((option, index) => {
-            const { ...optionProps } = getOptionProps({ option, index });
+            const {...optionProps } = getOptionProps({ option, index });
             return (
-              <li  {...optionProps}>
+              <li {...optionProps}>
                 <span>{option.beneficio}</span>
                 <CheckIcon fontSize="small" />
               </li>
