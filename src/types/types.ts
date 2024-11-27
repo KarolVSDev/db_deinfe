@@ -50,7 +50,7 @@ export interface Achado {
 
 export interface Beneficio {
   id: string;
-  label:string;
+  beneficio:string;
   situacaoBeneficio:boolean;
 }
 

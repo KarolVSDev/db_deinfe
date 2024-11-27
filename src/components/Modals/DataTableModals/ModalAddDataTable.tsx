@@ -9,6 +9,7 @@ import useFetchListData from '../../../hooks/useFetchListData';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchados';
 import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
+import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
 
 
@@ -65,7 +66,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   return (
     <div>
       <Button onClick={handleOpen} disabled={isDisabled} variant='contained'  >
-        Cadastrar novo {dataType}
+       <SaveIcon sx={{mr:1}}/> Cadastrar novo {dataType}
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"

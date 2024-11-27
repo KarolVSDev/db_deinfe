@@ -117,7 +117,7 @@ const dataFake = () => {
         return false
        
     }
-
+    //mocks de AchadoBeneficio
     const getAchadoByBeneficio = (Id:string):Achado[] => {
         const arrayFiltrado = arrayAchadoBeneficio.filter(item => item.beneficio_id === Id)
         const achados = arrayAchado.filter(achado => 
@@ -125,6 +125,14 @@ const dataFake = () => {
         )
         console.log(achados)
         return achados
+    }
+
+    const deleteByBeneficio = (beneficio_id:GridRowId) => {
+        setArrayAchadoBeneficio(prevArray => prevArray.filter(achadoBeneficio => achadoBeneficio.beneficio_id !== beneficio_id))
+        localStorage.set
+    }
+    const deleteByAchado = (achado_id:GridRowId) => {
+        setArrayAchadoBeneficio(prevArray => prevArray.filter(achadoBeneficio => achadoBeneficio.achado_id !== achado_id))
     }
     // const BeneficioFormatado = (beneficios:Beneficio[], achados:Achado[]) => {
     //     return beneficios.map((beneficio) => {
@@ -153,7 +161,9 @@ const dataFake = () => {
   return {saveTopico, saveAchado, 
     saveBeneficio, AchadoFormatado,
     getTopico, verifyAchado, 
-    verifyBeneficio, getAchado, getAchadoByString,saveAchadoBeneficio, getBeneficiosByAchado, getAchadoByBeneficio
+    verifyBeneficio, getAchado, 
+    getAchadoByString,saveAchadoBeneficio, getBeneficiosByAchado, 
+    getAchadoByBeneficio, deleteByBeneficio, deleteByAchado
     //BeneficioFormatado, 
     }
   

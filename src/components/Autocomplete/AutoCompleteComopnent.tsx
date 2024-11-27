@@ -11,30 +11,40 @@ export interface MulttiploAutoCompleteProps {
 }
 
 
-const MultiploAutoComplete: React.FC<MulttiploAutoCompleteProps> = ({beneficios,beneficiosDoAchado}) => {
-  console.log(beneficios)
-  console.log(beneficiosDoAchado)
- 
+const MultiploAutoComplete: React.FC<MulttiploAutoCompleteProps> = ({ beneficios, beneficiosDoAchado }) => {
+  
+  const indicesCorrespondentes = beneficiosDoAchado.map(beneficioDoAchado => 
+    beneficios.findIndex(beneficio => beneficio.id === beneficioDoAchado.id)
+  );
 
+
+  const beneficiosSelecionados = indicesCorrespondentes
+    .map(index => beneficios[index])
+    .filter(beneficio => beneficio !== undefined);
+  console.log(beneficiosSelecionados)
   return (
 
     <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-      <Autocomplete
-        multiple
-        id="tags-outlined"
-        options={teste1}
-        getOptionLabel={(option) => option.label}
-        defaultValue={teste1.filter(item => teste12.some(item2 => item.id === item2.id))}
-        filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Relação de Benefícios"
-            placeholder="selecionados"
-            variant='filled'
-          />
-        )}
-      />
+      {beneficiosDoAchado && (
+        <Autocomplete
+          multiple
+          id="tags-outlined"
+          options={beneficios}
+          defaultValue={beneficiosSelecionados}
+          getOptionLabel={(option) => option.beneficio}
+          filterSelectedOptions
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              defaultValue={beneficiosSelecionados.map(item => item.beneficio)}
+              label="Relação de Benefícios"
+              placeholder="selecionados"
+              variant='filled'
+            />
+          )}
+        />
+      )}
+
 
     </Grid>
   );

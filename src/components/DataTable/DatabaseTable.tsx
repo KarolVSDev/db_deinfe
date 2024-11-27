@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams, selectedGridRowsSelector } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useState } from 'react';
 import { topicoAchadoHeader, achadoHeader, beneficioHeader } from '../../service/columns';
@@ -25,22 +25,22 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, arrayAreaAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado, setArrayAreaAchado,
-    setArrayAchado, setArrayBeneficio } = useContextTable();
-  const [selectedRow, setSelectedRow] = useState<GridRowId | null>(null)
+  const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado,
+    setArrayAchado, setArrayBeneficio, setArrayAchadoBeneficio, arrayAchadoBeneficio } = useContextTable();
+  const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { AchadoFormatado, 
+  const { AchadoFormatado, deleteByBeneficio, deleteByAchado
     //BeneficioFormatado
-   } = dataFake()
+  } = dataFake()
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
-    setSelectedRow(null);
+    // setSelectedRow(null);
 
     switch (value) {
       case 'topico':
@@ -76,8 +76,20 @@ export default function DatabaseTable() {
       width: header.minWidth,
       editable: false,
       renderCell: (params) => {
+        if (header.id === "acoes") {
+          return (
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+              <IconButton color="primary" onClick={() => handleUpdate(selectedRow)}>
+                <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+              </IconButton>
+              <IconButton color="error" onClick={() => handleDelete(selectedRow)}>
+                <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+              </IconButton>
+            </Box>
+          );
+        }
         if (header.id === 'beneficios' || header.id === 'achados') {
-          return <ModalBeneficios Id={params.row.id} headerId={header.id}/>;
+          return <ModalBeneficios Id={params.row.id} headerId={header.id} />;
         }
         if (header.id === 'analise') {
           return <ModalAnalises analise={params.row.analise} />
@@ -148,7 +160,9 @@ export default function DatabaseTable() {
   };
 
   //função de delete
-  const handleDelete = async (selectedRow: GridRowId, dataType: string) => {
+  const handleDelete = async (selectedRow: GridRowId) => {
+    setArrayTopicoAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+    TypeAlert('Tópico removido', 'success')
     try {
       //const response = await api.delete(`/${dataType}/${selectedRow}`)
       //console.log(response)
@@ -160,16 +174,18 @@ export default function DatabaseTable() {
           break;
         case 'beneficio':
           setArrayBeneficio(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          deleteByBeneficio(selectedRow)
           TypeAlert('Benefício removido', 'success')
           break;
         case 'achado':
           setArrayAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+          deleteByAchado(selectedRow)
           TypeAlert('Achado removido', 'success')
           break;
         default:
           break;
       }
-      setSelectedRow(null)
+      // setSelectedRow(null)
 
     } catch (error: any) {
       console.log(error)
@@ -222,20 +238,9 @@ export default function DatabaseTable() {
               <FileDownloadIcon />
             </Button>
           </Box>
-          {selectedRow !== null && (
-            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-              {user?.cargo === 'Diretor' && (
-                <>
-                  <IconButton color='primary' onClick={() => handleUpdate(selectedRow)}>
-                    <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-                  </IconButton>
-                  <IconButton color='error' onClick={() => handleDelete(selectedRow, dataType)}>
-                    <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-                  </IconButton>
-                </>
-              )}
-            </Box>
-          )}
+          {/* {selectedRow !== null && (
+            
+          )} */}
         </Box>
         <Divider />
         <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>

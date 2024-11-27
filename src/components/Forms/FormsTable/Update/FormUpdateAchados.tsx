@@ -127,8 +127,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     setArrayAchado(prevArray => prevArray.map(item => item.id === id ? { ...item, ...updateData } : item))
     closeModal()
   }
-  console.log(topico)
-  console.log
+  
   return (
     <>
       {achado && (
@@ -216,7 +215,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               })}
             />
 
-            <MultiploAutoComplete  />
+            <MultiploAutoComplete beneficios={arrayBeneficio} beneficiosDoAchado={bda} />
 
           </Grid>
           <RegisterButton text="Registrar" />
