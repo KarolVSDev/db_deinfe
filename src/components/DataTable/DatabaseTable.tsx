@@ -2,12 +2,11 @@ import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams, selectedGridRowsSelector } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { topicoAchadoHeader, achadoHeader, beneficioHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ModalUpdatePF from '../Modals/DataTableModals/ModalUpdateForms';
 import { api } from '../../service/api';
 import { TypeAlert } from '../../hooks/TypeAlert';
@@ -19,6 +18,7 @@ import useFetchUsers from '../../hooks/useFetchUsers';
 import dataFake from '../../service/dataFake';
 import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
+import DeleteVerification from '../Dialog/VerificationStep';
 
 export default function DatabaseTable() {
 
@@ -68,8 +68,8 @@ export default function DatabaseTable() {
     }
   };
 
-  const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
 
+  const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
     return headers.map(header => ({
       field: header.id,
       headerName: header.label,
@@ -82,9 +82,7 @@ export default function DatabaseTable() {
               <IconButton color="primary" onClick={() => handleUpdate(selectedRow)}>
                 <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
               </IconButton>
-              <IconButton color="error" onClick={() => handleDelete(selectedRow)}>
-                <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-              </IconButton>
+              <DeleteVerification selectedRow={selectedRow}/>
             </Box>
           );
         }
@@ -159,45 +157,58 @@ export default function DatabaseTable() {
     setOpenModal(false);
   };
 
+  const dataTypeRef = useRef(dataType);
+
+  useEffect(() => {
+    dataTypeRef.current = dataType;
+  }, [dataType]);
+
   //função de delete
   const handleDelete = async (selectedRow: GridRowId) => {
-    setArrayTopicoAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-    TypeAlert('Tópico removido', 'success')
-    try {
-      //const response = await api.delete(`/${dataType}/${selectedRow}`)
-      //console.log(response)
-      //TypeAlert(response.data.message, 'success')
-      switch (dataType) {
-        case 'topico':
-          setArrayTopicoAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          TypeAlert('Tópico removido', 'success')
-          break;
-        case 'beneficio':
-          setArrayBeneficio(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          deleteByBeneficio(selectedRow)
-          TypeAlert('Benefício removido', 'success')
-          break;
-        case 'achado':
-          setArrayAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-          deleteByAchado(selectedRow)
-          TypeAlert('Achado removido', 'success')
-          break;
-        default:
-          break;
-      }
-      // setSelectedRow(null)
+    console.log(dataTypeRef.current)
+    
+    // try {
+    //   //const response = await api.delete(`/${dataType}/${selectedRow}`)
+    //   //console.log(response)
+    //   //TypeAlert(response.data.message, 'success')
+    //   switch (dataTypeRef.current) {
+    //     case 'topico':
+    //       console.log('Before delete:', arrayTopicoAchado);
+    //       setArrayTopicoAchado(prevArray => {
+    //         const updatedArray = prevArray.filter(item => item.id !== selectedRow);
+    //         console.log('After delete:', updatedArray);
+    //         return updatedArray;
+    //       });
+    //       TypeAlert('Tópico removido', 'success');
+    //       break;
+    //     case 'beneficio':
+    //       setArrayBeneficio(prevArray => prevArray.filter(item => item.id !== selectedRow))
+    //       deleteByBeneficio(selectedRow)
+    //       TypeAlert('Benefício removido', 'success')
+    //       break;
+    //     case 'achado':
+    //       setArrayAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
+    //       deleteByAchado(selectedRow)
+    //       TypeAlert('Achado removido', 'success')
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    //   // setSelectedRow(null)
 
-    } catch (error: any) {
-      console.log(error)
-      TypeAlert('Erro ao tentar excluir', 'error')
-    }
+    // } catch (error: any) {
+    //   console.log(error)
+    //   TypeAlert('Erro ao tentar excluir', 'error')
+    // }
   }
+  
 
   //esse bloco atualiza a visualização dos dados
   useEffect(() => {
     switch (dataType) {
       case 'topico':
         setRows(createRows(arrayTopicoAchado))
+      
         break;
       case 'beneficio':
         setRows(createRows(arrayBeneficio))
@@ -209,7 +220,8 @@ export default function DatabaseTable() {
       default:
         break;
     }
-  }, [arrayTopicoAchado, arrayBeneficio, arrayAchado])
+  }, [arrayTopicoAchado, arrayBeneficio, arrayAchado, dataType])
+
 
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
