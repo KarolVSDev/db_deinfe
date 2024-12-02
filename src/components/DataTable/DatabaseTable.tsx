@@ -19,6 +19,7 @@ import dataFake from '../../service/dataFake';
 import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function DatabaseTable() {
 
@@ -29,6 +30,7 @@ export default function DatabaseTable() {
     setArrayAchado, setArrayBeneficio, setArrayAchadoBeneficio, arrayAchadoBeneficio } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
+  const [openModalDelete, setOpenModalDelete] = useState(false)
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
@@ -69,6 +71,7 @@ export default function DatabaseTable() {
   };
 
 
+
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
     return headers.map(header => ({
       field: header.id,
@@ -82,7 +85,9 @@ export default function DatabaseTable() {
               <IconButton color="primary" onClick={() => handleUpdate(selectedRow)}>
                 <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
               </IconButton>
-              <DeleteVerification selectedRow={selectedRow}/>
+              <IconButton color="error" onClick={() => handleDelete(selectedRow)}>
+                <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+              </IconButton>
             </Box>
           );
         }
@@ -156,17 +161,23 @@ export default function DatabaseTable() {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+  const handleCloseModalDelete = () => {
+    setOpenModalDelete(false);
+  };
 
   const dataTypeRef = useRef(dataType);
 
   useEffect(() => {
     dataTypeRef.current = dataType;
-  }, [dataType]);
+  }, [dataType, arrayTopicoAchado, selectedRow]);
+
+
 
   //função de delete
   const handleDelete = async (selectedRow: GridRowId) => {
-    console.log(dataTypeRef.current)
-    
+    setSelectedRow(selectedRow)
+    setOpenModalDelete(true)
+
     // try {
     //   //const response = await api.delete(`/${dataType}/${selectedRow}`)
     //   //console.log(response)
@@ -201,14 +212,14 @@ export default function DatabaseTable() {
     //   TypeAlert('Erro ao tentar excluir', 'error')
     // }
   }
-  
+
 
   //esse bloco atualiza a visualização dos dados
   useEffect(() => {
     switch (dataType) {
       case 'topico':
         setRows(createRows(arrayTopicoAchado))
-      
+
         break;
       case 'beneficio':
         setRows(createRows(arrayBeneficio))
@@ -308,6 +319,14 @@ export default function DatabaseTable() {
           open={openModal}
           user={user}
           onClose={handleCloseModal}
+        />
+      )}
+      {selectedRow !== null && (
+        <DeleteVerification 
+        selectedRow={selectedRow} 
+        arrayTopicos={arrayTopicoAchado}
+        onClose={handleCloseModalDelete}
+        open={openModalDelete}
         />
       )}
     </Grid>

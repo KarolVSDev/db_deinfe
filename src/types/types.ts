@@ -67,6 +67,8 @@ export interface BeneficioComAchado {
   achado:Achado;
 }
 
+
+
 // export interface Achado2 {
 //   id: string;
 //   titulo: string;

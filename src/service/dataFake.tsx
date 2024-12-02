@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker"
 import { Achado, Beneficio, TopicoAchado } from "../types/types"
 import { useContextTable } from "../context/TableContext";
-import { TypeAlert } from "../hooks/TypeAlert";
+import { TypeAlert, TypeInfo } from "../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
 
 
@@ -29,6 +29,24 @@ const dataFake = () => {
             return true
         }
         return false
+    }
+
+    const getArrayTopicos =  () => {
+        return arrayTopicoAchado
+    }
+
+    const deleteTopico = (idTopico:GridRowId) => {
+        console.log(idTopico)
+        const achado = arrayAchado.find(achado => achado.topico_id === idTopico)
+        if(achado){
+            TypeInfo(`Esse Topico está relacionado à um Achado e não pode ser excluído.\n Você pode alterar os topicos dos achados relacionados ou excluí-los.`, "info")
+            return
+        }else{
+            const updatedArrayTopicoAchado = arrayTopicoAchado.filter(topico => topico.id !== idTopico)
+            console.log(updatedArrayTopicoAchado)
+            setArrayTopicoAchado(updatedArrayTopicoAchado)
+            TypeAlert("Topico excluído",'success')
+        }
     }
 
     //mocks de achado
@@ -163,7 +181,7 @@ const dataFake = () => {
     getTopico, verifyAchado, 
     verifyBeneficio, getAchado, 
     getAchadoByString,saveAchadoBeneficio, getBeneficiosByAchado, 
-    getAchadoByBeneficio, deleteByBeneficio, deleteByAchado
+    getAchadoByBeneficio, deleteByBeneficio, deleteByAchado, getArrayTopicos, deleteTopico
     //BeneficioFormatado, 
     }
   

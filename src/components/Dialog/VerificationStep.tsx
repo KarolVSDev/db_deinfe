@@ -8,29 +8,36 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridRowId } from '@mui/x-data-grid';
+import { TopicoAchado } from '../../types/types';
+import dataFake from '../../service/dataFake';
+
 
 
 export interface VerificationProps {
-    selectedRow:GridRowId;
+    selectedRow: GridRowId;
+    arrayTopicos: TopicoAchado[];
+    onClose: () => void;
+    open: boolean;
 }
 
-const DeleteVerification:React.FC<VerificationProps> = ({selectedRow}) => {
-    const [open, setOpen] = React.useState(false);
+const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, arrayTopicos, onClose, open }) => {
+    
+    console.log(selectedRow)
+    console.log(arrayTopicos)
+    const {deleteTopico} = dataFake()
 
-    const handleDelete = (selectedRow:GridRowId) => {
-        console.log(selectedRow)
-        setOpen(true);
+    const handleDelete = () => {
+        deleteTopico(selectedRow)
+        onClose()
     };
-
     const handleClose = () => {
-        setOpen(false);
+        onClose()
     };
+
+
 
     return (
         <React.Fragment>
-            <IconButton color="error" onClick={() => handleDelete(selectedRow)}>
-                <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-            </IconButton>
             <Dialog
                 open={open}
                 onClose={handleClose}
@@ -38,18 +45,17 @@ const DeleteVerification:React.FC<VerificationProps> = ({selectedRow}) => {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {"Use Google's location service?"}
+                    {"Você tem certeza dessa ação?"}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Let Google help apps determine location. This means sending anonymous
-                        location data to Google, even when no apps are running.
+                        Essa ação vai excluir o tópico da tabela.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Disagree</Button>
-                    <Button onClick={handleClose} autoFocus>
-                        Agree
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button color="error"onClick={handleDelete} autoFocus>
+                        Excluir
                     </Button>
                 </DialogActions>
             </Dialog>

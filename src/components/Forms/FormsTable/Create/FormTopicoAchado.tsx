@@ -8,6 +8,7 @@ import { useContextTable } from '../../../../context/TableContext';
 import dataFake from '../../../../service/dataFake'
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import { get } from 'https';
 
 export interface FormTopicoAchadoProps {
   closeModal: () => void;
@@ -52,6 +53,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
     TypeAlert('Tópico adicionado', 'success');
     reset()
     closeModal()
+    	
 
   };
 

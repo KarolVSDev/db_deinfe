@@ -80,9 +80,9 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
 
 
   return (
-      <Box sx={{borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} 
+      <Box sx={{borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}  
         component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+        <Box sx={{display:'flex', alignItems:'center', width:'70vw', justifyContent:'space-between'}}>
           <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
             Atualizar Registro de Tópico
           </Typography>
