@@ -112,7 +112,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                     )}
                 />
             </Grid>
-            <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
+
             <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
                 <TextField
                     variant='filled'

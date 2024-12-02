@@ -15,25 +15,25 @@ import dataFake from '../../service/dataFake';
 
 export interface VerificationProps {
     selectedRow: GridRowId;
-    arrayTopicos: TopicoAchado[];
     onClose: () => void;
     open: boolean;
+    dataType: string;
 }
 
-const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, arrayTopicos, onClose, open }) => {
-    
-    console.log(selectedRow)
-    console.log(arrayTopicos)
-    const {deleteTopico} = dataFake()
+const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
+    const { deleteTopico, deleteAchado } = dataFake()
 
     const handleDelete = () => {
-        deleteTopico(selectedRow)
+        if (dataType === 'topico') {
+            deleteTopico(selectedRow)
+        }else if (dataType === 'achado'){
+            deleteAchado(selectedRow)
+        }
         onClose()
     };
     const handleClose = () => {
         onClose()
     };
-
 
 
     return (
@@ -49,12 +49,12 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, arrayTop
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Essa ação vai excluir o tópico da tabela.
+                        Essa ação vai excluir o registro da tabela.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
-                    <Button color="error"onClick={handleDelete} autoFocus>
+                    <Button color="error" onClick={handleDelete} autoFocus>
                         Excluir
                     </Button>
                 </DialogActions>

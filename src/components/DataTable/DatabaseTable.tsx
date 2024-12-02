@@ -324,7 +324,7 @@ export default function DatabaseTable() {
       {selectedRow !== null && (
         <DeleteVerification 
         selectedRow={selectedRow} 
-        arrayTopicos={arrayTopicoAchado}
+        dataType={dataType}
         onClose={handleCloseModalDelete}
         open={openModalDelete}
         />

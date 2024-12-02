@@ -12,21 +12,22 @@ import dataFake from '../../../../service/dataFake';
 import { useState } from 'react';
 import ButtonNovo from '../../../Buttons/ButtonNovo';
 import CloseIcon from '@mui/icons-material/Close';
+import MultiploAutoComplete from '../../../Autocomplete/AutoCompleteComopnent';
 
 export interface FormAchadoProps {
-closeModal:() => void;
-user:User | undefined;
-dataType:string;
+  closeModal: () => void;
+  user: User | undefined;
+  dataType: string;
 }
-const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
+const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) => {
 
   const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<Achado & Beneficio>({});
   //const { setArrayAchado } = useContextTable()
-  const { saveAchado,saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
+  const { saveAchado, saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const {arrayTopicoAchado, arrayBeneficio} = useContextTable()
-  
+  const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
+
 
   const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,
@@ -57,29 +58,30 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
     // })
 
     //bloco que manipula e salva o achado
-    const {beneficio, ...dataSemBeneficio} = data
+    console.log(data)
+    const { beneficio, ...dataSemBeneficio } = data
 
-    if(verifyAchado(data.achado)){
+    if (verifyAchado(data.achado)) {
       return
     }
-    if(verifyBeneficio(data.beneficio)){
+    if (verifyBeneficio(data.beneficio)) {
       return
     }
 
-    if(user?.cargo !== 'Diretor'){
+    if (user?.cargo !== 'Diretor') {
       data.situacaoAchado = false
       data.situacaoBeneficio = false
     }
-    
+
     const dataWithSituacao = {
       ...dataSemBeneficio,
-      situacaoAchado: situacaoAchado === 'Aprovado'? true : false,
+      situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
     };
 
-    const retornoAchado = saveAchado(dataWithSituacao) 
+    const retornoAchado = saveAchado(dataWithSituacao)
 
     //bloco que manipula e salva o beneficio
-    const objBeneficio = {beneficio:data.beneficio, situacaoBeneficio:data.situacaoBeneficio}
+    const objBeneficio = { beneficio: data.beneficio, situacaoBeneficio: data.situacaoBeneficio }
 
     const objBeneficioWithSituacao = {
       ...objBeneficio,
@@ -89,156 +91,150 @@ const FormAchado:React.FC<FormAchadoProps> = ({closeModal, user, dataType}) => {
     const retornoBeneficio = saveBeneficio(objBeneficioWithSituacao)
 
     //bloco que manipula e salva o AchadoBeneficio
-   
-    if(retornoAchado && retornoBeneficio){
-      const objAchadoBeneficio = {achado_id:retornoAchado.id, beneficio_id:retornoBeneficio.id}
+
+    if (retornoAchado && retornoBeneficio) {
+      const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: retornoBeneficio.id }
       saveAchadoBeneficio(objAchadoBeneficio)
     }
-   
+
     TypeAlert('Achado adicionado', 'success');
     reset()
     closeModal()
   }
 
   return (
-        <Box sx={{borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
-         <Box sx={{display:'flex', alignItems:'center', width:'70vw', justifyContent:'space-between'}}>
-            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Achado</Typography>
-            <IconButton onClick={closeModal} sx={{
-            '&:hover': {
-              bgcolor: '#1e293b', color: '#ffffff',
-              }
-            }}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-            <Controller
-            name="topico_id"
-            control={control}
-            
-            defaultValue="" // valor inicial para evitar undefined
-            rules={{ required: 'Campo obrigatório' }} // Validação do campo
-            render={({ field }) => (
-              <Autocomplete
-                disablePortal
-                autoFocus={true}
-                id="combo-box-demo"
-                options={arrayTopicoAchado}
-                getOptionLabel={(option: TopicoAchado) => option.topico}
-                onChange={(event, value) => field.onChange(value?.id || '')} // Atualiza o valor do formulário
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Tópico"
-                    variant="filled"
-                    focused={true}
-                    error={!!errors.topico_id} // Mostra erro
-                    helperText={errors.topico_id?.message} // Mostra a mensagem de erro
-                  />
-                )}
-              />
-            )}
-          />
-          </Grid>
-          <ButtonNovo dataType={dataType} closeModal={closeModal} user={user}/>
-          <Grid item xs={12} sm={4} sx={{mt:3}}>
-            <TextField
-              variant='filled'
-              autoComplete="given-name"
-              type="text"
-              required
-              fullWidth
-              id="achado"
-              label="Proposta de Achado"
-              autoFocus
-              error={errors?.achado?.type === 'required'}
-              {...register('achado', {
-                required: 'Campo obrigatório',
-              })}
-            />
-            {errors?.achado && (
-              <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                {errors.achado?.message}
-              </Typography>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            {user?.cargo ==='Diretor'? (<ToggleButtonGroup
-                  color="primary"
-                  value={situacaoAchado}
-                  exclusive
-                  onChange={handleChangeSituacaoAchado}
-                  aria-label="Platform"
-                  
-                >
-                  <ToggleButton value='Pendente' >Pendente</ToggleButton>
-                  <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-                </ToggleButtonGroup>):(
-                <input type="hidden"{...register('situacaoAchado')} value="false" />
-              )}
-          </Grid>
-          <Grid item xs={12} sm={4} sx={{mt:3}}>
-            <TextField
-              variant='filled'
-              autoComplete="given-name"
-              type="text"
-              multiline
-              rows={4}
-              fullWidth
-              id="analise"
-              label="Análise"
-              autoFocus
-              error={errors?.analise?.type === 'required'}
-              {...register('analise', {
-                required: 'Campo obrigatório',
-              })}
-            />
-            <Grid item xs={12} sm={4} sx={{mt:3}}>
-                <Typography variant='h6' sx={{mb:2,  color:'rgb(17 24 39)'}}>Adicionar um Beneficio</Typography>
-                <TextField
-                    variant='filled'
-                    required
-                    autoFocus
-                    fullWidth
-                    id="beneficio"
-                    label='Proposta de Benefício'
-                    type="text"
-                    error={!!errors?.beneficio}
-                    {...register('beneficio', {
-                        required: 'Campo obrigatório'
-                    })}
-                />
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
+        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Achado</Typography>
+        <IconButton onClick={closeModal} sx={{
+          '&:hover': {
+            bgcolor: '#1e293b', color: '#ffffff',
+          }
+        }}>
+          <CloseIcon />
+        </IconButton>
+      </Box>
+      <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+        <Controller
+          name="topico_id"
+          control={control}
 
-                {errors?.beneficio && (
-                    <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                        {errors.beneficio.message}
-                    </Typography>
-                )}
-            </Grid>
-            <Grid item xs={12} sm={4}>
-            {user?.cargo ==='Diretor'? (<ToggleButtonGroup
-                  color="primary"
-                  value={situacaoBeneficio}
-                  exclusive
-                  onChange={handleChangeSituacaoBeneficio}
-                  aria-label="Platform"
-                
-                >
-                  <ToggleButton value='Pendente' >Pendente</ToggleButton>
-                  <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-                </ToggleButtonGroup>):(
-                <input type="hidden"{...register('situacaoBeneficio')} value="false" />
+          defaultValue="" // valor inicial para evitar undefined
+          rules={{ required: 'Campo obrigatório' }} // Validação do campo
+          render={({ field }) => (
+            <Autocomplete
+              disablePortal
+              autoFocus={true}
+              id="combo-box-demo"
+              options={arrayTopicoAchado}
+              getOptionLabel={(option: TopicoAchado) => option.topico}
+              onChange={(event, value) => field.onChange(value?.id || '')} // Atualiza o valor do formulário
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Tópico"
+                  variant="filled"
+                  focused={true}
+                  error={!!errors.topico_id} // Mostra erro
+                  helperText={errors.topico_id?.message} // Mostra a mensagem de erro
+                />
               )}
-          </Grid>
-            {errors?.analise && (
-              <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-                {errors.analise?.message}
-              </Typography>
-            )}
-          </Grid>
-          <RegisterButton text="Registrar" />
-        </Box>
+            />
+          )}
+        />
+      </Grid>
+      <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
+      <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+        <TextField
+          variant='filled'
+          autoComplete="given-name"
+          type="text"
+          required
+          fullWidth
+          id="achado"
+          label="Proposta de Achado"
+          autoFocus
+          error={errors?.achado?.type === 'required'}
+          {...register('achado', {
+            required: 'Campo obrigatório',
+          })}
+        />
+        {errors?.achado && (
+          <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+            {errors.achado?.message}
+          </Typography>
+        )}
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
+          color="primary"
+          value={situacaoAchado}
+          exclusive
+          onChange={handleChangeSituacaoAchado}
+          aria-label="Platform"
+
+        >
+          <ToggleButton value='Pendente' >Pendente</ToggleButton>
+          <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+        </ToggleButtonGroup>) : (
+          <input type="hidden"{...register('situacaoAchado')} value="false" />
+        )}
+      </Grid>
+      <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+        <TextField
+          variant='filled'
+          autoComplete="given-name"
+          type="text"
+          multiline
+          rows={4}
+          fullWidth
+          id="analise"
+          label="Análise"
+          autoFocus
+          error={errors?.analise?.type === 'required'}
+          {...register('analise', {
+            required: 'Campo obrigatório',
+          })}
+        />
+        <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+          <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Adicionar um Beneficio</Typography>
+          <TextField
+            variant='filled'
+            autoFocus
+            fullWidth
+            id="beneficio"
+            label='Proposta de Benefício'
+            type="text"
+            error={!!errors?.beneficio}
+            {...register('beneficio')}
+          />
+
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
+            color="primary"
+            value={situacaoBeneficio}
+            exclusive
+            onChange={handleChangeSituacaoBeneficio}
+            aria-label="Platform"
+
+          >
+            <ToggleButton value='Pendente' >Pendente</ToggleButton>
+            <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+          </ToggleButtonGroup>) : (
+            <input type="hidden"{...register('situacaoBeneficio')} value="false" />
+          )}
+        </Grid>
+        {errors?.analise && (
+          <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+            {errors.analise?.message}
+          </Typography>
+        )}
+
+      </Grid>
+      <MultiploAutoComplete beneficios={arrayBeneficio} />
+      <RegisterButton text="Registrar" />
+    </Box>
   )
 }
 
