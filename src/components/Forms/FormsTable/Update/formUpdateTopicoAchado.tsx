@@ -126,7 +126,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
             <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        <RegisterButton text="Registrar" />
+        <RegisterButton text="Atualizar" />
       </Box>
   );
 };

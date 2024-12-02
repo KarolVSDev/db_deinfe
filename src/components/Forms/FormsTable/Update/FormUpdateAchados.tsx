@@ -133,7 +133,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       {achado && (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Achado</Typography>
+            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Achado</Typography>
             <IconButton onClick={closeModal} sx={{
               '&:hover': {
                 bgcolor: '#1e293b', color: '#ffffff',
@@ -159,8 +159,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               </Typography>
             )}
           </Grid>) : (<></>)}
-
-          <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
 
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
             <TextField
@@ -218,7 +216,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             <MultiploAutoComplete beneficios={arrayBeneficio} beneficiosDoAchado={bda} />
 
           </Grid>
-          <RegisterButton text="Registrar" />
+          <RegisterButton text="Atualizar" />
         </Box>
       )}
     </>
