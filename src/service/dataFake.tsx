@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import { Achado, Beneficio, TopicoAchado } from "../types/types"
+import { Achado, Beneficio, BeneficioComAchado, TopicoAchado } from "../types/types"
 import { useContextTable } from "../context/TableContext";
 import { TypeAlert, TypeInfo } from "../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
@@ -112,8 +112,18 @@ const dataFake = () => {
         return beneficios
     }
 
+    const updateAchado = (updateData:BeneficioComAchado) => {
+        console.log(updateData)
+        //atualiza o achado
+        const {beneficios, beneficio,situacaoBeneficio, ...achado} = updateData;
+        setArrayAchado(prevArray => prevArray.map(item => item.id === achado.id ? { ...item, ...achado } : item))
+        //atualiza o arrayAchadoBeneficio
+        if (beneficios) {
+           beneficios.forEach(beneficio => updateAbByAchado(achado.id, beneficio.id))
+        }
+    }
+
     const deleteAchado = (idAchado: GridRowId) => {
-        console.log(idAchado)
         const relacaoBeneficios = arrayAchadoBeneficio.find(relacao => relacao.achado_id === idAchado);
         if (relacaoBeneficios) {
             TypeInfo('Esse Achado está relacionado à pelo menos um Benefício. Para excluir esse registro é preciso primeiramente alterar os benefícios relacionados a ele.', 'info')
@@ -121,10 +131,8 @@ const dataFake = () => {
         }else{
             const achadoBeneficioupdated = arrayAchadoBeneficio.filter(relacao => relacao.achado_id !== idAchado);
             setArrayAchadoBeneficio(achadoBeneficioupdated) 
-            console.log(achadoBeneficioupdated)
             const arrayAchadoUpdated = arrayAchado.filter(achado => achado.id !== idAchado)
             setArrayAchado(arrayAchadoUpdated)
-            console.log(arrayAchadoUpdated)
             return
         }
     }
@@ -191,14 +199,30 @@ const dataFake = () => {
         console.log('Dados do Array', [...arrayAchadoBeneficio, newData])
     }
 
-
+    const updateAbByAchado = (idAchado:string, idBeneficio:string) => {
+        setArrayAchadoBeneficio(prevArray => 
+            prevArray.map(item => {
+           
+              if (item.achado_id === idAchado) {
+          
+                return {
+                  ...item,
+                  beneficio_id: idBeneficio, 
+                };
+              }
+              return item; 
+            })
+          );
+    }
+    
     return {
         saveTopico, saveAchado,
         saveBeneficio, AchadoFormatado,
         getTopico, verifyAchado,
         verifyBeneficio, getAchado,
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
-        getAchadoByBeneficio, deleteByBeneficio, deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado
+        getAchadoByBeneficio, deleteByBeneficio, 
+        deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado
         //BeneficioFormatado, 
     }
 

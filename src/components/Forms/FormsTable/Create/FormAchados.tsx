@@ -141,9 +141,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         <Controller
           name="topico_id"
           control={control}
-
-          defaultValue="" // valor inicial para evitar undefined
-          rules={{ required: 'Campo obrigatório' }} // Validação do campo
+          rules={{ required: 'Campo obrigatório' }} 
           render={({ field }) => (
             <Autocomplete
               disablePortal
@@ -151,15 +149,15 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               id="combo-box-demo"
               options={arrayTopicoAchado}
               getOptionLabel={(option: TopicoAchado) => option.topico}
-              onChange={(event, value) => field.onChange(value?.id || '')} // Atualiza o valor do formulário
+              onChange={(event, value) => field.onChange(value?.id || '')} 
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Tópico"
                   variant="filled"
                   focused={true}
-                  error={!!errors.topico_id} // Mostra erro
-                  helperText={errors.topico_id?.message} // Mostra a mensagem de erro
+                  error={!!errors.topico_id} 
+                  helperText={errors.topico_id?.message} 
                 />
               )}
             />
@@ -255,9 +253,9 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
       <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Beneficio(s)</Typography>
         <Controller
-          name="beneficios" // O nome do campo no objeto `data` que será enviado
-          control={control} // Controle do `react-hook-form`
-          defaultValue={[]} // Valor inicial como array vazio
+          name="beneficios"
+          control={control} 
+          defaultValue={[]} 
           render={({ field }) => (
             <Autocomplete
               multiple
@@ -265,17 +263,17 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               options={arrayBeneficio}
               getOptionLabel={(option) => option.beneficio}
               filterSelectedOptions
-              value={field.value || []} // Sincroniza o valor com o formulário
-              onChange={(event, value) => field.onChange(value)} // Atualiza o estado do formulário
-              isOptionEqualToValue={(option, value) => option.id === value.id} // Compara pelo `id`
+              value={field.value || []} 
+              onChange={(event, value) => field.onChange(value)} 
+              isOptionEqualToValue={(option, value) => option.id === value.id} 
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Relação de Benefícios"
                   placeholder="Selecione os benefícios"
                   variant="filled"
-                  error={!!errors.beneficios} // Exibe erro se houver
-                  helperText={errors.beneficios?.message} // Mensagem de erro
+                  error={!!errors.beneficios} 
+                  helperText={errors.beneficios?.message} 
                 />
               )}
             />

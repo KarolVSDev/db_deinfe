@@ -1,7 +1,7 @@
 import { Autocomplete, AutocompleteGetTagProps, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, Beneficio, TopicoAchado, User } from '../../../../types/types';
+import { Achado, Beneficio, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -26,15 +26,15 @@ export interface FormUpdateAchadoProps {
   dataType: string;
 }
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user, dataType }) => {
-  const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Achado & Beneficio>({});
+  const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<BeneficioComAchado>({});
   const [achado, setAchado] = useState<Achado>()
   const [topico, setTopico] = useState<TopicoAchado>()
   const [openModal, setOpenModal] = useState(false)
   const { exportAchadoRelations } = useExportToExcel()
-  const { arrayAchado, setArrayAchado, arrayTopicoAchado, arrayBeneficio } = useContextTable()
+  const { arrayAchado, arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const { getBeneficiosByAchado } = dataFake()
+  const { getBeneficiosByAchado, updateAchado } = dataFake()
   const [bda, setbda] = useState<Beneficio[]>([])
 
   const getAchado = () => {
@@ -103,7 +103,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   //   }
   // }
 
-  const onSubmit = (data: Achado & Beneficio) => {
+  const onSubmit = (data: BeneficioComAchado) => {
     // const idAchado = id;
     // api.patch(`/achado/update/${idAchado}`, data).then(response => {
     //   TypeAlert(response.data.message, 'success')
@@ -118,16 +118,18 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     // }).catch((error) => {
     //   TypeAlert(error.response.data.message, 'warning');
     // })
-
-    const updateData = {
-      ...data,
-      situacao: situacaoAchado === "Aprovado" ? true : false
+    if (achado) {
+      const updateData = {
+        ...data,
+        situacao: situacaoAchado === "Aprovado" ? true : false,
+        id: achado.id
+      }
+      updateAchado(updateData)
+      TypeAlert("Achado atualizado", "success")
+      closeModal()
     }
-
-    setArrayAchado(prevArray => prevArray.map(item => item.id === id ? { ...item, ...updateData } : item))
-    closeModal()
   }
-  
+  console.log(bda)
   return (
     <>
       {achado && (
@@ -213,7 +215,36 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               })}
             />
 
-            <MultiploAutoComplete beneficios={arrayBeneficio} beneficiosDoAchado={bda} />
+            <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+              <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Benefício(s)</Typography>
+              <Controller
+                name="beneficios" // O nome do campo no objeto `data` que será enviado
+                control={control} // Controle do `react-hook-form`
+                defaultValue={bda} // Inicializa com os benefícios já associados ao achado
+                render={({ field }) => (
+                  <Autocomplete
+                    multiple
+                    id="beneficios"
+                    options={arrayBeneficio}
+                    getOptionLabel={(option) => option.beneficio}
+                    filterSelectedOptions
+                    value={field.value || []} // Sincroniza o valor com o formulário
+                    onChange={(event, value) => field.onChange(value)} // Atualiza o estado do formulário
+                    isOptionEqualToValue={(option, value) => option.id === value.id} // Compara pelo `id`
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Relação de Benefícios"
+                        placeholder="Selecione os benefícios"
+                        variant="filled"
+                        error={!!errors.beneficios} // Exibe erro se houver
+                        helperText={errors.beneficios?.message} // Mensagem de erro
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
 
           </Grid>
           <RegisterButton text="Atualizar" />
