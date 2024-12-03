@@ -61,11 +61,14 @@ export interface AchadoBeneficio {
 }
 
 export interface BeneficioComAchado {
-  id: string;
   beneficio?:string;
-  beneficios:Beneficio[];
+  beneficios?:Beneficio[];
   situacaoBeneficio?:boolean;
-  achado:Achado;
+  id: string;
+  achado:string;
+  situacaoAchado:boolean;
+  analise:string;
+  topico_id:string;
 }
 
 

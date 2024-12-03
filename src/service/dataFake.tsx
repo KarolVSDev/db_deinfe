@@ -142,7 +142,7 @@ const dataFake = () => {
         return newData
     }
 
-    const verifyBeneficio = (beneficio: string): boolean => {
+    const verifyBeneficio = (beneficio: string | undefined): boolean => {
         const texto = arrayBeneficio.find(item => item.beneficio === beneficio)
         if (texto) {
             TypeAlert('O Beneficio já existe no banco de dados', 'info')
