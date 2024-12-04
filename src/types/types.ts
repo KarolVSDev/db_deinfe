@@ -70,6 +70,12 @@ export interface BeneficioComAchado {
   analise:string;
   topico_id:string;
 }
+export interface FormBeneficioType {
+  id:string;
+  beneficio:string;
+  situacaoBeneficio:boolean;
+  achados:Achado[];
+}
 
 
 
