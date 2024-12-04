@@ -60,70 +60,94 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
     //bloco que manipula e salva o achado
 
-    if (data.beneficios?.length === 0) {
-      const { beneficio, ...dataSemBeneficio } = data
-
+    if (data.beneficios?.length === 0 && !data.beneficio) {
+      // Se não houver benefícios, apenas salva o achado
+      const { beneficio, beneficios, ...dataSemBeneficio } = data;
+  
       if (verifyAchado(data.achado)) {
-        return
+        return;
       }
-      if (beneficio && data.beneficios) {
-
-        if (verifyBeneficio(data.beneficio)) {
-          return
-        }
-      }
-
+  
       if (user?.cargo !== 'Diretor') {
-        data.situacaoAchado = false
-        data.situacaoBeneficio = false
+        data.situacaoAchado = false;
+        data.situacaoBeneficio = false;
       }
-
+  
       const dataWithSituacao = {
         ...dataSemBeneficio,
         situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
       };
-
-      const retornoAchado = saveAchado(dataWithSituacao)
-
-      //bloco que manipula e salva o beneficio
-      const objBeneficio = { beneficio: data.beneficio, situacaoBeneficio: data.situacaoBeneficio }
-
+  
+      const retornoAchado = saveAchado(dataWithSituacao);
+  
+      TypeAlert('Achado adicionado', 'success');
+      reset();
+      closeModal();
+      return; // Interrompe o processo aqui se não houver benefício
+    }
+  
+    // Caso haja benefício, ou se o array de benefícios não estiver vazio, o fluxo continua
+    if (data.beneficio) {
+      // Verifique se o benefício já existe antes de continuar
+      if (verifyBeneficio(data.beneficio)) {
+        return;
+      }
+  
+      if (user?.cargo !== 'Diretor') {
+        data.situacaoAchado = false;
+        data.situacaoBeneficio = false;
+      }
+  
+      const dataWithSituacao = {
+        ...data,
+        situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
+      };
+  
+      const retornoAchado = saveAchado(dataWithSituacao);
+  
+      // Bloco que manipula e salva o beneficio
+      const objBeneficio = { beneficio: data.beneficio, situacaoBeneficio: data.situacaoBeneficio };
+  
       const objBeneficioWithSituacao = {
         ...objBeneficio,
-        situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false
-      }
-
-      const retornoBeneficio = saveBeneficio(objBeneficioWithSituacao)
-
-      //bloco que manipula e salva o AchadoBeneficio
-
+        situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false,
+      };
+  
+      const retornoBeneficio = saveBeneficio(objBeneficioWithSituacao);
+  
+      // Bloco que manipula e salva o AchadoBeneficio
       if (retornoAchado && retornoBeneficio) {
-        const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: retornoBeneficio.id }
-        saveAchadoBeneficio(objAchadoBeneficio)
+        const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: retornoBeneficio.id };
+        
+        saveAchadoBeneficio(objAchadoBeneficio);
       }
-
-      TypeAlert('Achado adicionado', 'success');
-      reset()
-      closeModal()
+  
+      TypeAlert('Achado e Benefício adicionados', 'success');
+      reset();
+      closeModal();
     } else {
-      if (data.beneficios) {
-        const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data
+      // Caso haja múltiplos benefícios
+      if (data.beneficios && data.beneficios.length > 0) {
+        const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
+        
         const dataWithSituacao = {
           ...dataSemBeneficios,
           situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
         };
-        const retornoAchado = saveAchado(dataWithSituacao)
-        console.log(retornoAchado)
-        beneficios.forEach(beneficio => {
-          const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id }
-          saveAchadoBeneficio(objAchadoBeneficio)
-          TypeAlert('Achado adicionado', 'success');
-          reset()
-          closeModal()
-        })
+  
+        const retornoAchado = saveAchado(dataWithSituacao);
+  
+        beneficios.forEach((beneficio) => {
+          const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
+          saveAchadoBeneficio(objAchadoBeneficio);
+        });
+  
+        TypeAlert('Achado e Benefícios adicionados', 'success');
+        reset();
+        closeModal();
       }
     }
-  }
+  };
 
   return (
     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>

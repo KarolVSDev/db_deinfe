@@ -159,6 +159,7 @@ const dataFake = () => {
         return false
 
     }
+    
     //mocks de AchadoBeneficio
     const getAchadoByBeneficio = (Id: string): Achado[] => {
         const arrayFiltrado = arrayAchadoBeneficio.filter(item => item.beneficio_id === Id)
