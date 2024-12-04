@@ -112,14 +112,14 @@ const dataFake = () => {
         return beneficios
     }
 
-    const updateAchado = (updateData:BeneficioComAchado) => {
+    const updateAchado = (updateData: BeneficioComAchado) => {
         console.log(updateData)
         //atualiza o achado
-        const {beneficios, beneficio,situacaoBeneficio, ...achado} = updateData;
+        const { beneficios, beneficio, situacaoBeneficio, ...achado } = updateData;
         setArrayAchado(prevArray => prevArray.map(item => item.id === achado.id ? { ...item, ...achado } : item))
         //atualiza o arrayAchadoBeneficio
         if (beneficios) {
-           beneficios.forEach(beneficio => updateAbByAchado(achado.id, beneficio.id))
+            updateAbByAchado(beneficios, achado.id)
         }
     }
 
@@ -128,9 +128,9 @@ const dataFake = () => {
         if (relacaoBeneficios) {
             TypeInfo('Esse Achado está relacionado à pelo menos um Benefício. Para excluir esse registro é preciso primeiramente alterar os benefícios relacionados a ele.', 'info')
             return
-        }else{
+        } else {
             const achadoBeneficioupdated = arrayAchadoBeneficio.filter(relacao => relacao.achado_id !== idAchado);
-            setArrayAchadoBeneficio(achadoBeneficioupdated) 
+            setArrayAchadoBeneficio(achadoBeneficioupdated)
             const arrayAchadoUpdated = arrayAchado.filter(achado => achado.id !== idAchado)
             setArrayAchado(arrayAchadoUpdated)
             return
@@ -199,29 +199,48 @@ const dataFake = () => {
         console.log('Dados do Array', [...arrayAchadoBeneficio, newData])
     }
 
-    const updateAbByAchado = (idAchado:string, idBeneficio:string) => {
-        setArrayAchadoBeneficio(prevArray => 
-            prevArray.map(item => {
-           
-              if (item.achado_id === idAchado) {
-          
-                return {
-                  ...item,
-                  beneficio_id: idBeneficio, 
-                };
-              }
-              return item; 
-            })
-          );
-    }
-    
+    const updateAbByAchado = (beneficios: Beneficio[], idAchado: string) => {
+        setArrayAchadoBeneficio((prevArray) => {
+          // Caso 1: Se benefícios estiver vazio, removemos todos os registros do idAchado
+          if (beneficios.length === 0) {
+            return prevArray.filter((item) => item.achado_id !== idAchado);
+          }
+      
+          // Caso 2: Quando há benefícios passados, removemos os antigos e adicionamos os novos
+          const updatedArray = prevArray
+            .filter(
+              (item) =>
+                item.achado_id !== idAchado || // Mantenha os registros com achado_id diferente
+                beneficios.some((beneficio) => beneficio.id === item.beneficio_id) // Mantenha apenas os benefícios existentes
+            )
+            .concat(
+              beneficios
+                .filter(
+                  (beneficio) =>
+                    !prevArray.some(
+                      (item) =>
+                        item.achado_id === idAchado && item.beneficio_id === beneficio.id
+                    ) // Adiciona apenas benefícios que ainda não estão no array
+                )
+                .map((beneficio) => ({
+                  id: faker.string.uuid(), // Gerando um novo ID para o registro de relação
+                  achado_id: idAchado,
+                  beneficio_id: beneficio.id,
+                }))
+            );
+      
+          return updatedArray;
+        });
+      };
+      
+
     return {
         saveTopico, saveAchado,
         saveBeneficio, AchadoFormatado,
         getTopico, verifyAchado,
         verifyBeneficio, getAchado,
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
-        getAchadoByBeneficio, deleteByBeneficio, 
+        getAchadoByBeneficio, deleteByBeneficio,
         deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado
         //BeneficioFormatado, 
     }
