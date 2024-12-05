@@ -115,6 +115,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
               {errors.topico?.message}
             </Typography>
           )}
+          
           <ToggleButtonGroup
             color="primary"
             value={situacao}

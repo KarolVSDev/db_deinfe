@@ -59,95 +59,102 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     // })
 
     //bloco que manipula e salva o achado
-
     if (data.beneficios?.length === 0 && !data.beneficio) {
       // Se não houver benefícios, apenas salva o achado
       const { beneficio, beneficios, ...dataSemBeneficio } = data;
-  
+
       if (verifyAchado(data.achado)) {
         return;
       }
-  
+
       if (user?.cargo !== 'Diretor') {
         data.situacaoAchado = false;
         data.situacaoBeneficio = false;
       }
-  
+
       const dataWithSituacao = {
         ...dataSemBeneficio,
         situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
       };
-  
-      const retornoAchado = saveAchado(dataWithSituacao);
-  
+
+      saveAchado(dataWithSituacao);
+
       TypeAlert('Achado adicionado', 'success');
       reset();
       closeModal();
       return; // Interrompe o processo aqui se não houver benefício
     }
-  
+
     // Caso haja benefício, ou se o array de benefícios não estiver vazio, o fluxo continua
     if (data.beneficio) {
       // Verifique se o benefício já existe antes de continuar
       if (verifyBeneficio(data.beneficio)) {
         return;
       }
-  
+
       if (user?.cargo !== 'Diretor') {
         data.situacaoAchado = false;
         data.situacaoBeneficio = false;
       }
-  
+
       const dataWithSituacao = {
         ...data,
         situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
       };
-  
+
       const retornoAchado = saveAchado(dataWithSituacao);
-  
+
       // Bloco que manipula e salva o beneficio
       const objBeneficio = { beneficio: data.beneficio, situacaoBeneficio: data.situacaoBeneficio };
-  
+
       const objBeneficioWithSituacao = {
         ...objBeneficio,
         situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false,
       };
-  
+
       const retornoBeneficio = saveBeneficio(objBeneficioWithSituacao);
-  
+
       // Bloco que manipula e salva o AchadoBeneficio
-      if (retornoAchado && retornoBeneficio) {
+      if ((retornoAchado && retornoBeneficio) || (data.beneficios && data.beneficios.length > 0)) {
         const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: retornoBeneficio.id };
-        
+        console.log("teste de entrada")
+        // Caso haja múltiplos benefícios
+        if (data.beneficios && data.beneficios.length > 0) {
+          const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
+
+          if(retornoBeneficio){
+            beneficios.push(retornoBeneficio)
+          }
+
+          beneficios.forEach((beneficio) => {
+            const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
+            saveAchadoBeneficio(objAchadoBeneficio);
+          });
+        }else if(data.beneficios && data.beneficios.length === 0){
+          saveAchadoBeneficio(objAchadoBeneficio)
+        }
+      }
+    }else if(!data.beneficio && (data.beneficios && data.beneficios?.length > 0)){
+      const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
+
+      const dataWithSituacao = {
+        ...data,
+        situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
+      };
+
+      const retornoAchado = saveAchado(dataWithSituacao);
+
+      beneficios.forEach((beneficio) => {
+        const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
         saveAchadoBeneficio(objAchadoBeneficio);
-      }
-  
-      TypeAlert('Achado e Benefício adicionados', 'success');
-      reset();
-      closeModal();
-    } else {
-      // Caso haja múltiplos benefícios
-      if (data.beneficios && data.beneficios.length > 0) {
-        const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
-        
-        const dataWithSituacao = {
-          ...dataSemBeneficios,
-          situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
-        };
-  
-        const retornoAchado = saveAchado(dataWithSituacao);
-  
-        beneficios.forEach((beneficio) => {
-          const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
-          saveAchadoBeneficio(objAchadoBeneficio);
-        });
-  
-        TypeAlert('Achado e Benefícios adicionados', 'success');
-        reset();
-        closeModal();
-      }
+      });
     }
-  };
+
+    TypeAlert('Achado adicionado', 'success');
+    reset();
+    closeModal();
+  }
+
 
   return (
     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -165,7 +172,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         <Controller
           name="topico_id"
           control={control}
-          rules={{ required: 'Campo obrigatório' }} 
+          rules={{ required: 'Campo obrigatório' }}
           render={({ field }) => (
             <Autocomplete
               disablePortal
@@ -173,15 +180,15 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               id="combo-box-demo"
               options={arrayTopicoAchado}
               getOptionLabel={(option: TopicoAchado) => option.topico}
-              onChange={(event, value) => field.onChange(value?.id || '')} 
+              onChange={(event, value) => field.onChange(value?.id || '')}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Tópico"
                   variant="filled"
                   focused={true}
-                  error={!!errors.topico_id} 
-                  helperText={errors.topico_id?.message} 
+                  error={!!errors.topico_id}
+                  helperText={errors.topico_id?.message}
                 />
               )}
             />
@@ -275,11 +282,11 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
       </Grid>
       <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-      <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Beneficio(s)</Typography>
+        <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Beneficio(s)</Typography>
         <Controller
           name="beneficios"
-          control={control} 
-          defaultValue={[]} 
+          control={control}
+          defaultValue={[]}
           render={({ field }) => (
             <Autocomplete
               multiple
@@ -287,17 +294,17 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               options={arrayBeneficio}
               getOptionLabel={(option) => option.beneficio}
               filterSelectedOptions
-              value={field.value || []} 
-              onChange={(event, value) => field.onChange(value)} 
-              isOptionEqualToValue={(option, value) => option.id === value.id} 
+              value={field.value || []}
+              onChange={(event, value) => field.onChange(value)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Relação de Benefícios"
                   placeholder="Selecione os benefícios"
                   variant="filled"
-                  error={!!errors.beneficios} 
-                  helperText={errors.beneficios?.message} 
+                  error={!!errors.beneficios}
+                  helperText={errors.beneficios?.message}
                 />
               )}
             />
