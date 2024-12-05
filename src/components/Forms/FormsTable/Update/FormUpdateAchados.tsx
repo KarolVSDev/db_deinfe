@@ -121,7 +121,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     if (achado) {
       const updateData = {
         ...data,
-        situacao: situacaoAchado === "Aprovado" ? true : false,
+        situacaoAchado: situacaoAchado === "Aprovado" ? true : false,
         id: achado.id
       }
       updateAchado(updateData)

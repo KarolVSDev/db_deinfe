@@ -23,15 +23,14 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
     const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio } = dataFake()
     const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
 
-    const handleChange = (
+    const handleChangeSituacaoBeneficio = (
         event: React.MouseEvent<HTMLElement>,
-        newSituacao: string,
-    ) => {
-        if (newSituacao !== undefined) {
-            setSituacaoBeneficio(newSituacao);
-            setValue('situacaoBeneficio', newSituacao === 'Aprovado');
+        newSituacao: string | null
+      ) => {
+        if (newSituacao !== null) {
+          setSituacaoBeneficio(newSituacao);
         }
-    };
+      };
 
     const onSubmit = (data: FormBeneficioType) => {
         // api.post('/area-achado', data).then(response => {
@@ -53,14 +52,19 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         }
 
         
-        const { beneficio, situacaoBeneficio, ...resto } = data
+        const { beneficio, ...resto } = data
         
         if (data.beneficio && verifyBeneficio(data.beneficio)) {
             // Se o benefício já existe, não continue o processo de envio
             return;
         }
 
-        const retornoBeneficio = saveBeneficio({ beneficio: beneficio, situacaoBeneficio: situacaoBeneficio })
+        const dataWithSituacao = {
+            beneficio:beneficio,
+            situacaoBeneficio: situacaoBeneficio === 'Aprovado' ? true : false,
+          };
+
+        const retornoBeneficio = saveBeneficio(dataWithSituacao)
 
         //passo 2 criar a relação na entidade achadoBeneficio
 
@@ -114,7 +118,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                     color="primary"
                     value={situacaoBeneficio}
                     exclusive
-                    onChange={handleChange}
+                    onChange={handleChangeSituacaoBeneficio}
                     aria-label="Platform"
                 >
                     <ToggleButton value='Pendente' >Pendente</ToggleButton>
