@@ -26,11 +26,11 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
     const handleChangeSituacaoBeneficio = (
         event: React.MouseEvent<HTMLElement>,
         newSituacao: string | null
-      ) => {
+    ) => {
         if (newSituacao !== null) {
-          setSituacaoBeneficio(newSituacao);
+            setSituacaoBeneficio(newSituacao);
         }
-      };
+    };
 
     const onSubmit = (data: FormBeneficioType) => {
         // api.post('/area-achado', data).then(response => {
@@ -51,18 +51,18 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
             data.situacaoBeneficio = false
         }
 
-        
+
         const { beneficio, ...resto } = data
-        
+
         if (data.beneficio && verifyBeneficio(data.beneficio)) {
             // Se o benefício já existe, não continue o processo de envio
             return;
         }
 
         const dataWithSituacao = {
-            beneficio:beneficio,
+            beneficio: beneficio,
             situacaoBeneficio: situacaoBeneficio === 'Aprovado' ? true : false,
-          };
+        };
 
         const retornoBeneficio = saveBeneficio(dataWithSituacao)
 
@@ -133,7 +133,6 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                 <Controller
                     name="achados"
                     control={control}
-                    //defaultValue={[]}
                     rules={{ required: 'Selecione pelo menos um achado' }}
                     render={({ field }) => (
                         <Autocomplete

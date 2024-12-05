@@ -1,7 +1,7 @@
 import { Autocomplete, AutocompleteGetTagProps, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, Beneficio, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
+import { Achado, AchadoComTopico, Beneficio, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -27,14 +27,15 @@ export interface FormUpdateAchadoProps {
 }
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user, dataType }) => {
   const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<BeneficioComAchado>({});
-  const [achado, setAchado] = useState<Achado>()
+  const [achadoComTopico, setAchadoComTopico] = useState<AchadoComTopico>()
   const [topico, setTopico] = useState<TopicoAchado>()
+  const [achado, setAchado] = useState<Achado>()
   const [openModal, setOpenModal] = useState(false)
   const { exportAchadoRelations } = useExportToExcel()
   const { arrayAchado, arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const { getBeneficiosByAchado, updateAchado } = dataFake()
+  const { getBeneficiosByAchado, updateAchado, getAchadoComTopico } = dataFake()
   const [bda, setbda] = useState<Beneficio[]>([])
 
   const getAchado = () => {
@@ -45,32 +46,23 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     //   console.log(error)
     //   TypeAlert('Erro ao Resgata Achado', 'error')
     // })
-    const achado = arrayAchado.find(item => item.id === id)
-    setAchado(achado)
   }
-  const getTopico = () => {
-    if (achado) {
-      const topico = arrayTopicoAchado.find(item => item.id === achado.topico_id)
-      setTopico(topico)
-    }
-  }
+
 
   useEffect(() => {
     if (id) {
-      getAchado()
+      const result = getAchadoComTopico(id)
+      if (result) {
+        setAchadoComTopico(result)
+      }
     }
-  }, [])
+  }, [id])
 
 
   useEffect(() => {
-    if (achado) {
-      setSituacaoAchado(achado.situacaoAchado === false ? 'Pendente' : 'Aprovado');
-      const bda = getBeneficiosByAchado(achado?.id)
-      setbda(bda)
-      getTopico()
-    }
-  }, [achado])
-
+    setAchado(achadoComTopico?.achado)
+    setTopico(achadoComTopico?.topico)
+  })
 
   const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,
@@ -97,11 +89,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     setOpenModal(false)
   }
 
-  // const handleExport = () => {
-  //   if(achadoUp){
-  //     exportAchadoRelations(achadoUp, 'relacoes.xlsx')
-  //   }
-  // }
 
   const onSubmit = (data: BeneficioComAchado) => {
     // const idAchado = id;
@@ -114,22 +101,11 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     //     )
     //     return updatedArray
     //   });
-    //   closeModal()
+    closeModal()
     // }).catch((error) => {
     //   TypeAlert(error.response.data.message, 'warning');
-    // })
-    if (achado) {
-      const updateData = {
-        ...data,
-        situacaoAchado: situacaoAchado === "Aprovado" ? true : false,
-        id: achado.id
-      }
-      updateAchado(updateData)
-      TypeAlert("Achado atualizado", "success")
-      closeModal()
-    }
   }
-  console.log(bda)
+
   return (
     <>
       {achado && (
@@ -144,7 +120,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               <CloseIcon />
             </IconButton>
           </Box>
-          {topico ? (<Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+          <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
             <Autocomplete
               disablePortal
               id="combo-box-demo"
@@ -160,7 +136,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                 {errors.topico_id.message}
               </Typography>
             )}
-          </Grid>) : (<></>)}
+          </Grid>
 
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
             <TextField
@@ -245,7 +221,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                 )}
               />
             </Grid>
-
           </Grid>
           <RegisterButton text="Atualizar" />
         </Box>

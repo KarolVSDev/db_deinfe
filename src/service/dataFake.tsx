@@ -3,6 +3,7 @@ import { Achado, Beneficio, BeneficioComAchado, TopicoAchado } from "../types/ty
 import { useContextTable } from "../context/TableContext";
 import { TypeAlert, TypeInfo } from "../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
+import { promises } from "dns";
 
 
 const dataFake = () => {
@@ -112,6 +113,21 @@ const dataFake = () => {
         return beneficios
     }
 
+    const getAchadoComTopico = (idAchado: GridRowId | undefined) => {
+        const achado = arrayAchado.find(achado => achado.id === idAchado)
+        const topico = arrayTopicoAchado.find(topico => topico.id === achado?.topico_id)
+
+        if (topico && achado) {
+            const achadoComTopico = {
+                achado: achado,
+                topico: topico
+            }
+
+            return  achadoComTopico;
+        }
+
+    }
+
     const updateAchado = (updateData: BeneficioComAchado) => {
         console.log(updateData)
         //atualiza o achado
@@ -159,7 +175,7 @@ const dataFake = () => {
         return false
 
     }
-    
+
     //mocks de AchadoBeneficio
     const getAchadoByBeneficio = (Id: string): Achado[] => {
         const arrayFiltrado = arrayAchadoBeneficio.filter(item => item.beneficio_id === Id)
@@ -202,38 +218,38 @@ const dataFake = () => {
 
     const updateAbByAchado = (beneficios: Beneficio[], idAchado: string) => {
         setArrayAchadoBeneficio((prevArray) => {
-          // Caso 1: Se benefícios estiver vazio, removemos todos os registros do idAchado
-          if (beneficios.length === 0) {
-            return prevArray.filter((item) => item.achado_id !== idAchado);
-          }
-      
-          // Caso 2: Quando há benefícios passados, removemos os antigos e adicionamos os novos
-          const updatedArray = prevArray
-            .filter(
-              (item) =>
-                item.achado_id !== idAchado || // Mantenha os registros com achado_id diferente
-                beneficios.some((beneficio) => beneficio.id === item.beneficio_id) // Mantenha apenas os benefícios existentes
-            )
-            .concat(
-              beneficios
+            // Caso 1: Se benefícios estiver vazio, removemos todos os registros do idAchado
+            if (beneficios.length === 0) {
+                return prevArray.filter((item) => item.achado_id !== idAchado);
+            }
+
+            // Caso 2: Quando há benefícios passados, removemos os antigos e adicionamos os novos
+            const updatedArray = prevArray
                 .filter(
-                  (beneficio) =>
-                    !prevArray.some(
-                      (item) =>
-                        item.achado_id === idAchado && item.beneficio_id === beneficio.id
-                    ) // Adiciona apenas benefícios que ainda não estão no array
+                    (item) =>
+                        item.achado_id !== idAchado || // Mantenha os registros com achado_id diferente
+                        beneficios.some((beneficio) => beneficio.id === item.beneficio_id) // Mantenha apenas os benefícios existentes
                 )
-                .map((beneficio) => ({
-                  id: faker.string.uuid(), // Gerando um novo ID para o registro de relação
-                  achado_id: idAchado,
-                  beneficio_id: beneficio.id,
-                }))
-            );
-      
-          return updatedArray;
+                .concat(
+                    beneficios
+                        .filter(
+                            (beneficio) =>
+                                !prevArray.some(
+                                    (item) =>
+                                        item.achado_id === idAchado && item.beneficio_id === beneficio.id
+                                ) // Adiciona apenas benefícios que ainda não estão no array
+                        )
+                        .map((beneficio) => ({
+                            id: faker.string.uuid(), // Gerando um novo ID para o registro de relação
+                            achado_id: idAchado,
+                            beneficio_id: beneficio.id,
+                        }))
+                );
+
+            return updatedArray;
         });
-      };
-      
+    };
+
 
     return {
         saveTopico, saveAchado,
@@ -242,7 +258,7 @@ const dataFake = () => {
         verifyBeneficio, getAchado,
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
         getAchadoByBeneficio, deleteByBeneficio,
-        deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado
+        deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado, getAchadoComTopico
         //BeneficioFormatado, 
     }
 
