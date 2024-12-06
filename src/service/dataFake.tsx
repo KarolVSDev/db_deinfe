@@ -116,26 +116,35 @@ const dataFake = () => {
     const getAchadoComTopico = (idAchado: GridRowId | undefined) => {
         const achado = arrayAchado.find(achado => achado.id === idAchado)
         const topico = arrayTopicoAchado.find(topico => topico.id === achado?.topico_id)
+        const beneficios = getBeneficioByAchado(idAchado)
+        console.log(beneficios)
 
         if (topico && achado) {
-            const achadoComTopico = {
+            const achadoComTopicoEBeneficio = {
                 achado: achado,
-                topico: topico
+                topico: topico,
+                beneficios:beneficios
             }
 
-            return  achadoComTopico;
+            return  achadoComTopicoEBeneficio;
         }
 
     }
 
     const updateAchado = (updateData: BeneficioComAchado) => {
-        console.log(updateData)
         //atualiza o achado
-        const { beneficios, beneficio, situacaoBeneficio, ...achado } = updateData;
-        setArrayAchado(prevArray => prevArray.map(item => item.id === achado.id ? { ...item, ...achado } : item))
-        //atualiza o arrayAchadoBeneficio
-        if (beneficios) {
-            updateAbByAchado(beneficios, achado.id)
+        const { beneficios, situacaoBeneficio, beneficio, ...achado } = updateData;
+        console.log(achado)
+        try {
+            setArrayAchado(prevArray => prevArray.map((item) => item.id === achado.id ? { ...item, ...achado } : item))
+            //atualiza o arrayAchadoBeneficio
+            if (beneficios) {
+                updateAbByAchado(beneficios, achado.id)
+                return
+            }
+            return
+        } catch (error) {
+            TypeAlert("Erro ao tentar atualizar o achado", "error")
         }
     }
 
@@ -186,6 +195,25 @@ const dataFake = () => {
         return achados
     }
 
+    const getBeneficioByAchado = (idAchado: GridRowId | undefined ) => {
+        if (!idAchado) {
+          console.log("ID de Achado inválido.");
+          return [];
+        }
+      
+        const achadoBeneficios = arrayAchadoBeneficio.filter(item => item.achado_id === idAchado);
+      
+        if (achadoBeneficios.length > 0) {
+          const beneficios = achadoBeneficios.flatMap(achadoBeneficio => {
+            return arrayBeneficio.filter(beneficio => beneficio.id === achadoBeneficio.beneficio_id)
+          })
+          return beneficios;
+        } else {
+          console.log("Consulta vazia");
+          return [];
+        }
+      };
+
     const deleteByBeneficio = (beneficio_id: GridRowId) => {
         setArrayAchadoBeneficio(prevArray => prevArray.filter(achadoBeneficio => achadoBeneficio.beneficio_id !== beneficio_id))
         localStorage.set
@@ -193,17 +221,7 @@ const dataFake = () => {
     const deleteByAchado = (achado_id: GridRowId) => {
         setArrayAchadoBeneficio(prevArray => prevArray.filter(achadoBeneficio => achadoBeneficio.achado_id !== achado_id))
     }
-    // const BeneficioFormatado = (beneficios:Beneficio[], achados:Achado[]) => {
-    //     return beneficios.map((beneficio) => {
-    //         const achadoEncontrado = achados.find(achado => achado.id === beneficio.achado_id);
-    //         return {
-    //             ...beneficio,
-    //             achado_id:achadoEncontrado? achadoEncontrado.achado : 'Achado não encontrado'
-    //         }
-    //     })
-    // }
 
-    //mock relacao AchadoBeneficio
     const saveAchadoBeneficio = (data: any) => {
         const newData = {
             id: faker.string.uuid(),

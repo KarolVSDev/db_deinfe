@@ -79,6 +79,7 @@ export interface FormBeneficioType {
 export  interface AchadoComTopico {
   achado:Achado;
   topico:TopicoAchado;
+  beneficios:Beneficio[];
 }
 
 

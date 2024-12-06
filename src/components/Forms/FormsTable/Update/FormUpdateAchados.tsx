@@ -9,15 +9,8 @@ import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import useExportToExcel from '../../../../hooks/useExportToExcel';
-import CloseIcon from '@mui/icons-material/Close';
-import ButtonNovo from '../../../Buttons/ButtonNovo';
+import CloseIcon from '@mui/icons-material/Close';  
 import dataFake from '../../../../service/dataFake';
-import MultiploAutoComplete from '../../../Autocomplete/AutoCompleteComopnent';
-
-interface DivAchadoProps {
-  closeModal: () => void;
-  id: GridRowId | undefined;
-}
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -26,9 +19,8 @@ export interface FormUpdateAchadoProps {
   dataType: string;
 }
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user, dataType }) => {
-  const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<BeneficioComAchado>({});
   const [achadoComTopico, setAchadoComTopico] = useState<AchadoComTopico>()
-  const [topico, setTopico] = useState<TopicoAchado>()
+  const [topico, setTopico] = useState<TopicoAchado>({id:'', topico:'', situacao:false})
   const [achado, setAchado] = useState<Achado>()
   const [openModal, setOpenModal] = useState(false)
   const { exportAchadoRelations } = useExportToExcel()
@@ -36,7 +28,16 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { getBeneficiosByAchado, updateAchado, getAchadoComTopico } = dataFake()
-  const [bda, setbda] = useState<Beneficio[]>([])
+ 
+  const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<BeneficioComAchado>({
+    defaultValues: {
+      topico_id: topico.id, // Inicialize o id do tópico
+      achado: achado?.achado || '', // Inicialize com o achado, caso disponível
+      analise: achado?.analise || '', // Inicialize a análise, caso disponível
+      beneficios:  [], // Inicialize a lista de benefícios
+      situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
+    },
+  });
 
   const getAchado = () => {
     // api.get(`achado/${id}`).then(response => {
@@ -48,47 +49,36 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     // })
   }
 
-
   useEffect(() => {
     if (id) {
-      const result = getAchadoComTopico(id)
+      const result = getAchadoComTopico(id);
       if (result) {
-        setAchadoComTopico(result)
+        setAchadoComTopico(result);
+        reset({
+          id:result.achado.id || '',
+          topico_id: result.topico?.id || '',
+          achado: result.achado?.achado || '',
+          analise: result.achado?.analise || '',
+          beneficios: result.beneficios || [],
+          situacaoAchado: result.achado?.situacaoAchado || false,
+        });
       }
     }
-  }, [id])
+  }, [id, reset]);
 
 
   useEffect(() => {
     setAchado(achadoComTopico?.achado)
-    setTopico(achadoComTopico?.topico)
   })
 
-  const handleChangeSituacaoAchado = (
-    event: React.MouseEvent<HTMLElement>,
-    newSituacao: string | null
-  ) => {
-    if (newSituacao !== null) {
-      setSituacaoAchado(newSituacao);
+  useEffect(() => {
+
+    if (achado?.situacaoAchado === true) {
+      setSituacaoAchado("Aprovado")
+    } else {
+      setSituacaoAchado("Pendente")
     }
-  };
-
-  const handleChangeSituacaoBeneficio = (
-    event: React.MouseEvent<HTMLElement>,
-    newSituacao: string | null
-  ) => {
-    if (newSituacao !== null) {
-      setSituacaoBeneficio(newSituacao);
-    }
-  };
-
-  const handleModal = () => {
-    setOpenModal(true)
-  }
-  const handleClose = () => {
-    setOpenModal(false)
-  }
-
+  }, [])
 
   const onSubmit = (data: BeneficioComAchado) => {
     // const idAchado = id;
@@ -101,9 +91,21 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     //     )
     //     return updatedArray
     //   });
-    closeModal()
+    // closeModal()
     // }).catch((error) => {
-    //   TypeAlert(error.response.data.message, 'warning');
+    //  TypeAlert(error.response.data.message, 'warning');
+
+    const dataWithSituacao = {
+      ...data,
+      situacaoAchado: situacaoAchado === "Aprovado" ? true : false
+    }
+
+    console.log(dataWithSituacao)
+    updateAchado(data)
+    console.log(arrayAchado)
+    reset()
+    TypeAlert("Achado atualizado", "success")
+    closeModal()
   }
 
   return (
@@ -121,21 +123,29 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             </IconButton>
           </Box>
           <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={arrayTopicoAchado}
-              clearOnBlur
-              defaultValue={arrayTopicoAchado.find(item => item.id === topico?.id)}
-              getOptionLabel={(option: TopicoAchado) => option.topico}
-              onChange={(event, value) => setValue('topico_id', value?.id ?? '')}
-              renderInput={(params) => <TextField variant='filled' {...params} label="Topico" />}
+            <Controller
+              name="topico_id"
+              control={control}
+              defaultValue={topico.id || ''}
+              rules={{ required: "Selecione um tópico" }}
+              render={({ field }) => (
+                <Autocomplete
+                  options={arrayTopicoAchado}
+                  getOptionLabel={(option: TopicoAchado) => option.topico}
+                  defaultValue={arrayTopicoAchado.find(item => item.id === field.value) || null}
+                  onChange={(event, value) => field.onChange(value?.id || '')}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Tópico"
+                      variant="filled"
+                      error={!!errors.topico_id}
+                      helperText={errors.topico_id?.message}
+                    />
+                  )}
+                />
+              )}
             />
-            {errors.topico_id && (
-              <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                {errors.topico_id.message}
-              </Typography>
-            )}
           </Grid>
 
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
@@ -160,17 +170,23 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             )}
           </Grid>
           <Grid item xs={12} sm={4}>
-            {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
-              color="primary"
-              value={situacaoAchado}
-              exclusive
-              onChange={handleChangeSituacaoAchado}
-              aria-label="Platform"
-
-            >
-              <ToggleButton value='Pendente' >Pendente</ToggleButton>
-              <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-            </ToggleButtonGroup>) : (
+            {user?.cargo === 'Diretor' ? (<Controller
+              name="situacaoAchado"
+              defaultValue={achado.situacaoAchado}
+              control={control}
+              render={({ field }) => (
+                <ToggleButtonGroup
+                  color="primary"
+                  value={field.value}
+                  exclusive
+                  onChange={(event, newValue) => field.onChange(newValue)}
+                  aria-label="Situacao do Achado"
+                >
+                  <ToggleButton value={false}>Pendente</ToggleButton>
+                  <ToggleButton value={true}>Aprovado</ToggleButton>
+                </ToggleButtonGroup>
+              )}
+            />) : (
               <input type="hidden"{...register('situacaoAchado')} value="false" />
             )}
           </Grid>
@@ -196,7 +212,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               <Controller
                 name="beneficios" // O nome do campo no objeto `data` que será enviado
                 control={control} // Controle do `react-hook-form`
-                defaultValue={bda} // Inicializa com os benefícios já associados ao achado
                 render={({ field }) => (
                   <Autocomplete
                     multiple
