@@ -1,164 +1,100 @@
-import { Autocomplete, Box, Button, Container, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
-import { Controller, useForm } from 'react-hook-form';
-import { Achado, AreaAchado, Beneficio, DivAchado, DivAchado2 } from '../../../../types/types';
+import { Controller, useForm, UseFormRegister } from 'react-hook-form';
+import { Achado, Beneficio, FormBeneficioType, User } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import { GridRowId } from '@mui/x-data-grid';
+import React, { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
-import { useEffect, useState } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
 import dataFake from '../../../../service/dataFake';
+import CloseIcon from '@mui/icons-material/Close';
+import { GridRowId } from '@mui/x-data-grid';
 
-
-
-interface DivAchadoProps {
+export interface FormBeneficioProps {
     closeModal: () => void;
-    id: GridRowId | undefined;
+    user: User | undefined;
+    dataType: string;
+    id: GridRowId;
 }
-const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
-    const {control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<Beneficio>({});
 
-    const { arrayBeneficio, setArrayBeneficio, arrayAchado } = useContextTable()
+const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModal, id }) => {
+    const { setArrayBeneficio, arrayAchado } = useContextTable();
+    //const {getAllNatAchado} = useFetchListData()
+    const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio, getBeneficio, updateBeneficio } = dataFake()
+    const [situacaoBeneficio, setSituacaoBeneficio] = useState<string>();
     const [beneficio, setBeneficio] = useState<Beneficio>()
-    const [openModal, setOpenModal] = useState(false)
-    const [situacao, setSituacao] = useState<string>()
-    const {getAchado} = dataFake()
-    const [achado, setAchado] = useState<Achado | undefined>()
+    const [achados, setAchados] = useState<(Achado | undefined)[]>()
+    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<FormBeneficioType>({
+        defaultValues: {
+            beneficio: beneficio?.beneficio,
+            situacaoBeneficio: beneficio?.situacaoBeneficio || false,
+            achados: achados
+        },
+    });
 
-
-    const getBeneficio = () => {
-        // api.get(`/div-area-achado/${id}`).then(response => {
-        //     console.log(response.data)
-        //     setDivAchado(response.data)
-        // }).catch((error) => {
-        //     console.log(error)
-        //     TypeAlert('Erro ao resgatar Divisão do ahcado', 'error')
-        // })
-        const beneficio = arrayBeneficio.find(item => item.id === id);
-        setBeneficio(beneficio);
-    }
 
     useEffect(() => {
-        if(id){
-            getBeneficio()
+        if (id) {
+            const searchBeneficio = getBeneficio(id)
+            if (searchBeneficio) {
+                setBeneficio(searchBeneficio)
+                setAchados(searchBeneficio.achados)
+            }
+            reset({
+                id: searchBeneficio?.id || '',
+                beneficio: searchBeneficio?.beneficio || '',
+                situacaoBeneficio: searchBeneficio?.situacaoBeneficio || false,
+                achados: searchBeneficio?.achados || []
+            })
         }
-    }, [])
-   
-    useEffect(() => {
-        if(beneficio){
-            setSituacao(beneficio.situacao === false ? 'Pendente' : 'Aprovado');
-            const achado = getAchado(beneficio.achado_id)
-            setAchado(achado)
-        }
-    },[beneficio])
-   
+    }, [id, reset])
 
-    const handleModal = () => {
-        setOpenModal(true)
-    }
-
-    const handleClose = () => {
-        setOpenModal(false)
-    }
-
-    const handleChange = (
-        event: React.MouseEvent<HTMLElement>,
-        newSituacao: string,
-      ) => {
-        if (newSituacao !== undefined) {
-          setSituacao(newSituacao);
-        }
-      };
-
-    // const handleExport = () => {
-    //     if(divAchadoUp) {
-    //         exportDivRelations(divAchadoUp, 'relacoes.xlsx')
-    //     }
-    // }
-
-
-    const onSubmit = (data: Beneficio) => {
-        // const divId = id;
-        // api.patch(`/div-area-achado/update/${id}`, data).then(response => {
+    const onSubmit = (data: FormBeneficioType) => {
+        // api.post('/area-achado', data).then(response => {
+        //     const newAreaAchado = response.data.areaAchado;
         //     TypeAlert(response.data.message, 'success');
         //     reset();
-        //     setArrayDivAchado(prevArray => {
-        //         const updatedArray = prevArray.map(item =>
-        //             item.id === divId ? { ...item, ...data } : item
-        //         )
-
-        //         return updatedArray
-        //     })
-        //     closeModal()
+        //     setValue('natureza', '');
+        //     setArrayAreaAchado(prevArray => [...prevArray, newAreaAchado])
         // }).catch((error) => {
         //     TypeAlert(error.response.data.message, 'warning');
+        //     setValue('natureza', '');
         // });
-        const updateData = {
-            ...data,
-            situacao:situacao === "Aprovado"? true : false
-        }
 
-        setArrayBeneficio(prevArray => prevArray.map(item => item.id === id? {...item, ...updateData} : item))
+        //passo 1 criar o beneficio
+
+        updateBeneficio(data)
+       
+        TypeAlert('Benefício adicionado', 'success');
+        reset()
         closeModal()
     };
-
 
     return (
         <>
             {beneficio && (
-                <Box sx={{borderRadius:2, padding:'20px 20px 20px',boxShadow:'1px 2px 4px'}}
-                component="form" name='formDivAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-                    <Box sx={{display:'flex', alignItems:'center', width:'426.95px', justifyContent:'space-between'}}>
-                        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Registro de Benefício</Typography>
+
+                <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
+                        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Benefício</Typography>
                         <IconButton onClick={closeModal} sx={{
-                        '&:hover': {
-                        bgcolor: '#1e293b', color: '#ffffff',
-                        }
+                            '&:hover': {
+                                bgcolor: '#1e293b', color: '#ffffff',
+                            }
                         }}>
-                        <CloseIcon />
+                            <CloseIcon />
                         </IconButton>
                     </Box>
-                    {achado && 
-                        <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                            <Controller
-                            name="achado_id"
-                            control={control}
-                            
-                            rules={{ required: 'Campo obrigatório' }} 
-                            render={({ field }) => (
-                            <Autocomplete
-                                disablePortal
-                                defaultValue={achado}
-                                id="combo-box-demo"
-                                options={arrayAchado}
-                                getOptionLabel={(option: Achado) => option.achado}
-                                onChange={(event, value) => field.onChange(value?.id || '')} 
-                                renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    defaultValue={achado.achado}
-                                    label="Achado"
-                                    variant="filled"
-                                    error={!!errors.achado_id} // Mostra erro
-                                    helperText={errors.achado_id?.message} // Mostra a mensagem de erro
-                                />
-                                )}
-                            />
-                            )}
-                            />
-                        </Grid>
-                    }
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={4} >
                         <TextField
                             variant='filled'
                             required
-                            defaultValue={beneficio.beneficio}
-                            fullWidth
                             autoFocus
+                            fullWidth
                             id="beneficio"
-                            label='Beneficio'
+                            label='Benefício'
+                            defaultValue={beneficio.beneficio}
                             type="text"
                             error={!!errors?.beneficio}
                             {...register('beneficio', {
@@ -172,24 +108,62 @@ const FormUpdateBeneficio: React.FC<DivAchadoProps> = ({ closeModal, id }) => {
                             </Typography>
                         )}
                     </Grid>
+                    <Grid item xs={12} sm={4}>
+                        {user?.cargo === 'Diretor' ? (<Controller
+                            name="situacaoBeneficio"
+                            defaultValue={beneficio.situacaoBeneficio}
+                            control={control}
+                            render={({ field }) => (
+                                <ToggleButtonGroup
+                                    color="primary"
+                                    value={field.value}
+                                    exclusive
+                                    onChange={(event, newValue) => field.onChange(newValue)}
+                                    aria-label="Situacao do Achado"
+                                >
+                                    <ToggleButton value={false}>Pendente</ToggleButton>
+                                    <ToggleButton value={true}>Aprovado</ToggleButton>
+                                </ToggleButtonGroup>
+                            )}
+                        />) : (
+                            <input type="hidden"{...register('situacaoBeneficio')} value="false" />
+                        )}
+                    </Grid>
 
-                    <Grid item xs={12} sm={4} >
-                        <ToggleButtonGroup
-                            color="primary"
-                            value={situacao}
-                            exclusive
-                            onChange={handleChange}
-                            aria-label="Platform"
-                        >
-                            <ToggleButton value='Pendente' >Pendente</ToggleButton>
-                            <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-                        </ToggleButtonGroup>
+                    <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+                        <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Achado(s)</Typography>
+                        <Controller
+                            name="achados"
+                            control={control}
+                            rules={{ required: 'Selecione pelo menos um achado' }}
+                            render={({ field }) => (
+                                <Autocomplete
+                                    multiple
+                                    id="achados"
+                                    options={arrayAchado}
+                                    getOptionLabel={(option) => option.achado}
+                                    filterSelectedOptions
+                                    value={field.value || []}
+                                    onChange={(event, value) => field.onChange(value)}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Relação de Achados"
+                                            placeholder="Selecione os achados"
+                                            variant="filled"
+                                            error={!!errors.achados}
+                                            helperText={errors.achados?.message}
+                                        />
+                                    )}
+                                />
+                            )}
+                        />
                     </Grid>
                     <RegisterButton text="Registrar" />
                 </Box>
             )}
         </>
-    );
+    )
 }
-
-export default FormUpdateBeneficio;
+export default FormBeneficio;

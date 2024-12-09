@@ -44,7 +44,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
         return <FormUpdateTopicoAchado closeModal={onClose} id={id} />
 
       case 'beneficio':
-        return <FormUpdateBeneficio closeModal={onClose} id={id} />
+        return <FormUpdateBeneficio closeModal={onClose} id={id} user={user} dataType={dataType}/>
 
       case 'achado':
         return <FormUpdateAchados closeModal={onClose} id={id} user={user} dataType={dataType} />

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import { Achado, Beneficio, BeneficioComAchado, TopicoAchado } from "../types/types"
+import { Achado, Beneficio, BeneficioComAchado, FormBeneficioType, TopicoAchado } from "../types/types"
 import { useContextTable } from "../context/TableContext";
 import { TypeAlert, TypeInfo } from "../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
@@ -53,6 +53,7 @@ const dataFake = () => {
     //mocks de achado
     const verifyAchado = (achado: string): boolean => {
         const texto = arrayAchado.find(item => item.achado === achado)
+        console.log(texto)
         if (texto) {
             TypeAlert('O Achado já existe no banco de dados', 'info')
             return true
@@ -67,6 +68,17 @@ const dataFake = () => {
             }
         } catch (error) {
             console.log('Achado não encontrado', error)
+        }
+    }
+
+    const getAchadoById = (idAchado: string) => {
+        const objeto = arrayAchado.filter(item => item.id === idAchado)
+        try {
+            if (objeto) {
+                return objeto
+            }
+        } catch (error) {
+            console.log('Achados não encontrados', error)
         }
     }
 
@@ -123,10 +135,10 @@ const dataFake = () => {
             const achadoComTopicoEBeneficio = {
                 achado: achado,
                 topico: topico,
-                beneficios:beneficios
+                beneficios: beneficios
             }
 
-            return  achadoComTopicoEBeneficio;
+            return achadoComTopicoEBeneficio;
         }
 
     }
@@ -158,6 +170,7 @@ const dataFake = () => {
             setArrayAchadoBeneficio(achadoBeneficioupdated)
             const arrayAchadoUpdated = arrayAchado.filter(achado => achado.id !== idAchado)
             setArrayAchado(arrayAchadoUpdated)
+            TypeAlert('O achado foi excluído', 'success')
             return
         }
     }
@@ -185,6 +198,46 @@ const dataFake = () => {
 
     }
 
+    const getBeneficio = (idBeneficio: GridRowId) => {
+        try {
+            const beneficio = arrayBeneficio.find(item => item.id === idBeneficio)
+            if (beneficio) {
+                const achadoBeneficio = arrayAchadoBeneficio.filter(item =>
+                    item.beneficio_id === idBeneficio
+                )
+                if (achadoBeneficio) {
+                    const achados = achadoBeneficio.map(item => getAchado(item.achado_id))
+                    if (achados) {
+                        const objetoCompleto = {
+                            id: beneficio.id,
+                            beneficio: beneficio.beneficio,
+                            situacaoBeneficio: beneficio.situacaoBeneficio,
+                            achados: achados
+                        }
+                        return objetoCompleto
+                    }
+                }
+            }
+        } catch (error) {
+            console.log("Não foi possível achar o benefício", error)
+        }
+    }
+
+    const updateBeneficio = (objeto: FormBeneficioType) => {
+        console.log(objeto)
+        const { achados } = objeto
+        try {
+            setArrayBeneficio(prevArray => prevArray.map(item => item.id === objeto.id ? { ...item, ...objeto } : item))
+            if (achados) {
+                updateAbByBeneficio(achados, objeto.id)
+                return
+            }
+        } catch (error) {
+            TypeAlert("Erro ao tentar atualizar o beneficio", "error")
+        }
+
+    }
+
     //mocks de AchadoBeneficio
     const getAchadoByBeneficio = (Id: string): Achado[] => {
         const arrayFiltrado = arrayAchadoBeneficio.filter(item => item.beneficio_id === Id)
@@ -195,24 +248,24 @@ const dataFake = () => {
         return achados
     }
 
-    const getBeneficioByAchado = (idAchado: GridRowId | undefined ) => {
+    const getBeneficioByAchado = (idAchado: GridRowId | undefined) => {
         if (!idAchado) {
-          console.log("ID de Achado inválido.");
-          return [];
+            console.log("ID de Achado inválido.");
+            return [];
         }
-      
+
         const achadoBeneficios = arrayAchadoBeneficio.filter(item => item.achado_id === idAchado);
-      
+
         if (achadoBeneficios.length > 0) {
-          const beneficios = achadoBeneficios.flatMap(achadoBeneficio => {
-            return arrayBeneficio.filter(beneficio => beneficio.id === achadoBeneficio.beneficio_id)
-          })
-          return beneficios;
+            const beneficios = achadoBeneficios.flatMap(achadoBeneficio => {
+                return arrayBeneficio.filter(beneficio => beneficio.id === achadoBeneficio.beneficio_id)
+            })
+            return beneficios;
         } else {
-          console.log("Consulta vazia");
-          return [];
+            console.log("Consulta vazia");
+            return [];
         }
-      };
+    };
 
     const deleteByBeneficio = (beneficio_id: GridRowId) => {
         setArrayAchadoBeneficio(prevArray => prevArray.filter(achadoBeneficio => achadoBeneficio.beneficio_id !== beneficio_id))
@@ -266,6 +319,41 @@ const dataFake = () => {
 
             return updatedArray;
         });
+
+
+    };
+    const updateAbByBeneficio = (achados: Achado[], idBeneficio: string) => {
+        setArrayAchadoBeneficio((prevArray) => {
+            // Caso 1: Se achados estiver vazio, removemos todos os registros do idBeneficio
+            if (achados.length === 0) {
+                return prevArray.filter((item) => item.beneficio_id !== idBeneficio);
+            }
+
+            // Caso 2: Quando há achados passados, removemos os antigos e adicionamos os novos
+            const updatedArray = prevArray
+                .filter(
+                    (item) =>
+                        item.beneficio_id !== idBeneficio || // Mantenha os registros com beneficio_id diferente
+                        achados.some((achado) => achado.id === item.achado_id) // Mantenha apenas os achados existentes
+                )
+                .concat(
+                    achados
+                        .filter(
+                            (achado) =>
+                                !prevArray.some(
+                                    (item) =>
+                                        item.beneficio_id === idBeneficio && item.achado_id === achado.id
+                                ) // Adiciona apenas achados que ainda não estão no array
+                        )
+                        .map((achado) => ({
+                            id: faker.string.uuid(), // Gerando um novo ID para o registro de relação
+                            achado_id: achado.id,
+                            beneficio_id: idBeneficio,
+                        }))
+                );
+
+            return updatedArray;
+        });
     };
 
 
@@ -276,7 +364,8 @@ const dataFake = () => {
         verifyBeneficio, getAchado,
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
         getAchadoByBeneficio, deleteByBeneficio,
-        deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado, getAchadoComTopico
+        deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado,
+        getAchadoComTopico, getBeneficio, updateBeneficio
         //BeneficioFormatado, 
     }
 

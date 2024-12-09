@@ -23,6 +23,9 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
     const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio } = dataFake()
     const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
 
+    
+
+
     const handleChangeSituacaoBeneficio = (
         event: React.MouseEvent<HTMLElement>,
         newSituacao: string | null

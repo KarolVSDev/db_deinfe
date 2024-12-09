@@ -59,13 +59,13 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     // })
 
     //bloco que manipula e salva o achado
+    if (verifyAchado(data.achado)) {
+      return;
+    }
+    
     if (data.beneficios?.length === 0 && !data.beneficio) {
       // Se não houver benefícios, apenas salva o achado
       const { beneficio, beneficios, ...dataSemBeneficio } = data;
-
-      if (verifyAchado(data.achado)) {
-        return;
-      }
 
       if (user?.cargo !== 'Diretor') {
         data.situacaoAchado = false;
@@ -153,6 +153,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     TypeAlert('Achado adicionado', 'success');
     reset();
     closeModal();
+
   }
 
 
