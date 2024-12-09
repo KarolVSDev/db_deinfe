@@ -23,11 +23,10 @@ export interface FormAchadoProps {
 const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) => {
 
   const { control, register, handleSubmit, setValue, formState: { errors, isSubmitted }, reset } = useForm<BeneficioComAchado>({});
-  //const { setArrayAchado } = useContextTable()
   const { saveAchado, saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
+  const { arrayTopicoAchado, arrayBeneficio, setArrayAchado } = useContextTable()
 
 
   const handleChangeSituacaoAchado = (
@@ -62,7 +61,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     if (verifyAchado(data.achado)) {
       return;
     }
-    
+
     if (data.beneficios?.length === 0 && !data.beneficio) {
       // Se não houver benefícios, apenas salva o achado
       const { beneficio, beneficios, ...dataSemBeneficio } = data;

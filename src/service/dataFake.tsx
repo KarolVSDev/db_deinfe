@@ -238,6 +238,19 @@ const dataFake = () => {
 
     }
 
+    const deleteBeneficio = (idBeneficio: GridRowId) => {
+        try {
+            const arrayABAtualizado = arrayAchadoBeneficio.filter(objeto => objeto.beneficio_id !== idBeneficio)
+            setArrayAchadoBeneficio(arrayABAtualizado)
+            const arrayBeneficioAtualizado = arrayBeneficio.filter(beneficio => beneficio.id !== idBeneficio)
+            setArrayBeneficio(arrayBeneficioAtualizado)
+            TypeAlert('Benefício excluído', 'success')
+        } catch (error) {
+            console.log(error)
+            TypeAlert('Erro ao tentar excluir o Benefício', 'error')
+        }
+    }
+
     //mocks de AchadoBeneficio
     const getAchadoByBeneficio = (Id: string): Achado[] => {
         const arrayFiltrado = arrayAchadoBeneficio.filter(item => item.beneficio_id === Id)
@@ -365,7 +378,7 @@ const dataFake = () => {
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
         getAchadoByBeneficio, deleteByBeneficio,
         deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado,
-        getAchadoComTopico, getBeneficio, updateBeneficio
+        getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio
         //BeneficioFormatado, 
     }
 

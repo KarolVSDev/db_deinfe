@@ -21,13 +21,15 @@ export interface VerificationProps {
 }
 
 const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
-    const { deleteTopico, deleteAchado } = dataFake()
+    const { deleteTopico, deleteAchado, deleteBeneficio } = dataFake()
 
     const handleDelete = () => {
         if (dataType === 'topico') {
             deleteTopico(selectedRow)
         }else if (dataType === 'achado'){
             deleteAchado(selectedRow)
+        }else if(dataType === 'beneficio'){
+            deleteBeneficio(selectedRow)
         }
         onClose()
     };
