@@ -1,6 +1,6 @@
 import { Box, Container, createTheme, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { TopicoAchado } from '../../../../types/types';
+import { TopicoAchado, User } from '../../../../types/types';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -12,6 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 interface TopicoAchadoProp {
   closeModal: () => void;
   id: GridRowId | undefined;
+  user: User | undefined;
 }
 
 const theme = createTheme({
@@ -27,7 +28,7 @@ const theme = createTheme({
   },
 });
 
-const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) => {
+const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, user }) => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
   const [topicoAchado, setTopicoAchado] = useState<TopicoAchado | null>(null);
   const { arrayTopicoAchado, setArrayTopicoAchado } = useContextTable();
@@ -80,42 +81,42 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
 
 
   return (
-      <Box sx={{borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}  
-        component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{display:'flex', alignItems:'center', width:'70vw', justifyContent:'space-between'}}>
-          <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
-            Atualizar Registro de Tópico
-          </Typography>
-          <IconButton onClick={closeModal} sx={{
-               mr: 0, '&:hover': {
-                bgcolor: '#1e293b', color: '#ffffff',
-              }
-            }}>
-              <CloseIcon />
-            </IconButton>
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}
+      component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
+        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
+          Atualizar Registro de Tópico
+        </Typography>
+        <IconButton onClick={closeModal} sx={{
+          mr: 0, '&:hover': {
+            bgcolor: '#1e293b', color: '#ffffff',
+          }
+        }}>
+          <CloseIcon />
+        </IconButton>
 
-        </Box>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            variant="filled"
-            required
-            defaultValue={topicoAchado.topico}
-            fullWidth
-            autoFocus
-            id="topico"
-            label="Tópico"
-            type="text"
-            error={!!errors?.topico}
-            {...register('topico', {
-              required: 'Campo obrigatório'
-            })}
-          />
-          {errors?.topico && (
-            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-              {errors.topico?.message}
-            </Typography>
-          )}
-          
+      </Box>
+      <Grid item xs={12} sm={4}>
+        <TextField
+          variant="filled"
+          required
+          defaultValue={topicoAchado.topico}
+          fullWidth
+          autoFocus
+          id="topico"
+          label="Tópico"
+          type="text"
+          error={!!errors?.topico}
+          {...register('topico', {
+            required: 'Campo obrigatório'
+          })}
+        />
+        {errors?.topico && (
+          <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+            {errors.topico?.message}
+          </Typography>
+        )}
+        {user?.cargo === "Diretor" &&
           <ToggleButtonGroup
             color="primary"
             value={situacao}
@@ -126,9 +127,10 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id }) 
             <ToggleButton value='Pendente' >Pendente</ToggleButton>
             <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
           </ToggleButtonGroup>
-        </Grid>
-        <RegisterButton text="Atualizar" />
-      </Box>
+        }
+      </Grid>
+      <RegisterButton text="Atualizar" />
+    </Box>
   );
 };
 
