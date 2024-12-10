@@ -2,10 +2,9 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useCallback, useEffect, useState } from 'react';
 import { ColumnConfig, } from '../../types/types';
-
 import { useContextTable } from '../../context/TableContext';
 import useFetchListData from '../../hooks/useFetchListData';
-import useFormData from '../../hooks/useFormData';
+
 
 
 export interface DataProcessoDetailsProps {
@@ -19,7 +18,7 @@ const DataProcessoDetails: React.FC<DataProcessoDetailsProps> = ({
     const [rows, setRows] = useState<any[]>([]);
     const { handleLocalization } = useContextTable()
     const { onDelete } = useFetchListData()
-    //const { transformNat, transformAreaAchado, transformDivAchado, transformAchado } = useFormData()
+
 
 
     const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {

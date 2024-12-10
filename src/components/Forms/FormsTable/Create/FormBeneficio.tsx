@@ -102,7 +102,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                     autoFocus
                     fullWidth
                     id="beneficio"
-                    label='Benefício'
+                    label='Proposta de Benefício'
                     type="text"
                     error={!!errors?.beneficio}
                     {...register('beneficio', {

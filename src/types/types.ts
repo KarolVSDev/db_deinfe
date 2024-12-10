@@ -43,6 +43,11 @@ export interface TopicoAchado {
 export interface Achado {
   id: string;
   achado:string;
+  data:Date;
+  gravidade:string;
+  criterioMunicipal?:string;
+  criterioEstadual?:string;
+  criterioGeral?:string;
   situacaoAchado:boolean;
   analise:string;
   topico_id:string;
@@ -66,6 +71,11 @@ export interface BeneficioComAchado {
   situacaoBeneficio?:boolean;
   id: string;
   achado:string;
+  data:Date;
+  gravidade:string;
+  criterioMunicipal?:string;
+  criterioEstadual?:string;
+  criterioGeral?:string;
   situacaoAchado:boolean;
   analise:string;
   topico_id:string;
