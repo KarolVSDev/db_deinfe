@@ -4,7 +4,7 @@ import { BeneficioComAchado } from "../../types/types";
 
 
 export interface TextFieldProps {
-    id:| "criterioMunicipal" |  "criterioEstadual" | "criterioGeral"
+    id:keyof BeneficioComAchado;
     label:string;
     register: UseFormRegister<BeneficioComAchado>;
     errors:FieldErrors<FieldValues>;
@@ -13,7 +13,7 @@ export interface TextFieldProps {
 const TextFieldComponent:React.FC<TextFieldProps> = ({id, label, register, errors}) => {
 
     return (
-        <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+        <Grid item xs={12} sm={4} >
             <TextField
                 variant="filled"
                 autoComplete="given-name"
@@ -25,12 +25,13 @@ const TextFieldComponent:React.FC<TextFieldProps> = ({id, label, register, error
                 error={!!errors?.criterioMunicipal}
                 helperText={errors?.criterioMunicipal?.message as string}
              
-                {...register(id, {
-                    validate: (value: string | undefined) => {
-                        const inputValue = value || ""
-                        // Regex para bloquear caracteres SQL comuns
+                {...register(id as keyof BeneficioComAchado, {
+                    validate: (value) => {
+                        if (typeof value !== "string") {
+                            return true; // Se não for string, não executa a validação
+                        }
                         const sqlInjectionPattern = /(\b(SELECT|UPDATE|DELETE|INSERT|WHERE|DROP|UNION|EXEC|OR|AND|--|;|')\b)/i;
-                        if (sqlInjectionPattern.test(inputValue)) {
+                        if (sqlInjectionPattern.test(value)) {
                             return "Entrada inválida: possível tentativa de injeção de SQL.";
                         }
                         return true;

@@ -1,29 +1,39 @@
-import React, { useState } from "react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
-import dayjs, { Dayjs } from "dayjs";
+import { FormControl, FormHelperText, Grid } from "@mui/material";
+import { BeneficioComAchado } from "../../types/types";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-const DateSelector = ({ label = "Selecione uma data", onChange }: { label?: string; onChange?: (date: Dayjs | null) => void }) => {
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+export interface DateInputProps {
+  id: keyof BeneficioComAchado;
+  label: string;
+  register: UseFormRegister<BeneficioComAchado>;
+  errors: FieldErrors<BeneficioComAchado>;
+}
 
-  const handleDateChange = (newDate: Dayjs | null) => {
-    setSelectedDate(newDate);
-    if (onChange) {
-      onChange(newDate);
-    }
-  };
+const DateSelector:React.FC<DateInputProps> = ({id, label, register, errors}) => {
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        label={label}
-        value={selectedDate}
-        onChange={handleDateChange}
-        renderInput={(params) => <TextField {...params} fullWidth />}
-      />
-    </LocalizationProvider>
+    <Grid item xs={12} sm={6} sx={{ mt: 3 }}>
+      <FormControl error={!!errors?.[id]}>
+        <TextField
+          id={id}
+          label={label}
+          type="date"
+          fullWidth
+          variant="outlined"
+          InputLabelProps={{
+            shrink: true, // Faz a label ficar acima quando o campo é preenchido
+          }}
+          {...register(id, {
+            required: "Este campo é obrigatório", // Validação de campo obrigatório
+          })}
+        />
+        {errors?.[id] && (
+          <FormHelperText>{errors[id]?.message}</FormHelperText>
+        )}
+      </FormControl>
+    </Grid>
   );
 };
 

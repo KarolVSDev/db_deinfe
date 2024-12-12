@@ -5,38 +5,44 @@ import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Typography } from '@mui/material';
+import { BeneficioComAchado } from '../../../types/types';
 
-const  ToggleButtonsCriterios = () =>  {
-    
-  const [alignment, setAlignment] = React.useState<string | null>('left');
+export interface toggleComponentProps {
+  alignment: string;
+  onChange: (value:keyof BeneficioComAchado) => void;
+}
 
-  const handleAlignment = (
-    event: React.MouseEvent<HTMLElement>,
-    newAlignment: string | null,
-  ) => {
-    setAlignment(newAlignment);
+const ToggleButtonsCriterios:React.FC<toggleComponentProps> = ({alignment, onChange}) => {
+
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: keyof BeneficioComAchado | null) => {
+    if (newAlignment !== null) {
+      onChange(newAlignment);
+    }
   };
 
   return (
-    <ToggleButtonGroup
-      value={alignment}
-      exclusive
-      onChange={handleAlignment}
-      aria-label="text alignment"
-    >
-      <ToggleButton value="left" aria-label="left aligned">
-        <FormatAlignLeftIcon />
-      </ToggleButton>
-      <ToggleButton value="center" aria-label="centered">
-        <FormatAlignCenterIcon />
-      </ToggleButton>
-      <ToggleButton value="right" aria-label="right aligned">
-        <FormatAlignRightIcon />
-      </ToggleButton>
-      <ToggleButton value="justify" aria-label="justified" disabled>
-        <FormatAlignJustifyIcon />
-      </ToggleButton>
-    </ToggleButtonGroup>
+    <>
+      <Typography>Critérios</Typography>
+      <ToggleButtonGroup
+        value={alignment}
+        exclusive
+        onChange={handleAlignment}
+        aria-label="text alignment"
+        color='primary'
+      >
+        <ToggleButton value="criterioMunicipal" aria-label="critério municipal">
+          <Typography>Municipal</Typography>
+        </ToggleButton>
+        <ToggleButton value="criterioEstadual" aria-label="critério estadual">
+          <Typography>Estadual</Typography>
+        </ToggleButton>
+        <ToggleButton value="criterioGeral" aria-label="critério geral">
+          <Typography>Geral/Nacional</Typography>
+        </ToggleButton>
+
+      </ToggleButtonGroup>
+    </>
   );
 }
 

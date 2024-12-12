@@ -20,6 +20,7 @@ import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { formateDateToPtBr } from '../../hooks/DateFormate';
 
 export default function DatabaseTable() {
 
@@ -90,6 +91,9 @@ export default function DatabaseTable() {
               </IconButton>
             </Box>
           );
+        }
+        if(header.id === 'data'){
+          return formateDateToPtBr(params.value)
         }
         if (header.id === 'beneficios' || header.id === 'achados') {
           return <ModalBeneficios Id={params.row.id} headerId={header.id} />;
