@@ -6,11 +6,12 @@ export const formatToInputDate = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 export const formateDateToPtBr = (date: string): string => {
-  const parsedDate = new Date(date)
+  const parsedDate = new Date(date); // Presume que a string já está em formato UTC
 
-  const day = String(parsedDate.getDate()).padStart(2, '0');
-  const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
-  const year = parsedDate.getFullYear()
+  const day = String(parsedDate.getUTCDate()).padStart(2, '0');
+  const month = String(parsedDate.getUTCMonth() + 1).padStart(2, '0');
+  const year = parsedDate.getUTCFullYear();
+
   return `${day}/${month}/${year}`;
 };
 

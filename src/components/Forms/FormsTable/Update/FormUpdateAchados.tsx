@@ -8,9 +8,12 @@ import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
-import useExportToExcel from '../../../../hooks/useExportToExcel';
-import CloseIcon from '@mui/icons-material/Close';  
+import CloseIcon from '@mui/icons-material/Close';
 import dataFake from '../../../../service/dataFake';
+import DateSelector from '../../../Inputs/DatePicker';
+import RadioInput from '../../../Inputs/RadioInput';
+import ToggleButtonsCriterios from '../../../Inputs/ToggleInputs/ToggleInputCriterio';
+import TextFieldComponent from '../../../Inputs/TextField';
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -20,34 +23,37 @@ export interface FormUpdateAchadoProps {
 }
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user, dataType }) => {
   const [achadoComTopico, setAchadoComTopico] = useState<AchadoComTopico>()
-  const [topico, setTopico] = useState<TopicoAchado>({id:'', topico:'', situacao:false})
+  const [topico, setTopico] = useState<TopicoAchado>({ id: '', topico: '', situacao: false })
   const [achado, setAchado] = useState<Achado>()
   const [openModal, setOpenModal] = useState(false)
-  const { exportAchadoRelations } = useExportToExcel()
   const { arrayAchado, arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { getBeneficiosByAchado, updateAchado, getAchadoComTopico } = dataFake()
- 
-  const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<BeneficioComAchado>({
+  const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
     defaultValues: {
       topico_id: topico.id, // Inicialize o id do tópico
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
-      beneficios:  [], // Inicialize a lista de benefícios
+      beneficios: [], // Inicialize a lista de benefícios
       situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
+      criterioEstadual:achado?.criterioEstadual,
+      criterioGeral:achado?.criterioGeral,
+      criterioMunicipal:achado?.criterioMunicipal
     },
   });
-
+  const gravidade = watch('gravidade', achado?.gravidade);
+  
   const getAchado = () => {
     // api.get(`achado/${id}`).then(response => {
-    //   console.log(response.data)
-    //   setAchado(response.data)
-    // }).catch((error) => {
+      //   console.log(response.data)
+      //   setAchado(response.data)
+      // }).catch((error) => {
     //   console.log(error)
     //   TypeAlert('Erro ao Resgata Achado', 'error')
     // })
   }
+  const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
 
   useEffect(() => {
     if (id) {
@@ -55,13 +61,24 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       if (result) {
         setAchadoComTopico(result);
         reset({
-          id:result.achado.id || '',
+          id: result.achado.id || '',
           topico_id: result.topico?.id || '',
           achado: result.achado?.achado || '',
           analise: result.achado?.analise || '',
           beneficios: result.beneficios || [],
           situacaoAchado: result.achado?.situacaoAchado || false,
+          criterioMunicipal:result.achado.criterioMunicipal || '',
+          criterioEstadual:result.achado.criterioEstadual || '',
+          criterioGeral:result.achado.criterioGeral || '',
         });
+
+        if(result.achado.criterioMunicipal){
+          setAlignment('criterioMunicipal')
+        }else if(result.achado.criterioEstadual){
+          setAlignment('criterioEstadual')
+        }else{
+          setAlignment('criterioGeral')
+        }
       }
     }
   }, [id, reset]);
@@ -79,6 +96,22 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       setSituacaoAchado("Pendente")
     }
   }, [])
+
+
+
+  const getTextFieldLabel = () => {
+    switch (alignment) {
+      case 'criterioMunicipal':
+        return 'Criterio Municipal';
+      case 'criterioEstadual':
+        return 'Criterio Estadual';
+      case 'criterioGeral':
+        return 'Criterio Geral';
+      default:
+        return 'criterioGeral'
+    }
+
+  }
 
   const onSubmit = (data: BeneficioComAchado) => {
     // const idAchado = id;
@@ -169,6 +202,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               </Typography>
             )}
           </Grid>
+
+
           <Grid item xs={12} sm={4}>
             {user?.cargo === 'Diretor' ? (<Controller
               name="situacaoAchado"
@@ -190,6 +225,28 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               <input type="hidden"{...register('situacaoAchado')} value="false" />
             )}
           </Grid>
+
+          <DateSelector id='data' register={register} errors={errors} label='Data de registro' dataAchado={achado.data} />
+
+          <RadioInput id={'gravidade'}
+            label='Gravidade'
+            errors={errors}
+            value={gravidade}
+            setValue={setValue} />
+
+          <Grid item xs={12}>
+            <ToggleButtonsCriterios alignment={alignment} onChange={setAlignment} />
+          </Grid>
+          <Grid item xs={12}>
+            <TextFieldComponent id={alignment}
+            label={getTextFieldLabel()} 
+            register={register} 
+            errors={errors}
+            criterioMuni={achado.criterioMunicipal} 
+            criterioEst={achado.criterioEstadual} 
+            criterioGeral={achado.criterioGeral} />
+          </Grid>
+
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
             <TextField
               variant='filled'

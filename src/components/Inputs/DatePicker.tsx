@@ -9,16 +9,20 @@ export interface DateInputProps {
   label: string;
   register: UseFormRegister<BeneficioComAchado>;
   errors: FieldErrors<BeneficioComAchado>;
+  dataAchado?:Date;
 }
 
-const DateSelector:React.FC<DateInputProps> = ({id, label, register, errors}) => {
+const DateSelector:React.FC<DateInputProps> = ({id, label, register, errors, dataAchado}) => {
 
   return (
-    <Grid item xs={12} sm={6} sx={{ mt: 3 }}>
+    <>
+    {dataAchado ? (
+      <Grid item xs={12} sm={6} sx={{ mt: 3 }}>
       <FormControl error={!!errors?.[id]}>
         <TextField
           id={id}
           label={label}
+          defaultValue={dataAchado}
           type="date"
           fullWidth
           variant="outlined"
@@ -34,6 +38,29 @@ const DateSelector:React.FC<DateInputProps> = ({id, label, register, errors}) =>
         )}
       </FormControl>
     </Grid>
+    ):(
+      <Grid item xs={12} sm={6} sx={{ mt: 3 }}>
+        <FormControl error={!!errors?.[id]}>
+          <TextField
+            id={id}
+            label={label}
+            type="date"
+            fullWidth
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true, // Faz a label ficar acima quando o campo é preenchido
+            }}
+            {...register(id, {
+              required: "Este campo é obrigatório", // Validação de campo obrigatório
+            })}
+          />
+          {errors?.[id] && (
+            <FormHelperText>{errors[id]?.message}</FormHelperText>
+          )}
+        </FormControl>
+      </Grid>
+    )}
+    </>
   );
 };
 
