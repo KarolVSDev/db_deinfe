@@ -1,18 +1,14 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import {TopicoAchado, DivAchado, AreaAchado, Achado, Beneficio, AchadoBeneficio, } from "../types/types";
+import {TopicoAchado, Achado, Beneficio, AchadoBeneficio, } from "../types/types";
 
 
 interface TableContextType {
     arrayTopicoAchado: TopicoAchado[];
-    arrayAreaAchado: AreaAchado[];
-    arrayDivAchado: DivAchado[];
     arrayAchado: Achado[];
     arrayBeneficio: Beneficio[];
     arrayAchadoBeneficio:AchadoBeneficio[];
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
-    setArrayAreaAchado: Dispatch<SetStateAction<AreaAchado[]>>;
-    setArrayDivAchado: Dispatch<SetStateAction<DivAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
     setArrayBeneficio: Dispatch<SetStateAction<Beneficio[]>>;
     setArrayAchadoBeneficio:Dispatch<SetStateAction<AchadoBeneficio[]>>;
@@ -28,8 +24,6 @@ const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayTopicoAchado, setArrayTopicoAchado] = useState<TopicoAchado[]>([]);
-    const [arrayAreaAchado, setArrayAreaAchado] = useState<AreaAchado[]>([]);
-    const [arrayDivAchado, setArrayDivAchado] = useState<DivAchado[]>([]);
     const [arrayBeneficio, setArrayBeneficio] = useState<Beneficio[]>([]);
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
     const [arrayAchadoBeneficio, setArrayAchadoBeneficio] = useState<AchadoBeneficio[]>([]);
@@ -68,15 +62,11 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     return (
         <TableContext.Provider value={{
             arrayTopicoAchado,
-            arrayAreaAchado,
-            arrayDivAchado,
             arrayAchado,
             arrayBeneficio,
             arrayAchadoBeneficio,
             handleLocalization,
             setArrayTopicoAchado,
-            setArrayAreaAchado,
-            setArrayDivAchado,
             setArrayAchado,
             setArrayBeneficio,
             setArrayAchadoBeneficio

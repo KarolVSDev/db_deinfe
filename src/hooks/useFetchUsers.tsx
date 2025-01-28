@@ -28,7 +28,6 @@ const useFetchUsers = () => {
       })
     }
 
-
   return{
     getUsers,
     users,

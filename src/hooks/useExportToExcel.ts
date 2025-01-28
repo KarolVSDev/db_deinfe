@@ -12,8 +12,6 @@ interface GridState {
 
 const useExportToExcel = () => {
 
-    
-
     const exportToExcel = (gridState: GridState, fileName: 'data.xlsx') => {
         const { columns, rows } = gridState;
         const exportRows = rows.map((row) => {

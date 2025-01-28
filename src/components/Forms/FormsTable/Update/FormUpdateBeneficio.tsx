@@ -51,17 +51,6 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
     }, [id, reset])
 
     const onSubmit = (data: FormBeneficioType) => {
-        // api.post('/area-achado', data).then(response => {
-        //     const newAreaAchado = response.data.areaAchado;
-        //     TypeAlert(response.data.message, 'success');
-        //     reset();
-        //     setValue('natureza', '');
-        //     setArrayAreaAchado(prevArray => [...prevArray, newAreaAchado])
-        // }).catch((error) => {
-        //     TypeAlert(error.response.data.message, 'warning');
-        //     setValue('natureza', '');
-        // });
-
         //passo 1 criar o beneficio
 
         updateBeneficio(data)
