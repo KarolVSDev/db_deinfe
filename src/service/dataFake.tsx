@@ -3,7 +3,7 @@ import { Achado, Beneficio, BeneficioComAchado, FormBeneficioType, TopicoAchado 
 import { useContextTable } from "../context/TableContext";
 import { TypeAlert, TypeInfo } from "../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
-import { promises } from "dns";
+import { Loaded } from "../hooks/TypeAlert";
 
 
 const dataFake = () => {
@@ -13,15 +13,23 @@ const dataFake = () => {
 
 
     //mocks de topico
-    const saveTopico = (data: any) => {
+    const saveTopico = (data: any, setLoaded: (value: boolean) => void) => {
         const newData = {
             id: faker.string.uuid(),
             ...data
 
         }
-        setArrayTopicoAchado((prevData) => [...prevData, newData])
-        console.log('dados salvos', newData)
-        console.log('Dados do Array', [...arrayTopicoAchado, newData])
+        try {
+            setLoaded(true)
+            Loaded()
+            setArrayTopicoAchado((prevData) => [...prevData, newData])
+            console.log('dados salvos', newData)
+            console.log('Dados do Array', [...arrayTopicoAchado, newData])
+
+        } catch (error) {
+            setLoaded(true)
+        }
+
     }
     const getTopico = (topico: string): boolean => {
         const texto = arrayTopicoAchado.find(item => item.topico === topico)
@@ -95,7 +103,7 @@ const dataFake = () => {
     }
 
     const saveAchado = (data: Achado) => {
-        
+
 
         const newData = {
             ...data,

@@ -8,7 +8,6 @@ import { useContextTable } from '../../../../context/TableContext';
 import dataFake from '../../../../service/dataFake'
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import { get } from 'https';
 
 export interface FormTopicoAchadoProps {
   closeModal: () => void;
@@ -20,6 +19,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   //const { setArrayTopicoAchado } = useContextTable()
   const { saveTopico, getTopico } = dataFake()
   const [situacao, setSituacao] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false)
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -49,21 +49,19 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
       ...data,
       situacao: situacao === 'Aprovado' ? true : false
     }
-    saveTopico(dataWithSituacao)
+    saveTopico(dataWithSituacao, setLoaded)
     TypeAlert('Tópico adicionado', 'success');
     reset()
     closeModal()
-    	
-
   };
 
   return (
-    <Box sx={{borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{display:'flex', alignItems:'center', width:'70vw', justifyContent:'space-between'}}>
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Tópico</Typography>
         <IconButton onClick={closeModal} sx={{
-         '&:hover': {
-          bgcolor: '#1e293b', color: '#ffffff',
+          '&:hover': {
+            bgcolor: '#1e293b', color: '#ffffff',
           }
         }}>
           <CloseIcon />
