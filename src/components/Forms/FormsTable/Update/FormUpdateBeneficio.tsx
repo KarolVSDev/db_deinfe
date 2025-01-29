@@ -10,6 +10,7 @@ import useFetchListData from '../../../../hooks/useFetchListData';
 import dataFake from '../../../../service/dataFake';
 import CloseIcon from '@mui/icons-material/Close';
 import { GridRowId } from '@mui/x-data-grid';
+import Loader from '../../../Loader/Loader';
 
 export interface FormBeneficioProps {
     closeModal: () => void;
@@ -32,6 +33,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
             achados: achados
         },
     });
+    const [loading, setLoading] = useState(false)
 
 
     useEffect(() => {
@@ -50,20 +52,24 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         }
     }, [id, reset])
 
-    const onSubmit = (data: FormBeneficioType) => {
-        //passo 1 criar o beneficio
+    const onSubmit = async (data: FormBeneficioType) => {
+        setLoading(true)
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            updateBeneficio(data)
+            TypeAlert('Benefício adicionado', 'success');
+            reset()
+            closeModal()
+        } catch (error) {
+            TypeAlert("Erro ao Tentar atualizar o Benefício", "error")
+            console.error(error)
+        }
 
-        updateBeneficio(data)
-       
-        TypeAlert('Benefício adicionado', 'success');
-        reset()
-        closeModal()
     };
 
     return (
         <>
             {beneficio && (
-
                 <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
                         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Benefício</Typography>
@@ -149,7 +155,11 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                             )}
                         />
                     </Grid>
-                    <RegisterButton text="Registrar" />
+                    {loading ? <Box sx={{ display: "flex", justifyContent: "start", mt: 3 }}>
+                        <Loader />
+                    </Box> :
+                        <RegisterButton text="Registrar" />
+                    }
                 </Box>
             )}
         </>

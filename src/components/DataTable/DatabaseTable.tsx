@@ -246,7 +246,7 @@ export default function DatabaseTable() {
           variant='h5'
           component='div'
           sx={{ padding: '20px' }}>
-          Base de dados Deinfe
+          Catálogo
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height: '48px' }}>
           <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>

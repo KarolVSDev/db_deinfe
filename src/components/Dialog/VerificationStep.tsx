@@ -32,13 +32,28 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
             try {
                 await new Promise(resolve => setTimeout(resolve, 1000))
                 deleteTopico(selectedRow)
+                setLoading(false)
             } catch (error) {
-                console.log("Erro", error)
+                console.error("Erro ao tentar excluir o Tópico", error)
             }
         } else if (dataType === 'achado') {
-            deleteAchado(selectedRow)
+            setLoading(true)
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                deleteAchado(selectedRow)
+                setLoading(false)
+            } catch (error) {
+                console.error("Erro ao tentar excluir o Achado", error)
+            }
         } else if (dataType === 'beneficio') {
-            deleteBeneficio(selectedRow)
+            setLoading(true)
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                deleteBeneficio(selectedRow)
+                setLoading(false)
+            } catch (error) {
+                console.error("Erro ao tentar excluir o Benefício", error)
+            }
         }
         onClose()
     };

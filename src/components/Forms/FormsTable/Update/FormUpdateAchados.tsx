@@ -14,6 +14,7 @@ import DateSelector from '../../../Inputs/DatePicker';
 import RadioInput from '../../../Inputs/RadioInput';
 import ToggleButtonsCriterios from '../../../Inputs/ToggleInputs/ToggleInputCriterio';
 import TextFieldComponent from '../../../Inputs/TextField';
+import Loader from '../../../Loader/Loader';
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -30,6 +31,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { getBeneficiosByAchado, updateAchado, getAchadoComTopico } = dataFake()
+  const [loading, setLoading] = useState(false)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
     defaultValues: {
       topico_id: topico.id, // Inicialize o id do tópico
@@ -37,18 +39,18 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
       beneficios: [], // Inicialize a lista de benefícios
       situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
-      criterioEstadual:achado?.criterioEstadual,
-      criterioGeral:achado?.criterioGeral,
-      criterioMunicipal:achado?.criterioMunicipal
+      criterioEstadual: achado?.criterioEstadual,
+      criterioGeral: achado?.criterioGeral,
+      criterioMunicipal: achado?.criterioMunicipal
     },
   });
   const gravidade = watch('gravidade', achado?.gravidade);
-  
+
   const getAchado = () => {
     // api.get(`achado/${id}`).then(response => {
-      //   console.log(response.data)
-      //   setAchado(response.data)
-      // }).catch((error) => {
+    //   console.log(response.data)
+    //   setAchado(response.data)
+    // }).catch((error) => {
     //   console.log(error)
     //   TypeAlert('Erro ao Resgata Achado', 'error')
     // })
@@ -67,16 +69,16 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           analise: result.achado?.analise || '',
           beneficios: result.beneficios || [],
           situacaoAchado: result.achado?.situacaoAchado || false,
-          criterioMunicipal:result.achado.criterioMunicipal || '',
-          criterioEstadual:result.achado.criterioEstadual || '',
-          criterioGeral:result.achado.criterioGeral || '',
+          criterioMunicipal: result.achado.criterioMunicipal || '',
+          criterioEstadual: result.achado.criterioEstadual || '',
+          criterioGeral: result.achado.criterioGeral || '',
         });
 
-        if(result.achado.criterioMunicipal){
+        if (result.achado.criterioMunicipal) {
           setAlignment('criterioMunicipal')
-        }else if(result.achado.criterioEstadual){
+        } else if (result.achado.criterioEstadual) {
           setAlignment('criterioEstadual')
-        }else{
+        } else {
           setAlignment('criterioGeral')
         }
       }
@@ -113,7 +115,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
 
   }
 
-  const onSubmit = (data: BeneficioComAchado) => {
+  const onSubmit = async (data: BeneficioComAchado) => {
     // const idAchado = id;
     // api.patch(`/achado/update/${idAchado}`, data).then(response => {
     //   TypeAlert(response.data.message, 'success')
@@ -128,17 +130,18 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     // }).catch((error) => {
     //  TypeAlert(error.response.data.message, 'warning');
 
-    const dataWithSituacao = {
-      ...data,
-      situacaoAchado: situacaoAchado === "Aprovado" ? true : false
+    setLoading(true)
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      updateAchado(data)
+      reset()
+      TypeAlert("Achado atualizado", "success")
+      closeModal()
+    } catch (error) {
+      TypeAlert("Erro ao tentar atualizar o Achado", "error")
     }
 
-    console.log(dataWithSituacao)
-    updateAchado(data)
-    console.log(arrayAchado)
-    reset()
-    TypeAlert("Achado atualizado", "success")
-    closeModal()
   }
 
   return (
@@ -239,12 +242,12 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           </Grid>
           <Grid item xs={12}>
             <TextFieldComponent id={alignment}
-            label={getTextFieldLabel()} 
-            register={register} 
-            errors={errors}
-            criterioMuni={achado.criterioMunicipal} 
-            criterioEst={achado.criterioEstadual} 
-            criterioGeral={achado.criterioGeral} />
+              label={getTextFieldLabel()}
+              register={register}
+              errors={errors}
+              criterioMuni={achado.criterioMunicipal}
+              criterioEst={achado.criterioEstadual}
+              criterioGeral={achado.criterioGeral} />
           </Grid>
 
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
@@ -294,7 +297,11 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               />
             </Grid>
           </Grid>
-          <RegisterButton text="Atualizar" />
+          {loading ? <Box sx={{ display: "flex", justifyContent: "start", mt: 3 }}>
+            <Loader />
+          </Box> :
+            <RegisterButton text="Atualizar" />
+          }
         </Box>
       )}
     </>

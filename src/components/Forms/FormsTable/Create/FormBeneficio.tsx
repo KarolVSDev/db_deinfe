@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import dataFake from '../../../../service/dataFake';
 import CloseIcon from '@mui/icons-material/Close';
+import Loader from '../../../Loader/Loader';
 
 export interface FormBeneficioProps {
     closeModal: () => void;
@@ -22,9 +23,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
     //const {getAllNatAchado} = useFetchListData()
     const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio } = dataFake()
     const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-
-    
-
+    const [loading, setLoading] = useState(false);
 
     const handleChangeSituacaoBeneficio = (
         event: React.MouseEvent<HTMLElement>,
@@ -35,41 +34,46 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         }
     };
 
-    const onSubmit = (data: FormBeneficioType) => {
-        //passo 1 criar o beneficio
-        console.log(data)
+    const onSubmit = async (data: FormBeneficioType) => {
+        setLoading(true)
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            //passo 1 criar o beneficio
+            if (user?.cargo !== 'Diretor') {
+                data.situacaoBeneficio = false
+            }
 
-        if (user?.cargo !== 'Diretor') {
-            data.situacaoBeneficio = false
+            const { beneficio, ...resto } = data
+
+            if (data.beneficio && verifyBeneficio(data.beneficio)) {
+                // Se o benefício já existe, não continue o processo de envio
+                return;
+            }
+
+            const dataWithSituacao = {
+                beneficio: beneficio,
+                situacaoBeneficio: situacaoBeneficio === 'Aprovado' ? true : false,
+            };
+
+            const retornoBeneficio = saveBeneficio(dataWithSituacao)
+
+            //passo 2 criar a relação na entidade achadoBeneficio
+
+            if (resto.achados.length > 0) {
+                resto.achados.map(achado => {
+                    const objAchadoBeneficio = { achado_id: achado.id, beneficio_id: retornoBeneficio.id }
+                    saveAchadoBeneficio(objAchadoBeneficio)
+                })
+            }
+
+            TypeAlert('Benefício adicionado', 'success');
+            reset()
+            closeModal()
+        } catch (error) {
+            TypeAlert("Erro ao tentar adicionar o Benefício", "error");
+            console.log(error)
         }
 
-
-        const { beneficio, ...resto } = data
-
-        if (data.beneficio && verifyBeneficio(data.beneficio)) {
-            // Se o benefício já existe, não continue o processo de envio
-            return;
-        }
-
-        const dataWithSituacao = {
-            beneficio: beneficio,
-            situacaoBeneficio: situacaoBeneficio === 'Aprovado' ? true : false,
-        };
-
-        const retornoBeneficio = saveBeneficio(dataWithSituacao)
-
-        //passo 2 criar a relação na entidade achadoBeneficio
-
-        if (resto.achados.length > 0) {
-            resto.achados.map(achado => {
-                const objAchadoBeneficio = { achado_id: achado.id, beneficio_id: retornoBeneficio.id }
-                saveAchadoBeneficio(objAchadoBeneficio)
-            })
-        }
-
-        TypeAlert('Benefício adicionado', 'success');
-        reset()
-        closeModal()
     };
 
     return (
@@ -150,8 +154,12 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                     )}
                 />
             </Grid>
-            <RegisterButton text="Registrar" />
-        </Box>
+            {loading ? <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+                <Loader />
+            </Box> :
+                <RegisterButton text="Registrar" />
+            }
+            </Box>
     );
 }
-export default FormBeneficio;
+            export default FormBeneficio;
