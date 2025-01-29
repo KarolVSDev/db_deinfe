@@ -8,6 +8,9 @@ import { useContextTable } from '../../../../context/TableContext';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CloseIcon from '@mui/icons-material/Close';
+import dataFake from '../../../../service/dataFake';
+import { Loaded, TypeAlert } from '../../../../hooks/TypeAlert';
+import Loader from '../../../Loader/Loader';
 
 interface TopicoAchadoProp {
   closeModal: () => void;
@@ -30,9 +33,11 @@ const theme = createTheme({
 
 const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, user }) => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
+  const { updateTopico } = dataFake();
   const [topicoAchado, setTopicoAchado] = useState<TopicoAchado | null>(null);
   const { arrayTopicoAchado, setArrayTopicoAchado } = useContextTable();
   const [situacao, setSituacao] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
 
   // Função para buscar o tópico do achado
@@ -56,14 +61,26 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
     }
   }, [topicoAchado])
 
-  const onSubmit = (data: TopicoAchado) => {
+  const onSubmit = async (data: TopicoAchado) => {
     // Simulando a atualização (API ou outra lógica aqui)
     const updateData = {
       ...data,
       situacao: situacao === 'Aprovado' ? true : false
     }
-    setArrayTopicoAchado(prevArray => prevArray.map(item => item.id === id ? { ...item, ...updateData } : item))
-    closeModal();
+
+    setLoading(true)
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      updateTopico(id, updateData)
+      TypeAlert("Tópico Atualizado", "success")
+      reset()
+      closeModal();
+    } catch (error) {
+      TypeAlert("Erro ao tentar atualiza =r o registro", "error")
+    } finally {
+      setLoading(false)
+    }
   };
 
   if (!topicoAchado) {
@@ -117,19 +134,25 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
           </Typography>
         )}
         {user?.cargo === "Diretor" &&
-          <ToggleButtonGroup
-            color="primary"
-            value={situacao}
-            exclusive
-            onChange={handleChange}
-            aria-label="Platform"
-          >
-            <ToggleButton value='Pendente' >Pendente</ToggleButton>
-            <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-          </ToggleButtonGroup>
+          <Box>
+            <ToggleButtonGroup
+              color="primary"
+              value={situacao}
+              exclusive
+              onChange={handleChange}
+              aria-label="Platform"
+            >
+              <ToggleButton value='Pendente' >Pendente</ToggleButton>
+              <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
         }
       </Grid>
-      <RegisterButton text="Atualizar" />
+      {loading ? <Box sx={{ display: "flex", justifyContent: 'start', mt: 3 }}>
+        <Loader />
+      </Box> : <RegisterButton text="Atualizar" />
+      }
+
     </Box>
   );
 };

@@ -13,22 +13,21 @@ const dataFake = () => {
 
 
     //mocks de topico
-    const saveTopico = (data: any, setLoaded: (value: boolean) => void) => {
+    const saveTopico = (data: any) => {
         const newData = {
             id: faker.string.uuid(),
             ...data
 
         }
         try {
-            setLoaded(true)
-            Loaded()
             setArrayTopicoAchado((prevData) => [...prevData, newData])
             console.log('dados salvos', newData)
             console.log('Dados do Array', [...arrayTopicoAchado, newData])
 
         } catch (error) {
-            setLoaded(true)
+            console.error('Erro ao tentar salvar', error)
         }
+        
 
     }
     const getTopico = (topico: string): boolean => {
@@ -44,8 +43,19 @@ const dataFake = () => {
         return arrayTopicoAchado
     }
 
+    const updateTopico = (id:GridRowId | undefined, updateData:TopicoAchado) => {
+        try {
+            if(id){
+                setArrayTopicoAchado(prevArray => prevArray.map(item => item.id === id ? { ...item, ...updateData } : item))
+                console.log('dados salvos', updateData)
+                console.log('Dados do Array', [...arrayTopicoAchado, updateData])
+            }
+        } catch (error) {
+            console.error("Erro ao tentar atualizar o registro", error)
+        }
+    }
+
     const deleteTopico = (idTopico: GridRowId) => {
-        console.log(idTopico)
         const achado = arrayAchado.find(achado => achado.topico_id === idTopico)
         if (achado) {
             TypeInfo(`Esse Topico está relacionado à um Achado e não pode ser excluído.\n Você pode alterar os topicos dos achados relacionados ou excluí-los.`, "info")
@@ -387,10 +397,8 @@ const dataFake = () => {
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
         getAchadoByBeneficio, deleteByBeneficio,
         deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado,
-        getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio
+        getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio, updateTopico
         //BeneficioFormatado, 
     }
-
 }
-
 export default dataFake

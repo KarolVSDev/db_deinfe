@@ -8,6 +8,7 @@ import { useContextTable } from '../../../../context/TableContext';
 import dataFake from '../../../../service/dataFake'
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import Loader from '../../../Loader/Loader';
 
 export interface FormTopicoAchadoProps {
   closeModal: () => void;
@@ -19,7 +20,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   //const { setArrayTopicoAchado } = useContextTable()
   const { saveTopico, getTopico } = dataFake()
   const [situacao, setSituacao] = useState<string | null>(null);
-  const [loaded, setLoaded] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -30,7 +31,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
     }
   };
 
-  const onSubmit = (data: TopicoAchado) => {
+  const onSubmit = async (data: TopicoAchado) => {
     // api.post('/nat-achado', data).then(response => {
     //   const newTopicoAchado = response.data.natachado
     //   console.log(newTopicoAchado)
@@ -42,17 +43,28 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
     if (getTopico(data.topico)) {
       return;
     }
-    if (user?.cargo !== 'Diretor') {
-      data.situacao = false;
+
+    setLoading(true)
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      if (user?.cargo !== 'Diretor') {
+        data.situacao = false;
+      }
+      const dataWithSituacao = {
+        ...data,
+        situacao: situacao === 'Aprovado' ? true : false
+      }
+      saveTopico(dataWithSituacao)
+      TypeAlert('Tópico adicionado', 'success');
+      reset()
+      closeModal()
+    } catch (error) {
+      TypeAlert("Erro ao salvar o Tópico", 'error')
+    } finally {
+      setLoading(false)
     }
-    const dataWithSituacao = {
-      ...data,
-      situacao: situacao === 'Aprovado' ? true : false
-    }
-    saveTopico(dataWithSituacao, setLoaded)
-    TypeAlert('Tópico adicionado', 'success');
-    reset()
-    closeModal()
+
   };
 
   return (
@@ -102,7 +114,13 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
           <input type="hidden"{...register('situacao')} value="false" />
         )}
       </Grid>
-      <RegisterButton text="Registrar" />
+      {loading ?
+        <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+          <Loader />
+        </Box> :
+        <RegisterButton text="Registrar" />
+
+      }
     </Box>
   );
 }

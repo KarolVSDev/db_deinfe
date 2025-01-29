@@ -5,11 +5,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { GridRowId } from '@mui/x-data-grid';
 import { TopicoAchado } from '../../types/types';
 import dataFake from '../../service/dataFake';
+import { useState } from 'react';
+import Loader from '../Loader/Loader';
 
 
 
@@ -22,13 +24,20 @@ export interface VerificationProps {
 
 const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
     const { deleteTopico, deleteAchado, deleteBeneficio } = dataFake()
+    const [loading, setLoading] = useState(false)
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (dataType === 'topico') {
-            deleteTopico(selectedRow)
-        }else if (dataType === 'achado'){
+            setLoading(true)
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                deleteTopico(selectedRow)
+            } catch (error) {
+                console.log("Erro", error)
+            }
+        } else if (dataType === 'achado') {
             deleteAchado(selectedRow)
-        }else if(dataType === 'beneficio'){
+        } else if (dataType === 'beneficio') {
             deleteBeneficio(selectedRow)
         }
         onClose()
@@ -56,9 +65,9 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
-                    <Button color="error" onClick={handleDelete} autoFocus>
-                        Excluir
-                    </Button>
+                    {loading ? <Box sx={{display:"flex", justifyContent:"start", pl:3}}><Loader/></Box>:
+                    <Button color="error" onClick={handleDelete} autoFocus>Excluir
+                    </Button>}
                 </DialogActions>
             </Dialog>
         </React.Fragment>
