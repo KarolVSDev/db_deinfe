@@ -11,6 +11,7 @@ import dataFake from '../../../../service/dataFake';
 import CloseIcon from '@mui/icons-material/Close';
 import { GridRowId } from '@mui/x-data-grid';
 import Loader from '../../../Loader/Loader';
+import BeneficioSkeleton from '../../../Skeletons/BeneficioSkeleton';
 
 export interface FormBeneficioProps {
     closeModal: () => void;
@@ -34,6 +35,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         },
     });
     const [loading, setLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
 
     useEffect(() => {
@@ -66,6 +68,13 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         }
 
     };
+
+    if (isLoading) {
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 3000)
+        return <BeneficioSkeleton isLoading={isLoading}/>
+      }
 
     return (
         <>

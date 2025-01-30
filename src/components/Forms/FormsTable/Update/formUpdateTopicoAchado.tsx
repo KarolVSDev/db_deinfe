@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import dataFake from '../../../../service/dataFake';
 import { Loaded, TypeAlert } from '../../../../hooks/TypeAlert';
 import Loader from '../../../Loader/Loader';
+import TopicoSkeleton from '../../../Skeletons/TopicoSkeleton';
 
 interface TopicoAchadoProp {
   closeModal: () => void;
@@ -38,6 +39,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   const { arrayTopicoAchado, setArrayTopicoAchado } = useContextTable();
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const[isLoading, setIsLoading] = useState(true);
 
 
   // Função para buscar o tópico do achado
@@ -83,8 +85,11 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
     }
   };
 
-  if (!topicoAchado) {
-    return <Typography variant="h6">Carregando...</Typography>;
+  if (isLoading) {
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+    return <TopicoSkeleton isLoading={isLoading}/>
   }
 
   const handleChange = (
@@ -117,7 +122,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
         <TextField
           variant="filled"
           required
-          defaultValue={topicoAchado.topico}
+          defaultValue={topicoAchado?.topico}
           fullWidth
           autoFocus
           id="topico"

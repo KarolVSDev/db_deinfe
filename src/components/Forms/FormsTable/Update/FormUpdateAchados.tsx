@@ -15,6 +15,7 @@ import RadioInput from '../../../Inputs/RadioInput';
 import ToggleButtonsCriterios from '../../../Inputs/ToggleInputs/ToggleInputCriterio';
 import TextFieldComponent from '../../../Inputs/TextField';
 import Loader from '../../../Loader/Loader';
+import AchadoSkeleton from '../../../Skeletons/AchadoSkeleton';
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -32,6 +33,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { getBeneficiosByAchado, updateAchado, getAchadoComTopico } = dataFake()
   const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
     defaultValues: {
       topico_id: topico.id, // Inicialize o id do tópico
@@ -142,6 +144,13 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       TypeAlert("Erro ao tentar atualizar o Achado", "error")
     }
 
+  }
+
+  if (isLoading) {
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+    return <AchadoSkeleton isLoading={isLoading}/>
   }
 
   return (
