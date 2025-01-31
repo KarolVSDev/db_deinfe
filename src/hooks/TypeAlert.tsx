@@ -26,32 +26,3 @@ export function TypeInfo(message: string, type: 'success' | 'error' | 'warning' 
     icon: type,
   })
 }
-
-let timerInterval: NodeJS.Timeout;
-
-export function Loaded() {
-  Swal.fire({
-    title: "Auto close alert!",
-    html: "I will close in <b></b> milliseconds.",
-    timer: 2000,
-    timerProgressBar: true,
-    didOpen: () => {
-      Swal.showLoading(Swal.getDenyButton());
-  
-      const timer = Swal.getPopup()?.querySelector("b"); // O '?' é usado para evitar erros caso o elemento seja nulo
-      if (timer) {
-        timerInterval = setInterval(() => {
-          timer.textContent = `${Swal.getTimerLeft()}`; // Define o conteúdo do elemento
-        }, 100);
-      }
-    },
-    willClose: () => {
-      clearInterval(timerInterval);
-    },
-  }).then((result: SweetAlertResult) => {
-    // Verifica se o alerta foi fechado pelo timer
-    if (result.dismiss === Swal.DismissReason.timer) {
-      console.log("I was closed by the timer");
-    }
-  });
-}

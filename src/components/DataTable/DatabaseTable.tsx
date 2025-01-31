@@ -21,6 +21,7 @@ import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formateDateToPtBr } from '../../hooks/DateFormate';
+import { set } from 'react-hook-form';
 
 export default function DatabaseTable() {
 
@@ -35,7 +36,7 @@ export default function DatabaseTable() {
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { AchadoFormatado, deleteByBeneficio, deleteByAchado
+  const { AchadoFormatado, deleteByBeneficio, deleteByAchado, getAllTopicos
     //BeneficioFormatado
   } = dataFake()
 
@@ -47,9 +48,10 @@ export default function DatabaseTable() {
 
     switch (value) {
       case 'topico':
-        // if (arrayTopicoAchado.length <= 0) {
-        //   getAllTopcioAchado()
-        // }
+        if (arrayTopicoAchado.length <= 0) {
+          let topicos = getAllTopicos()
+          setArrayTopicoAchado(topicos)
+        }
         setColumns(createGridColumns(topicoAchadoHeader));
         setRows(createRows(arrayTopicoAchado))
         break
@@ -92,7 +94,7 @@ export default function DatabaseTable() {
             </Box>
           );
         }
-        if(header.id === 'data'){
+        if (header.id === 'data') {
           return formateDateToPtBr(params.value)
         }
         if (header.id === 'beneficios' || header.id === 'achados') {
@@ -326,11 +328,11 @@ export default function DatabaseTable() {
         />
       )}
       {selectedRow !== null && (
-        <DeleteVerification 
-        selectedRow={selectedRow} 
-        dataType={dataType}
-        onClose={handleCloseModalDelete}
-        open={openModalDelete}
+        <DeleteVerification
+          selectedRow={selectedRow}
+          dataType={dataType}
+          onClose={handleCloseModalDelete}
+          open={openModalDelete}
         />
       )}
     </Grid>

@@ -52,6 +52,7 @@ export interface Achado {
   topico_id:string;
 }
 
+
 export interface Beneficio {
   id: string;
   beneficio:string;

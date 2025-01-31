@@ -3,8 +3,12 @@ import { Achado, Beneficio, BeneficioComAchado, FormBeneficioType, TopicoAchado 
 import { useContextTable } from "../context/TableContext";
 import { TypeAlert, TypeInfo } from "../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
-import { Loaded } from "../hooks/TypeAlert";
 
+interface TopicoMockado {
+    id:number;
+    topico:string;
+    situacao:boolean;
+}
 
 const dataFake = () => {
     const { setArrayTopicoAchado,
@@ -13,6 +17,22 @@ const dataFake = () => {
 
 
     //mocks de topico
+    
+    const getAllTopicos = ()=> {
+        const topicos = new Set<string>();
+        while(topicos.size < 20){
+            const id = faker.string.uuid();
+            const topico = faker.lorem.word({length:{min:7, max:12}});
+            const situacao = faker.datatype.boolean();
+
+            topicos.add(JSON.stringify({id, topico, situacao}))
+        }
+        
+       const arrayTopicos = (Array.from(topicos).map(item => JSON.parse(item) as TopicoAchado))
+       return arrayTopicos;
+       
+    }
+
     const saveTopico = (data: any) => {
         const newData = {
             id: faker.string.uuid(),
@@ -397,7 +417,7 @@ const dataFake = () => {
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
         getAchadoByBeneficio, deleteByBeneficio,
         deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado,
-        getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio, updateTopico
+        getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio, updateTopico, getAllTopicos
         //BeneficioFormatado, 
     }
 }
