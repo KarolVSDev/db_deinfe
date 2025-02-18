@@ -19,7 +19,8 @@ import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Loader from '../Loader/Loader';
 
 function Copyright(props: any) {
   return (
@@ -41,11 +42,14 @@ export default function SignInSide() {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
-  const { login, isLoggedIn } = useAuth();
+  const { login } = useAuth();
+  const [loading, setLoading] = useState(false)
 
 
   const onSubmit = (data: UserLogin) => {
-    login(data);
+
+    login(data, setLoading);
+
   }
 
   return (
@@ -153,18 +157,24 @@ export default function SignInSide() {
                   {errors.password.message}
                 </Typography>
               )}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  mt: 3, mb: 2, bgcolor: 'rgb(17 24 39)', '&:hover': {
-                    bgcolor: '#1e293b',
-                  },
-                }}
-              >
-                Entrar
-              </Button>
+              {loading ? (
+                <Box sx={{margin:'15px auto'}}>
+                  <Loader />
+                </Box>
+              ) : (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 3, mb: 2, bgcolor: 'rgb(17 24 39)', '&:hover': {
+                      bgcolor: '#1e293b',
+                    },
+                  }}
+                >
+                  Entrar
+                </Button>
+              )}
               <Copyright sx={{ pt: '15px', m: 'auto' }} />
             </Box>
           </Box>

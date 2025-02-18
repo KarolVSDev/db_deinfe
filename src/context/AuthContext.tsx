@@ -4,11 +4,13 @@ import Cookies from "universal-cookie";
 import { api } from "../service/api";
 import { useNavigate } from "react-router-dom";
 import { TypeAlert } from "../hooks/TypeAlert";
+import { authBase } from "../service/firebase.config";
+import {  onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 
 interface AuthContextType {
     isLoggedIn:boolean;
-    login:(data:UserLogin) => void;
+    login:(data:UserLogin, setLoading:React.Dispatch<React.SetStateAction<boolean>>) => void;
     logout:() => void;
     auth:any
     user:User | undefined;
@@ -31,47 +33,64 @@ export const AuthProvider: React.FC <Props>= ({children}) => {
 
 
     useEffect(() => {
-        testeAuth()
-    }, []); 
-
-
-    const testeAuth = async () => {
-        if (auth) {
-            api.defaults.headers.Authorization = `Bearer ${auth}`;
-            setIsLoggedIn(true);
-        } else {
-            setIsLoggedIn(false); 
-        }
-    }
+        const unsubscribe = onAuthStateChanged(authBase, (user) => {
+            if (user) {
+                user.getIdToken().then((token) => {
+                    if(user.email !== null){
+                        setCookies({ token, email: user.email });
+                        setIsLoggedIn(true);
+                    }
+                });
+            } else {
+                setIsLoggedIn(false);
+            }
+        });
+        return () => unsubscribe();
+    }, []);
 
 
 
     const setCookies = (authData:AuthData) => {
         const cookies = new Cookies()
         cookies.set('focusToken', authData.token, {path:'/'})
-
+        
         localStorage.setItem('email', authData.email)
     }
 
-    const login = async (data:UserLogin) => {
-       await api.post('/auth/login', data).then((response:any) => {
-            setCookies(response.data)
-            setIsLoggedIn(true)
-            navigate('/dashboard/table')
-        }).catch((error:any) => {
-            if(error.response.status === 401){
-                TypeAlert(error.response.data.message, 'error' )
+    const login = async (data:UserLogin, setLoading:React.Dispatch<React.SetStateAction<boolean>>) => {
+        setLoading(true)
+        try {
+            const userCredentials = await signInWithEmailAndPassword(authBase, data.email, data.password);
+            const user = userCredentials.user;
+
+            const token = await user.getIdToken();
+            if(user.email !== null){
+                setCookies({token, email: user.email})
             }
-        })
+            setIsLoggedIn(true)
+            navigate('/dashboard/table');
+        } catch (error: any) {
+            if(error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                TypeAlert('Email ou senha incorretos', 'error');
+            } else {
+                TypeAlert(error.message, 'error');
+            }
+        } finally{
+            setLoading(false)
+        }
     };
 
-    const logout = () => {
+    const logout = async () => {
         const cookies = new Cookies();
-        cookies.remove('focusToken', {path:'/'})
-        localStorage.removeItem('email')
-        api.defaults.headers.Authorization = null;
-        setIsLoggedIn(false)
-        navigate('/signin')
+        try {
+            await signOut(authBase);
+            cookies.remove('focusToken', {path:'/'})
+            localStorage.removeItem('email')
+            setIsLoggedIn(false)
+            navigate('/signin')
+        } catch (error: any) {
+            TypeAlert(error.message, 'error')
+        }
     }
   
     return (

@@ -5,7 +5,7 @@ export interface User {
   email: string;
   cargo: string;
   ativo: string;
-  senha: string;
+  senha?: string;
 }
 export interface AllUsers {
   id: string;

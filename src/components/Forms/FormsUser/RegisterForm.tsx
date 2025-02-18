@@ -25,6 +25,10 @@ import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CloseIcon from '@mui/icons-material/Close';
 import useFetchUsers from '../../../hooks/useFetchUsers';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { authBase } from '../../../service/firebase.config';
+import { useState } from 'react';
+import Loader from '../../Loader/Loader';
 
 
 interface SignUpProps {
@@ -38,16 +42,39 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
-  const {getUsers} = useFetchUsers()
+  const { getUsers, addUser } = useFetchUsers()
+  const [loading, setLoading] = useState(false)
 
   const onSubmit = (data: User) => {
-    api.post('/usuario', data).then(response => {
-      closeModal()
-      TypeAlert(response.data.message, 'success')
-      getUsers()
-    }).catch((error) => {
-      TypeAlert(error.response.data.message, 'warning');
-    })
+    setLoading(true)
+    if (data.senha) {
+      createUserWithEmailAndPassword(authBase, data.email, data.senha)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const userData = {
+            id: user.uid,
+            nome: data.nome,
+            email: data.email,
+            cargo: data.cargo,
+            ativo: data.ativo
+          }
+          addUser(userData)
+          
+        }).catch((error) => {
+          console.log('erro no registro de usuário, componente registerForm', error)
+        }).finally(() => {
+          closeModal()
+          setLoading(false)
+        })
+        
+    }
+    // api.post('/usuario', data).then(response => {
+    //   closeModal()
+    //   TypeAlert(response.data.message, 'success')
+    //   getUsers()
+    // }).catch((error) => {
+    //   TypeAlert(error.response.data.message, 'warning');
+    // })
   }
 
   const handleModalClose: any = () => {
@@ -189,18 +216,22 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
                 {errors.senha.message}
               </Typography>
             )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3, mb: 2, bgcolor: 'rgb(17 24 39)', '&:hover': {
-                  bgcolor: '#1e293b',
-                }
-              }}
-            >
-              Registrar
-            </Button>
+            {loading ? (
+              <Loader />
+            ) : (
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3, mb: 2, bgcolor: 'rgb(17 24 39)', '&:hover': {
+                    bgcolor: '#1e293b',
+                  }
+                }}
+              >
+                Registrar
+              </Button>
+            )}
           </Grid>
         </Box>
       </Box>
