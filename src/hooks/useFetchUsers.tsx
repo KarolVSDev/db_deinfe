@@ -3,56 +3,71 @@ import { api } from '../service/api'
 import { AllUsers, User } from '../types/types'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../service/firebase.config'
-import { doc, setDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import { TypeAlert } from './TypeAlert'
 
 const useFetchUsers = () => {
 
-    const [users, setUsers] = useState<AllUsers[]>()
-    const{user, setUser} = useAuth()
-    const [email] = useState(localStorage.getItem('email'))
-    
 
-    const addUser = (user:User) => {
-      const userRef = doc(db,'usuarios', user.id);
-      setDoc(userRef, {
-        nome:user.nome,
-        email:user.email,
-        cargo:user.cargo,
-        ativo:user.ativo
-      })
+  const { setUsers } = useAuth()
+  const [email] = useState(localStorage.getItem('email'))
+  const {setUser} = useAuth()
+
+
+  const addUser = (user: User) => {
+    const userRef = doc(db, 'usuario', user.id);
+    setDoc(userRef, {
+      nome: user.nome,
+      email: user.email,
+      cargo: user.cargo,
+      ativo: user.ativo
+    })
       .then(() => {
         TypeAlert('Usuário cadastrado', 'success')
       })
       .catch((error) => {
         TypeAlert('Erro ao cadastrar usuário', 'error')
       })
+  }
+
+  const getUsers = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'usuario'))
+      const usuarios: AllUsers[] = [];
+      querySnapshot.forEach((doc) => {
+        usuarios.push({ id: doc.id, ...doc.data() } as AllUsers)
+      });
+      setUsers(usuarios);
+    } catch (error) {
+      console.error("Erro ao buscar usuários:", error);
     }
+  }
 
-    const getUsers = () => {
-        api.get('/usuario').then((response) => {
-            setUsers(response.data)
-        }).catch((error) => {
-            console.error('erro ao trazer os dados', error)
-        })
+  const getUser = async () => {
+    try {
+      const email = localStorage.getItem('email');
+      if(!email){
+        throw new Error("Email não encontrado no localStorage")
+      };
+
+     const q  = query(collection(db, "usuario"), where("email", "==", email));
+     const querySnapshot = await getDocs(q)
+
+     if(!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        console.log(userData)
+        setUser({id:doc.id, ...userData} as User)
+      })
+     }
+    } catch (error) {
+      console.error(error)
     }
+  }
 
-    const getUser = async () => {
-
-      // await api.get(`/usuario/login/${email}`).then((response) => {
-      //   let data = response.data;
-      //   delete data.createAt;
-      //   delete data.updateAt;
-      //   setUser(data)
-      // }).catch((error) => {
-      //   console.error('Erro ao buscar dados de usuário', error)
-      // })
-    }
-
-  return{
+  return {
     addUser,
     getUsers,
-    users,
     getUser
   }
 }

@@ -101,7 +101,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
         )}
       </Grid>
       <Grid item xs={12} sm={4}>
-        {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
+        {user?.cargo === 'chefe' ? (<ToggleButtonGroup
           color="primary"
           value={situacao}
           exclusive

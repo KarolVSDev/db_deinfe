@@ -110,7 +110,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                 )}
             </Grid>
             <Grid item xs={12} sm={4}>
-                {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
+                {user?.cargo === 'chefe' ? (<ToggleButtonGroup
                     color="primary"
                     value={situacaoBeneficio}
                     exclusive

@@ -47,6 +47,8 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
 
   const onSubmit = (data: User) => {
     setLoading(true)
+    const adminEmail = 'secexadmin@gmail.com'; // Substitua pelo email do admin
+    const adminPassword = 'Secex@123'; // Substitua pela senha do admin
     if (data.senha) {
       createUserWithEmailAndPassword(authBase, data.email, data.senha)
         .then((userCredential) => {
@@ -59,22 +61,16 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
             ativo: data.ativo
           }
           addUser(userData)
-          
+
         }).catch((error) => {
           console.log('erro no registro de usuário, componente registerForm', error)
         }).finally(() => {
+          getUsers()
           closeModal()
           setLoading(false)
         })
-        
+
     }
-    // api.post('/usuario', data).then(response => {
-    //   closeModal()
-    //   TypeAlert(response.data.message, 'success')
-    //   getUsers()
-    // }).catch((error) => {
-    //   TypeAlert(error.response.data.message, 'warning');
-    // })
   }
 
   const handleModalClose: any = () => {

@@ -11,11 +11,13 @@ import { TypeInfo } from '../../hooks/TypeAlert';
 import ModalAddUser from '../Modals/UserModals/ModalAddUser';
 import ModalUpdateUser from '../Modals/UserModals/ModalUpdateUser';
 import useFetchUsers from '../../hooks/useFetchUsers';
+import { useAuth } from '../../context/AuthContext';
 
 
 export default function ListUsers() {
 
-    const {users, getUsers} = useFetchUsers() 
+    const {users} = useAuth() 
+    const {getUsers} = useFetchUsers()
 
 
     const removeUser = (userId: string) => {
@@ -27,8 +29,13 @@ export default function ListUsers() {
     }
 
     useEffect(() => {
-        getUsers()
-        
+        try {
+            if(users.length === 0) {
+                getUsers()
+            }
+        } catch (error) {
+            console.error("Erro ao buscar os usuários")
+        }
     }, [users])
 
 

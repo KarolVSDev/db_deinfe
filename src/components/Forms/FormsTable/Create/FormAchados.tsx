@@ -72,6 +72,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     }
 
   }
+  console.log(user)
 
   const onSubmit = async (data: BeneficioComAchado) => {
     // api.post('/achado', data).then(response => {
@@ -96,7 +97,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         // Se não houver benefícios, apenas salva o achado
         const { beneficio, beneficios, ...dataSemBeneficio } = data;
 
-        if (user?.cargo !== 'Diretor') {
+        if (user?.cargo !== 'chefe') {
           data.situacaoAchado = false;
           data.situacaoBeneficio = false;
         }
@@ -255,7 +256,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         )}
       </Grid>
       <Grid item xs={12} sm={4}>
-        {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
+        {user?.cargo === 'chefe' ? (<ToggleButtonGroup
           color="primary"
           value={situacaoAchado}
           exclusive
@@ -319,7 +320,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
         </Grid>
         <Grid item xs={12} sm={4}>
-          {user?.cargo === 'Diretor' ? (<ToggleButtonGroup
+          {user?.cargo === 'chefe' ? (<ToggleButtonGroup
             color="primary"
             value={situacaoBeneficio}
             exclusive
