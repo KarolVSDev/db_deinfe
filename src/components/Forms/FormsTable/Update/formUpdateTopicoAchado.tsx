@@ -9,9 +9,10 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CloseIcon from '@mui/icons-material/Close';
 import dataFake from '../../../../service/dataFake';
-import { Loaded, TypeAlert } from '../../../../hooks/TypeAlert';
+import { TypeAlert } from '../../../../hooks/TypeAlert';
 import Loader from '../../../Loader/Loader';
 import TopicoSkeleton from '../../../Skeletons/TopicoSkeleton';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 interface TopicoAchadoProp {
   closeModal: () => void;
@@ -34,34 +35,34 @@ const theme = createTheme({
 
 const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, user }) => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
-  const { updateTopico } = dataFake();
-  const [topicoAchado, setTopicoAchado] = useState<TopicoAchado | null>(null);
-  const { arrayTopicoAchado, setArrayTopicoAchado } = useContextTable();
+  const [temaAchado, setTemaAchado] = useState<TopicoAchado | null>(null);
+  const { arrayTopicoAchado } = useContextTable();
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const[isLoading, setIsLoading] = useState(true);
+  const {updateTema} = useFetchListData();
 
 
-  // Função para buscar o tópico do achado
-  const getTopicoAchado = () => {
-    const topico = arrayTopicoAchado.find(item => item.id === id);
-    setTopicoAchado(topico || null);
+  // Função para buscar o tema do achado
+  const getTemaAchado = () => {
+    const tema = arrayTopicoAchado.find(item => item.id === id);
+    console.log(tema)
+    setTemaAchado(tema || null);
   };
 
 
   useEffect(() => {
     if (id) {
-      getTopicoAchado();
+      getTemaAchado();
 
     }
   }, [id, arrayTopicoAchado]);
 
   useEffect(() => {
-    if (topicoAchado) {
-      setSituacao(topicoAchado?.situacao === false ? 'Pendente' : 'Aprovado');
-      console.log(id)
+    if (temaAchado) {
+      setSituacao(temaAchado?.situacao === false ? 'Pendente' : 'Aprovado');
     }
-  }, [topicoAchado])
+  }, [temaAchado])
 
   const onSubmit = async (data: TopicoAchado) => {
     // Simulando a atualização (API ou outra lógica aqui)
@@ -73,13 +74,14 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
     setLoading(true)
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      updateTopico(id, updateData)
-      TypeAlert("Tópico Atualizado", "success")
-      reset()
-      closeModal();
+      const idTema = id?.toString();
+      if(idTema){
+        updateTema(idTema, updateData)
+        reset()
+        closeModal();
+      }
     } catch (error) {
-      TypeAlert("Erro ao tentar atualiza =r o registro", "error")
+      TypeAlert("Erro ao tentar atualizar o registro", "error")
     } finally {
       setLoading(false)
     }
@@ -122,23 +124,23 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
         <TextField
           variant="filled"
           required
-          defaultValue={topicoAchado?.topico}
+          defaultValue={temaAchado?.tema}
           fullWidth
           autoFocus
-          id="topico"
-          label="Tópico"
+          id="tema"
+          label="Tema"
           type="text"
-          error={!!errors?.topico}
-          {...register('topico', {
+          error={!!errors?.tema}
+          {...register('tema', {
             required: 'Campo obrigatório'
           })}
         />
-        {errors?.topico && (
+        {errors?.tema && (
           <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-            {errors.topico?.message}
+            {errors.tema?.message}
           </Typography>
         )}
-        {user?.cargo === "Diretor" &&
+        {user?.cargo === "chefe" &&
           <Box>
             <ToggleButtonGroup
               color="primary"

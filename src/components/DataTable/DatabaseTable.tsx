@@ -39,6 +39,7 @@ export default function DatabaseTable() {
   const { AchadoFormatado, deleteByBeneficio, deleteByAchado, getAllTopicos
     //BeneficioFormatado
   } = dataFake()
+  const {escutarTemas} = useFetchListData();
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -47,14 +48,13 @@ export default function DatabaseTable() {
     // setSelectedRow(null);
 
     switch (value) {
-      case 'topico':
-        if (arrayTopicoAchado.length <= 0) {
-          let topicos = getAllTopicos()
-          setArrayTopicoAchado(topicos)
-        }
+      case 'tema':
         setColumns(createGridColumns(topicoAchadoHeader));
-        setRows(createRows(arrayTopicoAchado))
-        break
+        const unsubscribe = escutarTemas((temas) => {
+          setArrayTopicoAchado(temas)
+          setRows(createRows(temas))
+        })
+        return () => unsubscribe
       case 'achado':
         // if (arrayAchado.length <= 0) {
         //   getAllAchados()
@@ -153,7 +153,7 @@ export default function DatabaseTable() {
 
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
-    { value: 'topico', string: 'Topicos' },
+    { value: 'tema', string: 'Temas' },
     { value: 'achado', string: 'Achados' },
     { value: 'beneficio', string: 'Benefícios' },
   ]
@@ -183,49 +183,13 @@ export default function DatabaseTable() {
   const handleDelete = async (selectedRow: GridRowId) => {
     setSelectedRow(selectedRow)
     setOpenModalDelete(true)
-
-    // try {
-    //   //const response = await api.delete(`/${dataType}/${selectedRow}`)
-    //   //console.log(response)
-    //   //TypeAlert(response.data.message, 'success')
-    //   switch (dataTypeRef.current) {
-    //     case 'topico':
-    //       console.log('Before delete:', arrayTopicoAchado);
-    //       setArrayTopicoAchado(prevArray => {
-    //         const updatedArray = prevArray.filter(item => item.id !== selectedRow);
-    //         console.log('After delete:', updatedArray);
-    //         return updatedArray;
-    //       });
-    //       TypeAlert('Tópico removido', 'success');
-    //       break;
-    //     case 'beneficio':
-    //       setArrayBeneficio(prevArray => prevArray.filter(item => item.id !== selectedRow))
-    //       deleteByBeneficio(selectedRow)
-    //       TypeAlert('Benefício removido', 'success')
-    //       break;
-    //     case 'achado':
-    //       setArrayAchado(prevArray => prevArray.filter(item => item.id !== selectedRow))
-    //       deleteByAchado(selectedRow)
-    //       TypeAlert('Achado removido', 'success')
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    //   // setSelectedRow(null)
-
-    // } catch (error: any) {
-    //   console.log(error)
-    //   TypeAlert('Erro ao tentar excluir', 'error')
-    // }
   }
-
 
   //esse bloco atualiza a visualização dos dados
   useEffect(() => {
     switch (dataType) {
-      case 'topico':
+      case 'tema':
         setRows(createRows(arrayTopicoAchado))
-
         break;
       case 'beneficio':
         setRows(createRows(arrayBeneficio))

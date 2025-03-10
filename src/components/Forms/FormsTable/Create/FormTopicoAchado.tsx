@@ -9,6 +9,7 @@ import dataFake from '../../../../service/dataFake'
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../../../Loader/Loader';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 export interface FormTopicoAchadoProps {
   closeModal: () => void;
@@ -18,9 +19,9 @@ export interface FormTopicoAchadoProps {
 const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user }) => {
   const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<TopicoAchado>({});
   //const { setArrayTopicoAchado } = useContextTable()
-  const { saveTopico, getTopico } = dataFake()
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
+  const {setTema, getTemaByName} = useFetchListData();
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -32,45 +33,39 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   };
 
   const onSubmit = async (data: TopicoAchado) => {
-    // api.post('/nat-achado', data).then(response => {
-    //   const newTopicoAchado = response.data.natachado
-    //   console.log(newTopicoAchado)
-    //   
-    //   setArrayTopicoAchado(prevArray => [...prevArray, newTopicoAchado])
-    // }).catch((error) => {
-    //   TypeAlert(error.response.data.message, 'warning');
-    // });
-    if (getTopico(data.topico)) {
+    const temaExiste = await getTemaByName(data.tema)
+
+    if (temaExiste) {
       return;
+    } else {
+      setLoading(true)
+
+      try {
+        if (user?.cargo !== 'chefe') {
+          data.situacao = false;
+        }
+        const dataWithSituacao = {
+          ...data,
+          situacao: situacao === 'Aprovado' ? true : false
+        }
+        setTema(dataWithSituacao)
+        reset()
+        closeModal()
+      } catch (error) {
+        console.error("Erro no tryCacht do submit de topico: ", error)
+      } finally {
+        setLoading(false)
+      }
     }
 
-    setLoading(true)
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      if (user?.cargo !== 'Diretor') {
-        data.situacao = false;
-      }
-      const dataWithSituacao = {
-        ...data,
-        situacao: situacao === 'Aprovado' ? true : false
-      }
-      saveTopico(dataWithSituacao)
-      TypeAlert('Tópico adicionado', 'success');
-      reset()
-      closeModal()
-    } catch (error) {
-      TypeAlert("Erro ao salvar o Tópico", 'error')
-    } finally {
-      setLoading(false)
-    }
+   
 
   };
 
   return (
     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Tópico</Typography>
+        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Tema</Typography>
         <IconButton onClick={closeModal} sx={{
           '&:hover': {
             bgcolor: '#1e293b', color: '#ffffff',
@@ -85,18 +80,18 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
           required
           fullWidth
           autoFocus
-          id="topico"
-          label='Proposta de Tópico'
+          id="tema"
+          label='Proposta de Tema'
           type="text"
-          error={!!errors?.topico}
-          {...register('topico', {
+          error={!!errors?.tema}
+          {...register('tema', {
             required: 'Campo obrigatório'
           })}
         />
 
-        {errors?.topico && (
+        {errors?.tema && (
           <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-            {errors.topico.message}
+            {errors.tema.message}
           </Typography>
         )}
       </Grid>

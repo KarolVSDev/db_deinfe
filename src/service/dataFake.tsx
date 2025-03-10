@@ -19,17 +19,7 @@ const dataFake = () => {
     //mocks de topico
     
     const getAllTopicos = ()=> {
-        const topicos = new Set<string>();
-        while(topicos.size < 20){
-            const id = faker.string.uuid();
-            const topico = faker.lorem.word({length:{min:7, max:12}});
-            const situacao = faker.datatype.boolean();
-
-            topicos.add(JSON.stringify({id, topico, situacao}))
-        }
-        
-       const arrayTopicos = (Array.from(topicos).map(item => JSON.parse(item) as TopicoAchado))
-       return arrayTopicos;
+        console.log("teste")
        
     }
 
@@ -50,10 +40,10 @@ const dataFake = () => {
         
 
     }
-    const getTopico = (topico: string): boolean => {
-        const texto = arrayTopicoAchado.find(item => item.topico === topico)
+    const getTema = (tema: string): boolean => {
+        const texto = arrayTopicoAchado.find(item => item.tema === tema)
         if (texto) {
-            TypeAlert('O Tópico já existe no banco de dados', 'info')
+            TypeAlert('O Tema já existe no banco de dados', 'info')
             return true
         }
         return false
@@ -75,18 +65,18 @@ const dataFake = () => {
         }
     }
 
-    const deleteTopico = (idTopico: GridRowId) => {
-        const achado = arrayAchado.find(achado => achado.topico_id === idTopico)
-        if (achado) {
-            TypeInfo(`Esse Topico está relacionado à um Achado e não pode ser excluído.\n Você pode alterar os topicos dos achados relacionados ou excluí-los.`, "info")
-            return
-        } else {
-            const updatedArrayTopicoAchado = arrayTopicoAchado.filter(topico => topico.id !== idTopico)
-            console.log(updatedArrayTopicoAchado)
-            setArrayTopicoAchado(updatedArrayTopicoAchado)
-            TypeAlert("Topico excluído", 'success')
-        }
-    }
+    // const deleteTopico = (idTopico: GridRowId) => {
+    //     const achado = arrayAchado.find(achado => achado.topico_id === idTopico)
+    //     if (achado) {
+    //         TypeInfo(`Esse Topico está relacionado à um Achado e não pode ser excluído.\n Você pode alterar os topicos dos achados relacionados ou excluí-los.`, "info")
+    //         return
+    //     } else {
+    //         const updatedArrayTopicoAchado = arrayTopicoAchado.filter(topico => topico.id !== idTopico)
+    //         console.log(updatedArrayTopicoAchado)
+    //         setArrayTopicoAchado(updatedArrayTopicoAchado)
+    //         TypeAlert("Topico excluído", 'success')
+    //     }
+    // }
 
     //mocks de achado
     const verifyAchado = (achado: string): boolean => {
@@ -151,7 +141,7 @@ const dataFake = () => {
             const topicoEncontrado = topicos.find(topico => topico.id === achado.topico_id);
             return {
                 ...achado,
-                topico_id: topicoEncontrado ? topicoEncontrado.topico : 'Topico não encontrado'
+                topico_id: topicoEncontrado ? topicoEncontrado.tema : 'Topico não encontrado'
             }
         })
     }
@@ -412,11 +402,11 @@ const dataFake = () => {
     return {
         saveTopico, saveAchado,
         saveBeneficio, AchadoFormatado,
-        getTopico, verifyAchado,
+        getTema, verifyAchado,
         verifyBeneficio, getAchado,
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
         getAchadoByBeneficio, deleteByBeneficio,
-        deleteByAchado, getArrayTopicos, deleteTopico, deleteAchado, updateAchado,
+        deleteByAchado, getArrayTopicos, deleteAchado, updateAchado,
         getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio, updateTopico, getAllTopicos
         //BeneficioFormatado, 
     }

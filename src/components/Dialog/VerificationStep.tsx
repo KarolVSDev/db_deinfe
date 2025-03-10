@@ -12,6 +12,7 @@ import { TopicoAchado } from '../../types/types';
 import dataFake from '../../service/dataFake';
 import { useState } from 'react';
 import Loader from '../Loader/Loader';
+import useFetchListData from '../../hooks/useFetchListData';
 
 
 
@@ -23,15 +24,16 @@ export interface VerificationProps {
 }
 
 const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
-    const { deleteTopico, deleteAchado, deleteBeneficio } = dataFake()
+    const { deleteAchado, deleteBeneficio } = dataFake()
     const [loading, setLoading] = useState(false)
+    const {deleteTema} = useFetchListData();
 
     const handleDelete = async () => {
-        if (dataType === 'topico') {
+        if (dataType === 'tema') {
             setLoading(true)
             try {
-                await new Promise(resolve => setTimeout(resolve, 1000))
-                deleteTopico(selectedRow)
+                const id = selectedRow.toString();
+                deleteTema(id)
                 setLoading(false)
             } catch (error) {
                 console.error("Erro ao tentar excluir o Tópico", error)

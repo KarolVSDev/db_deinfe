@@ -83,7 +83,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
       >
         <Fade in={open}>
           <Box sx={style}>
-            {(dataType === 'topico') && (<FormTopicoAchado closeModal={handleClose} user={user} />)}
+            {(dataType === 'tema') && (<FormTopicoAchado closeModal={handleClose} user={user} />)}
             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType} />)}
           </Box>

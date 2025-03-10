@@ -35,7 +35,7 @@ export interface AuthData {
 //Data Table
 export interface TopicoAchado {
   id: string;
-  topico: string;
+  tema: string;
   situacao:boolean;
 }
 
