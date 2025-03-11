@@ -49,12 +49,12 @@ export interface Achado {
   criterioGeral?:string;
   situacaoAchado:boolean;
   analise:string;
-  topico_id:string;
+  tema_id:string;
 }
 
 
 export interface Beneficio {
-  id: string;
+  id?: string;
   beneficio:string;
   situacaoBeneficio:boolean;
 }
@@ -78,7 +78,7 @@ export interface BeneficioComAchado {
   criterioGeral?:string;
   situacaoAchado:boolean;
   analise:string;
-  topico_id:string;
+  tema_id:string;
 }
 export interface FormBeneficioType {
   id:string;

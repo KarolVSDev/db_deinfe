@@ -45,14 +45,13 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
-  const { getAllTopcioAchado } = useFetchListData()
 
   const handleSubmit = () => {
     setOpen(false)
   }
 
   useEffect(() => {
-    getAllTopcioAchado()
+ 
     if (dataType === 'pesquisa') {
       setIsDisabled(true);
     } else {

@@ -1,7 +1,7 @@
 import { api } from "../service/api";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { useContextTable } from "../context/TableContext";
-import { TopicoAchado } from "../types/types";
+import { Achado, Beneficio, TopicoAchado } from "../types/types";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../service/firebase.config";
 
@@ -48,16 +48,28 @@ const useFetchListData = () => {
     }
   }
 
+  const getAllTemas = async () => {
+    const temasRef = collection(db, "tema");
+    await getDocs(temasRef).then((querySnapshot) => {
+      const temas = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        tema: doc.data().tema,
+        situacao: doc.data().situacao,
+      })) as TopicoAchado[];
+      setArrayTopicoAchado(temas);
+
+    })
+  }
+
   const getTemaByName = async (temaString: string) => {
     try {
       const temasRef = collection(db, "tema");
       const q = query(temasRef, where("tema", "==", temaString))
       const querySnapshot = await getDocs(q)
-      if(!querySnapshot.empty) {
-        console.log(temaString)
+      if (!querySnapshot.empty) {
         TypeAlert("O tema já existe no banco de dados", "info")
         return true
-      } 
+      }
       return false
     } catch (error) {
       console.error("Erro ao buscar o tema: ", error)
@@ -89,6 +101,50 @@ const useFetchListData = () => {
       throw error;
     }
   }
+
+  //CRUD de achados
+  const setAchado = async (data: Achado) => {
+    try {
+      const colecaoRef = collection(db, "achado");
+      const docRef = await addDoc(colecaoRef, data)
+      console.log("Achado adicionado", docRef.id)
+      TypeAlert('Achado adicionado', 'success');
+    } catch (error) {
+      console.error("Erro ao tentar criar o novo achado", error);
+      throw error;
+    }
+  }
+
+  const getAhcadobyName = async (achadoName: string) => {
+    try {
+      const achadoRef = collection(db, "achado");
+      const q = query(achadoRef, where("achado", "==", achadoName));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        TypeAlert('O achado já existe no banco de dados', 'info');
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Erro ao buscar o achado: ", error);
+      return false
+    }
+  }
+
+  //CRUD de benefício
+
+  const setBeneficio = async (data: Beneficio) => {
+    try {
+      const beneficioRef = collection(db, "beneficio");
+      const docRef = await addDoc(beneficioRef, data);
+      console.log("Benefício adicionado", docRef.id);
+      return docRef.id
+    } catch (error) {
+      console.error("Erro ao tentar adicionar o benefício", error)
+    }
+  }
+
+
   const getAllAchados = async () => {
     try {
       const response = await api.get('/achado');
@@ -98,25 +154,18 @@ const useFetchListData = () => {
     }
   }
 
-  const getAllTopcioAchado = async () => {
-    try {
-      //const response = await api.get('/nat-achado');
-      //setArrayTopicoAchado(response.data)
-      return arrayTopicoAchado
-    } catch (error: any) {
-      TypeInfo(error.response.data.message, 'error');
-    }
-  };
-
 
   return {
     getAllAchados,
-    getAllTopcioAchado,
     setTema,
+    getAllTemas,
     getTemaByName,
     escutarTemas,
     deleteTema,
-    updateTema
+    updateTema,
+    setAchado,
+    getAhcadobyName,
+    setBeneficio
   }
 }
 

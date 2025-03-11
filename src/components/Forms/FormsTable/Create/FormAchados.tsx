@@ -9,7 +9,7 @@ import { useContextTable } from '../../../../context/TableContext';
 import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import dataFake from '../../../../service/dataFake';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonNovo from '../../../Buttons/ButtonNovo';
 import CloseIcon from '@mui/icons-material/Close';
 import TextFieldComponent from '../../../Inputs/TextField';
@@ -17,6 +17,7 @@ import ToggleButtonsCriterios from '../../../Inputs/ToggleInputs/ToggleInputCrit
 import RadioInput from '../../../Inputs/RadioInput';
 import DateSelector from '../../../Inputs/DatePicker';
 import Loader from '../../../Loader/Loader';
+import useFetchListData from '../../../../hooks/useFetchListData';
 
 
 
@@ -34,12 +35,17 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     }
   });
   const { saveAchado, saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
+  const {setAchado, getAllTemas, getAhcadobyName, setBeneficio} = useFetchListData();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { arrayTopicoAchado, arrayBeneficio, setArrayAchado } = useContextTable()
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
   const [loading, setLoading] = useState(false);
   const gravidade = watch('gravidade', 'Baixa');
+
+  useEffect(() => {
+    getAllTemas()
+  })
 
   const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,
@@ -72,25 +78,18 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     }
 
   }
-  console.log(user)
+ 
 
   const onSubmit = async (data: BeneficioComAchado) => {
-    // api.post('/achado', data).then(response => {
-    //   const newAchado = response.data.achado;
-    //   TypeAlert(response.data.message, 'success')
-    //   reset()
-    //   setArrayAchado(prevArray => [...prevArray, newAchado])
-    // }).catch((error) => {
-    //   TypeAlert(error.response.data.message, 'warning');
-    // })
 
     setLoading(true)
     //bloco que manipula e salva o achado
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      if (verifyAchado(data.achado)) {
-        return;
+      const achadoExiste = await getAhcadobyName(data.achado);
+      if(achadoExiste) {
+        setLoading(false)
+        return
       }
 
       if (data.beneficios?.length === 0 && !data.beneficio) {
@@ -107,12 +106,10 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
         };
 
+        const {situacaoBeneficio, ...dataWithoutSituacaoBeneficio} = dataWithSituacao;
 
+        setAchado(dataWithoutSituacaoBeneficio);
 
-        saveAchado(dataWithSituacao);
-
-
-        TypeAlert('Achado adicionado', 'success');
         reset();
         closeModal();
         return; // Interrompe o processo aqui se não houver benefício
@@ -125,7 +122,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           return;
         }
 
-        if (user?.cargo !== 'Diretor') {
+        if (user?.cargo !== 'chefe') {
           data.situacaoAchado = false;
           data.situacaoBeneficio = false;
         }
@@ -135,7 +132,20 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
         };
 
-        const retornoAchado = saveAchado(dataWithSituacao);
+        const achadoComBeneficioId = {
+          id:dataWithSituacao.id,
+          achado:dataWithSituacao.achado,
+          data:dataWithSituacao.data,
+          gravidade:dataWithSituacao.gravidade,
+          criterioMunicipal:dataWithSituacao.criterioMunicipal,
+          criterioEstadual:dataWithSituacao.criterioEstadual,
+          criterioGeral:dataWithSituacao.criterioGeral,
+          situacaoAchado:dataWithSituacao.situacaoAchado,
+          analise:dataWithSituacao.analise,
+          tema_id:dataWithSituacao.tema_id
+        }
+
+        setAchado(achadoComBeneficioId);
 
         // Bloco que manipula e salva o beneficio
         const objBeneficio = { beneficio: data.beneficio, situacaoBeneficio: data.situacaoBeneficio };
@@ -145,42 +155,43 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false,
         };
 
-        const retornoBeneficio = saveBeneficio(objBeneficioWithSituacao);
+        const retornoBeneficio = setBeneficio(objBeneficioWithSituacao);
+
 
         // Bloco que manipula e salva o AchadoBeneficio
-        if ((retornoAchado && retornoBeneficio) || (data.beneficios && data.beneficios.length > 0)) {
-          const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: retornoBeneficio.id };
-          console.log("teste de entrada")
-          // Caso haja múltiplos benefícios
-          if (data.beneficios && data.beneficios.length > 0) {
-            const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
+      //   if ((retornoAchado && retornoBeneficio) || (data.beneficios && data.beneficios.length > 0)) {
+      //     const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: retornoBeneficio.id };
+      //     console.log("teste de entrada")
+      //     // Caso haja múltiplos benefícios
+      //     if (data.beneficios && data.beneficios.length > 0) {
+      //       const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
 
-            if (retornoBeneficio) {
-              beneficios.push(retornoBeneficio)
-            }
+      //       if (retornoBeneficio) {
+      //         beneficios.push(retornoBeneficio)
+      //       }
 
-            beneficios.forEach((beneficio) => {
-              const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
-              saveAchadoBeneficio(objAchadoBeneficio);
-            });
-          } else if (data.beneficios && data.beneficios.length === 0) {
-            saveAchadoBeneficio(objAchadoBeneficio)
-          }
-        }
-      } else if (!data.beneficio && (data.beneficios && data.beneficios?.length > 0)) {
-        const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
+      //       beneficios.forEach((beneficio) => {
+      //         const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
+      //         saveAchadoBeneficio(objAchadoBeneficio);
+      //       });
+      //     } else if (data.beneficios && data.beneficios.length === 0) {
+      //       saveAchadoBeneficio(objAchadoBeneficio)
+      //     }
+      //   }
+      // } else if (!data.beneficio && (data.beneficios && data.beneficios?.length > 0)) {
+      //   const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
 
-        const dataWithSituacao = {
-          ...data,
-          situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
-        };
+      //   const dataWithSituacao = {
+      //     ...data,
+      //     situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
+      //   };
 
-        const retornoAchado = saveAchado(dataWithSituacao);
+      //   const retornoAchado = saveAchado(dataWithSituacao);
 
-        beneficios.forEach((beneficio) => {
-          const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
-          saveAchadoBeneficio(objAchadoBeneficio);
-        });
+      //   beneficios.forEach((beneficio) => {
+      //     const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
+      //     saveAchadoBeneficio(objAchadoBeneficio);
+      //   });
       }
 
       TypeAlert('Achado adicionado', 'success');
@@ -193,7 +204,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
 
   }
-
+  
 
   return (
     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -209,7 +220,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       </Box>
       <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
         <Controller
-          name="topico_id"
+          name="tema_id"
           control={control}
           rules={{ required: 'Campo obrigatório' }}
           render={({ field }) => (
@@ -218,16 +229,16 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               autoFocus
               id="combo-box-demo"
               options={arrayTopicoAchado}
-              getOptionLabel={(option: TopicoAchado) => option.topico}
+              getOptionLabel={(option: TopicoAchado) => option.tema}
               onChange={(event, value) => field.onChange(value?.id || '')}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Tópico"
+                  label="Tema"
                   variant="filled"
                   focused={true}
-                  error={!!errors.topico_id}
-                  helperText={errors.topico_id?.message}
+                  error={!!errors.tema_id}
+                  helperText={errors.tema_id?.message}
                 />
               )}
             />

@@ -17,11 +17,6 @@ const dataFake = () => {
 
 
     //mocks de topico
-    
-    const getAllTopicos = ()=> {
-        console.log("teste")
-       
-    }
 
     const saveTopico = (data: any) => {
         const newData = {
@@ -407,8 +402,7 @@ const dataFake = () => {
         getAchadoByString, saveAchadoBeneficio, getBeneficiosByAchado,
         getAchadoByBeneficio, deleteByBeneficio,
         deleteByAchado, getArrayTopicos, deleteAchado, updateAchado,
-        getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio, updateTopico, getAllTopicos
-        //BeneficioFormatado, 
+        getAchadoComTopico, getBeneficio, updateBeneficio, deleteBeneficio, updateTopico
     }
 }
 export default dataFake

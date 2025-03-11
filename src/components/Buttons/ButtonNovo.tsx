@@ -26,7 +26,7 @@ const StyledButtonNovo = styled(Button)({
 const ButtonNovo:React.FC<ButtonNovoProps> = ({dataType, closeModal, user}) => {
    
     if(dataType === 'achado'){
-        dataType = 'topico'
+        dataType = 'tema'
     }
     if(dataType === 'beneficio'){
         dataType = 'achado'

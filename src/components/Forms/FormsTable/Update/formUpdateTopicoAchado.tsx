@@ -39,8 +39,8 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   const { arrayTopicoAchado } = useContextTable();
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const[isLoading, setIsLoading] = useState(true);
-  const {updateTema} = useFetchListData();
+  const [isLoading, setIsLoading] = useState(false);
+  const { updateTema } = useFetchListData();
 
 
   // Função para buscar o tema do achado
@@ -53,7 +53,9 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
 
   useEffect(() => {
     if (id) {
+      setIsLoading(true)
       getTemaAchado();
+      setIsLoading(false)
 
     }
   }, [id, arrayTopicoAchado]);
@@ -75,7 +77,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
 
     try {
       const idTema = id?.toString();
-      if(idTema){
+      if (idTema) {
         updateTema(idTema, updateData)
         reset()
         closeModal();
@@ -88,10 +90,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   };
 
   if (isLoading) {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
-    return <TopicoSkeleton isLoading={isLoading}/>
+    return <TopicoSkeleton isLoading={isLoading} />
   }
 
   const handleChange = (
@@ -105,62 +104,66 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
 
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}
-      component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
-          Atualizar Registro de Tópico
-        </Typography>
-        <IconButton onClick={closeModal} sx={{
-          mr: 0, '&:hover': {
-            bgcolor: '#1e293b', color: '#ffffff',
-          }
-        }}>
-          <CloseIcon />
-        </IconButton>
+    <>
+      {temaAchado && (
+        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}
+          component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
+          <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
+            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
+              Atualizar Registro de Tópico
+            </Typography>
+            <IconButton onClick={closeModal} sx={{
+              mr: 0, '&:hover': {
+                bgcolor: '#1e293b', color: '#ffffff',
+              }
+            }}>
+              <CloseIcon />
+            </IconButton>
 
-      </Box>
-      <Grid item xs={12} sm={4}>
-        <TextField
-          variant="filled"
-          required
-          defaultValue={temaAchado?.tema}
-          fullWidth
-          autoFocus
-          id="tema"
-          label="Tema"
-          type="text"
-          error={!!errors?.tema}
-          {...register('tema', {
-            required: 'Campo obrigatório'
-          })}
-        />
-        {errors?.tema && (
-          <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-            {errors.tema?.message}
-          </Typography>
-        )}
-        {user?.cargo === "chefe" &&
-          <Box>
-            <ToggleButtonGroup
-              color="primary"
-              value={situacao}
-              exclusive
-              onChange={handleChange}
-              aria-label="Platform"
-            >
-              <ToggleButton value='Pendente' >Pendente</ToggleButton>
-              <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-            </ToggleButtonGroup>
           </Box>
-        }
-      </Grid>
-      {loading ? <Box sx={{ display: "flex", justifyContent: 'start', mt: 3 }}>
-        <Loader />
-      </Box> : <RegisterButton text="Atualizar" />
-      }
+          <Grid item xs={12} sm={4}>
+            <TextField
+              variant="filled"
+              required
+              defaultValue={temaAchado?.tema}
+              fullWidth
+              autoFocus
+              id="tema"
+              label="Tema"
+              type="text"
+              error={!!errors?.tema}
+              {...register('tema', {
+                required: 'Campo obrigatório'
+              })}
+            />
+            {errors?.tema && (
+              <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                {errors.tema?.message}
+              </Typography>
+            )}
+            {user?.cargo === "chefe" &&
+              <Box>
+                <ToggleButtonGroup
+                  color="primary"
+                  value={situacao}
+                  exclusive
+                  onChange={handleChange}
+                  aria-label="Platform"
+                >
+                  <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                  <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+                </ToggleButtonGroup>
+              </Box>
+            }
+          </Grid>
+          {loading ? <Box sx={{ display: "flex", justifyContent: 'start', mt: 3 }}>
+            <Loader />
+          </Box> : <RegisterButton text="Atualizar" />
+          }
 
-    </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
