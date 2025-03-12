@@ -1,7 +1,7 @@
 import { api } from "../service/api";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { useContextTable } from "../context/TableContext";
-import { Achado, Beneficio, TopicoAchado } from "../types/types";
+import { Achado, AchadoBeneficio, Beneficio, TopicoAchado } from "../types/types";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../service/firebase.config";
 
@@ -9,7 +9,7 @@ const useFetchListData = () => {
 
   const { setArrayAchado,
     setArrayTopicoAchado,
-    arrayTopicoAchado,
+    arrayTopicoAchado, setArrayBeneficio
   } = useContextTable();
 
 
@@ -49,7 +49,8 @@ const useFetchListData = () => {
   }
 
   const getAllTemas = async () => {
-    const temasRef = collection(db, "tema");
+    try {
+      const temasRef = collection(db, "tema");
     await getDocs(temasRef).then((querySnapshot) => {
       const temas = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -59,6 +60,9 @@ const useFetchListData = () => {
       setArrayTopicoAchado(temas);
 
     })
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os Temas", error)
+    }
   }
 
   const getTemaByName = async (temaString: string) => {
@@ -108,7 +112,7 @@ const useFetchListData = () => {
       const colecaoRef = collection(db, "achado");
       const docRef = await addDoc(colecaoRef, data)
       console.log("Achado adicionado", docRef.id)
-      TypeAlert('Achado adicionado', 'success');
+      return docRef.id
     } catch (error) {
       console.error("Erro ao tentar criar o novo achado", error);
       throw error;
@@ -138,13 +142,40 @@ const useFetchListData = () => {
       const beneficioRef = collection(db, "beneficio");
       const docRef = await addDoc(beneficioRef, data);
       console.log("Benefício adicionado", docRef.id);
-      return docRef.id
+      return { id: docRef.id, ...data }
     } catch (error) {
       console.error("Erro ao tentar adicionar o benefício", error)
     }
   }
 
+  const getAllBeneficios = async () => {
+    try {
+      const beneficiosRef = collection(db, "beneficio");
+      await getDocs(beneficiosRef).then((querySnapshot) => {
+        const beneficios = querySnapshot.docs.map((doc) => ({
+          id:doc.id,
+          beneficio:doc.data().beneficio,
+          situacaoBeneficio:doc.data().situacaoBeneficio
+        })) as Beneficio[];
+        setArrayBeneficio(beneficios)
+      }) 
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os Beneficios", error)
+    }
+  }
 
+  //CRUD da entidade pai de achado e beneficio, AchadoBeneficio
+
+  const setAchadoBeneficio = async (objeto: AchadoBeneficio) => {
+    try {
+      const achadoBeneficioRef = collection(db, "achadoBeneficio");
+      const docRef = await addDoc(achadoBeneficioRef, objeto);
+      console.log("A relação entre o achado e o(s) benefício(s) foi criada")
+      return docRef
+    } catch (error) {
+      console.error("Erro ao tentar criar a relação na entidade pai", error)
+    }
+  }
   const getAllAchados = async () => {
     try {
       const response = await api.get('/achado');
@@ -165,7 +196,9 @@ const useFetchListData = () => {
     updateTema,
     setAchado,
     getAhcadobyName,
-    setBeneficio
+    setBeneficio,
+    setAchadoBeneficio,
+    getAllBeneficios
   }
 }
 

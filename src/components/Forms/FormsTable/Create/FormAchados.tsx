@@ -35,7 +35,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     }
   });
   const { saveAchado, saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
-  const {setAchado, getAllTemas, getAhcadobyName, setBeneficio} = useFetchListData();
+  const { setAchado, getAllTemas, getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios } = useFetchListData();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { arrayTopicoAchado, arrayBeneficio, setArrayAchado } = useContextTable()
@@ -45,6 +45,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
   useEffect(() => {
     getAllTemas()
+    getAllBeneficios()
   })
 
   const handleChangeSituacaoAchado = (
@@ -78,7 +79,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     }
 
   }
- 
+
 
   const onSubmit = async (data: BeneficioComAchado) => {
 
@@ -87,7 +88,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
     try {
       const achadoExiste = await getAhcadobyName(data.achado);
-      if(achadoExiste) {
+      if (achadoExiste) {
         setLoading(false)
         return
       }
@@ -106,9 +107,9 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
         };
 
-        const {situacaoBeneficio, ...dataWithoutSituacaoBeneficio} = dataWithSituacao;
+        const { situacaoBeneficio, ...dataWithoutSituacaoBeneficio } = dataWithSituacao;
 
-        setAchado(dataWithoutSituacaoBeneficio);
+        await setAchado(dataWithoutSituacaoBeneficio);
 
         reset();
         closeModal();
@@ -128,70 +129,90 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         }
 
         const dataWithSituacao = {
+
           ...data,
           situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
         };
-
-        const achadoComBeneficioId = {
-          id:dataWithSituacao.id,
-          achado:dataWithSituacao.achado,
-          data:dataWithSituacao.data,
-          gravidade:dataWithSituacao.gravidade,
-          criterioMunicipal:dataWithSituacao.criterioMunicipal,
-          criterioEstadual:dataWithSituacao.criterioEstadual,
-          criterioGeral:dataWithSituacao.criterioGeral,
-          situacaoAchado:dataWithSituacao.situacaoAchado,
-          analise:dataWithSituacao.analise,
-          tema_id:dataWithSituacao.tema_id
-        }
-
-        setAchado(achadoComBeneficioId);
 
         // Bloco que manipula e salva o beneficio
         const objBeneficio = { beneficio: data.beneficio, situacaoBeneficio: data.situacaoBeneficio };
 
         const objBeneficioWithSituacao = {
           ...objBeneficio,
-          situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false,
+          situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false
         };
 
-        const retornoBeneficio = setBeneficio(objBeneficioWithSituacao);
+        const achado = {
+          achado: dataWithSituacao.achado,
+          situacaoAchado: dataWithSituacao.situacaoAchado,
+          data: dataWithSituacao.data,
+          gravidade: dataWithSituacao.gravidade,
+          criterioMunicipal: dataWithSituacao.criterioMunicipal || "",
+          criterioEstadual: dataWithSituacao.criterioEstadual || "",
+          criterioGeral: dataWithSituacao.criterioEstadual || "",
+          analise: dataWithSituacao.analise,
+          tema_id: dataWithSituacao.tema_id
+        }
+
+        //const retornoBeneficio = setBeneficio(objBeneficioWithSituacao);
+        const retornoAchado = await setAchado(achado)
+
+        const retornoBeneficio = await setBeneficio(objBeneficioWithSituacao)
 
 
-        // Bloco que manipula e salva o AchadoBeneficio
-      //   if ((retornoAchado && retornoBeneficio) || (data.beneficios && data.beneficios.length > 0)) {
-      //     const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: retornoBeneficio.id };
-      //     console.log("teste de entrada")
-      //     // Caso haja múltiplos benefícios
-      //     if (data.beneficios && data.beneficios.length > 0) {
-      //       const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
+        //Bloco que manipula e salva o AchadoBeneficio
+        if ((retornoAchado && retornoBeneficio) || (data.beneficios && data.beneficios.length > 0)) {
+          // Caso haja múltiplos benefícios
+          if (data.beneficios && data.beneficios.length > 0) {
+            const { beneficios } = data;
 
-      //       if (retornoBeneficio) {
-      //         beneficios.push(retornoBeneficio)
-      //       }
+            if (retornoBeneficio) {
+              beneficios.push(retornoBeneficio)
+            }
 
-      //       beneficios.forEach((beneficio) => {
-      //         const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
-      //         saveAchadoBeneficio(objAchadoBeneficio);
-      //       });
-      //     } else if (data.beneficios && data.beneficios.length === 0) {
-      //       saveAchadoBeneficio(objAchadoBeneficio)
-      //     }
-      //   }
-      // } else if (!data.beneficio && (data.beneficios && data.beneficios?.length > 0)) {
-      //   const { beneficios, beneficio, situacaoBeneficio, ...dataSemBeneficios } = data;
+            beneficios.forEach((beneficio) => {
+              if (beneficio.id) {
+                const objAchadoBeneficio = { achado_id: retornoAchado, beneficio_id: beneficio.id };
+                setAchadoBeneficio(objAchadoBeneficio);
+              }
+            });
+          } else if (data.beneficios && data.beneficios.length === 0) {
+            //se só houver um benefício
+            if (retornoBeneficio?.id) {
+              const achadoBeneficio = { achado_id: retornoAchado, beneficio_id: retornoBeneficio.id }
+              setAchadoBeneficio(achadoBeneficio)
+            }
+          }
+        }
+      } else if (!data.beneficio && (data.beneficios && data.beneficios?.length > 0)) {
+        //se o input de benefício não for preenchido, mas o input com vários benefícios for
+        const { beneficios } = data;
 
-      //   const dataWithSituacao = {
-      //     ...data,
-      //     situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
-      //   };
+        const dataWithSituacao = {
+          ...data,
+          situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
+        };
 
-      //   const retornoAchado = saveAchado(dataWithSituacao);
+        const achado = {
+          achado: dataWithSituacao.achado,
+          situacaoAchado: dataWithSituacao.situacaoAchado,
+          data: dataWithSituacao.data,
+          gravidade: dataWithSituacao.gravidade,
+          criterioMunicipal: dataWithSituacao.criterioMunicipal || "",
+          criterioEstadual: dataWithSituacao.criterioEstadual || "",
+          criterioGeral: dataWithSituacao.criterioEstadual || "",
+          analise: dataWithSituacao.analise,
+          tema_id: dataWithSituacao.tema_id
+        }
 
-      //   beneficios.forEach((beneficio) => {
-      //     const objAchadoBeneficio = { achado_id: retornoAchado.id, beneficio_id: beneficio.id };
-      //     saveAchadoBeneficio(objAchadoBeneficio);
-      //   });
+        const retornoAchado = await setAchado(achado);
+
+        beneficios.forEach((beneficio) => {
+          if(beneficio.id){
+            const objAchadoBeneficio = { achado_id: retornoAchado, beneficio_id: beneficio.id };
+            setAchadoBeneficio(objAchadoBeneficio);
+          }
+        });
       }
 
       TypeAlert('Achado adicionado', 'success');
@@ -200,11 +221,9 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     } catch (error) {
       TypeAlert("Erro ao tentar adicionar o achado", "error");
       console.error(error)
+      setLoading(false)
     }
-
-
   }
-  
 
   return (
     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>

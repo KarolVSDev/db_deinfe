@@ -40,7 +40,7 @@ export interface TopicoAchado {
 }
 
 export interface Achado {
-  id: string;
+  id?: string;
   achado:string;
   data:Date;
   gravidade:string;
@@ -60,7 +60,7 @@ export interface Beneficio {
 }
 
 export interface AchadoBeneficio {
-  id:string;
+  id?:string;
   achado_id:string;
   beneficio_id:string;
 }
