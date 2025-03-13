@@ -51,15 +51,15 @@ const useFetchListData = () => {
   const getAllTemas = async () => {
     try {
       const temasRef = collection(db, "tema");
-    await getDocs(temasRef).then((querySnapshot) => {
-      const temas = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        tema: doc.data().tema,
-        situacao: doc.data().situacao,
-      })) as TopicoAchado[];
-      setArrayTopicoAchado(temas);
+      await getDocs(temasRef).then((querySnapshot) => {
+        const temas = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          tema: doc.data().tema,
+          situacao: doc.data().situacao,
+        })) as TopicoAchado[];
+        setArrayTopicoAchado(temas);
 
-    })
+      })
     } catch (error) {
       console.error("Erro ao tentar resgatar os Temas", error)
     }
@@ -135,6 +135,34 @@ const useFetchListData = () => {
     }
   }
 
+  const escutarAchados = (callback: (achados: Achado[]) => void) => {
+    try {
+      const colecaoRef = collection(db, "achado");
+
+      const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
+        const achados = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          achado: doc.data().achado,
+          analise: doc.data().analise,
+          criterioEstadual: doc.data().criterioEstadual,
+          criterioGeral: doc.data().criterioGeral,
+          criterioMunicipal: doc.data().criterioMunicipal,
+          data: doc.data().data,
+          gravidade: doc.data().gravidade,
+          situacaoAchado: doc.data().situacaoAchado,
+          tema_id: doc.data().tema_id,
+        })) as Achado[];
+        callback(achados)
+      });
+
+      return unsubscribe;
+    } catch (error) {
+      console.error("Erro ao escutar temas: ", error)
+      throw error;
+    }
+  }
+
+
   //CRUD de benefício
 
   const setBeneficio = async (data: Beneficio) => {
@@ -153,15 +181,46 @@ const useFetchListData = () => {
       const beneficiosRef = collection(db, "beneficio");
       await getDocs(beneficiosRef).then((querySnapshot) => {
         const beneficios = querySnapshot.docs.map((doc) => ({
-          id:doc.id,
-          beneficio:doc.data().beneficio,
-          situacaoBeneficio:doc.data().situacaoBeneficio
+          id: doc.id,
+          beneficio: doc.data().beneficio,
+          situacaoBeneficio: doc.data().situacaoBeneficio
         })) as Beneficio[];
         setArrayBeneficio(beneficios)
-      }) 
+      })
     } catch (error) {
       console.error("Erro ao tentar resgatar os Beneficios", error)
     }
+  }
+
+  const getBeneficioByAchadoId = async (achadoId: string) => {
+    try {
+      const beneficiosId = await getDocsByAchadoId(achadoId)
+      console.log(beneficiosId)
+      if (!beneficiosId || beneficiosId.length === 0) {
+        console.log("Nenhum benefício encontrado para o achadoId:", achadoId);
+        return [];
+      }
+      const beneficioRef = collection(db, "beneficio");
+
+      const promises = beneficiosId.map(async (beneficioId) => {
+        const q = query(beneficioRef, where("beneficio_id", "==", beneficioId));
+        const querySnapshot = getDocs(q);
+
+        return (await querySnapshot).docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+      })
+
+      const resultados = await Promise.all(promises)
+      const beneficioArray = resultados.flat();
+      console.log(beneficioArray)
+      return beneficioArray as Beneficio[];
+    } catch (error) {
+      console.error("Erro ao buscar benefícios:", error);
+      throw error;
+    }
+
   }
 
   //CRUD da entidade pai de achado e beneficio, AchadoBeneficio
@@ -176,6 +235,23 @@ const useFetchListData = () => {
       console.error("Erro ao tentar criar a relação na entidade pai", error)
     }
   }
+
+  const getDocsByAchadoId = async (achadoId: string) => {
+    try {
+      const achadoBeneficioRef = collection(db, "achadoBeneficio");
+      const q = query(achadoBeneficioRef, where("achado_id", "==", achadoId));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        return querySnapshot.docs.map((doc) => ({
+          beneficio_id: doc.data().beneficio_id
+        }))
+      }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os ids de achadoBeneficio", error);
+      throw error;
+    }
+  }
+
   const getAllAchados = async () => {
     try {
       const response = await api.get('/achado');
@@ -184,6 +260,7 @@ const useFetchListData = () => {
       TypeInfo(error.response.data.message, 'error')
     }
   }
+
 
 
   return {
@@ -198,7 +275,9 @@ const useFetchListData = () => {
     getAhcadobyName,
     setBeneficio,
     setAchadoBeneficio,
-    getAllBeneficios
+    getAllBeneficios,
+    escutarAchados,
+    getBeneficioByAchadoId
   }
 }
 

@@ -5,6 +5,7 @@ import dataFake from '../../../service/dataFake';
 import { Achado, Beneficio } from '../../../types/types';
 import ArticleIcon from '@mui/icons-material/Article';
 import Divider from '@mui/material/Divider';
+import useFetchListData from '../../../hooks/useFetchListData';
 
 
 const style = {
@@ -30,14 +31,16 @@ export interface ModalBeneficiosProps {
 }
 
 const ModalBeneficios:React.FC<ModalBeneficiosProps> = ({Id, headerId}) => {
-  const {getBeneficiosByAchado, getAchadoByBeneficio} = dataFake()
+  const {getAchadoByBeneficio} = dataFake()
+  const {getBeneficioByAchadoId} = useFetchListData()
   const [beneficios, setBeneficios] = useState<Beneficio[]>([])
   const [achados, setAchados] = useState<Achado[]>([])
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const handleOpen = () => {
+  const handleOpen = async () => {
     if(headerId === "beneficios"){
-      setBeneficios(getBeneficiosByAchado(Id))
+      await getBeneficioByAchadoId(Id)
+      // setBeneficios(bene)
     }else{
       setAchados(getAchadoByBeneficio(Id))
     }

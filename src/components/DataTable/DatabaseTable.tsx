@@ -36,10 +36,8 @@ export default function DatabaseTable() {
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { AchadoFormatado, deleteByBeneficio, deleteByAchado, getAllTopicos
-    //BeneficioFormatado
-  } = dataFake()
-  const {escutarTemas} = useFetchListData();
+  const { AchadoFormatado} = dataFake()
+  const {escutarTemas, escutarAchados} = useFetchListData();
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -50,19 +48,18 @@ export default function DatabaseTable() {
     switch (value) {
       case 'tema':
         setColumns(createGridColumns(topicoAchadoHeader));
-        const unsubscribe = escutarTemas((temas) => {
+        const temaListener = escutarTemas((temas) => {
           setArrayTopicoAchado(temas)
           setRows(createRows(temas))
         })
-        return () => unsubscribe
+        return () => temaListener
       case 'achado':
-        // if (arrayAchado.length <= 0) {
-        //   getAllAchados()
-        // }
-        const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
         setColumns(createGridColumns(achadoHeader));
-        setRows(createRows(achadoComTopico))
-        break
+        const achadoListener = escutarAchados((achados) => {
+          setArrayAchado(achados)
+          setRows(createRows(achados))
+        })
+        return () => achadoListener
       case 'beneficio':
         setColumns(createGridColumns(beneficioHeader));
         setRows(createRows(arrayBeneficio))
