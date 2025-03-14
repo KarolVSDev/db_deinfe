@@ -25,18 +25,19 @@ export interface FormUpdateAchadoProps {
 }
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user, dataType }) => {
   const [achadoComTopico, setAchadoComTopico] = useState<AchadoComTopico>()
-  const [topico, setTopico] = useState<TopicoAchado>({ id: '', topico: '', situacao: false })
+  const [topico, setTopico] = useState<TopicoAchado>({ id: '', tema: '', situacao: false })
   const [achado, setAchado] = useState<Achado>()
   const [openModal, setOpenModal] = useState(false)
   const { arrayAchado, arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const { getBeneficiosByAchado, updateAchado, getAchadoComTopico } = dataFake()
+  const { updateAchado, getAchadoComTopico } = dataFake()
+  const {getchadoById} = useFetchListData()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
     defaultValues: {
-      topico_id: topico.id, // Inicialize o id do tópico
+      tema_id: topico.id, // Inicialize o id do tópico
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
       beneficios: [], // Inicialize a lista de benefícios
@@ -48,25 +49,18 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   });
   const gravidade = watch('gravidade', achado?.gravidade);
 
-  const getAchado = () => {
-    // api.get(`achado/${id}`).then(response => {
-    //   console.log(response.data)
-    //   setAchado(response.data)
-    // }).catch((error) => {
-    //   console.log(error)
-    //   TypeAlert('Erro ao Resgata Achado', 'error')
-    // })
-  }
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
 
   useEffect(() => {
     if (id) {
-      const result = getAchadoComTopico(id);
+      const result = async () => {
+        await getchadoById(id);
+      }
       if (result) {
         setAchadoComTopico(result);
         reset({
           id: result.achado.id || '',
-          topico_id: result.topico?.id || '',
+          tema_id: result.topico?.id || '',
           achado: result.achado?.achado || '',
           analise: result.achado?.analise || '',
           beneficios: result.beneficios || [],
@@ -169,14 +163,14 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           </Box>
           <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
             <Controller
-              name="topico_id"
+              name="tema_id"
               control={control}
               defaultValue={topico.id || ''}
               rules={{ required: "Selecione um tópico" }}
               render={({ field }) => (
                 <Autocomplete
                   options={arrayTopicoAchado}
-                  getOptionLabel={(option: TopicoAchado) => option.topico}
+                  getOptionLabel={(option: TopicoAchado) => option.tema}
                   defaultValue={arrayTopicoAchado.find(item => item.id === field.value) || null}
                   onChange={(event, value) => field.onChange(value?.id || '')}
                   renderInput={(params) => (
@@ -184,8 +178,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                       {...params}
                       label="Tópico"
                       variant="filled"
-                      error={!!errors.topico_id}
-                      helperText={errors.topico_id?.message}
+                      error={!!errors.tema_id}
+                      helperText={errors.tema_id?.message}
                     />
                   )}
                 />

@@ -4,6 +4,7 @@ import { useContextTable } from "../context/TableContext";
 import { Achado, AchadoBeneficio, Beneficio, TopicoAchado } from "../types/types";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../service/firebase.config";
+import { GridRowId } from "@mui/x-data-grid";
 
 const useFetchListData = () => {
 
@@ -135,6 +136,19 @@ const useFetchListData = () => {
     }
   }
 
+  const getchadoById = async (achadoId: GridRowId) => {
+    try {
+      const idAchado = achadoId.toString();
+      const achadoRef = doc(db, "achado", idAchado);
+      const docRef = await getDoc(achadoRef);
+      console.log(docRef)
+      return { id: docRef.id, ...docRef.data() }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar o achado: ", error)
+      throw error;
+    }
+  }
+
   const escutarAchados = (callback: (achados: Achado[]) => void) => {
     try {
       const colecaoRef = collection(db, "achado");
@@ -191,37 +205,29 @@ const useFetchListData = () => {
       console.error("Erro ao tentar resgatar os Beneficios", error)
     }
   }
-
-  const getBeneficioByAchadoId = async (achadoId: string) => {
+  const getBeneficioByAchadoId = async (beneficioIds: { beneficio_id: string }[]) => {
     try {
-      const beneficiosId = await getDocsByAchadoId(achadoId)
-      console.log(beneficiosId)
-      if (!beneficiosId || beneficiosId.length === 0) {
-        console.log("Nenhum benefício encontrado para o achadoId:", achadoId);
-        return [];
+      const beneficios = [];
+
+      // Itera sobre os IDs e busca cada documento
+      for (const { beneficio_id } of beneficioIds) {
+        const beneficioRef = doc(db, "beneficio", beneficio_id); // Acessa o documento pelo ID
+        const beneficioSnapshot = await getDoc(beneficioRef);
+
+        // Se o documento existir, adiciona os dados ao array
+        if (beneficioSnapshot.exists()) {
+          beneficios.push(beneficioSnapshot.data());
+        } else {
+          console.log(`Documento com ID ${beneficio_id} não encontrado.`);
+        }
       }
-      const beneficioRef = collection(db, "beneficio");
 
-      const promises = beneficiosId.map(async (beneficioId) => {
-        const q = query(beneficioRef, where("beneficio_id", "==", beneficioId));
-        const querySnapshot = getDocs(q);
-
-        return (await querySnapshot).docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-      })
-
-      const resultados = await Promise.all(promises)
-      const beneficioArray = resultados.flat();
-      console.log(beneficioArray)
-      return beneficioArray as Beneficio[];
+      return beneficios; // Retorna os dados dos benefícios encontrados
     } catch (error) {
-      console.error("Erro ao buscar benefícios:", error);
+      console.error("Erro ao tentar resgatar os benefícios:", error);
       throw error;
     }
-
-  }
+  };
 
   //CRUD da entidade pai de achado e beneficio, AchadoBeneficio
 
@@ -235,6 +241,8 @@ const useFetchListData = () => {
       console.error("Erro ao tentar criar a relação na entidade pai", error)
     }
   }
+
+  
 
   const getDocsByAchadoId = async (achadoId: string) => {
     try {
@@ -252,6 +260,25 @@ const useFetchListData = () => {
     }
   }
 
+  const processAchadoBeneficio = async (achadoId: string) => {
+    try {
+      // 1. Chama a função e aguarda o retorno
+      const beneficioIds = await getDocsByAchadoId(achadoId);
+      // 2. Verifica se há IDs retornados
+      if (beneficioIds && beneficioIds.length > 0) {
+        // 3. Passa os IDs para a função getBeneficioByAchadoId
+        const beneficios = await getBeneficioByAchadoId(beneficioIds);
+        return beneficios;
+      } else {
+        console.log("Nenhum benefício encontrado para o achado ID:", achadoId);
+        return null;
+      }
+    } catch (error) {
+      console.error("Erro ao processar achadoBeneficio:", error);
+      throw error;
+    }
+  };
+
   const getAllAchados = async () => {
     try {
       const response = await api.get('/achado');
@@ -264,21 +291,10 @@ const useFetchListData = () => {
 
 
   return {
-    getAllAchados,
-    setTema,
-    getAllTemas,
-    getTemaByName,
-    escutarTemas,
-    deleteTema,
-    updateTema,
-    setAchado,
-    getAhcadobyName,
-    setBeneficio,
-    setAchadoBeneficio,
-    getAllBeneficios,
-    escutarAchados,
-    getBeneficioByAchadoId
-  }
+    getAllAchados, setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, setAchado,
+    getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
+    processAchadoBeneficio, getchadoById
+  };
 }
 
 export default useFetchListData;
