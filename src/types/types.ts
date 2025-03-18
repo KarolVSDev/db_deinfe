@@ -79,6 +79,7 @@ export interface BeneficioComAchado {
   situacaoAchado:boolean;
   analise:string;
   tema_id:string;
+  tema:TopicoAchado;
 }
 export interface FormBeneficioType {
   id:string;
@@ -88,7 +89,7 @@ export interface FormBeneficioType {
 }
 export  interface AchadoComTopico {
   achado:Achado;
-  topico:TopicoAchado;
+  tema:TopicoAchado;
   beneficios:Beneficio[];
 }
 export interface ColumnConfig {
@@ -96,6 +97,8 @@ export interface ColumnConfig {
   label: string;
   minWidth: number;
 };
+
+
 
 
 

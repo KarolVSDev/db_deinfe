@@ -1,7 +1,7 @@
 import { api } from "../service/api";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { useContextTable } from "../context/TableContext";
-import { Achado, AchadoBeneficio, Beneficio, TopicoAchado } from "../types/types";
+import { Achado, AchadoBeneficio, AchadoComTopico, Beneficio, BeneficioComAchado, TopicoAchado } from "../types/types";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../service/firebase.config";
 import { GridRowId } from "@mui/x-data-grid";
@@ -82,6 +82,21 @@ const useFetchListData = () => {
     }
   }
 
+  const getTemaById = async (temaId:string) => {
+    try {
+      const temaRef = doc(db, "tema", temaId);
+      const docRef = await getDoc(temaRef);
+
+      if(docRef.exists()) {
+        return {id: docRef.id, ...docRef.data()} as TopicoAchado
+      } else {
+        console.log("Tema não encontrado")
+      }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar o tema: ", error)
+    }
+  }
+
   const updateTema = async (id: string, data: Partial<TopicoAchado>) => {
     try {
       const docRef = doc(db, "tema", id);
@@ -136,13 +151,30 @@ const useFetchListData = () => {
     }
   }
 
-  const getchadoById = async (achadoId: GridRowId) => {
+  const getAchadoById = async (achadoId: GridRowId) => {
     try {
       const idAchado = achadoId.toString();
       const achadoRef = doc(db, "achado", idAchado);
       const docRef = await getDoc(achadoRef);
-      console.log(docRef)
-      return { id: docRef.id, ...docRef.data() }
+      const {id, ...achadoData} = docRef.data() as Achado;
+
+      const achado = { id: docRef.id, id_tema: achadoData.tema_id, ...achadoData};
+      const tema = await getTemaById(achado.tema_id)
+
+      if (!tema) {
+        throw new Error("Tema não encontrado");
+      }
+
+      const beneficios= await processAchadoBeneficio(idAchado) || [];
+   
+      const achadoCompleto = {
+        achado:achado,
+        tema:tema,
+        beneficios:beneficios
+      }
+
+      return achadoCompleto;
+
     } catch (error) {
       console.error("Erro ao tentar resgatar o achado: ", error)
       throw error;
@@ -216,7 +248,7 @@ const useFetchListData = () => {
 
         // Se o documento existir, adiciona os dados ao array
         if (beneficioSnapshot.exists()) {
-          beneficios.push(beneficioSnapshot.data());
+          beneficios.push({id: beneficioSnapshot.id ,...beneficioSnapshot.data()});
         } else {
           console.log(`Documento com ID ${beneficio_id} não encontrado.`);
         }
@@ -293,7 +325,7 @@ const useFetchListData = () => {
   return {
     getAllAchados, setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, setAchado,
     getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
-    processAchadoBeneficio, getchadoById
+    processAchadoBeneficio, getAchadoById
   };
 }
 

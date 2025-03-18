@@ -25,19 +25,19 @@ export interface FormUpdateAchadoProps {
 }
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user, dataType }) => {
   const [achadoComTopico, setAchadoComTopico] = useState<AchadoComTopico>()
-  const [topico, setTopico] = useState<TopicoAchado>({ id: '', tema: '', situacao: false })
+  const [tema, setTema] = useState<TopicoAchado>({ id: '', tema: '', situacao: false })
   const [achado, setAchado] = useState<Achado>()
   const [openModal, setOpenModal] = useState(false)
-  const { arrayAchado, arrayTopicoAchado, arrayBeneficio } = useContextTable()
+  const { arrayAchado, arrayTopicoAchado, arrayBeneficio, setArrayTopicoAchado } = useContextTable()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { updateAchado, getAchadoComTopico } = dataFake()
-  const {getchadoById} = useFetchListData()
+  const { getAchadoById, getAllTemas, getAllBeneficios } = useFetchListData()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
     defaultValues: {
-      tema_id: topico.id, // Inicialize o id do tópico
+      tema_id: tema.id, // Inicialize o id do tópico
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
       beneficios: [], // Inicialize a lista de benefícios
@@ -51,40 +51,65 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
 
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
 
-  useEffect(() => {
-    if (id) {
-      const result = async () => {
-        await getchadoById(id);
-      }
-      if (result) {
-        setAchadoComTopico(result);
-        reset({
-          id: result.achado.id || '',
-          tema_id: result.topico?.id || '',
-          achado: result.achado?.achado || '',
-          analise: result.achado?.analise || '',
-          beneficios: result.beneficios || [],
-          situacaoAchado: result.achado?.situacaoAchado || false,
-          criterioMunicipal: result.achado.criterioMunicipal || '',
-          criterioEstadual: result.achado.criterioEstadual || '',
-          criterioGeral: result.achado.criterioGeral || '',
-        });
 
-        if (result.achado.criterioMunicipal) {
-          setAlignment('criterioMunicipal')
-        } else if (result.achado.criterioEstadual) {
-          setAlignment('criterioEstadual')
-        } else {
-          setAlignment('criterioGeral')
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (id) {
+        setIsLoading(true)
+        try {
+          // Aguarda a resolução da promessa
+          const result = await getAchadoById(id);
+
+
+          if (result) {
+            setAchado(result.achado)
+            setTema(result.tema)
+            if (arrayTopicoAchado.length === 0) {
+              const fetchTemas = async () => {
+                await getAllTemas();
+                await getAllBeneficios()
+              }
+              fetchTemas()
+            }
+            // Reseta o formulário com os dados do achado
+            reset({
+              id: result.achado.id || '',
+              tema_id: result.tema?.id || '',
+              achado: result.achado?.achado || '',
+              analise: result.achado?.analise || '',
+              beneficios: result.beneficios || [],
+              situacaoAchado: result.achado?.situacaoAchado || false,
+              criterioMunicipal: result.achado.criterioMunicipal || '',
+              criterioEstadual: result.achado.criterioEstadual || '',
+              criterioGeral: result.achado.criterioGeral || '',
+              tema: result.tema || '',
+            });
+
+            // Define o alinhamento com base nos critérios
+            if (result.achado.criterioMunicipal) {
+              setAlignment('criterioMunicipal');
+            } else if (result.achado.criterioEstadual) {
+              setAlignment('criterioEstadual');
+            } else {
+              setAlignment('criterioGeral');
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao buscar o achado:', error);
+        } finally {
+          setIsLoading(false); 
         }
       }
-    }
-  }, [id, reset]);
+    };
+
+    fetchData(); // Chama a função assíncrona
+  }, [id, reset, arrayTopicoAchado.length]);
 
 
-  useEffect(() => {
-    setAchado(achadoComTopico?.achado)
-  })
+  // useEffect(() => {
+  //   setAchado(achadoComTopico?.achado)
+  // })
 
   useEffect(() => {
 
@@ -112,24 +137,11 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   }
 
   const onSubmit = async (data: BeneficioComAchado) => {
-    // const idAchado = id;
-    // api.patch(`/achado/update/${idAchado}`, data).then(response => {
-    //   TypeAlert(response.data.message, 'success')
-    //   reset()
-    //   setArrayAchado(prevArray => {
-    //     const updatedArray = prevArray.map(item =>
-    //       item.id === idAchado ? { ...item, ...data } : item
-    //     )
-    //     return updatedArray
-    //   });
-    // closeModal()
-    // }).catch((error) => {
-    //  TypeAlert(error.response.data.message, 'warning');
 
     setLoading(true)
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      console.log(data)
       updateAchado(data)
       reset()
       TypeAlert("Achado atualizado", "success")
@@ -140,16 +152,12 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
 
   }
 
-  if (isLoading) {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
-    return <AchadoSkeleton isLoading={isLoading}/>
-  }
 
   return (
     <>
-      {achado && (
+      {isLoading ? (
+        <AchadoSkeleton isLoading={isLoading} />
+      ):(
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Achado</Typography>
@@ -165,8 +173,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             <Controller
               name="tema_id"
               control={control}
-              defaultValue={topico.id || ''}
-              rules={{ required: "Selecione um tópico" }}
+              defaultValue={tema.id || ''}
+              rules={{ required: "Selecione um tema" }}
               render={({ field }) => (
                 <Autocomplete
                   options={arrayTopicoAchado}
@@ -176,7 +184,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Tópico"
+                      label="Tema"
                       variant="filled"
                       error={!!errors.tema_id}
                       helperText={errors.tema_id?.message}
@@ -190,7 +198,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
             <TextField
               variant='filled'
-              defaultValue={achado.achado}
+              defaultValue={achado?.achado}
               autoComplete="given-name"
               type="text"
               required
@@ -211,9 +219,9 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
 
 
           <Grid item xs={12} sm={4}>
-            {user?.cargo === 'Diretor' ? (<Controller
+            {user?.cargo === 'chefe' ? (<Controller
               name="situacaoAchado"
-              defaultValue={achado.situacaoAchado}
+              defaultValue={achado?.situacaoAchado}
               control={control}
               render={({ field }) => (
                 <ToggleButtonGroup
@@ -232,7 +240,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             )}
           </Grid>
 
-          <DateSelector id='data' register={register} errors={errors} label='Data de registro' dataAchado={achado.data} />
+          <DateSelector id='data' register={register} errors={errors} label='Data de registro' dataAchado={achado?.data} />
 
           <RadioInput id={'gravidade'}
             label='Gravidade'
@@ -248,16 +256,16 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               label={getTextFieldLabel()}
               register={register}
               errors={errors}
-              criterioMuni={achado.criterioMunicipal}
-              criterioEst={achado.criterioEstadual}
-              criterioGeral={achado.criterioGeral} />
+              criterioMuni={achado?.criterioMunicipal}
+              criterioEst={achado?.criterioEstadual}
+              criterioGeral={achado?.criterioGeral} />
           </Grid>
 
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
             <TextField
               variant='filled'
               autoComplete="given-name"
-              defaultValue={achado.analise}
+              defaultValue={achado?.analise}
               type="text"
               multiline
               rows={4}
