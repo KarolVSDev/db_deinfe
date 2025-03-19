@@ -31,10 +31,9 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const { arrayAchado, arrayTopicoAchado, arrayBeneficio, setArrayTopicoAchado } = useContextTable()
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const { updateAchado, getAchadoComTopico } = dataFake()
-  const { getAchadoById, getAllTemas, getAllBeneficios } = useFetchListData()
+  const { getAchadoById, getAllTemas, getAllBeneficios, updateAchado } = useFetchListData()
   const [loading, setLoading] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
     defaultValues: {
       tema_id: tema.id, // Inicialize o id do tópico
@@ -61,7 +60,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           // Aguarda a resolução da promessa
           const result = await getAchadoById(id);
 
-
           if (result) {
             setAchado(result.achado)
             setTema(result.tema)
@@ -71,6 +69,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                 await getAllBeneficios()
               }
               fetchTemas()
+              
             }
             // Reseta o formulário com os dados do achado
             reset({
@@ -107,12 +106,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   }, [id, reset, arrayTopicoAchado.length]);
 
 
-  // useEffect(() => {
-  //   setAchado(achadoComTopico?.achado)
-  // })
-
-  useEffect(() => {
-
+  useEffect(() => { 
     if (achado?.situacaoAchado === true) {
       setSituacaoAchado("Aprovado")
     } else {
@@ -141,11 +135,14 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     setLoading(true)
 
     try {
-      console.log(data)
-      updateAchado(data)
-      reset()
-      TypeAlert("Achado atualizado", "success")
-      closeModal()
+      if(id){
+        const idString = id?.toString()
+        await updateAchado(idString, data)
+        reset()
+        TypeAlert("Achado atualizado", "success")
+        closeModal()
+        setLoading(false)
+      }
     } catch (error) {
       TypeAlert("Erro ao tentar atualizar o Achado", "error")
     }

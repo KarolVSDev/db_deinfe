@@ -82,13 +82,13 @@ const useFetchListData = () => {
     }
   }
 
-  const getTemaById = async (temaId:string) => {
+  const getTemaById = async (temaId: string) => {
     try {
       const temaRef = doc(db, "tema", temaId);
       const docRef = await getDoc(temaRef);
 
-      if(docRef.exists()) {
-        return {id: docRef.id, ...docRef.data()} as TopicoAchado
+      if (docRef.exists()) {
+        return { id: docRef.id, ...docRef.data() } as TopicoAchado
       } else {
         console.log("Tema não encontrado")
       }
@@ -156,21 +156,21 @@ const useFetchListData = () => {
       const idAchado = achadoId.toString();
       const achadoRef = doc(db, "achado", idAchado);
       const docRef = await getDoc(achadoRef);
-      const {id, ...achadoData} = docRef.data() as Achado;
+      const { id, ...achadoData } = docRef.data() as Achado;
 
-      const achado = { id: docRef.id, id_tema: achadoData.tema_id, ...achadoData};
+      const achado = { id: docRef.id, id_tema: achadoData.tema_id, ...achadoData };
       const tema = await getTemaById(achado.tema_id)
 
       if (!tema) {
         throw new Error("Tema não encontrado");
       }
 
-      const beneficios= await processAchadoBeneficio(idAchado) || [];
-   
+      const beneficios = await processAchadoBeneficio(idAchado) || [];
+
       const achadoCompleto = {
-        achado:achado,
-        tema:tema,
-        beneficios:beneficios
+        achado: achado,
+        tema: tema,
+        beneficios: beneficios
       }
 
       return achadoCompleto;
@@ -207,6 +207,77 @@ const useFetchListData = () => {
       throw error;
     }
   }
+
+  const updateAchado = async (idAchado: string, data: Partial<BeneficioComAchado>) => {
+
+    const achado = {
+      achado: data.achado,
+      analise: data.analise,
+      situacaoAchado: data.situacaoAchado,
+      criterioMunicipal: data.criterioMunicipal,
+      criterioEstadual: data.criterioEstadual,
+      criterioGeral: data.criterioGeral,
+      data: data.data,
+      gravidade: data.gravidade,
+      tema_id: data.tema_id
+    }
+
+    
+
+    const filteredAchado = Object.fromEntries(
+      Object.entries(achado).filter(([_, value]) => value !== undefined)
+    );
+    try {
+      const achadoRef = doc(db, "achado", idAchado);
+      await updateDoc(achadoRef, filteredAchado)
+      console.log("Achado atualizado com sucesso!");
+
+      //Lógica para atualizar os benefícios
+      const currentBeneficios = await getDocsByAchadoId(idAchado);
+
+      // Extrair os IDs dos benefícios atuais e dos novos benefícios
+      const currentBeneficioIds = currentBeneficios?.map((b) => b.beneficio_id);
+      const newBeneficioIds = data.beneficios?.map((b) => b.id);
+
+      const beneficiosToAdd = newBeneficioIds?.filter(
+        (id) => !currentBeneficioIds?.includes(id)
+      );
+
+      const beneficiosToRemove = currentBeneficios?.filter(
+        (b) => !newBeneficioIds?.includes(b.beneficio_id)
+      );
+
+      const achadoBeneficioRef = collection(db, "achadoBeneficio");
+
+      // Adicionar novas relações
+      if (beneficiosToAdd) {
+        for (const beneficioId of beneficiosToAdd) {
+          try {
+            await addDoc(achadoBeneficioRef, {
+              achado_id: idAchado,
+              beneficio_id: beneficioId,
+            });
+          } catch (error) {
+            console.error("Erro ao tentar adicionar novas relações de achadoBeneficio", error)
+            throw error
+          }
+        }
+      } 
+
+      //Excluir relacções
+      if (beneficiosToRemove) {
+        for (const beneficio of beneficiosToRemove) {
+          const docRef = doc(db, "achadoBeneficio", beneficio.id);
+          await deleteDoc(docRef);
+        }
+      }
+
+    } catch (error) {
+
+    }
+
+  }
+
 
 
   //CRUD de benefício
@@ -248,7 +319,7 @@ const useFetchListData = () => {
 
         // Se o documento existir, adiciona os dados ao array
         if (beneficioSnapshot.exists()) {
-          beneficios.push({id: beneficioSnapshot.id ,...beneficioSnapshot.data()});
+          beneficios.push({ id: beneficioSnapshot.id, ...beneficioSnapshot.data() });
         } else {
           console.log(`Documento com ID ${beneficio_id} não encontrado.`);
         }
@@ -274,7 +345,7 @@ const useFetchListData = () => {
     }
   }
 
-  
+
 
   const getDocsByAchadoId = async (achadoId: string) => {
     try {
@@ -283,6 +354,7 @@ const useFetchListData = () => {
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
         return querySnapshot.docs.map((doc) => ({
+          id: doc.id,
           beneficio_id: doc.data().beneficio_id
         }))
       }
@@ -325,7 +397,7 @@ const useFetchListData = () => {
   return {
     getAllAchados, setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, setAchado,
     getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
-    processAchadoBeneficio, getAchadoById
+    processAchadoBeneficio, getAchadoById, updateAchado
   };
 }
 

@@ -6,7 +6,7 @@ export const topicoAchadoHeader = [
 
 export const achadoHeader = [
     {id:'achado', label:'Achado', minWidth:250},
-    {id:'topico_id', label:'Tópico', minWidth:150},
+    {id:'tema_id', label:'Tema', minWidth:150},
     {id:'beneficios', label:'Benefícios', minWidth:150},
     {id:'analise', label:'Análise', minWidth:150},
     {id:'data', label:'Data', minWidth:150},
