@@ -69,17 +69,15 @@ const ModalAnalises: React.FC<ModalAnalisesProps> = ({ analise }) => {
                 </Box>
                 <Divider></Divider>
                 {analise.split('\n').map((line, index) => (
-                  <Box sx={{
-                    
+                  <Box
+                  key={index}
+                  sx={{
                     borderRadius: 2,
                     padding: '10px',
                     textAlign: 'justify',
                     width:'70vw',
                     fontWeight: isTitle(line) ? 'bold' : 'normal'
                   }}>
-
-
-
                     <Typography
                       key={index}
                       sx={{width:'68vw'}}

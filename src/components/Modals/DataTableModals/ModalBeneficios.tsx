@@ -6,8 +6,7 @@ import { Achado, Beneficio } from '../../../types/types';
 import ArticleIcon from '@mui/icons-material/Article';
 import Divider from '@mui/material/Divider';
 import useFetchListData from '../../../hooks/useFetchListData';
-import Loader from '../../Loader/Loader';
-import BeneficioSkeleton from '../../Skeletons/BeneficioSkeleton';
+import ListaBeneficios from '../../Skeletons/ListaBeneficiosSkeleton';
 
 
 const style = {
@@ -41,18 +40,24 @@ const ModalBeneficios: React.FC<ModalBeneficiosProps> = ({ Id, headerId }) => {
   const [isLoading, setIsloading] = useState(false)
   const handleClose = () => setOpen(false);
   const handleOpen = async () => {
-    if (headerId === "beneficios") {
-      setIsloading(true)
-      await processAchadoBeneficio(Id).then((beneficios) => {
-        if (beneficios) {
-          setBeneficios(beneficios as Beneficio[])
-        }
-      })
-    } else {
-      setAchados(getAchadoByBeneficio(Id))
-    }
-    setIsloading(false)
     setOpen(true)
+    setIsloading(true)
+    try {
+      if (headerId === "beneficios") {
+        await processAchadoBeneficio(Id).then((beneficios) => {
+          if (beneficios) {
+            setBeneficios(beneficios as Beneficio[])
+          }
+        })
+      } else {
+        setAchados(getAchadoByBeneficio(Id))
+      }
+    } catch (error) {
+      console.error("Erro ao resgatar os benefícios do achado", error);
+    } finally {
+      setIsloading(false)
+    }
+    
   };
 
   return (
@@ -72,65 +77,72 @@ const ModalBeneficios: React.FC<ModalBeneficiosProps> = ({ Id, headerId }) => {
         }}
       >
         <Fade in={open}>
-          {isLoading ? (
-            <BeneficioSkeleton isLoading={isLoading} />
-          ) : (
-            <Box sx={style}>
-              {headerId === "beneficios" && (
-                beneficios.length > 0 ? (
-                  <List sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
-                      <Typography variant='h6'>Lista de Benefícios:</Typography>
-                      <IconButton onClick={handleClose} sx={{
-                        '&:hover': {
-                          bgcolor: '#1e293b', color: '#ffffff',
-                        }
-                      }}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
-                    {
-                      beneficios.map(beneficio => (
-                        <>
-                          <ListItem sx={{ width: '70vw', maxWidthwidth: '70vw' }}><ArticleIcon sx={{ mr: 2 }} /> {beneficio.beneficio}</ListItem>
-                          <Divider />
-                        </>
-                      ))
-                    }
-                  </List>
-                ) : (
-                  <Typography sx={{ border: '1px solid #000', borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>Não há Benefício relacionado à este Achado</Typography>
-                )
-              )}
+          <Box sx={style}>
+            {isLoading ? (
+              <ListaBeneficios isLoading={isLoading} />
+            ) : (
+              <>
+                {headerId === "beneficios" && (
+                  beneficios.length > 0 ? (
+                    <List sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                        <Typography variant='h6'>Lista de Benefícios:</Typography>
+                        <IconButton onClick={handleClose} sx={{
+                          '&:hover': {
+                            bgcolor: '#1e293b', color: '#ffffff',
+                          }
+                        }}>
+                          <CloseIcon />
+                        </IconButton>
+                      </Box>
+                      {
+                        beneficios.map((beneficio, index) => (
+                          <div key={beneficio.id || index}>
+                            <ListItem sx={{ width: '70vw', maxWidth: '70vw' }}>
+                              <ArticleIcon sx={{ mr: 2 }} /> {beneficio.beneficio}
+                            </ListItem>
+                            <Divider />
+                          </div>
+                        ))
+                      }
+                    </List>
+                  ) : (
+                    <Typography sx={{ border: '1px solid #000', borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>Não há Benefício relacionado à este Achado</Typography>
+                  )
+                )}
 
-              {headerId === "achados" && (
-                achados.length > 0 ? (
-                  <List sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
-                      <Typography variant='h6'>Lista de Achados:</Typography>
-                      <IconButton onClick={handleClose} sx={{
-                        '&:hover': {
-                          bgcolor: '#1e293b', color: '#ffffff',
-                        }
-                      }}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
-                    {achados.map(achado => (
-                      <>
-                        <ListItem sx={{ width: '70vw', maxWidthwidth: '70vw' }}><ArticleIcon sx={{ mr: 2 }} /> {achado.achado}</ListItem>
-                        <Divider />
-                      </>
-                    ))}
-                  </List>
-                ) : (
-                  <Typography sx={{ border: '1px solid #000', borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>Não há Achado relacionado à este Benefício</Typography>
-                )
-              )}
+                {headerId === "achados" && (
+                  achados.length > 0 ? (
+                    <List sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+                        <Typography variant='h6'>Lista de Achados:</Typography>
+                        <IconButton onClick={handleClose} sx={{
+                          '&:hover': {
+                            bgcolor: '#1e293b', color: '#ffffff',
+                          }
+                        }}>
+                          <CloseIcon />
+                        </IconButton>
+                      </Box>
+                      {
+                        achados.map((achado, index) => (
+                          <div key={achado.id || index}> {/* Corrigido */}
+                            <ListItem sx={{ width: '70vw', maxWidth: '70vw' }}>
+                              <ArticleIcon sx={{ mr: 2 }} /> {achado.achado}
+                            </ListItem>
+                            <Divider />
+                          </div>
+                        ))
+                      }
+                    </List>
+                  ) : (
+                    <Typography sx={{ border: '1px solid #000', borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>Não há Achado relacionado à este Benefício</Typography>
+                  )
+                )}
 
-
-            </Box>
-          )}
+              </>
+            )}
+          </Box>
 
         </Fade>
       </Modal>

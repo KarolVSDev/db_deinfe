@@ -74,6 +74,7 @@ export default function DatabaseTable() {
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
     return headers.map(header => ({
+      key:header.id,
       field: header.id,
       headerName: header.label,
       width: header.minWidth,
@@ -98,7 +99,7 @@ export default function DatabaseTable() {
           return <ModalBeneficios Id={params.row.id} headerId={header.id} />;
         }
         if (header.id === 'analise') {
-          return <ModalAnalises analise={params.row.analise} />
+          return <ModalAnalises key={params.row.id} analise={params.row.analise} />
         }
         if (['situacaoAchado', 'situacao', 'situacaoBeneficio'].includes(header.id) && typeof params.value === 'boolean') {
           return (

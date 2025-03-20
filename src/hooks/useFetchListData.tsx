@@ -22,7 +22,7 @@ const useFetchListData = () => {
         tema: data.tema,
         situacao: data.situacao
       })
-      console.log("Documento inserido com sucesso! ID:", docRef.id);
+      console.log("Tema inserido com sucesso! ID:", docRef.id);
       TypeAlert('Tema adicionado', 'success');
     } catch (error) {
       console.error("Erro ao inserir o documento")
@@ -32,39 +32,47 @@ const useFetchListData = () => {
   const escutarTemas = (callback: (temas: TopicoAchado[]) => void) => {
     try {
       const colecaoRef = collection(db, "tema");
-
+  
+      // Escuta mudanças em tempo real na coleção "tema"
       const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
-        const temas = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          tema: doc.data().tema,
-          situacao: doc.data().situacao
-        })) as TopicoAchado[];
-        callback(temas)
-      })
-
-      return unsubscribe;
-    } catch (error) {
-      console.error("Erro ao escutar temas: ", error)
-      throw error;
-    }
-  }
-
-  const getAllTemas = async () => {
-    try {
-      const temasRef = collection(db, "tema");
-      await getDocs(temasRef).then((querySnapshot) => {
         const temas = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           tema: doc.data().tema,
           situacao: doc.data().situacao,
         })) as TopicoAchado[];
-        setArrayTopicoAchado(temas);
-
-      })
+  
+        callback(temas); // Chama a função de callback com os temas atualizados
+      });
+  
+      return unsubscribe; // Retorna a função para parar de escutar as mudanças
     } catch (error) {
-      console.error("Erro ao tentar resgatar os Temas", error)
+      console.error("Erro ao escutar temas: ", error);
+      throw error;
     }
-  }
+  };
+
+  
+
+  const getAllTemas = async () => {
+    try {
+      const temasRef = collection(db, "tema");
+      const querySnapshot = await getDocs(temasRef);
+  
+      if (!querySnapshot.empty) {
+        const temas = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          tema: doc.data().tema,
+          situacao: doc.data().situacao,
+        })) as TopicoAchado[];
+  
+        setArrayTopicoAchado(temas); // Atualiza o estado com os temas
+      } else {
+        console.log("Nenhum tema encontrado.");
+      }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os Temas:", error);
+    }
+  };
 
   const getTemaByName = async (temaString: string) => {
     try {

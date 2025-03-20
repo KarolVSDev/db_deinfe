@@ -11,7 +11,7 @@ const useFetchUsers = () => {
 
   const { setUsers } = useAuth()
   const [email] = useState(localStorage.getItem('email'))
-  const {setUser} = useAuth()
+  const { setUser } = useAuth()
 
 
   const addUser = (user: User) => {
@@ -46,24 +46,26 @@ const useFetchUsers = () => {
   const getUser = async () => {
     try {
       const email = localStorage.getItem('email');
-      if(!email){
+      if (!email) {
         throw new Error("Email não encontrado no localStorage")
       };
 
-     const q  = query(collection(db, "usuario"), where("email", "==", email));
-     const querySnapshot = await getDocs(q)
+      const q = query(collection(db, "usuario"), where("email", "==", email));
+      const querySnapshot = await getDocs(q)
 
-     if(!querySnapshot.empty) {
-      querySnapshot.forEach((doc) => {
-        const userData = doc.data();
-        console.log(userData)
-        setUser({id:doc.id, ...userData} as User)
-      })
-     }
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          console.log("Usuário salvo no contexto:", userData)
+          setUser({ id: doc.id, ...userData } as User);
+        })
+      } else {
+        console.log("Nenhum documento encontrado com o email fornecido.");
+      }
     } catch (error) {
-      console.error(error)
+      console.error("Erro ao buscar usuário:", error);
     }
-  }
+  };
 
   return {
     addUser,

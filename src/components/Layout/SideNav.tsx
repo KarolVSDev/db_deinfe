@@ -77,21 +77,9 @@ export default function SideNav() {
   const updateOpen = useAppStore((state) => state.updateOpen);
   const open = useAppStore((state) => state.dopen);
   const [email, setEmail] = useState(localStorage.getItem('email'))
-  const [user, setUser] = useState<AllUsers | null>()
+  const {user} = useAuth() 
   
-  const getUserIdByEmail = async () => {
-    const user = await api.get(`/usuario/login/${email}`).then(response => {
-      delete response.data.senha
-      delete response.data.updateAt
-      delete response.data.createAt
-      return response.data
-      
-    }).catch(error => {
-      console.error('Erro ao tentar resgatar o usuário',error.response.data.message)
-    })
-    setUser(user)
-  } 
-  
+
   const [pages, setPages] = useState<any>([
         // {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
         {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},
@@ -108,11 +96,6 @@ export default function SideNav() {
   }
   const location = useLocation()
 
-  
-
-useEffect(() => {
-  getUserIdByEmail()
-},[pages])
 
 useEffect(() => {
   verifyUser()
