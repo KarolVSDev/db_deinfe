@@ -66,6 +66,7 @@ const useFetchListData = () => {
         })) as TopicoAchado[];
   
         setArrayTopicoAchado(temas); // Atualiza o estado com os temas
+        return temas
       } else {
         console.log("Nenhum tema encontrado.");
       }
@@ -189,32 +190,39 @@ const useFetchListData = () => {
     }
   }
 
-  const escutarAchados = (callback: (achados: Achado[]) => void) => {
+  const escutarAchados = async (callback: (achados: Achado[]) => void) => {
     try {
       const colecaoRef = collection(db, "achado");
-
+  
       const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
-        const achados = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          achado: doc.data().achado,
-          analise: doc.data().analise,
-          criterioEstadual: doc.data().criterioEstadual,
-          criterioGeral: doc.data().criterioGeral,
-          criterioMunicipal: doc.data().criterioMunicipal,
-          data: doc.data().data,
-          gravidade: doc.data().gravidade,
-          situacaoAchado: doc.data().situacaoAchado,
-          tema_id: doc.data().tema_id,
-        })) as Achado[];
-        callback(achados)
-      });
+        const achados = querySnapshot.docs.map((doc) => {
+          const achadoData = doc.data();
+          
+          return {
+            id: doc.id,
+            achado: achadoData.achado,
+            analise: achadoData.analise,
+            criterioEstadual: achadoData.criterioEstadual,
+            criterioGeral: achadoData.criterioGeral,
+            criterioMunicipal: achadoData.criterioMunicipal,
+            data: achadoData.data,
+            gravidade: achadoData.gravidade,
+            situacaoAchado: achadoData.situacaoAchado,
+            tema_id: achadoData.tema_id,
+          };
+        }) as Achado[];
 
-      return unsubscribe;
+        console.log(arrayTopicoAchado)
+  
+        callback(achados); // Passa a lista de achados atualizada para o callback
+      });
+  
+      return unsubscribe; // Retorna a função para parar de escutar as mudanças
     } catch (error) {
-      console.error("Erro ao escutar temas: ", error)
+      console.error("Erro ao escutar achados: ", error);
       throw error;
     }
-  }
+  };
 
   const updateAchado = async (idAchado: string, data: Partial<BeneficioComAchado>) => {
 
@@ -229,8 +237,6 @@ const useFetchListData = () => {
       gravidade: data.gravidade,
       tema_id: data.tema_id
     }
-
-    
 
     const filteredAchado = Object.fromEntries(
       Object.entries(achado).filter(([_, value]) => value !== undefined)
