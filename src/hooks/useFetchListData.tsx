@@ -1,7 +1,7 @@
 import { api } from "../service/api";
 import { TypeAlert, TypeInfo } from "./TypeAlert";
 import { useContextTable } from "../context/TableContext";
-import { Achado, AchadoBeneficio, AchadoComTopico, Beneficio, BeneficioComAchado, TopicoAchado } from "../types/types";
+import { Achado, AchadoBeneficio, AchadoComTopico, Beneficio, BeneficioComAchado, BeneficioUpdate, TopicoAchado } from "../types/types";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../service/firebase.config";
 import { GridRowId } from "@mui/x-data-grid";
@@ -10,7 +10,7 @@ const useFetchListData = () => {
 
   const { setArrayAchado,
     setArrayTopicoAchado,
-    arrayTopicoAchado, setArrayBeneficio
+    arrayTopicoAchado, setArrayBeneficio, arrayBeneficio
   } = useContextTable();
 
 
@@ -32,7 +32,7 @@ const useFetchListData = () => {
   const escutarTemas = (callback: (temas: TopicoAchado[]) => void) => {
     try {
       const colecaoRef = collection(db, "tema");
-  
+
       // Escuta mudanças em tempo real na coleção "tema"
       const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
         const temas = querySnapshot.docs.map((doc) => ({
@@ -40,10 +40,10 @@ const useFetchListData = () => {
           tema: doc.data().tema,
           situacao: doc.data().situacao,
         })) as TopicoAchado[];
-  
+
         callback(temas); // Chama a função de callback com os temas atualizados
       });
-  
+
       return unsubscribe; // Retorna a função para parar de escutar as mudanças
     } catch (error) {
       console.error("Erro ao escutar temas: ", error);
@@ -51,20 +51,20 @@ const useFetchListData = () => {
     }
   };
 
-  
+
 
   const getAllTemas = async () => {
     try {
       const temasRef = collection(db, "tema");
       const querySnapshot = await getDocs(temasRef);
-  
+
       if (!querySnapshot.empty) {
         const temas = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           tema: doc.data().tema,
           situacao: doc.data().situacao,
         })) as TopicoAchado[];
-  
+
         setArrayTopicoAchado(temas); // Atualiza o estado com os temas
         return temas
       } else {
@@ -144,6 +144,35 @@ const useFetchListData = () => {
     }
   }
 
+  const getAllAchados = async () => {
+    try {
+      const achadoRef = collection(db, "achado");
+      const querySnapshot = await getDocs(achadoRef);
+
+      if (!querySnapshot.empty) {
+        const achados = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          achado: doc.data().achado,
+          analise: doc.data().analise,
+          criterioMunicipal: doc.data().criterioMunicipal,
+          criterioEstadual: doc.data().criterioEstadual,
+          criterioGeral: doc.data().criterioGeral,
+          data: doc.data().data,
+          gravidade: doc.data().gravidade,
+          situacaoAchado: doc.data().situacaoAchado,
+          tema_id: doc.data().tema_id
+        })) as Achado[];
+
+        setArrayAchado(achados); // Atualiza o estado com os achados
+        return achados
+      } else {
+        console.log("Nenhum tema encontrado.");
+      }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os Temas:", error);
+    }
+  };
+
   const getAhcadobyName = async (achadoName: string) => {
     try {
       const achadoRef = collection(db, "achado");
@@ -193,11 +222,11 @@ const useFetchListData = () => {
   const escutarAchados = async (callback: (achados: Achado[]) => void) => {
     try {
       const colecaoRef = collection(db, "achado");
-  
+
       const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
         const achados = querySnapshot.docs.map((doc) => {
           const achadoData = doc.data();
-          
+
           return {
             id: doc.id,
             achado: achadoData.achado,
@@ -213,10 +242,10 @@ const useFetchListData = () => {
         }) as Achado[];
 
         console.log(arrayTopicoAchado)
-  
+
         callback(achados); // Passa a lista de achados atualizada para o callback
       });
-  
+
       return unsubscribe; // Retorna a função para parar de escutar as mudanças
     } catch (error) {
       console.error("Erro ao escutar achados: ", error);
@@ -276,9 +305,9 @@ const useFetchListData = () => {
             throw error
           }
         }
-      } 
+      }
 
-      //Excluir relacções
+      //Excluir relações
       if (beneficiosToRemove) {
         for (const beneficio of beneficiosToRemove) {
           const docRef = doc(db, "achadoBeneficio", beneficio.id);
@@ -289,13 +318,35 @@ const useFetchListData = () => {
     } catch (error) {
 
     }
+  };
 
-  }
+  const getAchadoByBeneficioId = async (achadoIds: { achado_id: string }[]) => {
+    try {
+      const achados = [];
+
+      // Itera sobre os IDs e busca cada documento
+      for (const { achado_id } of achadoIds) {
+        const achadooRef = doc(db, "achado", achado_id); // Acessa o documento pelo ID
+        const achadoSnapshot = await getDoc(achadooRef);
+
+        // Se o documento existir, adiciona os dados ao array
+        if (achadoSnapshot.exists()) {
+          achados.push({ id: achadoSnapshot.id, ...achadoSnapshot.data() });
+        } else {
+          console.log(`Documento com ID ${achado_id} não encontrado.`);
+        }
+      }
+
+      return achados; // Retorna os dados dos achados encontrados
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os benefícios:", error);
+      throw error;
+    }
+  };
 
 
 
   //CRUD de benefício
-
   const setBeneficio = async (data: Beneficio) => {
     try {
       const beneficioRef = collection(db, "beneficio");
@@ -304,6 +355,104 @@ const useFetchListData = () => {
       return { id: docRef.id, ...data }
     } catch (error) {
       console.error("Erro ao tentar adicionar o benefício", error)
+    }
+  }
+
+  const getBeneficioWithAchados = async (beneficioId: GridRowId) => {
+    try {
+      const parsedBeneficioId = beneficioId.toString();
+      const beneficio = arrayBeneficio.find((b) => b.id === beneficioId)
+   
+      const achadoIds = await getDocsByBeneficioId(parsedBeneficioId)
+      if(achadoIds && achadoIds.length > 0) {
+        const achados = await getAchadoByBeneficioId(achadoIds);
+        if(beneficio) {
+          const beneficioComAchados = {
+            id:beneficio.id,
+            beneficio:beneficio.beneficio,
+            situacaoBeneficio:beneficio.situacaoBeneficio,
+            achados:achados
+          }
+      
+          return beneficioComAchados;
+        } else {
+          console.log("Não foi encontrado o benefício no arrayBeneficio")
+        } 
+
+        }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar o benefício: ", error)
+      throw error;
+    }
+  }
+  
+
+  const escutarBeneficios = (callback: (beneficios: Beneficio[]) => void) => {
+    try {
+      const colecaoRef = collection(db, "beneficio");
+
+      // Escuta mudanças em tempo real na coleção "tema"
+      const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
+        const beneficios = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          beneficio: doc.data().beneficio,
+          situacaoBeneficio: doc.data().situacaoBeneficio,
+        })) as Beneficio[];
+
+        callback(beneficios); // Chama a função de callback com os temas atualizados
+      });
+
+      return unsubscribe; // Retorna a função para parar de escutar as mudanças
+    } catch (error) {
+      console.error("Erro ao escutar temas: ", error);
+      throw error;
+    }
+  };
+
+  const updateBeneficio = async (id:GridRowId, data: BeneficioUpdate) => {
+    const idString = id.toString();
+    const {achados, ...beneficio} = data;
+    try {
+      if(beneficio.id) {
+        const beneficioRefRef = doc(db, "beneficio", beneficio.id)
+        await updateDoc(beneficioRefRef, beneficio)
+        console.log("Beneficio Atualizado")
+
+      } else {
+        console.log("Erro ao tentar atualizar o Benefício")
+      }
+
+      const currentAchados = await getRelationsByBeneficioId(idString);
+      const currentAchadoIds = currentAchados?.map((b) => b.achado_id);
+      const newAchados = achados.map((achado) => achado.id);
+     
+    
+      const achadosToAdd = newAchados.filter(
+        (id) => !currentAchadoIds.includes(id)
+      );
+
+      const achadosToRemove = currentAchados?.filter(
+        (b) => !newAchados?.includes(b.achado_id)
+      );
+
+    } catch (error) {
+      
+    }
+  }
+
+  const getBeneficioByName = async (beneficioString: string) => {
+    try {
+      const beneficioRef = collection(db, "beneficio");
+      const q = query(beneficioRef, where("beneficio", "==", beneficioString))
+      const querySnapshot = await getDocs(q)
+      if (!querySnapshot.empty) {
+        TypeAlert("O beneficio já existe no banco de dados", "info")
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Erro ao buscar o beneficio: ", error)
+      return false
     }
   }
 
@@ -322,6 +471,7 @@ const useFetchListData = () => {
       console.error("Erro ao tentar resgatar os Beneficios", error)
     }
   }
+
   const getBeneficioByAchadoId = async (beneficioIds: { beneficio_id: string }[]) => {
     try {
       const beneficios = [];
@@ -346,20 +496,34 @@ const useFetchListData = () => {
     }
   };
 
-  //CRUD da entidade pai de achado e beneficio, AchadoBeneficio
+  const getRelationsByBeneficioId = async (beneficio_id: string ) => {
+    try {
+      const relationRef = collection(db, "achadoBeneficio");
+      const q = query(relationRef, where("beneficio_id", "==", beneficio_id));
+      const querySnapshot = await getDocs(q)
+      const relacoes = querySnapshot.docs.map(doc => ({
+        id:doc.id,
+        achado_id:doc.data().achado_id
+      }))
+      return relacoes
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os benefícios:", error);
+      throw error;
+    }
+  };
 
+  //CRUD da entidade pai de achado e beneficio, AchadoBeneficio
   const setAchadoBeneficio = async (objeto: AchadoBeneficio) => {
     try {
       const achadoBeneficioRef = collection(db, "achadoBeneficio");
       const docRef = await addDoc(achadoBeneficioRef, objeto);
       console.log("A relação entre o achado e o(s) benefício(s) foi criada")
+      console.log({ id: docRef.id })
       return docRef
     } catch (error) {
       console.error("Erro ao tentar criar a relação na entidade pai", error)
     }
   }
-
-
 
   const getDocsByAchadoId = async (achadoId: string) => {
     try {
@@ -372,6 +536,24 @@ const useFetchListData = () => {
           beneficio_id: doc.data().beneficio_id
         }))
       }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os ids de achadoBeneficio", error);
+      throw error;
+    }
+  }
+
+  const getDocsByBeneficioId = async (beneficioId: string) => {
+    try {
+      const beneficioAchadoRef = collection(db, "achadoBeneficio");
+      const q = query(beneficioAchadoRef, where("beneficio_id", "==", beneficioId));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        return querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          achado_id: doc.data().achado_id
+        }))
+      }
+
     } catch (error) {
       console.error("Erro ao tentar resgatar os ids de achadoBeneficio", error);
       throw error;
@@ -397,21 +579,32 @@ const useFetchListData = () => {
     }
   };
 
-  const getAllAchados = async () => {
+  const processoBeneficioAchado = async (beneficioId: string) => {
     try {
-      const response = await api.get('/achado');
-      setArrayAchado(response.data)
-    } catch (error: any) {
-      TypeInfo(error.response.data.message, 'error')
+      // 1. Chama a função e aguarda o retorno
+      const achadoIds = await getDocsByBeneficioId(beneficioId);
+      // 2. Verifica se há IDs retornados
+      if (achadoIds && achadoIds.length > 0) {
+        // 3. Passa os IDs para a função getBeneficioByAchadoId
+        const achados = await getAchadoByBeneficioId(achadoIds);
+        return achados;
+      } else {
+        console.log("Nenhum achado encontrado para o beneficio ID:", beneficioId);
+        return null;
+      }
+    } catch (error) {
+      console.error("Erro ao processar achadoBeneficio:", error);
+      throw error;
     }
-  }
+  };
 
 
 
   return {
     getAllAchados, setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, setAchado,
     getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
-    processAchadoBeneficio, getAchadoById, updateAchado
+    processAchadoBeneficio, getAchadoById, updateAchado, escutarBeneficios, getBeneficioByName, 
+    processoBeneficioAchado, getBeneficioWithAchados,updateBeneficio
   };
 }
 

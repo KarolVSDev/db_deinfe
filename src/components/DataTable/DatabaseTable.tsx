@@ -36,8 +36,8 @@ export default function DatabaseTable() {
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { AchadoFormatado} = dataFake()
-  const {escutarTemas, escutarAchados} = useFetchListData();
+  const { AchadoFormatado } = dataFake()
+  const { escutarTemas, escutarAchados, escutarBeneficios } = useFetchListData();
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -52,18 +52,21 @@ export default function DatabaseTable() {
           setArrayTopicoAchado(temas)
           setRows(createRows(temas))
         })
-        return () => temaListener
+        return () => temaListener;
       case 'achado':
         setColumns(createGridColumns(achadoHeader));
         const achadoListener = escutarAchados((achados) => {
           setArrayAchado(achados)
           setRows(createRows(achados))
         })
-        return () => achadoListener
+        return () => achadoListener;
       case 'beneficio':
         setColumns(createGridColumns(beneficioHeader));
-        setRows(createRows(arrayBeneficio))
-        break
+        const beneficioListener = escutarBeneficios((beneficios) => {
+          setArrayBeneficio(beneficios)
+          setRows(createRows(beneficios))
+        })
+        return () => beneficioListener;
       default:
         setColumns([]);
         setRows([])
@@ -74,7 +77,7 @@ export default function DatabaseTable() {
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
     return headers.map(header => ({
-      key:header.id,
+      key: header.id,
       field: header.id,
       headerName: header.label,
       width: header.minWidth,

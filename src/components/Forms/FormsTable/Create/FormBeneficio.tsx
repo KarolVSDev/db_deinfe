@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm, UseFormRegister } from 'react-hook-form';
-import { Achado, Beneficio, FormBeneficioType, User } from '../../../../types/types';
+import { Achado, AchadoBeneficio, Beneficio, FormBeneficioType, User } from '../../../../types/types';
 import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -20,8 +20,7 @@ export interface FormBeneficioProps {
 const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModal }) => {
     const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<FormBeneficioType>({});
     const { setArrayBeneficio, arrayAchado } = useContextTable();
-    //const {getAllNatAchado} = useFetchListData()
-    const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio } = dataFake()
+    const {getBeneficioByName, getAllAchados, setBeneficio, setAchadoBeneficio} = useFetchListData()
     const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -34,20 +33,31 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         }
     };
 
+    useEffect(() => {
+        const setAchados = async () => {
+            if(arrayAchado.length === 0) {
+                await getAllAchados()
+            }
+        }
+        setAchados()
+    },[arrayAchado])
+
     const onSubmit = async (data: FormBeneficioType) => {
         setLoading(true)
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
             //passo 1 criar o beneficio
-            if (user?.cargo !== 'Diretor') {
+            if (user?.cargo !== 'chefe') {
                 data.situacaoBeneficio = false
             }
 
             const { beneficio, ...resto } = data
 
-            if (data.beneficio && verifyBeneficio(data.beneficio)) {
-                // Se o benefício já existe, não continue o processo de envio
+            const beneficioExist = await getBeneficioByName(beneficio)
+
+            if (beneficioExist) {
                 return;
+            } else {
+                setLoading(true)
             }
 
             const dataWithSituacao = {
@@ -55,14 +65,14 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                 situacaoBeneficio: situacaoBeneficio === 'Aprovado' ? true : false,
             };
 
-            const retornoBeneficio = saveBeneficio(dataWithSituacao)
+            const retornoBeneficio = await setBeneficio(dataWithSituacao)
 
             //passo 2 criar a relação na entidade achadoBeneficio
 
             if (resto.achados.length > 0) {
                 resto.achados.map(achado => {
-                    const objAchadoBeneficio = { achado_id: achado.id, beneficio_id: retornoBeneficio.id }
-                    saveAchadoBeneficio(objAchadoBeneficio)
+                    const objAchadoBeneficio = { achado_id: achado.id, beneficio_id: retornoBeneficio?.id }
+                    setAchadoBeneficio(objAchadoBeneficio as AchadoBeneficio)
                 })
             }
 

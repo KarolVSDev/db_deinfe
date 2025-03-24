@@ -33,7 +33,7 @@ export interface ModalBeneficiosProps {
 
 const ModalBeneficios: React.FC<ModalBeneficiosProps> = ({ Id, headerId }) => {
   const { getAchadoByBeneficio } = dataFake()
-  const { processAchadoBeneficio } = useFetchListData()
+  const { processAchadoBeneficio, processoBeneficioAchado } = useFetchListData()
   const [beneficios, setBeneficios] = useState<Beneficio[]>([])
   const [achados, setAchados] = useState<Achado[]>([])
   const [open, setOpen] = useState(false);
@@ -50,7 +50,11 @@ const ModalBeneficios: React.FC<ModalBeneficiosProps> = ({ Id, headerId }) => {
           }
         })
       } else {
-        setAchados(getAchadoByBeneficio(Id))
+        await processoBeneficioAchado(Id).then((achados) => {
+          if(achados) {
+            setAchados(achados as Achado[])
+          }
+        })
       }
     } catch (error) {
       console.error("Erro ao resgatar os benefícios do achado", error);

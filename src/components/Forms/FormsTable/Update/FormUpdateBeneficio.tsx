@@ -22,11 +22,10 @@ export interface FormBeneficioProps {
 
 const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModal, id }) => {
     const { setArrayBeneficio, arrayAchado } = useContextTable();
-    //const {getAllNatAchado} = useFetchListData()
-    const { saveBeneficio, verifyBeneficio, saveAchadoBeneficio, getBeneficio, updateBeneficio } = dataFake()
+    const {getAllAchados, getBeneficioWithAchados, updateBeneficio} = useFetchListData()
     const [situacaoBeneficio, setSituacaoBeneficio] = useState<string>();
     const [beneficio, setBeneficio] = useState<Beneficio>()
-    const [achados, setAchados] = useState<(Achado | undefined)[]>()
+    const [achados, setAchados] = useState()
     const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<FormBeneficioType>({
         defaultValues: {
             beneficio: beneficio?.beneficio,
@@ -35,15 +34,20 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         },
     });
     const [loading, setLoading] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+
+
 
 
     useEffect(() => {
         if (id) {
-            const searchBeneficio = getBeneficio(id)
+            setIsLoading(true)
+            const searchBeneficioF = async () => {
+            const searchBeneficio =  await getBeneficioWithAchados(id)
             if (searchBeneficio) {
-                setBeneficio(searchBeneficio)
-                setAchados(searchBeneficio.achados)
+                setBeneficio({id:searchBeneficio.id, 
+                    beneficio:searchBeneficio.beneficio, 
+                    situacaoBeneficio:searchBeneficio.situacaoBeneficio})
             }
             reset({
                 id: searchBeneficio?.id || '',
@@ -51,34 +55,47 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                 situacaoBeneficio: searchBeneficio?.situacaoBeneficio || false,
                 achados: searchBeneficio?.achados || []
             })
+            setIsLoading(false)
+            }
+            searchBeneficioF()
         }
     }, [id, reset])
+
+    
+    useEffect(() => {
+        const setAchados = async () => {
+            if(arrayAchado.length === 0) {
+                await getAllAchados()
+            }
+        }
+        setAchados()
+    },[arrayAchado])
 
     const onSubmit = async (data: FormBeneficioType) => {
         setLoading(true)
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000))
-            updateBeneficio(data)
+            console.log(data)
+            updateBeneficio(id, data)
             TypeAlert('Benefício adicionado', 'success');
             reset()
             closeModal()
         } catch (error) {
             TypeAlert("Erro ao Tentar atualizar o Benefício", "error")
             console.error(error)
+        } finally {
+            setLoading(false)
         }
 
     };
 
-    if (isLoading) {
-        setTimeout(() => {
-          setIsLoading(false)
-        }, 3000)
-        return <BeneficioSkeleton isLoading={isLoading}/>
-      }
+    
 
     return (
         <>
-            {beneficio && (
+            {isLoading ? (
+                <BeneficioSkeleton isLoading={isLoading}/>
+            ):
+            (
                 <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
                         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Benefício</Typography>
@@ -98,7 +115,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                             fullWidth
                             id="beneficio"
                             label='Benefício'
-                            defaultValue={beneficio.beneficio}
+                            defaultValue={beneficio?.beneficio}
                             type="text"
                             error={!!errors?.beneficio}
                             {...register('beneficio', {
@@ -113,9 +130,9 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                         )}
                     </Grid>
                     <Grid item xs={12} sm={4}>
-                        {user?.cargo === 'Diretor' ? (<Controller
+                        {user?.cargo === 'chefe' ? (<Controller
                             name="situacaoBeneficio"
-                            defaultValue={beneficio.situacaoBeneficio}
+                            defaultValue={beneficio?.situacaoBeneficio}
                             control={control}
                             render={({ field }) => (
                                 <ToggleButtonGroup
@@ -167,7 +184,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                     {loading ? <Box sx={{ display: "flex", justifyContent: "start", mt: 3 }}>
                         <Loader />
                     </Box> :
-                        <RegisterButton text="Registrar" />
+                        <RegisterButton text="Atualizar" />
                     }
                 </Box>
             )}
