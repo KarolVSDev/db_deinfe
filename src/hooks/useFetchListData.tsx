@@ -362,30 +362,30 @@ const useFetchListData = () => {
     try {
       const parsedBeneficioId = beneficioId.toString();
       const beneficio = arrayBeneficio.find((b) => b.id === beneficioId)
-   
+
       const achadoIds = await getDocsByBeneficioId(parsedBeneficioId)
-      if(achadoIds && achadoIds.length > 0) {
+      if (achadoIds && achadoIds.length > 0) {
         const achados = await getAchadoByBeneficioId(achadoIds);
-        if(beneficio) {
+        if (beneficio) {
           const beneficioComAchados = {
-            id:beneficio.id,
-            beneficio:beneficio.beneficio,
-            situacaoBeneficio:beneficio.situacaoBeneficio,
-            achados:achados
+            id: beneficio.id,
+            beneficio: beneficio.beneficio,
+            situacaoBeneficio: beneficio.situacaoBeneficio,
+            achados: achados
           }
-      
+
           return beneficioComAchados;
         } else {
           console.log("Não foi encontrado o benefício no arrayBeneficio")
-        } 
-
         }
+
+      }
     } catch (error) {
       console.error("Erro ao tentar resgatar o benefício: ", error)
       throw error;
     }
   }
-  
+
 
   const escutarBeneficios = (callback: (beneficios: Beneficio[]) => void) => {
     try {
@@ -409,11 +409,11 @@ const useFetchListData = () => {
     }
   };
 
-  const updateBeneficio = async (id:GridRowId, data: BeneficioUpdate) => {
+  const updateBeneficio = async (id: GridRowId, data: BeneficioUpdate) => {
     const idString = id.toString();
-    const {achados, ...beneficio} = data;
+    const { achados, ...beneficio } = data;
     try {
-      if(beneficio.id) {
+      if (beneficio.id) {
         const beneficioRefRef = doc(db, "beneficio", beneficio.id)
         await updateDoc(beneficioRefRef, beneficio)
         console.log("Beneficio Atualizado")
@@ -425,8 +425,8 @@ const useFetchListData = () => {
       const currentAchados = await getRelationsByBeneficioId(idString);
       const currentAchadoIds = currentAchados?.map((b) => b.achado_id);
       const newAchados = achados.map((achado) => achado.id);
-     
-    
+
+
       const achadosToAdd = newAchados.filter(
         (id) => !currentAchadoIds.includes(id)
       );
@@ -435,27 +435,70 @@ const useFetchListData = () => {
         (b) => !newAchados?.includes(b.achado_id)
       );
 
-    } catch (error) {
-      
-    }
-  }
+      console.log(achadosToAdd)
+      console.log(achadosToRemove)
 
-  const getBeneficioByName = async (beneficioString: string) => {
-    try {
-      const beneficioRef = collection(db, "beneficio");
-      const q = query(beneficioRef, where("beneficio", "==", beneficioString))
-      const querySnapshot = await getDocs(q)
-      if (!querySnapshot.empty) {
-        TypeAlert("O beneficio já existe no banco de dados", "info")
-        return true
+      const achadoBeneficioRef = collection(db, "achadoBeneficio");
+
+      if (achadosToAdd) {
+        for (const achadoId of achadosToAdd) {
+          try {
+            await addDoc(achadoBeneficioRef, {
+              achado_id: achadoId,
+              beneficio_id: idString,
+            });
+          } catch (error) {
+            console.error("Erro ao tentar adicionar novas relações de achadoBeneficio", error)
+            throw error
+          }
+        }
       }
-      return false
+
+      //Excluir relações
+      if (achadosToRemove) {
+        for (const achado of achadosToRemove) {
+          const docRef = doc(db, "achadoBeneficio", achado.id);
+          await deleteDoc(docRef);
+        }
+      }
     } catch (error) {
-      console.error("Erro ao buscar o beneficio: ", error)
-      return false
+
     }
   }
 
+  const getBeneficioByName = async (beneficioString: string, idCurrent?: GridRowId) => {
+    try {
+      const currentDocId = idCurrent?.toString();
+      const beneficioRef = collection(db, "beneficio");
+      const q = query(beneficioRef, where("beneficio", "==", beneficioString));
+      const querySnapshot = await getDocs(q);
+
+      // Se não há documentos com esse benefício, retorna false
+      if (querySnapshot.empty) {
+        return false;
+      }
+
+      // Se não foi passado um currentDocId (caso de criação)
+      if (!currentDocId) {
+        TypeAlert("Este benefício já existe na coleção", "info");
+        return true;
+      }
+
+      // Verifica se existe em documentos que NÃO são o atual
+      const existsInOtherDocs = querySnapshot.docs.some(doc => doc.id !== currentDocId);
+
+      if (existsInOtherDocs) {
+        TypeAlert("Este benefício já existe em outro documento", "info");
+      }
+
+      return existsInOtherDocs; // Só retorna true se existir em OUTRO documento
+
+    } catch (error) {
+      console.error("Erro ao verificar o benefício: ", error);
+      TypeAlert("Erro ao verificar o benefício", "error");
+      return false;
+    }
+  }
   const getAllBeneficios = async () => {
     try {
       const beneficiosRef = collection(db, "beneficio");
@@ -496,14 +539,14 @@ const useFetchListData = () => {
     }
   };
 
-  const getRelationsByBeneficioId = async (beneficio_id: string ) => {
+  const getRelationsByBeneficioId = async (beneficio_id: string) => {
     try {
       const relationRef = collection(db, "achadoBeneficio");
       const q = query(relationRef, where("beneficio_id", "==", beneficio_id));
       const querySnapshot = await getDocs(q)
       const relacoes = querySnapshot.docs.map(doc => ({
-        id:doc.id,
-        achado_id:doc.data().achado_id
+        id: doc.id,
+        achado_id: doc.data().achado_id
       }))
       return relacoes
     } catch (error) {
@@ -511,6 +554,22 @@ const useFetchListData = () => {
       throw error;
     }
   };
+
+  const deleteBeneficio = async (id: string) => {
+    try {
+      //deleta as relações da entidade pai 
+      deleteRelacao(id)
+      //deleta o benefício
+      const docRef = doc(db, "beneficio", id);
+      await deleteDoc(docRef);
+      //feedback para o usuário 
+      TypeAlert("O Beneficio foi excluído", "success")
+      console.log(`Benefício ${id} e suas relações foram deletadas `)
+    } catch (error) {
+      console.error("Erro ao deletar benefício:", error);
+      TypeAlert("Erro ao excluir o benefício", "error");
+    }
+  }
 
   //CRUD da entidade pai de achado e beneficio, AchadoBeneficio
   const setAchadoBeneficio = async (objeto: AchadoBeneficio) => {
@@ -598,13 +657,50 @@ const useFetchListData = () => {
     }
   };
 
+  const deleteRelacao = async (beneficioId?: GridRowId, achadoId?: GridRowId) => {
+    try {
+      if (beneficioId) {
+        const relacaoRef = collection(db, "achadoBeneficio");
+        const q = query(relacaoRef, where("beneficio_id", "==", beneficioId));
+        const querySnapshot = await getDocs(q);
+
+        const deletePromises = querySnapshot.docs.map(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+        
+        await Promise.all(deletePromises);
+        console.log(`Todas as relações com beneficio_id ${beneficioId} foram deletadas`);
+      }
+  
+      if (achadoId) {
+        const relacaoRef = collection(db, "achadoBeneficio");
+        const q = query(relacaoRef, where("achado_id", "==", achadoId));
+        const querySnapshot = await getDocs(q);
+        
+        // Deleta cada documento encontrado
+        const deletePromises = querySnapshot.docs.map(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+        
+        await Promise.all(deletePromises);
+        console.log(`Todas as relações com achado_id ${achadoId} foram deletadas`);
+      }
+      
+      return { success: true, message: "Relações deletadas com sucesso" };
+      
+    } catch (error) {
+      console.error("Erro ao tentar excluir a relação: ", error);
+      throw error;
+    }
+  }
+
 
 
   return {
     getAllAchados, setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, setAchado,
     getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
-    processAchadoBeneficio, getAchadoById, updateAchado, escutarBeneficios, getBeneficioByName, 
-    processoBeneficioAchado, getBeneficioWithAchados,updateBeneficio
+    processAchadoBeneficio, getAchadoById, updateAchado, escutarBeneficios, getBeneficioByName,
+    processoBeneficioAchado, getBeneficioWithAchados, updateBeneficio, deleteBeneficio
   };
 }
 

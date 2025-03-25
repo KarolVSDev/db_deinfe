@@ -55,6 +55,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
             const beneficioExist = await getBeneficioByName(beneficio)
 
             if (beneficioExist) {
+                setLoading(false)
                 return;
             } else {
                 setLoading(true)

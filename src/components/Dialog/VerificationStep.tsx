@@ -24,9 +24,9 @@ export interface VerificationProps {
 }
 
 const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
-    const { deleteAchado, deleteBeneficio } = dataFake()
+    const { deleteAchado } = dataFake()
     const [loading, setLoading] = useState(false)
-    const {deleteTema} = useFetchListData();
+    const {deleteTema, deleteBeneficio} = useFetchListData();
 
     const handleDelete = async () => {
         if (dataType === 'tema') {
@@ -50,8 +50,8 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
         } else if (dataType === 'beneficio') {
             setLoading(true)
             try {
-                await new Promise(resolve => setTimeout(resolve, 1000))
-                deleteBeneficio(selectedRow)
+                const id = selectedRow.toString();
+                deleteBeneficio(id)
                 setLoading(false)
             } catch (error) {
                 console.error("Erro ao tentar excluir o Benefício", error)
