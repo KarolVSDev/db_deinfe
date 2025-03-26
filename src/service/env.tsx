@@ -1,24 +1,15 @@
-interface EnvVariables {
-    VITE_FIREBASE_API_KEY: string;
-    VITE_FIREBASE_AUTH_DOMAIN: string;
-    VITE_FIREBASE_PROJECT_ID: string;
-    VITE_FIREBASE_STORAGE_BUCKET: string;
-    VITE_FIREBASE_MESSAGING_SENDER_ID: string;
-    VITE_FIREBASE_APP_ID: string;
-    VITE_FIREBASE_MEASUREMENT_ID?: string;
-    VITE_EMAIL_ADMIN: string;
-}
+
 
 const env =  
      {
-        VITE_FIREBASE_API_KEY: import.meta.env.VITE_FIREBASE_API_KEY,
-        VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-        VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-        VITE_FIREBASE_STORAGE_BUCKET: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-        VITE_FIREBASE_MESSAGING_SENDER_ID: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-        VITE_FIREBASE_APP_ID: import.meta.env.VITE_FIREBASE_APP_ID,
-        VITE_FIREBASE_MEASUREMENT_ID: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-        VITE_EMAIL_ADMIN: import.meta.env.VITE_EMAIL_ADMIN,
+        VITE_FIREBASE_API_KEY: import.meta.env.VITE_FIREBASE_API_KEY as string,
+        VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN as string,
+        VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN as string,
+        VITE_FIREBASE_STORAGE_BUCKET: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET as string,
+        VITE_FIREBASE_MESSAGING_SENDER_ID: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID as string,
+        VITE_FIREBASE_APP_ID: import.meta.env.VITE_FIREBASE_APP_ID as string,
+        VITE_FIREBASE_MEASUREMENT_ID: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID as string,
+        VITE_EMAIL_ADMIN: import.meta.env.VITE_EMAIL_ADMIN as string,
 
     };
 export default env
