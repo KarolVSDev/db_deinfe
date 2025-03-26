@@ -9,11 +9,11 @@ export interface BeneficioSkeletonProps {
 const BeneficioSkeleton:React.FC<BeneficioSkeletonProps> = ({isLoading}) => {
   return (
     <Box sx={{ width: '70vw' }}>
-      <Typography variant='h2'>{isLoading && <Skeleton sx={{ml:1, mr:3, width:'25vw', mt:2}} />}</Typography> 
-      <Typography variant='h1'>{isLoading && <Skeleton sx={{ml:1, mr:3, height:'120px'}} />}</Typography>
-      <Typography variant='h2'>{isLoading && <Skeleton sx={{ml:1, mr:3, width:'25vw'}} />}</Typography>
-      <Typography variant='h1'>{isLoading && <Skeleton sx={{ml:1, mr:3, height:'90px'}} />}</Typography>
-      <Skeleton sx={{ml:1, mr:3, width:'15vw', height:'5vw'}}/>
+      <Typography variant='h3'>{isLoading && <Skeleton sx={{ml:1, mr:3, width:'15vw', mt:2}} />}</Typography> 
+      <Typography variant='h3'>{isLoading && <Skeleton sx={{ml:1, mr:3, height:'10vh'}} />}</Typography>
+      <Typography variant='h3'>{isLoading && <Skeleton sx={{ml:1, mr:3, width:'15vw'}} />}</Typography>
+      <Typography variant='h3'>{isLoading && <Skeleton sx={{ml:1, mr:3, height:'4vw'}} />}</Typography>
+      <Skeleton sx={{ml:1, mr:3, width:'15vw', height:'4vw'}}/>
     </Box>
   );
 }
