@@ -232,9 +232,6 @@ export default function DatabaseTable() {
               <FileDownloadIcon />
             </Button>
           </Box>
-          {/* {selectedRow !== null && (
-            
-          )} */}
         </Box>
         <Divider />
         <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>
