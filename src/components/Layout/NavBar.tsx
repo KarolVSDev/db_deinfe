@@ -174,7 +174,7 @@ export default function NavBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            Focus
+            DB Deinfe
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
 

@@ -1,47 +1,43 @@
-import * as React from 'react';
+import React, { memo } from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Grid, Typography } from '@mui/material';
 import { BeneficioComAchado } from '../../../types/types';
 
 export interface toggleComponentProps {
-  alignment: string;
-  onChange: (value: keyof BeneficioComAchado) => void;
+    alignment: keyof BeneficioComAchado; // Tipagem mais precisa
+    onChange: (value: keyof BeneficioComAchado) => void;
 }
 
-const ToggleButtonsCriterios: React.FC<toggleComponentProps> = ({ alignment, onChange }) => {
+const ToggleButtonsCriterios: React.FC<toggleComponentProps> = memo(({ alignment, onChange }) => {
+    const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: keyof BeneficioComAchado | null) => {
+        if (newAlignment !== null) {
+            onChange(newAlignment);
+        }
+    };
 
-  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: keyof BeneficioComAchado | null) => {
-    if (newAlignment !== null) {
-      onChange(newAlignment);
-    }
-  };
-
-  return (
-    <>
-      <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-        <Typography>Critérios</Typography>
-        <ToggleButtonGroup
-          value={alignment}
-          exclusive
-          onChange={handleAlignment}
-          aria-label="text alignment"
-          color='primary'
-        >
-          <ToggleButton value="criterioMunicipal" aria-label="critério municipal">
-            <Typography>Municipal</Typography>
-          </ToggleButton>
-          <ToggleButton value="criterioEstadual" aria-label="critério estadual">
-            <Typography>Estadual</Typography>
-          </ToggleButton>
-          <ToggleButton value="criterioGeral" aria-label="critério geral">
-            <Typography>Geral/Nacional</Typography>
-          </ToggleButton>
-
-        </ToggleButtonGroup>
-      </Grid>
-    </>
-  );
-}
+    return (
+        <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+            <Typography>Critérios</Typography>
+            <ToggleButtonGroup
+                value={alignment}
+                exclusive
+                onChange={handleAlignment}
+                aria-label="text alignment"
+                color="primary"
+            >
+                <ToggleButton value="criterioMunicipal" aria-label="critério municipal">
+                    <Typography>Municipal</Typography>
+                </ToggleButton>
+                <ToggleButton value="criterioEstadual" aria-label="critério estadual">
+                    <Typography>Estadual</Typography>
+                </ToggleButton>
+                <ToggleButton value="criterioGeral" aria-label="critério geral">
+                    <Typography>Geral/Nacional</Typography>
+                </ToggleButton>
+            </ToggleButtonGroup>
+        </Grid>
+    );
+});
 
 export default ToggleButtonsCriterios;

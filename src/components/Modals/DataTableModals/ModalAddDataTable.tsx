@@ -65,7 +65,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   return (
     <div>
       <Button onClick={handleOpen} disabled={isDisabled} variant='contained'  >
-       <SaveIcon sx={{mr:1}}/> Cadastrar novo {dataType}
+       <SaveIcon sx={{mr:1}}/> Cadastrar {dataType}
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
