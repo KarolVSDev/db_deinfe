@@ -70,6 +70,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
             const token = await user.getIdToken();
             if (user.email !== null) {
                 setCookies({ token, email: user.email })
+             
             }
             setIsLoggedIn(true)
             navigate('/dashboard/table');

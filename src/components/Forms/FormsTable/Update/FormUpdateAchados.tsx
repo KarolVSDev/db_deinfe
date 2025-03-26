@@ -57,20 +57,20 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       if (id) {
         setIsLoading(true)
         try {
+          if (arrayTopicoAchado.length === 0) {
+            const fetchTemas = async () => {
+              await getAllTemas();
+              await getAllBeneficios()
+            }
+            fetchTemas()
+            
+          }
           // Aguarda a resolução da promessa
           const result = await getAchadoById(id);
 
           if (result) {
             setAchado(result.achado)
             setTema(result.tema)
-            if (arrayTopicoAchado.length === 0) {
-              const fetchTemas = async () => {
-                await getAllTemas();
-                await getAllBeneficios()
-              }
-              fetchTemas()
-              
-            }
             // Reseta o formulário com os dados do achado
             reset({
               id: result.achado.id || '',
@@ -103,7 +103,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     };
 
     fetchData(); // Chama a função assíncrona
-  }, [id, reset, arrayTopicoAchado.length]);
+  }, [id, reset, arrayTopicoAchado.length, arrayBeneficio.length]);
 
 
   useEffect(() => { 

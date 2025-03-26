@@ -121,10 +121,19 @@ const useFetchListData = () => {
 
   const deleteTema = async (id: string) => {
     try {
-      const docRef = doc(db, "tema", id);
-      await deleteDoc(docRef);
-      console.log("Documento deletado da coleçao Tema")
-      TypeAlert("O tema foi excluído", "success")
+      const achadoRef = collection(db, "achado");
+      const q = query(achadoRef, where("tema_id", "==", id));
+      const querySnapshot = await getDocs(q)
+      if(!querySnapshot.empty) {
+        TypeAlert("Esse tema está relacionado a um ou mais registros de achados. Altere o tema desse(s) achado(s) antes de excluir este registro.", "info")
+        return
+      } else {
+        const docRef = doc(db, "tema", id);
+        await deleteDoc(docRef);
+        console.log("Documento deletado da coleçao Tema")
+        TypeAlert("O tema foi excluído", "success")
+        return
+      }
     } catch (error) {
       console.error("Erro ao tentar deletar o dado: ", error);
       throw error;
@@ -343,6 +352,22 @@ const useFetchListData = () => {
       throw error;
     }
   };
+
+  const deleteAchado = async (id: string) => {
+    try {
+      //deleta as relações da entidade pai 
+      deleteRelacao(id)
+      //deleta o achado
+      const docRef = doc(db, "achado", id);
+      await deleteDoc(docRef);
+      //feedback para o usuário 
+      TypeAlert("O Achado foi excluído", "success")
+      console.log(`Achado ${id} e suas relações foram excluídos`)
+    } catch (error) {
+      console.error("Erro ao excluir Achado:", error);
+      TypeAlert("Erro ao excluir o benefício", "error");
+    }
+  }
 
 
 
@@ -700,7 +725,7 @@ const useFetchListData = () => {
     getAllAchados, setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, setAchado,
     getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
     processAchadoBeneficio, getAchadoById, updateAchado, escutarBeneficios, getBeneficioByName,
-    processoBeneficioAchado, getBeneficioWithAchados, updateBeneficio, deleteBeneficio
+    processoBeneficioAchado, getBeneficioWithAchados, updateBeneficio, deleteBeneficio, deleteAchado
   };
 }
 

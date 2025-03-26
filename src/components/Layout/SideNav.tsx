@@ -87,7 +87,7 @@ export default function SideNav() {
   ]);
 
   const verifyUser = () => {
-    if(email === env.EMAIL_MASTER){
+    if(email === env.VITE_EMAIL_ADMIN){
       setPages([
         // {name:'Análises', link:'/dashboard', icon: <QueryStatsIcon/> },
         {name:'Pesquisa de dados', link:'/dashboard/table',  icon:<TableChartIcon/>},

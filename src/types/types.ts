@@ -20,8 +20,6 @@ export interface UserUpdate {
   email: string;
   cargo: string;
   ativo: string;
-  senhaAtual: string;
-  novaSenha: string;
 }
 export interface UserLogin {
   email: string;

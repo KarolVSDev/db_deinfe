@@ -97,9 +97,9 @@ export default function NavBar() {
   };
 
   const handlePerfil = () => {
-      navigate('/dashboard/edituser')
+    navigate('/dashboard/edituser')
   }
-  
+
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -118,7 +118,7 @@ export default function NavBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      
+
     </Menu>
   );
 
@@ -153,11 +153,11 @@ export default function NavBar() {
       </MenuItem>
     </Menu>
   );
-  const {logout} = useAuth();
+  const { logout } = useAuth();
   return (
-    <Box sx={{ flexGrow: 1}}>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
-        <Toolbar sx={{backgroundColor:'rgb(17 24 39)'}}>
+        <Toolbar sx={{ backgroundColor: 'rgb(17 24 39)' }}>
           <IconButton
             size="large"
             edge="start"
@@ -177,22 +177,21 @@ export default function NavBar() {
             Focus
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-            {email !== env.EMAIL_MASTER ? (
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                <IconButton
-                  size="large"
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-haspopup="true"
-                  color="inherit"
-                  sx={{mr:'10px'}}
-                  onClick={handlePerfil}
-                >
-                  <AccountCircle sx={{mr:'5px'}} /> <Typography>Perfil</Typography>
-                </IconButton>
-              </Box>
-            ):(null)}
-            
+
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-haspopup="true"
+              color="inherit"
+              sx={{ mr: '10px' }}
+              onClick={handlePerfil}
+            >
+              <AccountCircle sx={{ mr: '5px' }} /> <Typography>Perfil</Typography>
+            </IconButton>
+          </Box>
+
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"
@@ -202,7 +201,7 @@ export default function NavBar() {
               onClick={logout}
               color="inherit"
             >
-              <LogoutOutlined sx={{mr:'5px'}}/> <Typography>Sair</Typography>
+              <LogoutOutlined sx={{ mr: '5px' }} /> <Typography>Sair</Typography>
             </IconButton>
           </Box>
         </Toolbar>
