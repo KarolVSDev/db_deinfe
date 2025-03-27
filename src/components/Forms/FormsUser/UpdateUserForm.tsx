@@ -9,6 +9,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert';
 import env from '../../../service/env';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import useFetchUsers from '../../../hooks/useFetchUsers';
@@ -21,8 +22,8 @@ interface SignUpProps {
 const UpdateUserForm: React.FC<SignUpProps> = ({ closeModal }) => {
   const location = useLocation();
   const [email] = useState(localStorage.getItem('email'))
-  const {getUser, updateUser} = useFetchUsers();
-  const {user} = useAuth();
+  const { getUser, updateUser } = useFetchUsers();
+  const { user } = useAuth();
   const { register, handleSubmit, formState: { errors } } = useForm<UserUpdate>({})
 
   useEffect(() => {
@@ -30,16 +31,16 @@ const UpdateUserForm: React.FC<SignUpProps> = ({ closeModal }) => {
       await getUser()
     };
     fetchUser()
-    
+
   }, [email, user?.id])
 
   const onSubmit = async (data: UserUpdate) => {
     try {
-      if(user) {
-        await updateUser(user.id,  data)
+      if (user) {
+        await updateUser(user.id, data)
         TypeAlert("Usuário atualizado", "success")
       }
-   
+
     } catch (error) {
       console.error("Erro na função updateUser do hook useFetchUser()", error)
       TypeAlert("Erro ao tentar atualizar o registro do usuário", "error")
@@ -162,9 +163,18 @@ const UpdateUserForm: React.FC<SignUpProps> = ({ closeModal }) => {
                 Atualizar
               </Button>
               {location.pathname === '/dashboard/edituser' && (
-                <Link href="/dashboard/table" variant="body2" sx={{ cursor: 'pointer' }}>
-                  Voltar para Dashboard
+
+
+
+                <Link href="/dashboard/table" variant="body2" sx={{ display: 'flex', flexDirection: 'row', width: "100%", cursor: "pointer" }} >
+                  <Button variant="outlined">
+                    <NavigateBeforeIcon />
+                    <Typography variant="caption" sx={{ mt: 0.5 }}>
+                      Voltar para Dashboard
+                    </Typography>
+                  </Button>
                 </Link>
+
               )}
             </Grid>
           </Box>
