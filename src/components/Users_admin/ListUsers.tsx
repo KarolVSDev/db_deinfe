@@ -19,14 +19,6 @@ export default function ListUsers() {
     const {getUsers} = useFetchUsers()
 
 
-    const removeUser = (userId: string) => {
-        api.delete(`/usuario/${userId}`).then((response: any) => {
-            TypeInfo(response.data.message, 'success')
-        }).catch((error: any) => {
-            TypeInfo(error.response.data.message, 'error')
-        })
-    }
-
     useEffect(() => {
         try {
             if(users.length === 0) {
@@ -40,8 +32,8 @@ export default function ListUsers() {
     console.log(users)
 
     return (
-        <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }} >
-            <Grid container >{users?.map((user: any) => (
+        <Grid sx={{overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }} >
+            <Grid container sx={{gap:2, p:0}}>{users?.map((user: any) => (
                 <List key={user.id} sx={{ display:"flex",  flexDirection:"column", justifyContent:"center",alignItems:"center", width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb: 2 }}>
                     <AccountCircleIcon sx={{ fontSize: { xs: 30, sm: 40, md: 50 } }} />
                     <ListItem alignItems="center" sx={{display:"flex", justifyContent:"center", textAlign:"center"}} >

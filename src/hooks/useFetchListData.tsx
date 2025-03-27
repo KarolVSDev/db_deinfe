@@ -230,11 +230,20 @@ const useFetchListData = () => {
 
   const escutarAchados = async (callback: (achados: Achado[]) => void) => {
     try {
+      const temasRef = collection(db, "tema");
+      const temasSnapshot = await getDocs(temasRef);
+      const temasMap = new Map<string, any>();
+      
+      temasSnapshot.forEach((doc) => {
+        temasMap.set(doc.id, doc.data());
+      })
+
       const colecaoRef = collection(db, "achado");
 
       const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
         const achados = querySnapshot.docs.map((doc) => {
           const achadoData = doc.data();
+          const tema = temasMap.get(achadoData.tema_id);
 
           return {
             id: doc.id,
@@ -246,7 +255,7 @@ const useFetchListData = () => {
             data: achadoData.data,
             gravidade: achadoData.gravidade,
             situacaoAchado: achadoData.situacaoAchado,
-            tema_id: achadoData.tema_id,
+            tema_id: tema.tema ||"Tema não encontrado",
           };
         }) as Achado[];
 
