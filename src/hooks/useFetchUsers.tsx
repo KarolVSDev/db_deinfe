@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { api } from '../service/api'
+import  { useState } from 'react'
 import { AllUsers, User, UserUpdate } from '../types/types'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../service/firebase.config'

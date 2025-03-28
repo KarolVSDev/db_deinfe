@@ -1,15 +1,13 @@
-import { Autocomplete, AutocompleteGetTagProps, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, AchadoComTopico, Beneficio, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
-import { api } from '../../../../service/api';
+import { Achado, AchadoComTopico, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import dataFake from '../../../../service/dataFake';
 import DateSelector from '../../../Inputs/DatePicker';
 import RadioInput from '../../../Inputs/RadioInput';
 import ToggleButtonsCriterios from '../../../Inputs/ToggleInputs/ToggleInputCriterio';

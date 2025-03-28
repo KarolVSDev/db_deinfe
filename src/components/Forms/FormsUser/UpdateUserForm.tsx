@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
-import { api } from '../../../service/api';
 import { useState } from 'react';
 import { UserUpdate } from '../../../types/types';
-import { Avatar, Box, Button, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, FormControlLabel, FormLabel, Grid, Link, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert';
-import env from '../../../service/env';
+import { TypeAlert } from '../../../hooks/TypeAlert';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
@@ -46,8 +43,6 @@ const UpdateUserForm: React.FC<SignUpProps> = ({ closeModal }) => {
     }
 
   }
-
-
 
   return (
     <div>

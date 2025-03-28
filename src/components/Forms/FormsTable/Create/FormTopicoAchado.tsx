@@ -1,11 +1,7 @@
-import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado, User } from '../../../../types/types';
-import { api } from '../../../../service/api';
-import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import { useContextTable } from '../../../../context/TableContext';
-import dataFake from '../../../../service/dataFake'
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../../../Loader/Loader';

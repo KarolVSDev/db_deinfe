@@ -1,7 +1,6 @@
-import { api } from "../service/api";
-import { TypeAlert, TypeInfo } from "./TypeAlert";
+import { TypeAlert } from "./TypeAlert";
 import { useContextTable } from "../context/TableContext";
-import { Achado, AchadoBeneficio, AchadoComTopico, Beneficio, BeneficioComAchado, BeneficioUpdate, TopicoAchado } from "../types/types";
+import { Achado, AchadoBeneficio, Beneficio, BeneficioComAchado, BeneficioUpdate, TopicoAchado } from "../types/types";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../service/firebase.config";
 import { GridRowId } from "@mui/x-data-grid";

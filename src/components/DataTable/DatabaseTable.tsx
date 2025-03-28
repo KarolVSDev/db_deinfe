@@ -8,8 +8,6 @@ import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import ModalUpdatePF from '../Modals/DataTableModals/ModalUpdateForms';
-import { api } from '../../service/api';
-import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchListData from '../../hooks/useFetchListData';

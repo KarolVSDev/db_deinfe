@@ -2,8 +2,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types'
-import { api } from '../../../../service/api';
+import { BeneficioComAchado, TopicoAchado, User } from '../../../../types/types'
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
 import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';

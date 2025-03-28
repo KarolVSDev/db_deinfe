@@ -12,14 +12,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useAuth } from '../../context/AuthContext';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../hooks/appStore';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import {  useState, useEffect } from 'react';
-import { api } from '../../service/api';
-import { AllUsers } from '../../types/types';
 import env from '../../service/env';
 
 

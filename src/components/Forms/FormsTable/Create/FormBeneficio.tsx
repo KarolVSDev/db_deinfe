@@ -2,7 +2,6 @@ import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleBut
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm, UseFormRegister } from 'react-hook-form';
 import { Achado, AchadoBeneficio, Beneficio, FormBeneficioType, User } from '../../../../types/types';
-import { api } from '../../../../service/api';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import React, { useEffect, useState } from 'react';
