@@ -38,6 +38,7 @@ export default function DatabaseTable() {
   const { getUser } = useFetchUsers()
   const { AchadoFormatado } = dataFake()
   const { escutarTemas, escutarAchados, escutarBeneficios } = useFetchListData();
+  const [isLoading,  setIsLoading] = useState(true)
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -204,7 +205,30 @@ export default function DatabaseTable() {
     }
   }, [arrayTopicoAchado, arrayBeneficio, arrayAchado, dataType])
 
-
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true)
+      try {
+        switch (dataType) {
+          case 'tema':
+            setRows(createRows(arrayTopicoAchado))
+            break;
+          case 'beneficio':
+            setRows(createRows(arrayBeneficio))
+            break;
+          case 'achado':
+            const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
+            setRows(createRows(achadoComTopico))
+            break;
+          default:
+            break;
+        }
+        loadData()
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }, [dataType])
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >

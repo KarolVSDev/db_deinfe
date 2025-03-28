@@ -34,8 +34,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       gravidade: 'Baixa'
     }
   });
-  const { saveAchado, saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
-  const { setAchado, getAllTemas, getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios } = useFetchListData();
+  const { setAchado, getAllTemas, getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, getBeneficioByName } = useFetchListData();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { arrayTopicoAchado, arrayBeneficio, setArrayAchado } = useContextTable()
@@ -119,9 +118,14 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       // Caso haja benefício, ou se o array de benefícios não estiver vazio, o fluxo continua
       if (data.beneficio) {
         // Verifique se o benefício já existe antes de continuar
-        if (verifyBeneficio(data.beneficio)) {
-          return;
-        }
+        const beneficioExist = await getBeneficioByName(data.beneficio)
+
+            if (beneficioExist) {
+                setLoading(false)
+                return;
+            } else {
+                setLoading(true)
+            }
 
         if (user?.cargo !== 'chefe') {
           data.situacaoAchado = false;

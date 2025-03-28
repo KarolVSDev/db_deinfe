@@ -523,6 +523,7 @@ const useFetchListData = () => {
 
       if (existsInOtherDocs) {
         TypeAlert("Este benefício já existe em outro documento", "info");
+        return true
       }
 
       return existsInOtherDocs; // Só retorna true se existir em OUTRO documento

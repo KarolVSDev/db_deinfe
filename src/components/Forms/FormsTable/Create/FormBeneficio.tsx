@@ -83,6 +83,8 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         } catch (error) {
             TypeAlert("Erro ao tentar adicionar o Benefício", "error");
             console.log(error)
+        } finally {
+            setLoading(false)
         }
 
     };
