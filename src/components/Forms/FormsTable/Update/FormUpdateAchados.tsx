@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, AchadoComTopico, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
+import { Achado, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
@@ -21,14 +21,11 @@ export interface FormUpdateAchadoProps {
   id: GridRowId | undefined;
   dataType: string;
 }
-const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user, dataType }) => {
-  const [achadoComTopico, setAchadoComTopico] = useState<AchadoComTopico>()
+const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user }) => {
   const [tema, setTema] = useState<TopicoAchado>({ id: '', tema: '', situacao: false })
   const [achado, setAchado] = useState<Achado>()
-  const [openModal, setOpenModal] = useState(false)
-  const { arrayAchado, arrayTopicoAchado, arrayBeneficio, setArrayTopicoAchado } = useContextTable()
-  const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
-  const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
+  const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
+  const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const { getAchadoById, getAllTemas, getAllBeneficios, updateAchado } = useFetchListData()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -175,7 +172,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                   options={arrayTopicoAchado}
                   getOptionLabel={(option: TopicoAchado) => option.tema}
                   defaultValue={arrayTopicoAchado.find(item => item.id === field.value) || null}
-                  onChange={(event, value) => field.onChange(value?.id || '')}
+                  onChange={(_, value) => field.onChange(value?.id || '')}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -223,7 +220,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                   color="primary"
                   value={field.value}
                   exclusive
-                  onChange={(event, newValue) => field.onChange(newValue)}
+                  onChange={(_, newValue) => field.onChange(newValue)}
                   aria-label="Situacao do Achado"
                 >
                   <ToggleButton value={false}>Pendente</ToggleButton>
@@ -286,7 +283,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                     getOptionLabel={(option) => option.beneficio}
                     filterSelectedOptions
                     value={field.value || []} // Sincroniza o valor com o formulário
-                    onChange={(event, value) => field.onChange(value)} // Atualiza o estado do formulário
+                    onChange={(_, value) => field.onChange(value)} // Atualiza o estado do formulário
                     isOptionEqualToValue={(option, value) => option.id === value.id} // Compara pelo `id`
                     renderInput={(params) => (
                       <TextField

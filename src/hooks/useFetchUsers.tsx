@@ -1,4 +1,3 @@
-import  { useState } from 'react'
 import { AllUsers, User, UserUpdate } from '../types/types'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../service/firebase.config'
@@ -9,7 +8,6 @@ const useFetchUsers = () => {
 
 
   const { setUsers } = useAuth()
-  const [email] = useState(localStorage.getItem('email'))
   const { setUser } = useAuth()
 
 
@@ -26,6 +24,7 @@ const useFetchUsers = () => {
       })
       .catch((error) => {
         TypeAlert('Erro ao cadastrar usuário', 'error')
+        console.error(error)
       })
   }
 

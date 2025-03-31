@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { UserUpdate } from '../../../types/types';
 import { Avatar, Box, Button, FormControlLabel, FormLabel, Grid, Link, Radio, RadioGroup, TextField, Typography } from '@mui/material';
@@ -10,12 +10,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import useFetchUsers from '../../../hooks/useFetchUsers';
 
-
-interface SignUpProps {
-  closeModal: () => void;
-}
-
-const UpdateUserForm: React.FC<SignUpProps> = ({ closeModal }) => {
+const UpdateUserForm = () => {
   const location = useLocation();
   const [email] = useState(localStorage.getItem('email'))
   const {getUser, updateUser} = useFetchUsers();

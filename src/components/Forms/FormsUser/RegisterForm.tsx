@@ -45,8 +45,6 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
 
   const onSubmit = (data: User) => {
     setLoading(true)
-    const adminEmail = 'secexadmin@gmail.com'; // Substitua pelo email do admin
-    const adminPassword = 'Secex@123'; // Substitua pela senha do admin
     if (data.senha) {
       createUserWithEmailAndPassword(authBase, data.email, data.senha)
         .then((userCredential) => {
