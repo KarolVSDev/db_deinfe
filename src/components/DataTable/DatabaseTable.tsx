@@ -155,6 +155,8 @@ export default function DatabaseTable() {
     { value: 'tema', string: 'Temas' },
     { value: 'achado', string: 'Achados' },
     { value: 'beneficio', string: 'Benefícios' },
+    { value: 'coleta', string: 'Coleta' },
+    { value: 'processo', string: 'Processos' },
   ]
 
 

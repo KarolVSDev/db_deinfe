@@ -103,19 +103,29 @@ export interface ColumnConfig {
   minWidth: number;
 };
 
-export interface Processos {
+export interface Coleta {
   id: string;
-  tema: string;
-  numeroAchado: string;
-  achados: Achado[];
-  valorAchado: string;
-  quantitativoAchado: string;
-  unidades: string;
-  situacaoAchado: boolean;
+  topico: TopicoAchado;
   responsavel: string;
+  coletador: string;
+  achado: Achado;
+  valorFinanceiroAchado: number;
+  quantidadeAchado: string;
+  unidades: string;
+  situacaoAchado: string;
   beneficio: Beneficio[];
-  alcance: string;
-  responsabilisacao: string;
+  valorBeneficio: string;
+}
+
+export interface Processo {
+  processoNRO: string;
+  tipoProcesso: string;
+  exercicio: string;
+  analiseDefesa: string;
+  julgado: string;
+  achado: Achado;
+  meritoContas: string;
+  observacoes: string;
 }
 
 
