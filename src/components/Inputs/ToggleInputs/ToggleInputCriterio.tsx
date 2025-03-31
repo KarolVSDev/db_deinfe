@@ -10,7 +10,7 @@ export interface toggleComponentProps {
 }
 
 const ToggleButtonsCriterios: React.FC<toggleComponentProps> = memo(({ alignment, onChange }) => {
-    const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: keyof BeneficioComAchado | null) => {
+    const handleAlignment = (_: React.MouseEvent<HTMLElement>, newAlignment: keyof BeneficioComAchado | null) => {
         if (newAlignment !== null) {
             onChange(newAlignment);
         }

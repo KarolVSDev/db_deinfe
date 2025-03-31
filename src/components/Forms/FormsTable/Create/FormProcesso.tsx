@@ -6,7 +6,6 @@
 // import Typography from '@mui/material/Typography';
 // import Container from '@mui/material/Container';
 // import { useForm } from 'react-hook-form';
-// import { api } from '../../../../service/api';
 // import { TypeAlert } from '../../../../hooks/TypeAlert';
 // import { useContextTable } from '../../../../context/TableContext';
 // import { Autocomplete} from '@mui/material';
@@ -23,14 +22,7 @@
 
 
 //   // const onSubmit = (data: Processo) => {
-//   //   api.post('/processo', data).then(response => {
-//   //     const newProcesso = response.data.processo
-//   //     TypeAlert(response.data.message, 'success')
-//   //     reset()
-//   //     setArrayProcesso(prevArray => [...prevArray, newProcesso]);
-//   //   }).catch((error) => {
-//   //     TypeAlert(error.response.data.message, 'warning');
-//   //   })
+
 //   // }
 
 //   const handleExpansion = () => {

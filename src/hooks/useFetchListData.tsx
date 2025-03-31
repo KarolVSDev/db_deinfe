@@ -1,7 +1,6 @@
-import { api } from "../service/api";
-import { TypeAlert, TypeInfo } from "./TypeAlert";
+import { TypeAlert } from "./TypeAlert";
 import { useContextTable } from "../context/TableContext";
-import { Achado, AchadoBeneficio, AchadoComTopico, Beneficio, BeneficioComAchado, BeneficioUpdate, TopicoAchado } from "../types/types";
+import { Achado, AchadoBeneficio, Beneficio, BeneficioComAchado, BeneficioUpdate, TopicoAchado } from "../types/types";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../service/firebase.config";
 import { GridRowId } from "@mui/x-data-grid";
@@ -230,11 +229,20 @@ const useFetchListData = () => {
 
   const escutarAchados = async (callback: (achados: Achado[]) => void) => {
     try {
+      const temasRef = collection(db, "tema");
+      const temasSnapshot = await getDocs(temasRef);
+      const temasMap = new Map<string, any>();
+      
+      temasSnapshot.forEach((doc) => {
+        temasMap.set(doc.id, doc.data());
+      })
+
       const colecaoRef = collection(db, "achado");
 
       const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
         const achados = querySnapshot.docs.map((doc) => {
           const achadoData = doc.data();
+          const tema = temasMap.get(achadoData.tema_id);
 
           return {
             id: doc.id,
@@ -246,7 +254,7 @@ const useFetchListData = () => {
             data: achadoData.data,
             gravidade: achadoData.gravidade,
             situacaoAchado: achadoData.situacaoAchado,
-            tema_id: achadoData.tema_id,
+            tema_id: tema.tema ||"Tema não encontrado",
           };
         }) as Achado[];
 
@@ -514,6 +522,7 @@ const useFetchListData = () => {
 
       if (existsInOtherDocs) {
         TypeAlert("Este benefício já existe em outro documento", "info");
+        return true
       }
 
       return existsInOtherDocs; // Só retorna true se existir em OUTRO documento

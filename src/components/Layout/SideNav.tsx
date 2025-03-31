@@ -11,15 +11,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { useAuth } from '../../context/AuthContext';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../hooks/appStore';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import {  useState, useEffect } from 'react';
-import { api } from '../../service/api';
-import { AllUsers } from '../../types/types';
 import env from '../../service/env';
 
 
@@ -74,10 +70,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function SideNav() {
   const theme = useTheme();
-  const updateOpen = useAppStore((state) => state.updateOpen);
   const open = useAppStore((state) => state.dopen);
-  const [email, setEmail] = useState(localStorage.getItem('email'))
-  const {user} = useAuth() 
+  const [email] = useState(localStorage.getItem('email'))
   
 
   const [pages, setPages] = useState<any>([

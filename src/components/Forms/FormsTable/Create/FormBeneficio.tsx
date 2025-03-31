@@ -1,13 +1,11 @@
 import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../context/TableContext';
-import { Controller, useForm, UseFormRegister } from 'react-hook-form';
-import { Achado, AchadoBeneficio, Beneficio, FormBeneficioType, User } from '../../../../types/types';
-import { api } from '../../../../service/api';
+import { Controller, useForm } from 'react-hook-form';
+import { AchadoBeneficio, FormBeneficioType, User } from '../../../../types/types';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import React, { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
-import dataFake from '../../../../service/dataFake';
 import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../../../Loader/Loader';
 
@@ -17,15 +15,15 @@ export interface FormBeneficioProps {
     dataType: string;
 }
 
-const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModal }) => {
-    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<FormBeneficioType>({});
-    const { setArrayBeneficio, arrayAchado } = useContextTable();
+const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, closeModal }) => {
+    const { control, handleSubmit, register, formState: { errors }, reset } = useForm<FormBeneficioType>({});
+    const { arrayAchado } = useContextTable();
     const {getBeneficioByName, getAllAchados, setBeneficio, setAchadoBeneficio} = useFetchListData()
     const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const handleChangeSituacaoBeneficio = (
-        event: React.MouseEvent<HTMLElement>,
+        _: React.MouseEvent<HTMLElement>,
         newSituacao: string | null
     ) => {
         if (newSituacao !== null) {
@@ -83,6 +81,8 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
         } catch (error) {
             TypeAlert("Erro ao tentar adicionar o Benefício", "error");
             console.log(error)
+        } finally {
+            setLoading(false)
         }
 
     };
@@ -149,7 +149,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                             getOptionLabel={(option) => option.achado}
                             filterSelectedOptions
                             value={field.value || []}
-                            onChange={(event, value) => field.onChange(value)}
+                            onChange={(_, value) => field.onChange(value)}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
                             renderInput={(params) => (
                                 <TextField

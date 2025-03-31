@@ -1,6 +1,5 @@
 import SideNav from "../../../components/Layout/SideNav";
-import { Box, Button } from "@mui/material";
-import { useAuth } from "../../../context/AuthContext";
+import { Box } from "@mui/material";
 import NavBar from "../../../components/Layout/NavBar";
 import DataBaseTable from "../../../components/DataTable/DatabaseTable";
 import { TableProvider } from "../../../context/TableContext";

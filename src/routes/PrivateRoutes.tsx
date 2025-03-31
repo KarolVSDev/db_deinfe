@@ -1,7 +1,5 @@
-import React from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Navigate } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 import { useEffect } from 'react';
 
 

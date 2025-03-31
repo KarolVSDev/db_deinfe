@@ -4,12 +4,9 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import { api } from '../../service/api';
 import {  useEffect } from 'react';
-import { Box, Button, Grid } from '@mui/material';
-import { TypeInfo } from '../../hooks/TypeAlert';
-import ModalAddUser from '../Modals/UserModals/ModalAddUser';
-import ModalUpdateUser from '../Modals/UserModals/ModalUpdateUser';
+import {  Grid } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import useFetchUsers from '../../hooks/useFetchUsers';
 import { useAuth } from '../../context/AuthContext';
 
@@ -19,14 +16,6 @@ export default function ListUsers() {
     const {users} = useAuth() 
     const {getUsers} = useFetchUsers()
 
-
-    const removeUser = (userId: string) => {
-        api.delete(`/usuario/${userId}`).then((response: any) => {
-            TypeInfo(response.data.message, 'success')
-        }).catch((error: any) => {
-            TypeInfo(error.response.data.message, 'error')
-        })
-    }
 
     useEffect(() => {
         try {
@@ -38,14 +27,14 @@ export default function ListUsers() {
         }
     }, [users])
 
-
+    console.log(users)
 
     return (
-        <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }} >
-            <ModalAddUser />
-            <Grid container >{users?.map((user: any) => (
-                <List key={user.id} sx={{ width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb: 2 }}>
-                    <ListItem alignItems="flex-start"  >
+        <Grid sx={{overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }} >
+            <Grid container sx={{gap:2, p:0}}>{users?.map((user: any) => (
+                <List key={user.id} sx={{ display:"flex",  flexDirection:"column", justifyContent:"center",alignItems:"center", width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb: 2 }}>
+                    <AccountCircleIcon sx={{ fontSize: { xs: 30, sm: 40, md: 50 } }} />
+                    <ListItem alignItems="center" sx={{display:"flex", justifyContent:"center", textAlign:"center"}} >
                         <ListItemText
                             primary={user.nome}
                             secondary={
@@ -69,10 +58,6 @@ export default function ListUsers() {
                             }
                         />
                         <br />
-                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Button onClick={() => removeUser(user.id)} variant='outlined' color='error' sx={{ mb: 1 }}>Excluir</Button>
-                            <ModalUpdateUser userId={user.id} />
-                        </Box>
                     </ListItem>
                     <Divider variant="inset" component="li" />
                 </List>

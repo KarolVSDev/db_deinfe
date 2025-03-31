@@ -1,8 +1,6 @@
 import { Grid, TextField } from "@mui/material";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import { BeneficioComAchado } from "../../types/types";
-import { GridRowId } from "@mui/x-data-grid";
-import { useEffect } from "react";
 
 
 export interface TextFieldProps {

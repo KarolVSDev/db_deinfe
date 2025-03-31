@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { FormHelperText, Grid } from '@mui/material';
 import { BeneficioComAchado } from '../../types/types';
-import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 
 export interface RadioInputProps {
     id: keyof BeneficioComAchado;

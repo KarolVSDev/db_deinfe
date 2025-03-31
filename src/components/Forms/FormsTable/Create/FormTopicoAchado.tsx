@@ -1,11 +1,7 @@
-import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado, User } from '../../../../types/types';
-import { api } from '../../../../service/api';
-import { TypeAlert } from '../../../../hooks/TypeAlert';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import { useContextTable } from '../../../../context/TableContext';
-import dataFake from '../../../../service/dataFake'
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../../../Loader/Loader';
@@ -17,14 +13,13 @@ export interface FormTopicoAchadoProps {
 }
 
 const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user }) => {
-  const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<TopicoAchado>({});
-  //const { setArrayTopicoAchado } = useContextTable()
+  const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
   const {setTema, getTemaByName} = useFetchListData();
 
   const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newSituacao: string,
   ) => {
     if (newSituacao !== undefined) {
