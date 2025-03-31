@@ -1,5 +1,3 @@
-import React, { useState } from 'react'
-import { api } from '../service/api'
 import { AllUsers, User, UserUpdate } from '../types/types'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../service/firebase.config'
@@ -10,7 +8,6 @@ const useFetchUsers = () => {
 
 
   const { setUsers } = useAuth()
-  const [email] = useState(localStorage.getItem('email'))
   const { setUser } = useAuth()
 
 
@@ -27,6 +24,7 @@ const useFetchUsers = () => {
       })
       .catch((error) => {
         TypeAlert('Erro ao cadastrar usuário', 'error')
+        console.error(error)
       })
   }
 
@@ -34,6 +32,7 @@ const useFetchUsers = () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'usuario'))
       const usuarios: AllUsers[] = [];
+      console.log(usuarios)
       querySnapshot.forEach((doc) => {
         usuarios.push({ id: doc.id, ...doc.data() } as AllUsers)
       });
@@ -49,23 +48,23 @@ const useFetchUsers = () => {
       if (!email) {
         throw new Error("Email não encontrado no localStorage");
       };
-  
+
       const q = query(collection(db, "usuario"), where("email", "==", email));
       const querySnapshot = await getDocs(q);
-  
+
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
         const userData = doc.data();
-        
+
         // Criando o objeto com o ID incluído
-        const userWithId = { 
+        const userWithId = {
           id: doc.id, // Aqui garantimos que o ID está incluído
-          ...userData 
+          ...userData
         };
-        
+
         console.log("Usuário salvo no contexto:", userWithId);
         setUser(userWithId as UserUpdate);
-        
+
         return userWithId; // Opcional: retornar o usuário com ID
       } else {
         console.log("Nenhum documento encontrado com o email fornecido.");
@@ -77,16 +76,16 @@ const useFetchUsers = () => {
     }
   };
 
-  const updateUser = async (id:string, data:Partial<UserUpdate>)  => {
+  const updateUser = async (id: string, data: Partial<UserUpdate>) => {
     try {
       const userRef = doc(db, "usuario", id);
 
       await updateDoc(userRef, data);
-      
+
       const updatedDoc = await getDoc(userRef);
-      if(updatedDoc.exists()) {
+      if (updatedDoc.exists()) {
         const updatedUser = {
-          id:updatedDoc.id,
+          id: updatedDoc.id,
           ...updatedDoc.data()
         }
         setUser(updatedUser as UserUpdate)

@@ -1,7 +1,5 @@
 import { GridColDef } from "@mui/x-data-grid";
-import { useCallback } from "react";
 import * as  XLSX from 'xlsx';
-import { formateDateToPtBr } from "./DateFormate";
 
 
 
@@ -13,7 +11,7 @@ interface GridState {
 const useExportToExcel = () => {
 
     const exportToExcel = (gridState: GridState, fileName: 'data.xlsx') => {
-        const { columns, rows } = gridState;
+        const { rows } = gridState;
         const exportRows = rows.map((row) => {
             const { id, ...exportRow } = row;
             return exportRow;

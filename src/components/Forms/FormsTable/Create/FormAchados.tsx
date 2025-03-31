@@ -2,13 +2,11 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types'
-import { api } from '../../../../service/api';
+import { BeneficioComAchado, TopicoAchado, User } from '../../../../types/types'
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../context/TableContext';
 import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import dataFake from '../../../../service/dataFake';
 import { useEffect, useState } from 'react';
 import ButtonNovo from '../../../Buttons/ButtonNovo';
 import CloseIcon from '@mui/icons-material/Close';
@@ -34,11 +32,10 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       gravidade: 'Baixa'
     }
   });
-  const { saveAchado, saveBeneficio, verifyAchado, saveAchadoBeneficio, verifyBeneficio } = dataFake()
-  const { setAchado, getAllTemas, getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios } = useFetchListData();
+  const { setAchado, getAllTemas, getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, getBeneficioByName } = useFetchListData();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const { arrayTopicoAchado, arrayBeneficio, setArrayAchado } = useContextTable()
+  const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
   const [loading, setLoading] = useState(false);
   const gravidade = watch('gravidade', 'Baixa');
@@ -55,10 +52,11 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     if (newSituacao !== null) {
       setSituacaoAchado(newSituacao);
     }
+    console.log(event)
   };
 
   const handleChangeSituacaoBeneficio = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newSituacao: string | null
   ) => {
     if (newSituacao !== null) {
@@ -119,9 +117,14 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       // Caso haja benefício, ou se o array de benefícios não estiver vazio, o fluxo continua
       if (data.beneficio) {
         // Verifique se o benefício já existe antes de continuar
-        if (verifyBeneficio(data.beneficio)) {
-          return;
-        }
+        const beneficioExist = await getBeneficioByName(data.beneficio)
+
+            if (beneficioExist) {
+                setLoading(false)
+                return;
+            } else {
+                setLoading(true)
+            }
 
         if (user?.cargo !== 'chefe') {
           data.situacaoAchado = false;
@@ -249,7 +252,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               id="combo-box-demo"
               options={arrayTopicoAchado}
               getOptionLabel={(option: TopicoAchado) => option.tema}
-              onChange={(event, value) => field.onChange(value?.id || '')}
+              onChange={(_, value) => field.onChange(value?.id || '')}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -385,7 +388,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               getOptionLabel={(option) => option.beneficio}
               filterSelectedOptions
               value={field.value || []}
-              onChange={(event, value) => field.onChange(value)}
+              onChange={(_, value) => field.onChange(value)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               renderInput={(params) => (
                 <TextField

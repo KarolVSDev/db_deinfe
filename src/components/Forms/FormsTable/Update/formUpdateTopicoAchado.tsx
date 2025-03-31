@@ -1,4 +1,4 @@
-import { Box, Container, createTheme, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado, User } from '../../../../types/types';
 import { GridRowId } from '@mui/x-data-grid';
@@ -8,7 +8,6 @@ import { useContextTable } from '../../../../context/TableContext';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CloseIcon from '@mui/icons-material/Close';
-import dataFake from '../../../../service/dataFake';
 import { TypeAlert } from '../../../../hooks/TypeAlert';
 import Loader from '../../../Loader/Loader';
 import TopicoSkeleton from '../../../Skeletons/TopicoSkeleton';
@@ -20,18 +19,6 @@ interface TopicoAchadoProp {
   user: User | undefined;
 }
 
-const theme = createTheme({
-  components: {
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          paddingLeft: 0,
-          paddingRight: 0,
-        },
-      },
-    },
-  },
-});
 
 const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, user }) => {
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
@@ -94,7 +81,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   }
 
   const handleChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newSituacao: string,
   ) => {
     if (newSituacao !== undefined) {

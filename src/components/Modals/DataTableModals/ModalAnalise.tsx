@@ -1,9 +1,6 @@
-import { Backdrop, Box, Button, Fade, IconButton, List, ListItem, Modal, Typography } from '@mui/material'
+import { Backdrop, Box, Button, Fade, IconButton, Modal, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react'
-import dataFake from '../../../service/dataFake';
-import { Achado, Beneficio } from '../../../types/types';
-import ArticleIcon from '@mui/icons-material/Article';
 import Divider from '@mui/material/Divider';
 
 
@@ -29,11 +26,9 @@ export interface ModalAnalisesProps {
 }
 
 const ModalAnalises: React.FC<ModalAnalisesProps> = ({ analise }) => {
-  const { getBeneficiosByAchado } = dataFake()
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-
   const isTitle = (text: string) => text.startsWith('# ') && !text.includes('\n');
 
 

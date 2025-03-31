@@ -20,8 +20,6 @@ import FormControl from '@mui/material/FormControl/FormControl';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 import { User } from '../../../types/types'
-import { api } from '../../../service/api';
-import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CloseIcon from '@mui/icons-material/Close';
 import useFetchUsers from '../../../hooks/useFetchUsers';
@@ -47,8 +45,6 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
 
   const onSubmit = (data: User) => {
     setLoading(true)
-    const adminEmail = 'secexadmin@gmail.com'; // Substitua pelo email do admin
-    const adminPassword = 'Secex@123'; // Substitua pela senha do admin
     if (data.senha) {
       createUserWithEmailAndPassword(authBase, data.email, data.senha)
         .then((userCredential) => {

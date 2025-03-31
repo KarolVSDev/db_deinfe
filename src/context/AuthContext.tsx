@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AllUsers, AuthData, User, UserLogin } from "../types/types";
 import Cookies from "universal-cookie";
-import { api } from "../service/api";
 import { useNavigate } from "react-router-dom";
 import { TypeAlert } from "../hooks/TypeAlert";
 import { authBase } from "../service/firebase.config";

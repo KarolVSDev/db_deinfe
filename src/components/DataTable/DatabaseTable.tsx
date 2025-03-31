@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams, selectedGridRowsSelector } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
 import { topicoAchadoHeader, achadoHeader, beneficioHeader } from '../../service/columns';
@@ -8,20 +8,17 @@ import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import ModalUpdatePF from '../Modals/DataTableModals/ModalUpdateForms';
-import { api } from '../../service/api';
-import { TypeAlert } from '../../hooks/TypeAlert';
 import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchListData from '../../hooks/useFetchListData';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
-import dataFake from '../../service/dataFake';
 import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formateDateToPtBr } from '../../hooks/DateFormate';
-import { set } from 'react-hook-form';
+import HookUseFormat from '../../hooks/HookUseFormat';
 
 export default function DatabaseTable() {
 
@@ -29,15 +26,16 @@ export default function DatabaseTable() {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado,
-    setArrayAchado, setArrayBeneficio, setArrayAchadoBeneficio, arrayAchadoBeneficio } = useContextTable();
+    setArrayAchado, setArrayBeneficio } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
   const [openModalDelete, setOpenModalDelete] = useState(false)
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { AchadoFormatado } = dataFake()
+  const { AchadoFormatado } = HookUseFormat()
   const { escutarTemas, escutarAchados, escutarBeneficios } = useFetchListData();
+  const [_isLoading, setIsLoading] = useState(true)
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -125,7 +123,7 @@ export default function DatabaseTable() {
 
   //cria table pra dados sem relação
   const createRows = (data: any[]): any[] => {
-    return data.map((item, index) => ({
+    return data.map((item) => ({
       id: item.id,
       ...item,
     }));
@@ -204,7 +202,30 @@ export default function DatabaseTable() {
     }
   }, [arrayTopicoAchado, arrayBeneficio, arrayAchado, dataType])
 
-
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true)
+      try {
+        switch (dataType) {
+          case 'tema':
+            setRows(createRows(arrayTopicoAchado))
+            break;
+          case 'beneficio':
+            setRows(createRows(arrayBeneficio))
+            break;
+          case 'achado':
+            const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
+            setRows(createRows(achadoComTopico))
+            break;
+          default:
+            break;
+        }
+        loadData()
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }, [dataType])
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >

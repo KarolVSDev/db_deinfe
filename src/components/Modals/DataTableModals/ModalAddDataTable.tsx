@@ -5,15 +5,11 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
-import useFetchListData from '../../../hooks/useFetchListData';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchados';
 import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
-import { GlobalStyles } from '@mui/material';
-
-
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -45,10 +41,6 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
-
-  const handleSubmit = () => {
-    setOpen(false)
-  }
 
   useEffect(() => {
  

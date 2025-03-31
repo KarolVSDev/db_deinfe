@@ -34,74 +34,89 @@ export interface AuthData {
 export interface TopicoAchado {
   id: string;
   tema: string;
-  situacao:boolean;
+  situacao: boolean;
 }
 
 export interface Achado {
   id?: string;
-  achado:string;
-  data:Date;
-  gravidade:string;
-  criterioMunicipal?:string;
-  criterioEstadual?:string;
-  criterioGeral?:string;
-  situacaoAchado:boolean;
-  analise:string;
-  tema_id:string;
+  achado: string;
+  data: Date;
+  gravidade: string;
+  criterioMunicipal?: string;
+  criterioEstadual?: string;
+  criterioGeral?: string;
+  situacaoAchado: boolean;
+  analise: string;
+  tema_id: string;
 }
 
 
 export interface Beneficio {
   id?: string;
-  beneficio:string;
-  situacaoBeneficio:boolean;
+  beneficio: string;
+  situacaoBeneficio: boolean;
 }
 
 export interface BeneficioUpdate {
   id?: string;
-  beneficio:string;
-  situacaoBeneficio:boolean;
+  beneficio: string;
+  situacaoBeneficio: boolean;
   achados: Achado[];
 }
 
 export interface AchadoBeneficio {
-  id?:string;
-  achado_id:string;
-  beneficio_id:string;
+  id?: string;
+  achado_id: string;
+  beneficio_id: string;
 }
 
 export interface BeneficioComAchado {
-  beneficio?:string;
-  beneficios?:Beneficio[];
-  situacaoBeneficio?:boolean;
+  beneficio?: string;
+  beneficios?: Beneficio[];
+  situacaoBeneficio?: boolean;
   id: string;
-  achado:string;
-  data:Date;
-  gravidade:string;
-  criterioMunicipal?:string;
-  criterioEstadual?:string;
-  criterioGeral?:string;
-  situacaoAchado:boolean;
-  analise:string;
-  tema_id:string;
-  tema:TopicoAchado;
+  achado: string;
+  data: Date;
+  gravidade: string;
+  criterioMunicipal?: string;
+  criterioEstadual?: string;
+  criterioGeral?: string;
+  situacaoAchado: boolean;
+  analise: string;
+  tema_id: string;
+  tema: TopicoAchado;
 }
 export interface FormBeneficioType {
-  id:string;
-  beneficio:string;
-  situacaoBeneficio:boolean;
-  achados:Achado[];
+  id: string;
+  beneficio: string;
+  situacaoBeneficio: boolean;
+  achados: Achado[];
 }
-export  interface AchadoComTopico {
-  achado:Achado;
-  tema:TopicoAchado;
-  beneficios:Beneficio[];
+export interface AchadoComTopico {
+  achado: Achado;
+  tema: TopicoAchado;
+  beneficios: Beneficio[];
 }
 export interface ColumnConfig {
   id: string;
   label: string;
   minWidth: number;
 };
+
+export interface Processos {
+  id: string;
+  tema: string;
+  numeroAchado: string;
+  achados: Achado[];
+  valorAchado: string;
+  quantitativoAchado: string;
+  unidades: string;
+  situacaoAchado: boolean;
+  responsavel: string;
+  beneficio: Beneficio[];
+  alcance: string;
+  responsabilisacao: string;
+}
 
 
 

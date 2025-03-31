@@ -1,7 +1,6 @@
 import { Backdrop, Box, Button, Fade, IconButton, List, ListItem, Modal, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react'
-import dataFake from '../../../service/dataFake';
 import { Achado, Beneficio } from '../../../types/types';
 import ArticleIcon from '@mui/icons-material/Article';
 import Divider from '@mui/material/Divider';
@@ -32,7 +31,6 @@ export interface ModalBeneficiosProps {
 }
 
 const ModalBeneficios: React.FC<ModalBeneficiosProps> = ({ Id, headerId }) => {
-  const { getAchadoByBeneficio } = dataFake()
   const { processAchadoBeneficio, processoBeneficioAchado } = useFetchListData()
   const [beneficios, setBeneficios] = useState<Beneficio[]>([])
   const [achados, setAchados] = useState<Achado[]>([])

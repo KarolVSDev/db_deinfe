@@ -18,13 +18,12 @@ export interface FormBeneficioProps {
     id: GridRowId;
 }
 
-const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModal, id }) => {
-    const { setArrayBeneficio, arrayAchado } = useContextTable();
+const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, closeModal, id }) => {
+    const { arrayAchado } = useContextTable();
     const { getAllAchados, getBeneficioWithAchados, updateBeneficio, getBeneficioByName } = useFetchListData()
-    const [situacaoBeneficio, setSituacaoBeneficio] = useState<string>();
     const [beneficio, setBeneficio] = useState<Beneficio>()
-    const [achados, setAchados] = useState()
-    const { control, handleSubmit, register, formState: { errors }, setValue, reset } = useForm<BeneficioUpdate>({
+    const [achados] = useState()
+    const { control, handleSubmit, register, formState: { errors }, reset } = useForm<BeneficioUpdate>({
         defaultValues: {
             beneficio: beneficio?.beneficio,
             situacaoBeneficio: beneficio?.situacaoBeneficio || false,
@@ -79,7 +78,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                 data.situacaoBeneficio = false
             };
 
-            const { beneficio, ...resto } = data
+            const { beneficio } = data
 
             const beneficioExist = await getBeneficioByName(beneficio, id)
 
@@ -154,7 +153,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                                         color="primary"
                                         value={field.value}
                                         exclusive
-                                        onChange={(event, newValue) => field.onChange(newValue)}
+                                        onChange={(_, newValue) => field.onChange(newValue)}
                                         aria-label="Situacao do Achado"
                                     >
                                         <ToggleButton value={false}>Pendente</ToggleButton>
@@ -180,7 +179,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, dataType, closeModa
                                         getOptionLabel={(option) => option.achado}
                                         filterSelectedOptions
                                         value={field.value || []}
-                                        onChange={(event, value) => field.onChange(value)}
+                                        onChange={(_, value) => field.onChange(value)}
                                         isOptionEqualToValue={(option, value) => option.id === value.id}
                                         renderInput={(params) => (
                                             <TextField
