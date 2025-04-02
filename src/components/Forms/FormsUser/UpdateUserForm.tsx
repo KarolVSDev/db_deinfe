@@ -158,20 +158,15 @@ const UpdateUserForm = () => {
               >
                 Atualizar
               </Button>
-              {location.pathname === '/dashboard/edituser' && (
+              <Button onClick={handleNavigation} variant="outlined">
+                <NavigateBeforeIcon />
+                <Typography variant="caption" sx={{ mt: 0.5 }}>
+                  Voltar para Dashboard
+                </Typography>
+              </Button>
 
 
 
-                
-                  <Button onClick={handleNavigation} variant="outlined">
-                    <NavigateBeforeIcon />
-                    <Typography variant="caption" sx={{ mt: 0.5 }}>
-                      Voltar para Dashboard
-                    </Typography>
-                  </Button>
-              
-
-              )}
             </Grid>
           </Box>
         </Box>
