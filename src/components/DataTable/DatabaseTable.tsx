@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
-import { topicoAchadoHeader, achadoHeader, beneficioHeader } from '../../service/columns';
+import { topicoAchadoHeader, achadoHeader, beneficioHeader, coletaHeader, processoHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -25,7 +25,7 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado,
+  const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, arrayColeta, arrayProcesso, setArrayColeta, setArrayProcesso, setArrayTopicoAchado,
     setArrayAchado, setArrayBeneficio } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
@@ -65,6 +65,12 @@ export default function DatabaseTable() {
           setRows(createRows(beneficios))
         })
         return () => beneficioListener;
+      case 'coleta':
+        setColumns(createGridColumns(coletaHeader));
+        break;
+      case 'processo':
+        setColumns(createGridColumns(processoHeader));
+        break;
       default:
         setColumns([]);
         setRows([])

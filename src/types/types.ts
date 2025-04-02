@@ -123,7 +123,7 @@ export interface Processo {
   exercicio: string;
   analiseDefesa: string;
   julgado: string;
-  achado: Achado;
+  achado: Achado[];
   meritoContas: string;
   observacoes: string;
 }
