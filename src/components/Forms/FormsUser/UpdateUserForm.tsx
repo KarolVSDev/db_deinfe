@@ -1,19 +1,17 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { UserUpdate } from '../../../types/types';
-import { Avatar, Box, Button, FormControlLabel, FormLabel, Grid, Link, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import { TypeAlert } from '../../../hooks/TypeAlert';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import useFetchUsers from '../../../hooks/useFetchUsers';
 import { useNavigate } from 'react-router-dom';
 
 const UpdateUserForm = () => {
-  const location = useLocation();
   const [email] = useState(localStorage.getItem('email'))
   const { getUser, updateUser } = useFetchUsers();
   const { user } = useAuth();
