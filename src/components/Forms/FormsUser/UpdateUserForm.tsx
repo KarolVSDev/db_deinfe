@@ -10,6 +10,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import useFetchUsers from '../../../hooks/useFetchUsers';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateUserForm = () => {
   const location = useLocation();
@@ -17,6 +18,7 @@ const UpdateUserForm = () => {
   const { getUser, updateUser } = useFetchUsers();
   const { user } = useAuth();
   const { register, handleSubmit, formState: { errors } } = useForm<UserUpdate>({})
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,6 +27,10 @@ const UpdateUserForm = () => {
     fetchUser()
 
   }, [email, user?.id])
+
+  const handleNavigation = () => {
+    navigate('/dashboard/table')
+  }
 
   const onSubmit = async (data: UserUpdate) => {
     try {
@@ -156,14 +162,14 @@ const UpdateUserForm = () => {
 
 
 
-                <Link href="/dashboard/table" variant="body2" sx={{ display: 'flex', flexDirection: 'row', width: "100%", cursor: "pointer" }} >
-                  <Button variant="outlined">
+                
+                  <Button onClick={handleNavigation} variant="outlined">
                     <NavigateBeforeIcon />
                     <Typography variant="caption" sx={{ mt: 0.5 }}>
                       Voltar para Dashboard
                     </Typography>
                   </Button>
-                </Link>
+              
 
               )}
             </Grid>
