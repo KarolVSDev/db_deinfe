@@ -24,3 +24,9 @@ export const beneficioHeader = [
     {id:'situacaoBeneficio', label:'Situação', minWidth:150},
     {id:'acoes', label:'Acões', minWidth:150}
 ]
+export const processoHeader = [
+    {id:'numero', label:'Nº Processo', minWidth:150},
+    {id:'exercicio', label:'Exercício', minWidth:150},
+    {id:'analiseDefesa', label:'Análise de Defesa', minWidth:150},
+    {id:'julgado', label:'Julgado', minWidth:150},
+]

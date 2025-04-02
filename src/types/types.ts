@@ -71,10 +71,10 @@ export interface AchadoBeneficio {
 }
 
 export interface BeneficioComAchado {
+  id: string;
   beneficio?: string;
   beneficios?: Beneficio[];
   situacaoBeneficio?: boolean;
-  id: string;
   achado: string;
   data: Date;
   gravidade: string;
@@ -118,14 +118,11 @@ export interface Coleta {
 }
 
 export interface Processo {
-  processoNRO: string;
-  tipoProcesso: string;
+  id: string;
+  numero: string;
   exercicio: string;
   analiseDefesa: string;
   julgado: string;
-  achado: Achado;
-  meritoContas: string;
-  observacoes: string;
 }
 
 
