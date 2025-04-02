@@ -75,6 +75,81 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal, user, dataType 
                     )}
                 </Grid>
             </Grid>
+
+            <Grid container spacing={3} sx={{ pb: 1 }} >
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        variant='filled'
+                        required
+                        fullWidth
+                        placeholder='12345/6789'
+                        id="numero"
+                        label="Número do Processo"
+                        type="text"
+                        error={!!errors?.numero}
+                        {...register('numero', {
+                            required: 'Campo obrigatório',
+                            maxLength: {
+                                value: 10,
+                                message: 'Tamanho inválido'
+                            },
+                            minLength: {
+                                value: 10,
+                                message: 'Tamanho inválido'
+                            },
+                            pattern: {
+                                value: /^(\d+\/\d+)$/,
+                                message: 'Número inválido'
+                            }
+                        })}
+                    />
+
+                    {errors?.numero && (
+                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                            {errors.numero.message}
+                        </Typography>
+                    )}
+                </Grid>
+            </Grid>
+
+
+            <Grid container spacing={3} sx={{ pb: 1 }} >
+                <Grid item xs={12} sm={4}>
+                    <TextField
+                        variant='filled'
+                        required
+                        fullWidth
+                        placeholder='Status da Analise'
+                        id="analiseDefesa"
+                        label="Analise de Defesa"
+                        type="text"
+                        error={!!errors?.analiseDefesa}
+                        {...register('analiseDefesa', {
+                            required: 'Campo obrigatório',
+                            maxLength: {
+                                value: 10,
+                                message: 'Tamanho inválido'
+                            },
+                            minLength: {
+                                value: 10,
+                                message: 'Tamanho inválido'
+                            },
+                            pattern: {
+                                value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
+                                message: 'Analise inválido'
+                            }
+                        })}
+                    />
+
+                    {errors?.analiseDefesa && (
+                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                            {errors.analiseDefesa.message}
+                        </Typography>
+                    )}
+                </Grid>
+            </Grid>
+
+
             <RegisterButton text="Registrar" />
         </Box>
     )
