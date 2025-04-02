@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
-import { topicoAchadoHeader, achadoHeader, beneficioHeader, coletaHeader, processoHeader } from '../../service/columns';
+import { topicoAchadoHeader, achadoHeader, beneficioHeader, processoHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -65,12 +65,17 @@ export default function DatabaseTable() {
           setRows(createRows(beneficios))
         })
         return () => beneficioListener;
-      case 'coleta':
-        setColumns(createGridColumns(coletaHeader));
-        break;
       case 'processo':
         setColumns(createGridColumns(processoHeader));
         break;
+      case 'processo':
+        setColumns(createGridColumns(processoHeader));
+        // const beneficioListener = escutarBeneficios((beneficios) => {
+        //   setArrayBeneficio(beneficios)
+        //   setRows(createRows(beneficios))
+        // })
+        // return () => beneficioListener;
+        break
       default:
         setColumns([]);
         setRows([])

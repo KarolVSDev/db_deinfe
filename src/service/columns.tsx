@@ -19,33 +19,14 @@ export const achadoHeader = [
 ]
 
 export const beneficioHeader = [
-    { id: 'beneficio', label: 'Benefício', minWidth: 250 },
-    { id: 'achados', label: 'Achados', minWidth: 150 },
-    { id: 'situacaoBeneficio', label: 'Situação', minWidth: 150 },
-    { id: 'acoes', label: 'Acões', minWidth: 150 }
+    {id:'beneficio', label:'Benefício', minWidth:250},
+    {id:'achados', label:'Achados', minWidth:150},
+    {id:'situacaoBeneficio', label:'Situação', minWidth:150},
+    {id:'acoes', label:'Acões', minWidth:150}
 ]
-
-export const coletaHeader = [
-    { id: 'coleta', label: 'Coleta', minWidth: 250 },
-    { id: 'topico', label: 'Topico', minWidth: 150 },
-    { id: 'responsavel', label: 'Responsavel', minWidth: 250 },
-    { id: 'coletador', label: 'Coletador', minWidth: 250 },
-    { id: 'achado', label: 'Achado', minWidth: 250 },
-    { id: 'valorFinanceiroAchado', label: 'Valor Financeiro', minWidth: 150 },
-    { id: 'quantidadeAchado', label: 'Quantidade', minWidth: 150 },
-    { id: 'unidades', label: 'Unidades', minWidth: 150 },
-    { id: 'situacaoAchado', label: 'Situação', minWidth: 150 },
-    { id: 'beneficio', label: 'Beneficio', minWidth: 250 },
-    { id: 'valorBeneficio', label: 'Valor', minWidth: 150 }
-]
-
 export const processoHeader = [
-    { id: 'processoNRO', label: 'Numero do Processo', minWidth: 250 },
-    { id: 'tipoProcesso', label: 'Tipo', minWidth: 250 },
-    { id: 'exercicio', label: 'Exercicio', minWidth: 150 },
-    { id: 'analiseDefesa', label: 'Analise de Defesa', minWidth: 150 },
-    { id: 'julgado', label: 'Julgado', minWidth: 150 },
-    { id: 'achado', label: 'Achado', minWidth: 250 },
-    { id: 'meritoContas', label: 'Merito Contas', minWidth: 250 },
-    { id: 'observacoes', label: 'Observações', minWidth: 250 }
+    {id:'numero', label:'Nº Processo', minWidth:150},
+    {id:'exercicio', label:'Exercício', minWidth:150},
+    {id:'analiseDefesa', label:'Análise de Defesa', minWidth:150},
+    {id:'julgado', label:'Julgado', minWidth:150},
 ]

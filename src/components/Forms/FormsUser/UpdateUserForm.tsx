@@ -1,22 +1,22 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { UserUpdate } from '../../../types/types';
-import { Avatar, Box, Button, FormControlLabel, FormLabel, Grid, Link, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import { TypeAlert } from '../../../hooks/TypeAlert';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import useFetchUsers from '../../../hooks/useFetchUsers';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateUserForm = () => {
-  const location = useLocation();
   const [email] = useState(localStorage.getItem('email'))
   const { getUser, updateUser } = useFetchUsers();
   const { user } = useAuth();
   const { register, handleSubmit, formState: { errors } } = useForm<UserUpdate>({})
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,6 +25,10 @@ const UpdateUserForm = () => {
     fetchUser()
 
   }, [email, user?.id])
+
+  const handleNavigation = () => {
+    navigate('/dashboard/table')
+  }
 
   const onSubmit = async (data: UserUpdate) => {
     try {
@@ -152,20 +156,15 @@ const UpdateUserForm = () => {
               >
                 Atualizar
               </Button>
-              {location.pathname === '/dashboard/edituser' && (
+              <Button onClick={handleNavigation} variant="outlined">
+                <NavigateBeforeIcon />
+                <Typography variant="caption" sx={{ mt: 0.5 }}>
+                  Voltar para Dashboard
+                </Typography>
+              </Button>
 
 
 
-                <Link href="/dashboard/table" variant="body2" sx={{ display: 'flex', flexDirection: 'row', width: "100%", cursor: "pointer" }} >
-                  <Button variant="outlined">
-                    <NavigateBeforeIcon />
-                    <Typography variant="caption" sx={{ mt: 0.5 }}>
-                      Voltar para Dashboard
-                    </Typography>
-                  </Button>
-                </Link>
-
-              )}
             </Grid>
           </Box>
         </Box>
