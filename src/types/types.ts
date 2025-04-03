@@ -123,7 +123,10 @@ export interface Processo {
   exercicio: string;
   analiseDefesa: string;
   julgado: string;
+  unidadeGestora: string;
+  diretoria: string;
 }
+
 
 
 

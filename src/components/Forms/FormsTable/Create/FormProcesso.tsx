@@ -1,17 +1,15 @@
 import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { useForm } from 'react-hook-form';
-import { TypeAlert } from '../../../../hooks/TypeAlert';
-import { useContextTable } from '../../../../context/TableContext';
-import { Autocomplete, IconButton } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
+import { IconButton } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
-import { Processo, User } from '../../../../types/types';
+import { Processo, User, } from '../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
+import DateSelectorProcesso from '../../../Inputs/DatePickerProcesso';
+import SelectInput from '../../../Inputs/SelectInput';
 
 export interface FormProcessoProps {
     closeModal: () => void;
@@ -20,12 +18,12 @@ export interface FormProcessoProps {
 }
 
 
-const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal, user, dataType }) => {
+const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
 
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Processo>({});
+    const { control, register, handleSubmit, formState: { errors } } = useForm<Processo>({});
 
     const onSubmit = (data: Processo) => {
-
+        console.log(data)
     }
 
     return (
@@ -40,115 +38,112 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal, user, dataType 
                     <CloseIcon />
                 </IconButton>
             </Box>
-            <Grid container spacing={3} sx={{ pb: 1 }} >
-                <Grid item xs={12} sm={4}>
+            <Grid container spacing={2} sx={{ pb: 1 }}>
+                <Grid item xs={12} sx={{ pb: 1 }}>
                     <TextField
                         variant='filled'
                         required
                         fullWidth
-                        placeholder='Muni'
-                        id="exercicio"
-                        label="Exercício"
-                        type="text"
-                        error={!!errors?.exercicio}
-                        {...register('exercicio', {
-                            required: 'Campo obrigatório',
-                            maxLength: {
-                                value: 4,
-                                message: 'Tamanho inválido'
-                            },
-                            minLength: {
-                                value: 4,
-                                message: 'Tamanho inválido'
-                            },
-                            pattern: {
-                                value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                                message: 'Exercício inválido'
-                            }
-                        })}
-                    />
-
-                    {errors?.exercicio && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.exercicio.message}
-                        </Typography>
-                    )}
-                </Grid>
-            </Grid>
-
-            <Grid container spacing={3} sx={{ pb: 1 }} >
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        variant='filled'
-                        required
-                        fullWidth
-                        placeholder='12345/6789'
+                        placeholder='xxxxx'
+                        autoFocus
                         id="numero"
-                        label="Número do Processo"
-                        type="text"
+                        label='Número'
+                        type="string"
                         error={!!errors?.numero}
                         {...register('numero', {
                             required: 'Campo obrigatório',
-                            maxLength: {
-                                value: 10,
-                                message: 'Tamanho inválido'
-                            },
-                            minLength: {
-                                value: 10,
-                                message: 'Tamanho inválido'
-                            },
                             pattern: {
-                                value: /^(\d+\/\d+)$/,
-                                message: 'Número inválido'
+                                value: /^\d{5}$/,
+                                message: 'Número de processo inválido'
                             }
                         })}
                     />
-
                     {errors?.numero && (
                         <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
                             {errors.numero.message}
                         </Typography>
                     )}
                 </Grid>
-            </Grid>
+
+                <Grid item xs={12} sx={{ pb: 1 }}>
+                    <Controller
+                        name="unidadeGestora"
+                        control={control}
+                        rules={{ required: 'Campo obrigatório' }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Unidade Gestora"
+                                required
+                                fullWidth
+                                variant="filled"
+                                focused={true}
+                                error={!!errors.unidadeGestora}
+                                helperText={errors.unidadeGestora?.message}
+                            />
+                        )}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sx={{ pb: 1 }}>
+                    <Controller
+                        name="diretoria"
+                        control={control}
+                        rules={{ required: 'Campo obrigatório' }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Diretoria"
+                                required
+                                fullWidth
+                                variant="filled"
+                                focused={true}
+                                error={!!errors.diretoria}
+                                helperText={errors.diretoria?.message}
+                            />
+                        )}
+                    />
+                </Grid>
 
 
-            <Grid container spacing={3} sx={{ pb: 1 }} >
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={6} sm={4} md={2}>
+                    <DateSelectorProcesso
+                        id='exercicio'
+                        register={register}
+                        errors={errors}
+                        label='Exercício'
+                    />
+                </Grid>
+
+                <Grid item xs={6} sm={4} md={2} >
+                    <SelectInput
+                        id={'julgado'}
+                        register={register}
+                        errors={errors}
+                        label={"Status do Julgado"}
+                    />
+                </Grid>
+
+
+
+                <Grid item xs={12}>
+                    <Typography>Campo de Análise</Typography>
                     <TextField
                         variant='filled'
-                        required
-                        fullWidth
-                        placeholder='Status da Analise'
-                        id="analiseDefesa"
-                        label="Analise de Defesa"
+                        autoComplete="given-name"
                         type="text"
-                        error={!!errors?.analiseDefesa}
+                        multiline
+                        rows={4}
+                        fullWidth
+                        id="analiseDefesa"
+                        label="Análise da defesa"
+                        error={errors?.analiseDefesa?.type === 'required'}
                         {...register('analiseDefesa', {
                             required: 'Campo obrigatório',
-                            maxLength: {
-                                value: 10,
-                                message: 'Tamanho inválido'
-                            },
-                            minLength: {
-                                value: 10,
-                                message: 'Tamanho inválido'
-                            },
-                            pattern: {
-                                value: /^([A-Z][a-zÀ-ú]*)(\s[A-Z][a-zÀ-ú]*)*$/,
-                                message: 'Analise inválido'
-                            }
                         })}
                     />
-
-                    {errors?.analiseDefesa && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.analiseDefesa.message}
-                        </Typography>
-                    )}
                 </Grid>
             </Grid>
-
 
             <RegisterButton text="Registrar" />
         </Box>
