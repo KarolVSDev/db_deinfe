@@ -119,12 +119,12 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         // Verifique se o benefício já existe antes de continuar
         const beneficioExist = await getBeneficioByName(data.beneficio)
 
-            if (beneficioExist) {
-                setLoading(false)
-                return;
-            } else {
-                setLoading(true)
-            }
+        if (beneficioExist) {
+          setLoading(false)
+          return;
+        } else {
+          setLoading(true)
+        }
 
         if (user?.cargo !== 'chefe') {
           data.situacaoAchado = false;
@@ -211,7 +211,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         const retornoAchado = await setAchado(achado);
 
         beneficios.forEach((beneficio) => {
-          if(beneficio.id){
+          if (beneficio.id) {
             const objAchadoBeneficio = { achado_id: retornoAchado, beneficio_id: beneficio.id };
             setAchadoBeneficio(objAchadoBeneficio);
           }
@@ -304,13 +304,16 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         )}
       </Grid>
 
-      <DateSelector id='data' register={register} errors={errors} label='Data de registro' />
-
-      <RadioInput id={'gravidade'}
-        label='Gravidade'
-        errors={errors}
-        value={gravidade}
-        setValue={setValue} />
+      <Grid item xs={12} sm={4}>
+        <Box sx={{display:"flex", flexDirection:"row", gap:3}}>
+        <DateSelector id='data' register={register} errors={errors} label='Data de registro' />
+        <RadioInput id={'gravidade'}
+          label='Gravidade'
+          errors={errors}
+          value={gravidade}
+          setValue={setValue} />
+        </Box>
+      </Grid>
 
       <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
 
@@ -321,7 +324,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           <TextFieldComponent id={alignment} label={getTextFieldLabel()} register={register} errors={errors} />
         </Grid>
 
-        <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+        <Grid  item xs={12} sm={4} sx={{ mt: 3 }}>
           <Typography>Campo de Análise</Typography>
           <TextField
             variant='filled'
