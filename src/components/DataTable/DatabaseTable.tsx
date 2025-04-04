@@ -25,7 +25,7 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, arrayColeta, arrayProcesso, setArrayColeta, setArrayProcesso, setArrayTopicoAchado,
+  const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado,
     setArrayAchado, setArrayBeneficio } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
@@ -65,9 +65,6 @@ export default function DatabaseTable() {
           setRows(createRows(beneficios))
         })
         return () => beneficioListener;
-      case 'processo':
-        setColumns(createGridColumns(processoHeader));
-        break;
       case 'processo':
         setColumns(createGridColumns(processoHeader));
         // const beneficioListener = escutarBeneficios((beneficios) => {
