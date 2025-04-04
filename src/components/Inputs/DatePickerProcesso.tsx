@@ -17,7 +17,7 @@ const DateSelectorProcesso:React.FC<DateProcessoProps> = ({id, label, register, 
     <>
     {dataProcesso ? (
       <Grid item xs={12} sm={6} >
-      <FormControl error={!!errors?.[id]}>
+      <FormControl  error={!!errors?.[id]}>
         <TextField
           id={id}
           label={label}
@@ -33,7 +33,7 @@ const DateSelectorProcesso:React.FC<DateProcessoProps> = ({id, label, register, 
           })}
         />
         {errors?.[id] && (
-          <FormHelperText>{errors[id]?.message}</FormHelperText>
+          <FormHelperText sx={{ color: 'red', ml: '10px' }}>{errors[id]?.message}</FormHelperText>
         )}
       </FormControl>
     </Grid>
@@ -54,7 +54,7 @@ const DateSelectorProcesso:React.FC<DateProcessoProps> = ({id, label, register, 
             })}
           />
           {errors?.[id] && (
-            <FormHelperText>{errors[id]?.message}</FormHelperText>
+            <FormHelperText sx={{ color: 'red', ml: '10px' }}>{errors[id]?.message}</FormHelperText>
           )}
         </FormControl>
       </Grid>

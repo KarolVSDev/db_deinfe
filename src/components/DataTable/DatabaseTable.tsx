@@ -11,6 +11,7 @@ import ModalUpdatePF from '../Modals/DataTableModals/ModalUpdateForms';
 import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchListData from '../../hooks/useFetchListData';
+import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
 import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
@@ -26,7 +27,7 @@ export default function DatabaseTable() {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado,
-    setArrayAchado, setArrayBeneficio } = useContextTable();
+    setArrayAchado, setArrayBeneficio, setArrayProcesso} = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
   const [openModalDelete, setOpenModalDelete] = useState(false)
@@ -35,6 +36,7 @@ export default function DatabaseTable() {
   const { getUser } = useFetchUsers()
   const { AchadoFormatado } = HookUseFormat()
   const { escutarTemas, escutarAchados, escutarBeneficios } = useFetchListData();
+  const { escutarProcessos } = useFetchProcesso();
   const [_isLoading, setIsLoading] = useState(true)
 
   //Esse bloco controla a renderizaçao dos dados
@@ -67,12 +69,11 @@ export default function DatabaseTable() {
         return () => beneficioListener;
       case 'processo':
         setColumns(createGridColumns(processoHeader));
-        // const beneficioListener = escutarBeneficios((beneficios) => {
-        //   setArrayBeneficio(beneficios)
-        //   setRows(createRows(beneficios))
-        // })
-        // return () => beneficioListener;
-        break
+        const processoListener = escutarProcessos((processos) => {
+          setArrayProcesso(processos)
+          setRows(createRows(processos))
+        })
+        return () => processoListener;
       default:
         setColumns([]);
         setRows([])
@@ -101,7 +102,7 @@ export default function DatabaseTable() {
             </Box>
           );
         }
-        if (header.id === 'data') {
+        if (header.id === 'data' || header.id === 'exercicio') {
           return formateDateToPtBr(params.value)
         }
         if (header.id === 'beneficios' || header.id === 'achados') {

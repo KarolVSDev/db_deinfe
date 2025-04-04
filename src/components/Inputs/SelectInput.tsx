@@ -35,7 +35,7 @@ const SelectInput:React.FC<SelectInputProps> = ({label,id, register, errors}) =>
           <MenuItem value="irregular">Irregular</MenuItem>
         </Select>
         {errors?.[id] && (
-            <FormHelperText>{errors[id]?.message}</FormHelperText>
+            <FormHelperText sx={{ color: 'red', ml: '10px' }}>{errors[id]?.message}</FormHelperText>
         )}
       </FormControl>
     </div>
