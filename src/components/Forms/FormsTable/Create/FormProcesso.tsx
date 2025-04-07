@@ -1,17 +1,12 @@
-import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { TypeAlert } from '../../../../hooks/TypeAlert';
-import { useContextTable } from '../../../../context/TableContext';
-import { Autocomplete, IconButton } from '@mui/material';
 import RegisterButton from '../../../Buttons/RegisterButton';
 import { Processo, User } from '../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
+import { IconButton } from '@mui/material';
 
 export interface FormProcessoProps {
     closeModal: () => void;
@@ -20,12 +15,12 @@ export interface FormProcessoProps {
 }
 
 
-const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal, user, dataType }) => {
+const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
 
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<Processo>({});
+    const { register, handleSubmit, formState: { errors } } = useForm<Processo>({});
 
     const onSubmit = (data: Processo) => {
-
+        console.log(data)
     }
 
     return (
