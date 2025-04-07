@@ -12,9 +12,10 @@ export interface SelectInputProps {
   register: UseFormRegister<Processo>;
   errors: FieldErrors<Processo>;
   label:string
+  julgado?:string;
 }
 
-const SelectInput:React.FC<SelectInputProps> = ({label,id, register, errors}) => {
+const SelectInput:React.FC<SelectInputProps> = ({label,id, register, errors, julgado}) => {
 
   return (
     <div>
@@ -24,7 +25,7 @@ const SelectInput:React.FC<SelectInputProps> = ({label,id, register, errors}) =>
           labelId={`${id}-label`}
           id={id}
           {...register(id, {required:"Este campo é obrigatório"})}
-          defaultValue={""}
+          defaultValue={julgado}
         >
           <MenuItem value="">
             <em>Selecione...</em>

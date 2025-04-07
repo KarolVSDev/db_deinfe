@@ -90,7 +90,7 @@ const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, closeModal }) => {
     return (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formBeneficio' noValidate onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Novo Benefício</Typography>
+                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Benefício</Typography>
                 <IconButton onClick={closeModal} sx={{
                     '&:hover': {
                         bgcolor: '#1e293b', color: '#ffffff',

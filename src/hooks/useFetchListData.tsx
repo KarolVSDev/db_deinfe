@@ -98,10 +98,11 @@ const useFetchListData = () => {
       if (docRef.exists()) {
         return { id: docRef.id, ...docRef.data() } as TopicoAchado
       } else {
-        console.log("Tema não encontrado")
+        console.log("Tema não existe no banco")
       }
     } catch (error) {
       console.error("Erro ao tentar resgatar o tema: ", error)
+      throw error
     }
   }
 

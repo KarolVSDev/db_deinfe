@@ -102,7 +102,7 @@ export default function DatabaseTable() {
             </Box>
           );
         }
-        if (header.id === 'data' || header.id === 'exercicio') {
+        if (header.id === 'data') {
           return formateDateToPtBr(params.value)
         }
         if (header.id === 'beneficios' || header.id === 'achados') {

@@ -10,6 +10,7 @@ import { GridRowId } from '@mui/x-data-grid';
 import { useState } from 'react';
 import Loader from '../Loader/Loader';
 import useFetchListData from '../../hooks/useFetchListData';
+import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 
 
 
@@ -23,6 +24,7 @@ export interface VerificationProps {
 const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
     const [loading, setLoading] = useState(false)
     const {deleteTema, deleteBeneficio, deleteAchado} = useFetchListData();
+    const {deleteProcesso} = useFetchProcesso()
 
     const handleDelete = async () => {
         if (dataType === 'tema') {
@@ -51,6 +53,15 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
                 setLoading(false)
             } catch (error) {
                 console.error("Erro ao tentar excluir o Benefício", error)
+            }
+        } else if (dataType === 'processo') {
+            setLoading(true)
+            try {
+                const id = selectedRow.toString();
+                deleteProcesso(id)
+                setLoading(false)
+            } catch (error) {
+                console.error("Erro ao tentar excluir o Processo", error)
             }
         }
         onClose()

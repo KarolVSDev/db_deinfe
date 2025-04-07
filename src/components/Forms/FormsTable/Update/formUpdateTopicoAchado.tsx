@@ -97,7 +97,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
           component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
-              Atualizar Registro de Tópico
+              Atualizar Tema
             </Typography>
             <IconButton onClick={closeModal} sx={{
               mr: 0, '&:hover': {

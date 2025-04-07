@@ -24,7 +24,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<Processo>({});
     const [diretorias, setDiretorias] = useState<Diretoria[]>([])
-    const {addProcesso} = useFetchProcesso();
+    const { addProcesso } = useFetchProcesso();
 
     useEffect(() => {
         const fetchDiretorias = async () => {
@@ -34,16 +34,16 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
         fetchDiretorias();
     }, []);
     const onSubmit = async (data: Processo) => {
-       const processo = await  addProcesso(data);
-       if(processo) {
-        TypeAlert("Processo adicionado", "success");
-        reset()
-        closeModal()
-       } else {
-        TypeAlert("Erro ao tentar adicionar o processo", "error")
-        reset()
-        closeModal()
-       }
+        const processo = await addProcesso(data);
+        if (processo) {
+            TypeAlert("Processo adicionado", "success");
+            reset()
+            closeModal()
+        } else {
+            TypeAlert("Erro ao tentar adicionar o processo", "error")
+            reset()
+            closeModal()
+        }
     }
 
     return (
@@ -85,7 +85,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
                     )}
                 </Grid>
 
-                <Grid item xs={12} sx={{ pb: 1 }}>
+                <Grid item xs={12} >
                     <TextField
                         variant='filled'
                         required
@@ -107,7 +107,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ pb: 1 }}>
-                    <FormControl fullWidth margin="normal" variant="filled">
+                    <FormControl  fullWidth margin="normal" variant="filled">
                         <InputLabel id="diretoria-label">Diretoria</InputLabel>
                         <Select
                             labelId='diretoria-label'
@@ -137,12 +137,29 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
 
 
                 <Grid item xs={6} sm={4} md={2}>
-                    <DateSelectorProcesso
-                        id='exercicio'
-                        register={register}
-                        errors={errors}
+                    <TextField
+                        variant='filled'
+                        required
+                        fullWidth
+                        placeholder='xxxxx'
+                        autoFocus
+                        id="exercicio"
                         label='Exercício'
+                        type="string"
+                        error={!!errors?.exercicio}
+                        {...register('exercicio', {
+                            required: 'Campo obrigatório',
+                            pattern: {
+                                value: /^\d{4}$/,
+                                message: 'Exercício inválido'
+                            }
+                        })}
                     />
+                    {errors?.exercicio && (
+                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                            {errors.exercicio.message}
+                        </Typography>
+                    )}
                 </Grid>
 
                 <Grid item xs={6} sm={4} md={2} >
