@@ -7,7 +7,6 @@ import { FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select }
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { Processo, User, Diretoria } from '../../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
-import DateSelectorProcesso from '../../../../Inputs/DatePickerProcesso';
 import SelectInput from '../../../../Inputs/SelectInput';
 import { useEffect, useState } from 'react';
 import useFetchProcesso from './useFetchProcesso';
