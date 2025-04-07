@@ -1,19 +1,19 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import {TopicoAchado, Achado, Beneficio, AchadoBeneficio, } from "../types/types";
+import { TopicoAchado, Achado, Beneficio, AchadoBeneficio, Processo,} from "../types/types";
 
 
 interface TableContextType {
     arrayTopicoAchado: TopicoAchado[];
     arrayAchado: Achado[];
     arrayBeneficio: Beneficio[];
-    arrayAchadoBeneficio:AchadoBeneficio[];
+    arrayAchadoBeneficio: AchadoBeneficio[];
+    arrayProcesso: Processo[];
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
     setArrayBeneficio: Dispatch<SetStateAction<Beneficio[]>>;
-    setArrayAchadoBeneficio:Dispatch<SetStateAction<AchadoBeneficio[]>>;
-    
-
+    setArrayAchadoBeneficio: Dispatch<SetStateAction<AchadoBeneficio[]>>;
+    setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
 }
 
 interface Props {
@@ -27,6 +27,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayBeneficio, setArrayBeneficio] = useState<Beneficio[]>([]);
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
     const [arrayAchadoBeneficio, setArrayAchadoBeneficio] = useState<AchadoBeneficio[]>([]);
+    const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -58,18 +59,20 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
                 : `${count.toLocaleString()} linha selecionada`,
     };
 
-    
+
     return (
         <TableContext.Provider value={{
             arrayTopicoAchado,
             arrayAchado,
             arrayBeneficio,
             arrayAchadoBeneficio,
+            arrayProcesso,
             handleLocalization,
             setArrayTopicoAchado,
             setArrayAchado,
             setArrayBeneficio,
-            setArrayAchadoBeneficio
+            setArrayAchadoBeneficio,
+            setArrayProcesso,
         }}>
             {children}
         </TableContext.Provider>

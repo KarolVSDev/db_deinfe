@@ -121,9 +121,16 @@ export interface Processo {
   id: string;
   numero: string;
   exercicio: string;
-  analiseDefesa: string;
   julgado: string;
+  unidadeGestora: string;
+  diretoria: string;
 }
+
+export interface Diretoria {
+  id:string;
+  label:string;
+}
+
 
 
 

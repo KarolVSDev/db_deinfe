@@ -8,6 +8,7 @@ import FormUpdateAchados from '../../Forms/FormsTable/Update/FormUpdateAchados';
 import FormUpdateTopicoAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
 import FormUpdateBeneficio from '../../Forms/FormsTable/Update/FormUpdateBeneficio';
 import { User } from '../../../types/types';
+import FormUpdateProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormUpdateProcesso';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -31,11 +32,11 @@ interface ModalUpdateProps {
   dataType: string;
   open: boolean;
   onClose: () => void;
-  user:User | undefined;
+  user: User | undefined;
 }
 
 
-const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose, user}) => {
+const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose, user }) => {
 
   const renderForm = () => {
     switch (dataType) {
@@ -43,10 +44,13 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
         return <FormUpdateTopicoAchado closeModal={onClose} id={id} user={user} />
 
       case 'beneficio':
-        return <FormUpdateBeneficio closeModal={onClose} id={id} user={user} dataType={dataType}/>
+        return <FormUpdateBeneficio closeModal={onClose} id={id} user={user} dataType={dataType} />
 
       case 'achado':
         return <FormUpdateAchados closeModal={onClose} id={id} user={user} dataType={dataType} />
+
+      case 'processo':
+        return <FormUpdateProcesso closeModal={onClose} id={id} user={user} dataType={dataType} />
     }
   }
 
@@ -65,7 +69,7 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
           },
         }}
       >
-        <Fade  in={open}>
+        <Fade in={open}>
           <Box sx={style}>
             {renderForm()}
           </Box>

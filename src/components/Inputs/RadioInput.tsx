@@ -24,7 +24,7 @@ const RadioInput: React.FC<RadioInputProps> = ({ id, label, errors, setValue , v
 
     return (
         <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-            <FormControl error={!!errors?.[id]}>
+            <FormControl error={!!errors?.[id]} sx={{ border: "1px solid #b5b9be", borderRadius:2, pl:2 }}>
                 <FormLabel id={`${id}-label`}>{label}</FormLabel>
                 <RadioGroup
                     row

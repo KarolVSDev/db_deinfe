@@ -10,7 +10,7 @@ import FormAchado from '../../Forms/FormsTable/Create/FormAchados';
 import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
-import FormProcesso from '../../Forms/FormsTable/Create/FormProcesso';
+import FormProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormProcesso';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,7 +44,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
 
 
   useEffect(() => {
- 
+
     if (dataType === 'pesquisa') {
       setIsDisabled(true);
     } else {
@@ -58,7 +58,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   return (
     <div>
       <Button onClick={handleOpen} disabled={isDisabled} variant='contained'  >
-       <SaveIcon sx={{mr:1}}/> Cadastrar {dataType}
+        <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"
