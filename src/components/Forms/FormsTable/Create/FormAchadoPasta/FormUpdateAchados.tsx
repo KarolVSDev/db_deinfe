@@ -1,19 +1,20 @@
 import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { useContextTable } from '../../../../context/TableContext';
+import { useContextTable } from '../../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, BeneficioComAchado, TopicoAchado, User } from '../../../../types/types';
-import { TypeAlert } from '../../../../hooks/TypeAlert';
-import RegisterButton from '../../../Buttons/RegisterButton';
+import { Achado, BeneficioComAchado, TopicoAchado, User } from '../../../../../types/types';
+import { TypeAlert } from '../../../../../hooks/TypeAlert';
+import RegisterButton from '../../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
-import useFetchListData from '../../../../hooks/useFetchListData';
+import useFetchListData from '../../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import DateSelector from '../../../Inputs/DatePicker';
-import RadioInput from '../../../Inputs/RadioInput';
-import ToggleButtonsCriterios from '../../../Inputs/ToggleInputs/ToggleInputCriterio';
-import TextFieldComponent from '../../../Inputs/TextField';
-import Loader from '../../../Loader/Loader';
-import AchadoSkeleton from '../../../Skeletons/AchadoSkeleton';
+import DateSelector from '../../../../Inputs/DatePicker';
+import RadioInput from '../../../../Inputs/RadioInput';
+import ToggleButtonsCriterios from '../../../../Inputs/ToggleInputs/ToggleInputCriterio';
+import TextFieldComponent from '../../../../Inputs/TextField';
+import Loader from '../../../../Loader/Loader';
+import AchadoSkeleton from '../../../../Skeletons/AchadoSkeleton';
+import useFetchAchado from './useFetchAchado';
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -26,7 +27,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [achado, setAchado] = useState<Achado>()
   const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
-  const { getAchadoById, getAllTemas, getAllBeneficios, updateAchado } = useFetchListData()
+  const { getAllTemas, getAllBeneficios, updateAchado } = useFetchListData()
+  const { getAchadoById } = useFetchAchado()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({

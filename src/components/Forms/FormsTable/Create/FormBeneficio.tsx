@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import useFetchListData from '../../../../hooks/useFetchListData';
 import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../../../Loader/Loader';
+import useFetchAchado from './FormAchadoPasta/useFetchAchado';
 
 export interface FormBeneficioProps {
     closeModal: () => void;
@@ -18,7 +19,8 @@ export interface FormBeneficioProps {
 const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, closeModal }) => {
     const { control, handleSubmit, register, formState: { errors }, reset } = useForm<FormBeneficioType>({});
     const { arrayAchado } = useContextTable();
-    const {getBeneficioByName, getAllAchados, setBeneficio, setAchadoBeneficio} = useFetchListData()
+    const {getBeneficioByName, setBeneficio, setAchadoBeneficio} = useFetchListData()
+    const { getAllAchados} = useFetchAchado()
     const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 

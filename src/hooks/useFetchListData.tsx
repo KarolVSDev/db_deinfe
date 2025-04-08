@@ -7,8 +7,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 const useFetchListData = () => {
 
-  const { setArrayAchado,
-    setArrayTopicoAchado,
+  const { setArrayTopicoAchado,
     arrayTopicoAchado, setArrayBeneficio, arrayBeneficio
   } = useContextTable();
 
@@ -124,7 +123,7 @@ const useFetchListData = () => {
       const achadoRef = collection(db, "achado");
       const q = query(achadoRef, where("tema_id", "==", id));
       const querySnapshot = await getDocs(q)
-      if(!querySnapshot.empty) {
+      if (!querySnapshot.empty) {
         TypeAlert("Esse tema está relacionado a um ou mais registros de achados. Altere o tema desse(s) achado(s) antes de excluir este registro.", "info")
         return
       } else {
@@ -141,99 +140,99 @@ const useFetchListData = () => {
   }
 
   //CRUD de achados
-  const setAchado = async (data: Achado) => {
-    try {
-      const colecaoRef = collection(db, "achado");
-      const docRef = await addDoc(colecaoRef, data)
-      console.log("Achado adicionado", docRef.id)
-      return docRef.id
-    } catch (error) {
-      console.error("Erro ao tentar criar o novo achado", error);
-      throw error;
-    }
-  }
+  // const setAchado = async (data: Achado) => {
+  //   try {
+  //     const colecaoRef = collection(db, "achado");
+  //     const docRef = await addDoc(colecaoRef, data)
+  //     console.log("Achado adicionado", docRef.id)
+  //     return docRef.id
+  //   } catch (error) {
+  //     console.error("Erro ao tentar criar o novo achado", error);
+  //     throw error;
+  //   }
+  // }
 
-  const getAllAchados = async () => {
-    try {
-      const achadoRef = collection(db, "achado");
-      const querySnapshot = await getDocs(achadoRef);
+  // const getAllAchados = async () => {
+  //   try {
+  //     const achadoRef = collection(db, "achado");
+  //     const querySnapshot = await getDocs(achadoRef);
 
-      if (!querySnapshot.empty) {
-        const achados = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          achado: doc.data().achado,
-          analise: doc.data().analise,
-          criterioMunicipal: doc.data().criterioMunicipal,
-          criterioEstadual: doc.data().criterioEstadual,
-          criterioGeral: doc.data().criterioGeral,
-          data: doc.data().data,
-          gravidade: doc.data().gravidade,
-          situacaoAchado: doc.data().situacaoAchado,
-          tema_id: doc.data().tema_id
-        })) as Achado[];
+  //     if (!querySnapshot.empty) {
+  //       const achados = querySnapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         achado: doc.data().achado,
+  //         analise: doc.data().analise,
+  //         criterioMunicipal: doc.data().criterioMunicipal,
+  //         criterioEstadual: doc.data().criterioEstadual,
+  //         criterioGeral: doc.data().criterioGeral,
+  //         data: doc.data().data,
+  //         gravidade: doc.data().gravidade,
+  //         situacaoAchado: doc.data().situacaoAchado,
+  //         tema_id: doc.data().tema_id
+  //       })) as Achado[];
 
-        setArrayAchado(achados); // Atualiza o estado com os achados
-        return achados
-      } else {
-        console.log("Nenhum tema encontrado.");
-      }
-    } catch (error) {
-      console.error("Erro ao tentar resgatar os Temas:", error);
-    }
-  };
+  //       setArrayAchado(achados); // Atualiza o estado com os achados
+  //       return achados
+  //     } else {
+  //       console.log("Nenhum tema encontrado.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erro ao tentar resgatar os Temas:", error);
+  //   }
+  // };
 
-  const getAhcadobyName = async (achadoName: string) => {
-    try {
-      const achadoRef = collection(db, "achado");
-      const q = query(achadoRef, where("achado", "==", achadoName));
-      const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        TypeAlert('O achado já existe no banco de dados', 'info');
-        return true
-      }
-      return false
-    } catch (error) {
-      console.error("Erro ao buscar o achado: ", error);
-      return false
-    }
-  }
+  // const getAhcadobyName = async (achadoName: string) => {
+  //   try {
+  //     const achadoRef = collection(db, "achado");
+  //     const q = query(achadoRef, where("achado", "==", achadoName));
+  //     const querySnapshot = await getDocs(q);
+  //     if (!querySnapshot.empty) {
+  //       TypeAlert('O achado já existe no banco de dados', 'info');
+  //       return true
+  //     }
+  //     return false
+  //   } catch (error) {
+  //     console.error("Erro ao buscar o achado: ", error);
+  //     return false
+  //   }
+  // }
 
-  const getAchadoById = async (achadoId: GridRowId) => {
-    try {
-      const idAchado = achadoId.toString();
-      const achadoRef = doc(db, "achado", idAchado);
-      const docRef = await getDoc(achadoRef);
-      const { id, ...achadoData } = docRef.data() as Achado;
+  // const getAchadoById = async (achadoId: GridRowId) => {
+  //   try {
+  //     const idAchado = achadoId.toString();
+  //     const achadoRef = doc(db, "achado", idAchado);
+  //     const docRef = await getDoc(achadoRef);
+  //     const { id, ...achadoData } = docRef.data() as Achado;
 
-      const achado = { id: docRef.id, id_tema: achadoData.tema_id, ...achadoData };
-      const tema = await getTemaById(achado.tema_id)
+  //     const achado = { id: docRef.id, id_tema: achadoData.tema_id, ...achadoData };
+  //     const tema = await getTemaById(achado.tema_id)
 
-      if (!tema) {
-        throw new Error("Tema não encontrado");
-      }
+  //     if (!tema) {
+  //       throw new Error("Tema não encontrado");
+  //     }
 
-      const beneficios = await processAchadoBeneficio(idAchado) || [];
+  //     const beneficios = await processAchadoBeneficio(idAchado) || [];
 
-      const achadoCompleto = {
-        achado: achado,
-        tema: tema,
-        beneficios: beneficios
-      }
+  //     const achadoCompleto = {
+  //       achado: achado,
+  //       tema: tema,
+  //       beneficios: beneficios
+  //     }
 
-      return achadoCompleto;
+  //     return achadoCompleto;
 
-    } catch (error) {
-      console.error("Erro ao tentar resgatar o achado: ", error)
-      throw error;
-    }
-  }
+  //   } catch (error) {
+  //     console.error("Erro ao tentar resgatar o achado: ", error)
+  //     throw error;
+  //   }
+  // }
 
   const escutarAchados = async (callback: (achados: Achado[]) => void) => {
     try {
       const temasRef = collection(db, "tema");
       const temasSnapshot = await getDocs(temasRef);
       const temasMap = new Map<string, any>();
-      
+
       temasSnapshot.forEach((doc) => {
         temasMap.set(doc.id, doc.data());
       })
@@ -255,7 +254,7 @@ const useFetchListData = () => {
             data: achadoData.data,
             gravidade: achadoData.gravidade,
             situacaoAchado: achadoData.situacaoAchado,
-            tema_id: tema.tema ||"Tema não encontrado",
+            tema_id: tema.tema || "Tema não encontrado",
           };
         }) as Achado[];
 
@@ -702,41 +701,41 @@ const useFetchListData = () => {
         const deletePromises = querySnapshot.docs.map(async (doc) => {
           await deleteDoc(doc.ref);
         });
-        
+
         await Promise.all(deletePromises);
         console.log(`Todas as relações com beneficio_id ${beneficioId} foram deletadas`);
       }
-  
+
       if (achadoId) {
         const relacaoRef = collection(db, "achadoBeneficio");
         const q = query(relacaoRef, where("achado_id", "==", achadoId));
         const querySnapshot = await getDocs(q);
-        
+
         // Deleta cada documento encontrado
         const deletePromises = querySnapshot.docs.map(async (doc) => {
           await deleteDoc(doc.ref);
         });
-        
+
         await Promise.all(deletePromises);
         console.log(`Todas as relações com achado_id ${achadoId} foram deletadas`);
       }
-      
+
       return { success: true, message: "Relações deletadas com sucesso" };
-      
+
     } catch (error) {
       console.error("Erro ao tentar excluir a relação: ", error);
       throw error;
     }
   }
 
-  
+
 
 
 
   return {
-    getAllAchados, setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, setAchado,
-    getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
-    processAchadoBeneficio, getAchadoById, updateAchado, escutarBeneficios, getBeneficioByName,
+    setTema, getAllTemas, getTemaByName, escutarTemas, deleteTema, updateTema, getTemaById,
+    setBeneficio, setAchadoBeneficio, getAllBeneficios, escutarAchados,
+    processAchadoBeneficio, updateAchado, escutarBeneficios, getBeneficioByName,
     processoBeneficioAchado, getBeneficioWithAchados, updateBeneficio, deleteBeneficio, deleteAchado
   };
 }

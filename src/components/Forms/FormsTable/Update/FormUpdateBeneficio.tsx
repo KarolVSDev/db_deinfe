@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { GridRowId } from '@mui/x-data-grid';
 import Loader from '../../../Loader/Loader';
 import BeneficioSkeleton from '../../../Skeletons/BeneficioSkeleton';
+import useFetchAchado from '../Create/FormAchadoPasta/useFetchAchado';
 
 export interface FormBeneficioProps {
     closeModal: () => void;
@@ -20,7 +21,8 @@ export interface FormBeneficioProps {
 
 const FormBeneficio: React.FC<FormBeneficioProps> = ({ user, closeModal, id }) => {
     const { arrayAchado } = useContextTable();
-    const { getAllAchados, getBeneficioWithAchados, updateBeneficio, getBeneficioByName } = useFetchListData()
+    const {getBeneficioWithAchados, updateBeneficio, getBeneficioByName } = useFetchListData()
+    const { getAllAchados } = useFetchAchado()
     const [beneficio, setBeneficio] = useState<Beneficio>()
     const [achados] = useState()
     const { control, handleSubmit, register, formState: { errors }, reset } = useForm<BeneficioUpdate>({

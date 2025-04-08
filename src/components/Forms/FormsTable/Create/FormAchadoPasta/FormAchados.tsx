@@ -2,20 +2,21 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
-import { BeneficioComAchado, TopicoAchado, User } from '../../../../types/types'
-import { TypeAlert } from '../../../../hooks/TypeAlert';
-import { useContextTable } from '../../../../context/TableContext';
+import { BeneficioComAchado, TopicoAchado, User } from '../../../../../types/types'
+import { TypeAlert } from '../../../../../hooks/TypeAlert';
+import { useContextTable } from '../../../../../context/TableContext';
 import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import RegisterButton from '../../../Buttons/RegisterButton';
+import RegisterButton from '../../../../Buttons/RegisterButton';
 import { useEffect, useState } from 'react';
-import ButtonNovo from '../../../Buttons/ButtonNovo';
+import ButtonNovo from '../../../../Buttons/ButtonNovo';
 import CloseIcon from '@mui/icons-material/Close';
-import TextFieldComponent from '../../../Inputs/TextField';
-import ToggleButtonsCriterios from '../../../Inputs/ToggleInputs/ToggleInputCriterio';
-import RadioInput from '../../../Inputs/RadioInput';
-import DateSelector from '../../../Inputs/DatePicker';
-import Loader from '../../../Loader/Loader';
-import useFetchListData from '../../../../hooks/useFetchListData';
+import TextFieldComponent from '../../../../Inputs/TextField';
+import ToggleButtonsCriterios from '../../../../Inputs/ToggleInputs/ToggleInputCriterio';
+import RadioInput from '../../../../Inputs/RadioInput';
+import DateSelector from '../../../../Inputs/DatePicker';
+import Loader from '../../../../Loader/Loader';
+import useFetchListData from '../../../../../hooks/useFetchListData';
+import useFetchAchado from './useFetchAchado';
 
 
 
@@ -32,7 +33,9 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       gravidade: 'Baixa'
     }
   });
-  const { setAchado, getAllTemas, getAhcadobyName, setBeneficio, setAchadoBeneficio, getAllBeneficios, getBeneficioByName } = useFetchListData();
+  const { getAllTemas,setBeneficio, setAchadoBeneficio, getAllBeneficios, getBeneficioByName } = useFetchListData();
+  const { getAchadobyName } = useFetchAchado();
+  const { setAchado } = useFetchAchado();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
   const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
@@ -85,7 +88,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     //bloco que manipula e salva o achado
 
     try {
-      const achadoExiste = await getAhcadobyName(data.achado);
+      const achadoExiste = await getAchadobyName(data.achado);
       if (achadoExiste) {
         setLoading(false)
         return

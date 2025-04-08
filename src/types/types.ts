@@ -104,17 +104,16 @@ export interface ColumnConfig {
 };
 
 export interface Coleta {
-  id: string;
-  topico: TopicoAchado;
-  responsavel: string;
-  coletador: string;
-  achado: Achado;
-  valorFinanceiroAchado: number;
-  quantidadeAchado: string;
-  unidades: string;
-  situacaoAchado: string;
-  beneficio: Beneficio[];
-  valorBeneficio: string;
+  id:string;
+  valorFinanceiro:number;
+  quantitativo:number;
+  unidades:string;
+  beneficio:Beneficio[];
+  sitaucaoAchado:string;
+  temaId:string;
+  achadoId:string;
+  processoId:string;
+  responsavelId:string;
 }
 
 export interface Processo {
