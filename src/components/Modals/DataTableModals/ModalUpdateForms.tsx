@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { GridRowId } from '@mui/x-data-grid';
-import FormUpdateAchados from '../../Forms/FormsTable/Update/FormUpdateAchados';
+import FormUpdateAchados from '../../Forms/FormsTable/Create/FormAchadoPasta/FormUpdateAchados';
 import FormUpdateTopicoAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
 import FormUpdateBeneficio from '../../Forms/FormsTable/Update/FormUpdateBeneficio';
 import { User } from '../../../types/types';

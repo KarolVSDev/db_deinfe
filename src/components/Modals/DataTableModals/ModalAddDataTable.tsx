@@ -6,7 +6,7 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
-import FormAchado from '../../Forms/FormsTable/Create/FormAchados';
+import FormAchado from '../../Forms/FormsTable/Create/FormAchadoPasta/FormAchados';
 import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
