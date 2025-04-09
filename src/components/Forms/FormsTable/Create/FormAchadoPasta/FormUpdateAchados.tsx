@@ -13,7 +13,7 @@ import RadioInput from '../../../../Inputs/RadioInput';
 import ToggleButtonsCriterios from '../../../../Inputs/ToggleInputs/ToggleInputCriterio';
 import TextFieldComponent from '../../../../Inputs/TextField';
 import Loader from '../../../../Loader/Loader';
-import AchadoSkeleton from '../../../../Skeletons/AchadoSkeleton';
+import AchadoSkeleton from './AchadoSkeleton';
 import useFetchAchado from './useFetchAchado';
 import { formatCurrency } from '../../../../../hooks/DateFormate';
 
