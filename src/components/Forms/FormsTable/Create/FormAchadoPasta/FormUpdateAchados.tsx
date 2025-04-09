@@ -37,7 +37,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       tema_id: tema.id, // Inicialize o id do tópico
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
-      valorFinanceiro:achado?.valorFinanceiro || 0,
+      valorFinanceiro: achado?.valorFinanceiro || 0,
       beneficios: [], // Inicialize a lista de benefícios
       situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
       criterioEstadual: achado?.criterioEstadual,
@@ -48,6 +48,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const gravidade = watch('gravidade', achado?.gravidade);
   const fieldValue = watch('valorFinanceiro');
   const [displayValue, setDisplayValue] = useState('');
+  const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
 
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
 
@@ -77,7 +78,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               achado: result.achado?.achado || '',
               analise: result.achado?.analise || '',
               beneficios: result.beneficios || [],
-              valorFinanceiro:result.achado.valorFinanceiro || 0,
+              valorFinanceiro: result.achado.valorFinanceiro || 0,
               situacaoAchado: result.achado?.situacaoAchado || false,
               criterioMunicipal: result.achado.criterioMunicipal || '',
               criterioEstadual: result.achado.criterioEstadual || '',
@@ -120,6 +121,15 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       setDisplayValue(formatCurrency(fieldValue.toString()));
     }
   }, [fieldValue]);
+
+  const handleChangeSituacaoBeneficio = (
+    _: React.MouseEvent<HTMLElement>,
+    newSituacao: string | null
+  ) => {
+    if (newSituacao !== null) {
+      setSituacaoBeneficio(newSituacao);
+    }
+  };
 
 
 
@@ -307,6 +317,36 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                 required: 'Campo obrigatório',
               })}
             />
+
+            <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+              <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Adicionar um Beneficio</Typography>
+              <TextField
+                variant='filled'
+                fullWidth
+                id="beneficio"
+                label='Proposta de Benefício'
+                type="text"
+                error={!!errors?.beneficio}
+                {...register('beneficio')}
+              />
+
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              {user?.cargo === 'chefe' ? (<ToggleButtonGroup
+                color="primary"
+                value={situacaoBeneficio}
+                exclusive
+                onChange={handleChangeSituacaoBeneficio}
+                aria-label="Platform"
+
+              >
+                <ToggleButton value='Pendente' >Pendente</ToggleButton>
+                <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+              </ToggleButtonGroup>) : (
+                <input type="hidden"{...register('situacaoBeneficio')} value="false" />
+              )}
+            </Grid>
 
             <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
               <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Benefício(s)</Typography>
