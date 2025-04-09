@@ -18,8 +18,9 @@ import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { formateDateToPtBr } from '../../hooks/DateFormate';
+import { formateDateToPtBr, formatCurrency } from '../../hooks/DateFormate';
 import HookUseFormat from '../../hooks/HookUseFormat';
+import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 
 export default function DatabaseTable() {
 
@@ -35,7 +36,8 @@ export default function DatabaseTable() {
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
   const { AchadoFormatado } = HookUseFormat()
-  const { escutarTemas, escutarAchados, escutarBeneficios } = useFetchListData();
+  const { escutarTemas, escutarBeneficios } = useFetchListData();
+  const { escutarAchados } = useFetchAchado();
   const { escutarProcessos } = useFetchProcesso();
   const [_isLoading, setIsLoading] = useState(true)
 
@@ -104,6 +106,9 @@ export default function DatabaseTable() {
         }
         if (header.id === 'data') {
           return formateDateToPtBr(params.value)
+        }
+        if (header.id === 'valorFinanceiro') {
+          return formatCurrency(params.value)
         }
         if (header.id === 'beneficios' || header.id === 'achados') {
           return <ModalBeneficios Id={params.row.id} headerId={header.id} />;

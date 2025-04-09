@@ -17,8 +17,7 @@ import DateSelector from '../../../../Inputs/DatePicker';
 import Loader from '../../../../Loader/Loader';
 import useFetchListData from '../../../../../hooks/useFetchListData';
 import useFetchAchado from './useFetchAchado';
-
-
+import { formatCurrency } from '../../../../../hooks/DateFormate';
 
 export interface FormAchadoProps {
   closeModal: () => void;
@@ -33,7 +32,8 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       gravidade: 'Baixa'
     }
   });
-  const { getAllTemas,setBeneficio, setAchadoBeneficio, getAllBeneficios, getBeneficioByName } = useFetchListData();
+  const { getAllTemas, setBeneficio,
+    setAchadoBeneficio, getAllBeneficios, getBeneficioByName } = useFetchListData();
   const { getAchadobyName } = useFetchAchado();
   const { setAchado } = useFetchAchado();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
@@ -42,11 +42,22 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
   const [loading, setLoading] = useState(false);
   const gravidade = watch('gravidade', 'Baixa');
+  const fieldValue = watch('valorFinanceiro');
+  const [displayValue, setDisplayValue] = useState('');
 
   useEffect(() => {
     getAllTemas()
     getAllBeneficios()
   })
+
+  // Atualiza o valor formatado quando o valor do campo muda
+  useEffect(() => {
+    if (fieldValue !== undefined) {
+      setDisplayValue(formatCurrency(fieldValue.toString()));
+    }
+  }, [fieldValue]);
+
+
 
   const handleChangeSituacaoAchado = (
     event: React.MouseEvent<HTMLElement>,
@@ -153,6 +164,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           situacaoAchado: dataWithSituacao.situacaoAchado,
           data: dataWithSituacao.data,
           gravidade: dataWithSituacao.gravidade,
+          valorFinanceiro: dataWithSituacao.valorFinanceiro,
           criterioMunicipal: dataWithSituacao.criterioMunicipal || "",
           criterioEstadual: dataWithSituacao.criterioEstadual || "",
           criterioGeral: dataWithSituacao.criterioEstadual || "",
@@ -308,13 +320,38 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       </Grid>
 
       <Grid item xs={12} sm={4}>
-        <Box sx={{display:"flex", flexDirection:"row", gap:3}}>
-        <DateSelector id='data' register={register} errors={errors} label='Data de registro' />
-        <RadioInput id={'gravidade'}
-          label='Gravidade'
-          errors={errors}
-          value={gravidade}
-          setValue={setValue} />
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+          <TextField
+            variant="filled"
+            sx={{ mt: 3 }}
+            placeholder="R$ 0,00"
+            autoFocus
+            id="valorFinanceiro"
+            label="Valor Financeiro"
+            error={!!errors?.valorFinanceiro}
+            value={displayValue}
+            inputProps={{
+              inputMode: 'numeric',
+            }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const rawValue = e.target.value.replace(/\D/g, '');
+              // Converte para número antes de setar o valor
+              setValue('valorFinanceiro', Number(rawValue), { shouldValidate: true });
+            }}
+          // Remove o spread do register para evitar conflito com onChange
+          />
+          {errors?.valorFinanceiro && (
+            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+              {errors.valorFinanceiro.message}
+            </Typography>
+          )}
+
+          <DateSelector id='data' register={register} errors={errors} label='Data de registro' />
+          <RadioInput id={'gravidade'}
+            label='Gravidade'
+            errors={errors}
+            value={gravidade}
+            setValue={setValue} />
         </Box>
       </Grid>
 
@@ -327,7 +364,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           <TextFieldComponent id={alignment} label={getTextFieldLabel()} register={register} errors={errors} />
         </Grid>
 
-        <Grid  item xs={12} sm={4} sx={{ mt: 3 }}>
+        <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
           <Typography>Campo de Análise</Typography>
           <TextField
             variant='filled'

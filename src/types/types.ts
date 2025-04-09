@@ -42,6 +42,7 @@ export interface Achado {
   achado: string;
   data: Date;
   gravidade: string;
+  valorFinanceiro?:number;
   criterioMunicipal?: string;
   criterioEstadual?: string;
   criterioGeral?: string;
@@ -78,6 +79,7 @@ export interface BeneficioComAchado {
   achado: string;
   data: Date;
   gravidade: string;
+  valorFinanceiro: number;
   criterioMunicipal?: string;
   criterioEstadual?: string;
   criterioGeral?: string;

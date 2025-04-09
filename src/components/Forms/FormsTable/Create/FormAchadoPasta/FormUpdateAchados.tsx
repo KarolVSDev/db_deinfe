@@ -15,6 +15,7 @@ import TextFieldComponent from '../../../../Inputs/TextField';
 import Loader from '../../../../Loader/Loader';
 import AchadoSkeleton from '../../../../Skeletons/AchadoSkeleton';
 import useFetchAchado from './useFetchAchado';
+import { formatCurrency } from '../../../../../hooks/DateFormate';
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -27,8 +28,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [achado, setAchado] = useState<Achado>()
   const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
-  const { getAllTemas, getAllBeneficios, updateAchado } = useFetchListData()
-  const { getAchadoById } = useFetchAchado()
+  const { getAllTemas, getAllBeneficios } = useFetchListData()
+  const { getAchadoById, updateAchado } = useFetchAchado()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
@@ -36,6 +37,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       tema_id: tema.id, // Inicialize o id do tópico
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
+      valorFinanceiro:achado?.valorFinanceiro || 0,
       beneficios: [], // Inicialize a lista de benefícios
       situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
       criterioEstadual: achado?.criterioEstadual,
@@ -44,10 +46,10 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     },
   });
   const gravidade = watch('gravidade', achado?.gravidade);
+  const fieldValue = watch('valorFinanceiro');
+  const [displayValue, setDisplayValue] = useState('');
 
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +62,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               await getAllBeneficios()
             }
             fetchTemas()
-            
+
           }
           // Aguarda a resolução da promessa
           const result = await getAchadoById(id);
@@ -75,6 +77,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               achado: result.achado?.achado || '',
               analise: result.achado?.analise || '',
               beneficios: result.beneficios || [],
+              valorFinanceiro:result.achado.valorFinanceiro || 0,
               situacaoAchado: result.achado?.situacaoAchado || false,
               criterioMunicipal: result.achado.criterioMunicipal || '',
               criterioEstadual: result.achado.criterioEstadual || '',
@@ -94,7 +97,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
         } catch (error) {
           console.error('Erro ao buscar o achado:', error);
         } finally {
-          setIsLoading(false); 
+          setIsLoading(false);
         }
       }
     };
@@ -103,13 +106,20 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   }, [id, reset, arrayTopicoAchado.length, arrayBeneficio.length]);
 
 
-  useEffect(() => { 
+  useEffect(() => {
     if (achado?.situacaoAchado === true) {
       setSituacaoAchado("Aprovado")
     } else {
       setSituacaoAchado("Pendente")
     }
   }, [])
+
+  // Atualiza o valor formatado quando o valor do campo muda
+  useEffect(() => {
+    if (fieldValue !== undefined) {
+      setDisplayValue(formatCurrency(fieldValue.toString()));
+    }
+  }, [fieldValue]);
 
 
 
@@ -128,11 +138,10 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   }
 
   const onSubmit = async (data: BeneficioComAchado) => {
-
     setLoading(true)
-
+    console.log(data)
     try {
-      if(id){
+      if (id) {
         const idString = id?.toString()
         await updateAchado(idString, data)
         reset()
@@ -151,7 +160,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     <>
       {isLoading ? (
         <AchadoSkeleton isLoading={isLoading} />
-      ):(
+      ) : (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Achado</Typography>
@@ -233,14 +242,41 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               <input type="hidden"{...register('situacaoAchado')} value="false" />
             )}
           </Grid>
+          <Grid item xs={12} sm={4}>
+            <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+              <TextField
+                variant="filled"
+                sx={{ mt: 3 }}
+                placeholder="R$ 0,00"
+                autoFocus
+                id="valorFinanceiro"
+                label="Valor Financeiro"
+                error={!!errors?.valorFinanceiro}
+                value={displayValue}
+                inputProps={{
+                  inputMode: 'numeric',
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const rawValue = e.target.value.replace(/\D/g, '');
+                  // Converte para número antes de setar o valor
+                  setValue('valorFinanceiro', Number(rawValue), { shouldValidate: true });
+                }}
+              // Remove o spread do register para evitar conflito com onChange
+              />
+              {errors?.valorFinanceiro && (
+                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                  {errors.valorFinanceiro.message}
+                </Typography>
+              )}
+              <DateSelector id='data' register={register} errors={errors} label='Data de registro' dataAchado={achado?.data} />
 
-          <DateSelector id='data' register={register} errors={errors} label='Data de registro' dataAchado={achado?.data} />
-
-          <RadioInput id={'gravidade'}
-            label='Gravidade'
-            errors={errors}
-            value={gravidade}
-            setValue={setValue} />
+              <RadioInput id={'gravidade'}
+                label='Gravidade'
+                errors={errors}
+                value={gravidade}
+                setValue={setValue} />
+            </Box>
+          </Grid>
 
           <Grid item xs={12}>
             <ToggleButtonsCriterios alignment={alignment} onChange={setAlignment} />
