@@ -11,6 +11,7 @@ import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
 import FormProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormProcesso';
+import FormColeta from '../../Forms/FormsTable/Create/formColetaPasta/FormColeta';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -41,6 +42,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
 
 
   useEffect(() => {
@@ -79,6 +81,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'processo') && (<FormProcesso closeModal={handleClose} user={user} dataType={dataType} />)}
+            {(dataType === 'coleta') && (<FormColeta closeModal={handleClose} user={user} dataType={dataType} />)}
           </Box>
         </Fade>
       </Modal>
