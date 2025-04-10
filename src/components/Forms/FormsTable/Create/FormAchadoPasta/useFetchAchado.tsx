@@ -48,10 +48,10 @@ const useFetchAchado = () => {
         setArrayAchado(achados); // Atualiza o estado com os achados
         return achados
       } else {
-        console.log("Nenhum tema encontrado.");
+        console.log("Nenhum achado encontrado.");
       }
     } catch (error) {
-      console.error("Erro ao tentar resgatar os Temas:", error);
+      console.error("Erro ao tentar resgatar os Achados:", error);
     }
   };
 

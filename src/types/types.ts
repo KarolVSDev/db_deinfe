@@ -109,9 +109,10 @@ export interface Coleta {
   id:string;
   valorFinanceiro:number;
   quantitativo:number;
-  unidades:string;
+  unidadeGestora:string;
   beneficio:Beneficio[];
-  sitaucaoAchado:string;
+  sitaucaoAchado:boolean;
+  coletador:string;
   temaId:string;
   achadoId:string;
   processoId:string;
