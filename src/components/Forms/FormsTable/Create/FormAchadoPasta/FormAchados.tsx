@@ -66,7 +66,6 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
     if (newSituacao !== null) {
       setSituacaoAchado(newSituacao);
     }
-    console.log(event)
   };
 
   const handleChangeSituacaoBeneficio = (

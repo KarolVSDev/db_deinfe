@@ -29,7 +29,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
   const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const { getAllTemas, getAllBeneficios } = useFetchListData()
-  const { getAchadoById, updateAchado } = useFetchAchado()
+  const { getAchadoById } = useFetchAchado()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
@@ -48,7 +48,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const gravidade = watch('gravidade', achado?.gravidade);
   const fieldValue = watch('valorFinanceiro');
   const [displayValue, setDisplayValue] = useState('');
-  const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
 
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
 
@@ -122,14 +121,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     }
   }, [fieldValue]);
 
-  const handleChangeSituacaoBeneficio = (
-    _: React.MouseEvent<HTMLElement>,
-    newSituacao: string | null
-  ) => {
-    if (newSituacao !== null) {
-      setSituacaoBeneficio(newSituacao);
-    }
-  };
+
 
 
 
@@ -149,7 +141,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
 
   const onSubmit = async (data: BeneficioComAchado) => {
     setLoading(true)
-    console.log(data)
+    
     try {
       if (id) {
         const idString = id?.toString()
@@ -317,36 +309,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                 required: 'Campo obrigatório',
               })}
             />
-
-            <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-              <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Adicionar um Beneficio</Typography>
-              <TextField
-                variant='filled'
-                fullWidth
-                id="beneficio"
-                label='Proposta de Benefício'
-                type="text"
-                error={!!errors?.beneficio}
-                {...register('beneficio')}
-              />
-
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-              {user?.cargo === 'chefe' ? (<ToggleButtonGroup
-                color="primary"
-                value={situacaoBeneficio}
-                exclusive
-                onChange={handleChangeSituacaoBeneficio}
-                aria-label="Platform"
-
-              >
-                <ToggleButton value='Pendente' >Pendente</ToggleButton>
-                <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-              </ToggleButtonGroup>) : (
-                <input type="hidden"{...register('situacaoBeneficio')} value="false" />
-              )}
-            </Grid>
 
             <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
               <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Benefício(s)</Typography>

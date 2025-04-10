@@ -33,10 +33,11 @@ const style = {
 export interface ModalAddDataProps {
   dataType: string;
   user: User | undefined;
+  closeModal?:() => void;
 }
 
 
-const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
+const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user, closeModal }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
