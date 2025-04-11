@@ -50,6 +50,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [displayValue, setDisplayValue] = useState('');
 
   const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
+  const {updateAchado} = useFetchAchado();
 
   useEffect(() => {
     const fetchData = async () => {

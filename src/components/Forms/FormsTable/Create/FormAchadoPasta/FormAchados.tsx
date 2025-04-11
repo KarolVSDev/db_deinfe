@@ -60,7 +60,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
 
   const handleChangeSituacaoAchado = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newSituacao: string | null
   ) => {
     if (newSituacao !== null) {

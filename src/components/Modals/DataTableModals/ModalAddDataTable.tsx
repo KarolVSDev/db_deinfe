@@ -38,7 +38,7 @@ export interface ModalAddDataProps {
 }
 
 
-const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user, closeModal }) => {
+const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
