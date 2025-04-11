@@ -109,14 +109,14 @@ export interface Coleta {
   id:string;
   valorFinanceiro:number;
   quantitativo:number;
-  unidadeGestora:string;
-  beneficio:Beneficio[];
+  unidade:string;
+  beneficios:Beneficio[];
   sitaucaoAchado:boolean;
-  coletador:string;
+  coletadorId:string;
   temaId:string;
   achadoId:string;
   processoId:string;
-  responsavelId:string;
+  responsavel:string;
 }
 
 export interface Processo {
