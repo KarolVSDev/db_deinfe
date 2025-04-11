@@ -1,10 +1,13 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../../../service/firebase.config"
 import { Processo } from "../../../../../types/types"
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
+import { useContextTable } from "../../../../../context/TableContext";
 
 
 const useFetchProcesso = () => {
+
+  const { setArrayProcesso } = useContextTable();
   //CREATE
   const addProcesso = async (data: Processo): Promise<boolean> => {
     try {
@@ -44,6 +47,32 @@ const useFetchProcesso = () => {
       throw error;
     }
   };
+
+  const getAllProcessos = async () => {
+    try {
+      const processoRef = collection(db, "processo");
+      const querySnapshot = await getDocs(processoRef);
+
+      if (!querySnapshot.empty) {
+        const processos = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          numero: doc.data().numero,
+          exercicio: doc.data().exercicio,
+          julgado: doc.data().julgado,
+          unidadeGestora: doc.data().unidadeGestora,
+          diretoria: doc.data().diretoria,
+        })) as Processo[];
+
+        setArrayProcesso(processos)
+        return processos
+      } else {
+        console.log("Nenhum processo encontrado.");
+      }
+    } catch (error) {
+      console.error("Erro ao tentar resgatar os Processos:", error);
+    } 
+
+  }
 
   const getProcesso = async (id: string): Promise<Processo | null> => {
     try {
@@ -87,7 +116,7 @@ const useFetchProcesso = () => {
     }
   }
   return {
-    addProcesso, escutarProcessos, getProcesso, updateProcesso, deleteProcesso
+    addProcesso, escutarProcessos, getProcesso, updateProcesso, deleteProcesso, getAllProcessos
   }
 }
 
