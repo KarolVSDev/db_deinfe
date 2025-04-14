@@ -15,6 +15,7 @@ const ButtonNovo:React.FC<ButtonNovoProps> = ({dataType, user}) => {
     if(dataType === 'achado'){
         dataType = 'tema'
     }
+    
     if (dataType === 'beneficio') {
         dataType = 'achado'
     }

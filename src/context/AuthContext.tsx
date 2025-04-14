@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
             setIsLoggedIn(true)
             navigate('/dashboard/table');
         } catch (error: any) {
-            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+            if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
                 TypeAlert('Email ou senha incorretos', 'error');
             } else {
                 TypeAlert(error.message, 'error');

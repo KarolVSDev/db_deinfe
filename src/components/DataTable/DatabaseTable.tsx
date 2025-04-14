@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
-import { topicoAchadoHeader, achadoHeader, beneficioHeader, processoHeader } from '../../service/columns';
+import { topicoAchadoHeader, achadoHeader, processoHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,12 +14,10 @@ import useFetchListData from '../../hooks/useFetchListData';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
-import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formateDateToPtBr, formatCurrency } from '../../hooks/DateFormate';
-import HookUseFormat from '../../hooks/HookUseFormat';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 
 export default function DatabaseTable() {
@@ -27,19 +25,18 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, arrayBeneficio, arrayAchado, setArrayTopicoAchado,
-    setArrayAchado, setArrayBeneficio, setArrayProcesso} = useContextTable();
+  const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado,
+    setArrayAchado, setArrayProcesso } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
   const [openModalDelete, setOpenModalDelete] = useState(false)
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { AchadoFormatado } = HookUseFormat()
-  const { escutarTemas, escutarBeneficios } = useFetchListData();
+  const { escutarTemas } = useFetchListData();
   const { escutarAchados } = useFetchAchado();
   const { escutarProcessos } = useFetchProcesso();
-  const [_isLoading, setIsLoading] = useState(true)
+  const [_isLoading] = useState(true)
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -62,13 +59,6 @@ export default function DatabaseTable() {
           setRows(createRows(achados))
         })
         return () => achadoListener;
-      case 'beneficio':
-        setColumns(createGridColumns(beneficioHeader));
-        const beneficioListener = escutarBeneficios((beneficios) => {
-          setArrayBeneficio(beneficios)
-          setRows(createRows(beneficios))
-        })
-        return () => beneficioListener;
       case 'processo':
         setColumns(createGridColumns(processoHeader));
         const processoListener = escutarProcessos((processos) => {
@@ -110,13 +100,10 @@ export default function DatabaseTable() {
         if (header.id === 'valorFinanceiro') {
           return formatCurrency(params.value)
         }
-        if (header.id === 'beneficios' || header.id === 'achados') {
-          return <ModalBeneficios Id={params.row.id} headerId={header.id} />;
-        }
         if (header.id === 'analise') {
           return <ModalAnalises key={params.row.id} analise={params.row.analise} />
         }
-        if (['situacaoAchado', 'situacao', 'situacaoBeneficio'].includes(header.id) && typeof params.value === 'boolean') {
+        if (['situacaoAchado', 'situacao'].includes(header.id) && typeof params.value === 'boolean') {
           return (
             <span style={{
               background: params.value ? '#86efac' : '#fcd34d',
@@ -156,19 +143,10 @@ export default function DatabaseTable() {
     return console.log(columns, model)
   };
 
-  const captureDataGridState = () => {
-    const gridState = {
-      columns: columns,
-      rows: rows,
-    }
-    return gridState
-  }
-
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'tema', string: 'Temas' },
     { value: 'achado', string: 'Achados' },
-    { value: 'beneficio', string: 'Benefícios' },
     { value: 'coleta', string: 'Coleta' },
     { value: 'processo', string: 'Processos' },
   ]
@@ -200,48 +178,6 @@ export default function DatabaseTable() {
     setOpenModalDelete(true)
   }
 
-  //esse bloco atualiza a visualização dos dados
-  useEffect(() => {
-    switch (dataType) {
-      case 'tema':
-        setRows(createRows(arrayTopicoAchado))
-        break;
-      case 'beneficio':
-        setRows(createRows(arrayBeneficio))
-        break;
-      case 'achado':
-        const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
-        setRows(createRows(achadoComTopico))
-        break;
-      default:
-        break;
-    }
-  }, [arrayTopicoAchado, arrayBeneficio, arrayAchado, dataType])
-
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true)
-      try {
-        switch (dataType) {
-          case 'tema':
-            setRows(createRows(arrayTopicoAchado))
-            break;
-          case 'beneficio':
-            setRows(createRows(arrayBeneficio))
-            break;
-          case 'achado':
-            const achadoComTopico = AchadoFormatado(arrayAchado, arrayTopicoAchado)
-            setRows(createRows(achadoComTopico))
-            break;
-          default:
-            break;
-        }
-        loadData()
-      } finally {
-        setIsLoading(false)
-      }
-    }
-  }, [dataType])
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >
@@ -263,8 +199,7 @@ export default function DatabaseTable() {
           <ModalAddData dataType={dataType} user={user} />
           <Box>
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
-              const gridState = captureDataGridState();
-              exportToExcel(gridState, 'data.xlsx')
+              exportToExcel(dataType, 'data.xlsx')
             }}>
               <FileDownloadIcon />
             </Button>

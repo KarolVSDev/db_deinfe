@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useContextTable } from '../../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
-import { Achado, BeneficioComAchado, TopicoAchado, User } from '../../../../../types/types';
+import { Achado, TopicoAchado, User } from '../../../../../types/types';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
@@ -26,19 +26,18 @@ export interface FormUpdateAchadoProps {
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user }) => {
   const [tema, setTema] = useState<TopicoAchado>({ id: '', tema: '', situacao: false })
   const [achado, setAchado] = useState<Achado>()
-  const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
+  const { arrayTopicoAchado } = useContextTable()
   const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
-  const { getAllTemas, getAllBeneficios } = useFetchListData()
-  const { getAchadoById, updateAchado } = useFetchAchado()
+  const { getAllTemas } = useFetchListData()
+  const { getAchadoById } = useFetchAchado()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<BeneficioComAchado>({
+  const { control, handleSubmit, register, formState: { errors }, setValue, reset, watch } = useForm<Achado>({
     defaultValues: {
       tema_id: tema.id, // Inicialize o id do tópico
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
       valorFinanceiro: achado?.valorFinanceiro || 0,
-      beneficios: [], // Inicialize a lista de benefícios
       situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
       criterioEstadual: achado?.criterioEstadual,
       criterioGeral: achado?.criterioGeral,
@@ -48,9 +47,9 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const gravidade = watch('gravidade', achado?.gravidade);
   const fieldValue = watch('valorFinanceiro');
   const [displayValue, setDisplayValue] = useState('');
-  const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
 
-  const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
+  const [alignment, setAlignment] = useState<keyof Achado>('criterioGeral');
+  const { updateAchado } = useFetchAchado();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +59,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           if (arrayTopicoAchado.length === 0) {
             const fetchTemas = async () => {
               await getAllTemas();
-              await getAllBeneficios()
             }
             fetchTemas()
 
@@ -77,13 +75,11 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               tema_id: result.tema?.id || '',
               achado: result.achado?.achado || '',
               analise: result.achado?.analise || '',
-              beneficios: result.beneficios || [],
               valorFinanceiro: result.achado.valorFinanceiro || 0,
               situacaoAchado: result.achado?.situacaoAchado || false,
               criterioMunicipal: result.achado.criterioMunicipal || '',
               criterioEstadual: result.achado.criterioEstadual || '',
               criterioGeral: result.achado.criterioGeral || '',
-              tema: result.tema || '',
             });
 
             // Define o alinhamento com base nos critérios
@@ -104,7 +100,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     };
 
     fetchData(); // Chama a função assíncrona
-  }, [id, reset, arrayTopicoAchado.length, arrayBeneficio.length]);
+  }, [id, reset, arrayTopicoAchado.length]);
 
 
   useEffect(() => {
@@ -122,14 +118,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     }
   }, [fieldValue]);
 
-  const handleChangeSituacaoBeneficio = (
-    _: React.MouseEvent<HTMLElement>,
-    newSituacao: string | null
-  ) => {
-    if (newSituacao !== null) {
-      setSituacaoBeneficio(newSituacao);
-    }
-  };
+
 
 
 
@@ -147,9 +136,9 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
 
   }
 
-  const onSubmit = async (data: BeneficioComAchado) => {
+  const onSubmit = async (data: Achado) => {
     setLoading(true)
-    console.log(data)
+
     try {
       if (id) {
         const idString = id?.toString()
@@ -318,65 +307,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               })}
             />
 
-            <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-              <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Adicionar um Beneficio</Typography>
-              <TextField
-                variant='filled'
-                fullWidth
-                id="beneficio"
-                label='Proposta de Benefício'
-                type="text"
-                error={!!errors?.beneficio}
-                {...register('beneficio')}
-              />
 
-            </Grid>
-
-            <Grid item xs={12} sm={4}>
-              {user?.cargo === 'chefe' ? (<ToggleButtonGroup
-                color="primary"
-                value={situacaoBeneficio}
-                exclusive
-                onChange={handleChangeSituacaoBeneficio}
-                aria-label="Platform"
-
-              >
-                <ToggleButton value='Pendente' >Pendente</ToggleButton>
-                <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-              </ToggleButtonGroup>) : (
-                <input type="hidden"{...register('situacaoBeneficio')} value="false" />
-              )}
-            </Grid>
-
-            <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-              <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Benefício(s)</Typography>
-              <Controller
-                name="beneficios" // O nome do campo no objeto `data` que será enviado
-                control={control} // Controle do `react-hook-form`
-                render={({ field }) => (
-                  <Autocomplete
-                    multiple
-                    id="beneficios"
-                    options={arrayBeneficio}
-                    getOptionLabel={(option) => option.beneficio}
-                    filterSelectedOptions
-                    value={field.value || []} // Sincroniza o valor com o formulário
-                    onChange={(_, value) => field.onChange(value)} // Atualiza o estado do formulário
-                    isOptionEqualToValue={(option, value) => option.id === value.id} // Compara pelo `id`
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Relação de Benefícios"
-                        placeholder="Selecione os benefícios"
-                        variant="filled"
-                        error={!!errors.beneficios} // Exibe erro se houver
-                        helperText={errors.beneficios?.message} // Mensagem de erro
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
           </Grid>
           {loading ? <Box sx={{ display: "flex", justifyContent: "start", mt: 3 }}>
             <Loader />
