@@ -1,29 +1,38 @@
-import { GridColDef } from "@mui/x-data-grid";
 import * as  XLSX from 'xlsx';
+import useFetchListData from './useFetchListData';
 
 
 
-interface GridState {
-    columns: GridColDef[];
-    rows: any[];
-}
 
 const useExportToExcel = () => {
+    const { getAllTemas } = useFetchListData();
+    const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
 
-    const exportToExcel = (gridState: GridState, fileName: 'data.xlsx') => {
-        const { rows } = gridState;
-        const exportRows = rows.map((row) => {
-            const { id, ...exportRow } = row;
-            return exportRow;
-        })
+        if (dataType === 'tema') {
+            try {
+                const temas = await getAllTemas();
 
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(exportRows);
-        XLSX.utils.book_append_sheet(wb, ws, 'Data');
-        XLSX.writeFile(wb, fileName)
+                if (!temas || temas.length === 0) {
+                    console.log("Nenhum tema encontrado.");
+                    return;
+                };
+
+                const exportData = temas.map((tema) => ({
+                    tema: tema.tema,
+                    situacao: tema.situacao === true ? 'Aprovado' : 'Pendente',
+                }));
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(exportData);
+                XLSX.utils.book_append_sheet(wb, ws, 'Temas');
+                XLSX.writeFile(wb, fileName)
+            } catch (error) {
+                console.error("erro ao tentar exportar os temas: ", error)
+            }
+        }
     }
 
-   
+
 
     return {
         exportToExcel,

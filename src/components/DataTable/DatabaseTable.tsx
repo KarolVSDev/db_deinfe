@@ -143,14 +143,6 @@ export default function DatabaseTable() {
     return console.log(columns, model)
   };
 
-  const captureDataGridState = () => {
-    const gridState = {
-      columns: columns,
-      rows: rows,
-    }
-    return gridState
-  }
-
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'tema', string: 'Temas' },
@@ -207,8 +199,7 @@ export default function DatabaseTable() {
           <ModalAddData dataType={dataType} user={user} />
           <Box>
             <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
-              const gridState = captureDataGridState();
-              exportToExcel(gridState, 'data.xlsx')
+              exportToExcel(dataType, 'data.xlsx')
             }}>
               <FileDownloadIcon />
             </Button>
