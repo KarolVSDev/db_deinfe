@@ -51,25 +51,6 @@ export interface Achado {
   tema_id: string;
 }
 
-
-export interface Beneficio {
-  id?: string;
-  beneficio: string;
-  situacaoBeneficio: boolean;
-}
-
-export interface BeneficioUpdate {
-  id?: string;
-  beneficio: string;
-  situacaoBeneficio: boolean;
-  achados: Achado[];
-}
-
-export interface AchadoBeneficio {
-  id?: string;
-  achado_id: string;
-  beneficio_id: string;
-}
 export interface FormBeneficioType {
   id: string;
   beneficio: string;
@@ -79,7 +60,6 @@ export interface FormBeneficioType {
 export interface AchadoComTopico {
   achado: Achado;
   tema: TopicoAchado;
-  beneficios: Beneficio[];
 }
 export interface ColumnConfig {
   id: string;
@@ -92,7 +72,6 @@ export interface Coleta {
   valorFinanceiro:number;
   quantitativo:number;
   unidade:string;
-  beneficios:Beneficio[];
   sitaucaoAchado:boolean;
   coletadorId:string;
   temaId:string;

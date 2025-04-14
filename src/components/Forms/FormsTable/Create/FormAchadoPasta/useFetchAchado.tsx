@@ -10,7 +10,7 @@ import useFetchListData from "../../../../../hooks/useFetchListData";
 const useFetchAchado = () => {
 
   const { setArrayAchado } = useContextTable()
-  const { getTemaById, processAchadoBeneficio, deleteRelacao } = useFetchListData();
+  const { getTemaById } = useFetchListData();
 
   //CREATE
   const setAchado = async (data: Achado) => {
@@ -85,12 +85,11 @@ const useFetchAchado = () => {
         throw new Error("Tema não encontrado");
       }
 
-      const beneficios = await processAchadoBeneficio(idAchado) || [];
+     
 
       const achadoCompleto = {
         achado: achado,
         tema: tema,
-        beneficios: beneficios
       }
 
       return achadoCompleto;
@@ -172,14 +171,12 @@ const useFetchAchado = () => {
 
   const deleteAchado = async (id: string) => {
     try {
-      //deleta as relações da entidade pai 
-      deleteRelacao(id)
       //deleta o achado
       const docRef = doc(db, "achado", id);
       await deleteDoc(docRef);
       //feedback para o usuário 
       TypeAlert("O Achado foi excluído", "success")
-      console.log(`Achado ${id} e suas relações foram excluídos`)
+     
     } catch (error) {
       console.error("Erro ao excluir Achado:", error);
       TypeAlert("Erro ao excluir o benefício", "error");

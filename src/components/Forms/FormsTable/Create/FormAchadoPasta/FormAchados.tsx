@@ -102,7 +102,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         };
 
         await setAchado(dataWithSituacao);
-
+        TypeAlert("Achado adicionado", "success");
         reset();
         closeModal();
         return; 

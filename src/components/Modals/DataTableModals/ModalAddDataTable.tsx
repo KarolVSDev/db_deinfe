@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchadoPasta/FormAchados';
-import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
 import FormProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormProcesso';
@@ -80,7 +79,6 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
           <Box sx={style}>
             {(dataType === 'tema') && (<FormTopicoAchado closeModal={handleClose} user={user} />)}
             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType} />)}
-            {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'processo') && (<FormProcesso closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'coleta') && (<FormColeta closeModal={handleClose} user={user} dataType={dataType} />)}
           </Box>
