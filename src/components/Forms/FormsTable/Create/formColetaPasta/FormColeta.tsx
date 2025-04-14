@@ -26,12 +26,8 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     //const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
-    const { processAchadoBeneficio } = useFetchListData();
     const { arrayAchado, arrayProcesso } = useContextTable();
     const [achadoId, setAchadoId] = useState<string | undefined>()
-    const [beneficiosDoAchado, setBeneficiosDoAchado] = useState<Beneficio[]>([])
-    const [loadingB, setLoadingB] = useState(false)
-    const [showBeneficiosAutocomplete, setShowBeneficiosAutocomplete] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,30 +36,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         }
         fetchData();
     }, [arrayAchado, arrayProcesso])
-
-    const handleModalBeneficioSelet = async () => {
-        if (achadoId) {
-            setLoadingB(true);
-            try {
-                const beneficios = await processAchadoBeneficio(achadoId);
-                setBeneficiosDoAchado(beneficios as Beneficio[]);
-                setShowBeneficiosAutocomplete(true);
-            } catch (error) {
-                console.error("Erro ao carregar benefícios:", error);
-            } finally {
-                setLoadingB(false);
-            }
-        } else {
-            setShowBeneficiosAutocomplete(false);
-            setBeneficiosDoAchado([]);
-        }
-    };
-
-    // Atualize o useEffect para monitorar apenas achadoId
-    useEffect(() => {
-        handleModalBeneficioSelet();
-    }, [achadoId]); // Remova showBeneficiosAutocomplete das dependências
-
 
     const onSubmit = async (data: Coleta) => {
         // const Coleta = await addColeta(data);
@@ -152,53 +124,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     )}
                 />
             </Grid>
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-
-                {/* <Button sx={{ mb:2 }} disabled={isButtonDisabled} onClick={handleModalBeneficioSelet} variant="outlined">Selecionar Benefício do processo</Button> */}
-                {loadingB ? (
-                    <Loader />
-                ) : (
-                    showBeneficiosAutocomplete && (
-                        <Grid item xs={12} sm={4}>
-                            <Controller
-                                name="beneficios"
-                                control={control}
-                                defaultValue={[]}
-                                rules={{
-                                    required: 'Selecione pelo menos um benefício',
-                                    validate: (value) => value.length > 0 || 'Selecione pelo menos um benefício'
-                                }}
-                                render={({ field, fieldState: { error } }) => (
-                                    <Autocomplete
-                                        multiple
-                                        id="beneficios"
-                                        options={beneficiosDoAchado}
-                                        getOptionLabel={(option) => option.beneficio}
-                                        filterSelectedOptions
-                                        value={field.value || []}
-                                        onChange={(_, value) => field.onChange(value)}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Relação de Benefícios"
-                                                placeholder="Selecione os benefícios"
-                                                variant="filled"
-                                                error={!!error}
-                                                helperText={error?.message}
-                                            />
-                                        )}
-                                    />
-                                )}
-                            />
-                        </Grid>
-                    )
-
-                )}
-
-
-            </Grid>
-
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>

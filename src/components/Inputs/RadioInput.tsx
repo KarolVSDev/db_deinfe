@@ -5,15 +5,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { FormHelperText, Grid } from '@mui/material';
-import { BeneficioComAchado } from '../../types/types';
+import { Achado } from '../../types/types';
 import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 
 export interface RadioInputProps {
-    id: keyof BeneficioComAchado;
+    id: keyof Achado;
     label: string;
-    errors: FieldErrors<BeneficioComAchado>
+    errors: FieldErrors<Achado>
     value: string;
-    setValue: UseFormSetValue<BeneficioComAchado>;
+    setValue: UseFormSetValue<Achado>;
 }
 
 const RadioInput: React.FC<RadioInputProps> = ({ id, label, errors, setValue , value}) => {

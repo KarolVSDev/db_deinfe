@@ -1,5 +1,5 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
-import { Achado, BeneficioComAchado } from "../../../../../types/types";
+import { Achado } from "../../../../../types/types";
 import { db } from "../../../../../service/firebase.config";
 import { useContextTable } from "../../../../../context/TableContext";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
@@ -10,7 +10,7 @@ import useFetchListData from "../../../../../hooks/useFetchListData";
 const useFetchAchado = () => {
 
   const { setArrayAchado } = useContextTable()
-  const { getTemaById, processAchadoBeneficio, getDocsByAchadoId, deleteRelacao } = useFetchListData();
+  const { getTemaById, processAchadoBeneficio, deleteRelacao } = useFetchListData();
 
   //CREATE
   const setAchado = async (data: Achado) => {
@@ -144,7 +144,7 @@ const useFetchAchado = () => {
   };
 
   //UPDATE
-  const updateAchado = async (idAchado: string, data: Partial<BeneficioComAchado>) => {
+  const updateAchado = async (idAchado: string, data: Partial<Achado>) => {
 
     const achado = {
       achado: data.achado,
@@ -166,49 +166,7 @@ const useFetchAchado = () => {
       const achadoRef = doc(db, "achado", idAchado);
       await updateDoc(achadoRef, filteredAchado)
       console.log("Achado atualizado com sucesso!");
-
-      //Lógica para atualizar os benefícios
-      const currentBeneficios = await getDocsByAchadoId(idAchado);
-
-      // Extrair os IDs dos benefícios atuais e dos novos benefícios
-      const currentBeneficioIds = currentBeneficios?.map((b) => b.beneficio_id);
-      const newBeneficioIds = data.beneficios?.map((b) => b.id);
-
-      const beneficiosToAdd = newBeneficioIds?.filter(
-        (id) => !currentBeneficioIds?.includes(id)
-      );
-
-      const beneficiosToRemove = currentBeneficios?.filter(
-        (b) => !newBeneficioIds?.includes(b.beneficio_id)
-      );
-
-      const achadoBeneficioRef = collection(db, "achadoBeneficio");
-
-      // Adicionar novas relações
-      if (beneficiosToAdd) {
-        for (const beneficioId of beneficiosToAdd) {
-          try {
-            await addDoc(achadoBeneficioRef, {
-              achado_id: idAchado,
-              beneficio_id: beneficioId,
-            });
-          } catch (error) {
-            console.error("Erro ao tentar adicionar novas relações de achadoBeneficio", error)
-            throw error
-          }
-        }
-      }
-
-      //Excluir relações
-      if (beneficiosToRemove) {
-        for (const beneficio of beneficiosToRemove) {
-          const docRef = doc(db, "achadoBeneficio", beneficio.id);
-          await deleteDoc(docRef);
-        }
-      }
-
     } catch (error) {
-
     }
   };
 

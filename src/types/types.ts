@@ -70,24 +70,6 @@ export interface AchadoBeneficio {
   achado_id: string;
   beneficio_id: string;
 }
-
-export interface BeneficioComAchado {
-  id: string;
-  beneficio?: string;
-  beneficios?: Beneficio[];
-  situacaoBeneficio?: boolean;
-  achado: string;
-  data: Date;
-  gravidade: string;
-  valorFinanceiro: number;
-  criterioMunicipal?: string;
-  criterioEstadual?: string;
-  criterioGeral?: string;
-  situacaoAchado: boolean;
-  analise: string;
-  tema_id: string;
-  tema: TopicoAchado;
-}
 export interface FormBeneficioType {
   id: string;
   beneficio: string;

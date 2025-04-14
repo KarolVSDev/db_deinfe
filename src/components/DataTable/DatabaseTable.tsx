@@ -14,7 +14,6 @@ import useFetchListData from '../../hooks/useFetchListData';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
-import ModalBeneficios from '../Modals/DataTableModals/ModalBeneficios';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -109,9 +108,6 @@ export default function DatabaseTable() {
         }
         if (header.id === 'valorFinanceiro') {
           return formatCurrency(params.value)
-        }
-        if (header.id === 'beneficios' || header.id === 'achados') {
-          return <ModalBeneficios Id={params.row.id} headerId={header.id} />;
         }
         if (header.id === 'analise') {
           return <ModalAnalises key={params.row.id} analise={params.row.analise} />

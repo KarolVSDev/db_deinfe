@@ -2,15 +2,15 @@ import React, { memo } from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Grid, Typography } from '@mui/material';
-import { BeneficioComAchado } from '../../../types/types';
+import { Achado } from '../../../types/types';
 
 export interface toggleComponentProps {
-    alignment: keyof BeneficioComAchado; // Tipagem mais precisa
-    onChange: (value: keyof BeneficioComAchado) => void;
+    alignment: keyof Achado; // Tipagem mais precisa
+    onChange: (value: keyof Achado) => void;
 }
 
 const ToggleButtonsCriterios: React.FC<toggleComponentProps> = memo(({ alignment, onChange }) => {
-    const handleAlignment = (_: React.MouseEvent<HTMLElement>, newAlignment: keyof BeneficioComAchado | null) => {
+    const handleAlignment = (_: React.MouseEvent<HTMLElement>, newAlignment: keyof Achado | null) => {
         if (newAlignment !== null) {
             onChange(newAlignment);
         }
