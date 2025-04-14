@@ -5,14 +5,12 @@ import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
-import { Processo, User, Coleta, Achado, Beneficio } from '../../../../../types/types';
+import { Processo, User, Coleta, Achado } from '../../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
 import { useContextTable } from "../../../../../context/TableContext";
 import useFetchProcesso from "../FormProcessoPasta/useFetchProcesso";
-import useFetchListData from "../../../../../hooks/useFetchListData";
-import Loader from "../../../../Loader/Loader";
 
 export interface FormColetaProps {
     closeModal: () => void;
@@ -27,7 +25,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { arrayAchado, arrayProcesso } = useContextTable();
-    const [achadoId, setAchadoId] = useState<string | undefined>()
+    const [_, setAchadoId] = useState<string | undefined>()
 
     useEffect(() => {
         const fetchData = async () => {

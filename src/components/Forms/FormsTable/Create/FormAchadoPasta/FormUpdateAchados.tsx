@@ -26,7 +26,7 @@ export interface FormUpdateAchadoProps {
 const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, user }) => {
   const [tema, setTema] = useState<TopicoAchado>({ id: '', tema: '', situacao: false })
   const [achado, setAchado] = useState<Achado>()
-  const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
+  const { arrayTopicoAchado } = useContextTable()
   const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const { getAllTemas } = useFetchListData()
   const { getAchadoById } = useFetchAchado()
@@ -100,7 +100,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     };
 
     fetchData(); // Chama a função assíncrona
-  }, [id, reset, arrayTopicoAchado.length, arrayBeneficio.length]);
+  }, [id, reset, arrayTopicoAchado.length]);
 
 
   useEffect(() => {
