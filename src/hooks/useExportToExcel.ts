@@ -7,7 +7,9 @@ import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcesso
 
 
 const useExportToExcel = () => {
+    //funções e states
     const { getAllTemas } = useFetchListData();
+    //
     const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
 
         if (dataType === 'tema') {
@@ -32,8 +34,9 @@ const useExportToExcel = () => {
                 console.error("erro ao tentar exportar os temas: ", error)
             }
         }
-
+        // é uma boa prática chamar a função no topo do componente 
         const { getAllAchados } = useFetchAchado();
+        //
 
         if (dataType === 'achado') {
             try {
@@ -66,8 +69,9 @@ const useExportToExcel = () => {
             }
         }
 
+        // é uma boa prática chamar a função no topo do componente 
         const { getAllProcessos } = useFetchProcesso();
-
+        //
         if (dataType === 'processos') {
             try {
                 const processos = await getAllProcessos();
