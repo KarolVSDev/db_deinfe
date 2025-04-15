@@ -69,15 +69,14 @@ export interface ColumnConfig {
 
 export interface Coleta {
   id:string;
-  valorFinanceiro:number;
   quantitativo:number;
   unidade:string;
-  sitaucaoAchado:boolean;
+  valorFinanceiro:number;
+  sitaucaoSanado:boolean;
   coletadorId:string;
   temaId:string;
   achadoId:string;
   processoId:string;
-  responsavel:string;
 }
 
 export interface Processo {
