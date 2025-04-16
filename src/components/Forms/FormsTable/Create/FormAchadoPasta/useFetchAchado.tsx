@@ -126,7 +126,6 @@ const useFetchAchado = () => {
             criterioMunicipal: achadoData.criterioMunicipal,
             data: achadoData.data,
             gravidade: achadoData.gravidade,
-            valorFinanceiro: achadoData.valorFinanceiro,
             situacaoAchado: achadoData.situacaoAchado,
             tema_id: tema.tema || "Tema não encontrado",
           };
@@ -154,7 +153,6 @@ const useFetchAchado = () => {
       criterioGeral: data.criterioGeral,
       data: data.data,
       gravidade: data.gravidade,
-      valorFinanceiro: data.valorFinanceiro,
       tema_id: data.tema_id
     }
 

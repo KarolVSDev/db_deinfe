@@ -42,7 +42,6 @@ export interface Achado {
   achado: string;
   data: Date;
   gravidade: string;
-  valorFinanceiro?:number;
   criterioMunicipal?: string;
   criterioEstadual?: string;
   criterioGeral?: string;

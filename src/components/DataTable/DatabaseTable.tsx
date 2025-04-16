@@ -3,7 +3,7 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
-import { topicoAchadoHeader, achadoHeader, processoHeader } from '../../service/columns';
+import { topicoAchadoHeader, achadoHeader, processoHeader, coletaHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
@@ -66,6 +66,14 @@ export default function DatabaseTable() {
           setRows(createRows(processos))
         })
         return () => processoListener;
+      case 'coleta':
+        setColumns(createGridColumns(coletaHeader));
+        // const processoListener = escutarProcessos((processos) => {
+        //   setArrayProcesso(processos)
+        //   setRows(createRows(processos))
+        // })
+        // return () => processoListener;
+        break
       default:
         setColumns([]);
         setRows([])
@@ -147,8 +155,8 @@ export default function DatabaseTable() {
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'tema', string: 'Temas' },
     { value: 'achado', string: 'Achados' },
-    { value: 'coleta', string: 'Coleta' },
     { value: 'processo', string: 'Processos' },
+    { value: 'coleta', string: 'Coleta' },
   ]
 
 

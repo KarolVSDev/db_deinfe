@@ -14,7 +14,6 @@ const AchadoSkeleton: React.FC<AchadoSkeletonProps> = ({ isLoading }) => {
       <Skeleton sx={{ ml: 1, mr: 3, height: '90px' }} />
       <Skeleton sx={{ ml: 1, mr: 3, height: '75px', width: '10vw' }} />
       <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-        <Skeleton sx={{ ml: 1, mr: 3, height: '75px', width: '12vw' }} />
         <Skeleton sx={{ ml: 1, mr: 3, height: '75px', width: '10vw' }} />
         <Skeleton sx={{ ml: 1, mr: 3, height: '75px', width: '15vw' }} />
       </Box>

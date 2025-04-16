@@ -160,7 +160,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                             // Converte para número antes de setar o valor
                             setValue('valorFinanceiro', Number(rawValue), { shouldValidate: true });
                         }}
-                    // Remove o spread do register para evitar conflito com onChange
                     />
                     {errors?.valorFinanceiro && (
                         <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
