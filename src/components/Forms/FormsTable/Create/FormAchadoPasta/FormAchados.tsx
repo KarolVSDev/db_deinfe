@@ -21,7 +21,7 @@ import { formatCurrency } from '../../../../../hooks/DateFormate';
 
 export interface FormAchadoProps {
   closeModal: () => void;
-  user: User | undefined;
+  user: User;
   dataType: string;
 }
 

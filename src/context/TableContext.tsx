@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import { TopicoAchado, Achado, Processo, AllUsers, } from "../types/types";
+import { TopicoAchado, Achado, Processo } from "../types/types";
 
 
 interface TableContextType {

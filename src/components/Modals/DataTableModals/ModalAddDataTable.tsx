@@ -32,7 +32,7 @@ const style = {
 
 export interface ModalAddDataProps {
   dataType: string;
-  user: User | undefined;
+  user: User;
   closeModal?:() => void;
 }
 

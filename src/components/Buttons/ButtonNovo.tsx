@@ -4,7 +4,7 @@ import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 export interface ButtonNovoProps {
     dataType: string;
     closeModal: () => void;
-    user: User | undefined;
+    user: User;
 }
 
 

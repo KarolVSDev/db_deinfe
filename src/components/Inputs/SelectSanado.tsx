@@ -12,14 +12,14 @@ export interface SelectSanadoProps {
     register: UseFormRegister<Coleta>;
     errors: FieldErrors<Coleta>;
     label: string
-    sanado: string[];
+    sanado: string;
 }
 
 const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors, sanado }) => {
 
     return (
         <div>
-            <FormControl variant="filled" sx={{  minWidth: 180 }}>
+            <FormControl variant="filled" sx={{ minWidth: 180 }}>
                 <InputLabel id={`${id}-label`}>{label}</InputLabel>
                 <Select
                     labelId={`${id}-label`}
@@ -30,11 +30,8 @@ const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors
                     <MenuItem value="">
                         <em>Selecione...</em>
                     </MenuItem>
-                    {sanado.map((option, index) => (
-                        <MenuItem key={index} value={option}>
-                            {option}
-                        </MenuItem>
-                    ))}
+                    <MenuItem value="sanado">Sanado</MenuItem>
+                    <MenuItem value="não sanado">Não Sanado</MenuItem>
                 </Select>
                 {errors?.[id] && (
                     <FormHelperText sx={{ color: 'red', ml: '10px' }}>{errors[id]?.message}</FormHelperText>

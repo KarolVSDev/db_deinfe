@@ -32,7 +32,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const [_, setAchadoId] = useState<string | undefined>()
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
-    const [sanado] = useState<string[]>(["Sanado", "Não Sanado"]);
+    const [sanado] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -186,8 +186,8 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     )}
 
                     <SelectSanado
-                        id="sanado"
-                        label="Sanado"
+                        id={"sanado"}
+                        label={"Sanado"}
                         register={register}
                         errors={errors}
                         sanado={sanado}
@@ -210,8 +210,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                             {errors.quantitativo.message}
                         </Typography>
                     )}
-
-
                 </Box>
             </Grid>
             <RegisterButton text="Registrar" />
