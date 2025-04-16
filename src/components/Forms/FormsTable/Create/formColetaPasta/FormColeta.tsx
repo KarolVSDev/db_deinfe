@@ -5,41 +5,42 @@ import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
-import { Processo, User, Coleta, Achado, AllUsers } from '../../../../../types/types';
+import { Processo, User, Coleta, Achado } from '../../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
 import { useContextTable } from "../../../../../context/TableContext";
 import useFetchProcesso from "../FormProcessoPasta/useFetchProcesso";
-import useFetchUsers from "../../../../../hooks/useFetchUsers";
 import { formatCurrency } from "../../../../../hooks/DateFormate";
+import SelectSanado from "../../../../Inputs/SelectSanado";
+import useFetchColeta from "./useFetchColeta";
+import { TypeAlert } from "../../../../../hooks/TypeAlert";
 
 export interface FormColetaProps {
     closeModal: () => void;
-    user: User | undefined;
+    user: User;
     dataType: string;
 }
 
 const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
-    const { register, handleSubmit, control, watch, setValue, formState: { errors } } = useForm<Coleta>({});
-    //const { addColeta } = useFetchColeta();
+    const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<Coleta>({});
+    const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
-    const { getUsers } = useFetchUsers();
-    const { arrayAchado, arrayProcesso, usuarios } = useContextTable();
+    const { arrayAchado, arrayProcesso } = useContextTable();
     const [_, setAchadoId] = useState<string | undefined>()
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
+    const [sanado] = useState<string[]>(["Sanado", "Não Sanado"]);
 
     useEffect(() => {
         const fetchData = async () => {
             await getAllAchados();
             await getAllProcessos();
-            await getUsers();
         }
         fetchData();
-    }, [arrayAchado, arrayProcesso, usuarios])
+    }, [arrayAchado, arrayProcesso])
 
     // Atualiza o valor formatado quando o valor do campo muda
     useEffect(() => {
@@ -49,21 +50,26 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     }, [fieldValue]);
 
     const onSubmit = async (data: Coleta) => {
-        // const Coleta = await addColeta(data);
-        // if (Coleta) {
-        //     TypeAlert("Coleta adicionado", "success");
-        //     reset()
-        //     closeModal()
-        // } else {
-        //     TypeAlert("Erro ao tentar adicionar o coleta", "error")
-        //     reset()
-        //     closeModal()
-        // }
-        const formData = {
-            ...data,
-            coletador: user?.id
+        try {
+            const formData = {
+                ...data,
+                coletadorId: user.id
+            }
+
+            const Coleta = await addColeta(formData);
+            if (Coleta) {
+                TypeAlert("Coleta adicionada", "success");
+                reset()
+                closeModal()
+            } else {
+                TypeAlert("Erro ao tentar adicionar a coleta", "error")
+                reset()
+                closeModal()
+            }
+        } catch (error) {
+            console.log("Erro no Submit", error)
         }
-        console.log(formData)
+
 
     }
 
@@ -165,6 +171,31 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     <TextField variant="filled"
                         required
                         autoFocus
+                        id="unidade"
+                        label="Unidade"
+                        type="text"
+                        error={!!errors?.unidade}
+                        {...register('unidade', {
+                            required: 'Campo obrigatorio',
+                        })}
+                    />
+                    {errors?.unidade && (
+                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                            {errors.unidade.message}
+                        </Typography>
+                    )}
+
+                    <SelectSanado
+                        id="sanado"
+                        label="Sanado"
+                        register={register}
+                        errors={errors}
+                        sanado={sanado}
+                    />
+
+                    <TextField variant="filled"
+                        required
+                        autoFocus
                         sx={{ width: "15%" }}
                         id="quantitativo"
                         label="Quantitativo"
@@ -180,58 +211,8 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         </Typography>
                     )}
 
-                    <TextField variant="filled"
-                        required
-                        autoFocus
-                        id="unidade"
-                        label="Unidade"
-                        type="text"
-                        error={!!errors?.unidade}
-                        {...register('unidade', {
-                            required: 'Campo obrigatorio',
-                        })}
-                    />
-                    {errors?.unidade && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.unidade.message}
-                        </Typography>
-                    )}
-
-                    <Controller
-                        name="coletadorId"
-                        control={control}
-                        rules={{ required: 'Campo obrigatório' }}
-                        render={({ field }) => (
-                            <Autocomplete
-                                disablePortal
-                                autoFocus
-                                sx={{ width: "30%" }}
-                                id="combo-box-demo"
-                                options={usuarios}
-                                getOptionLabel={(option: AllUsers) => option.nome}
-                                isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array
-                                onChange={(_, value) => field.onChange(value?.id || '')}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Coletador"
-                                        variant="filled"
-                                        focused={true}
-                                        error={!!errors.coletadorId}
-                                        helperText={errors.coletadorId?.message}
-                                    />
-                                )}
-                            />
-                        )}
-                    />
-
 
                 </Box>
-                <Grid item xs={12} sm={4}>
-                    <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-
-                    </Box>
-                </Grid>
             </Grid>
             <RegisterButton text="Registrar" />
         </Box >

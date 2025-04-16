@@ -3,14 +3,12 @@ import { useAuth } from '../context/AuthContext'
 import { db } from '../service/firebase.config'
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
 import { TypeAlert } from './TypeAlert'
-import { useContextTable } from '../context/TableContext'
 
 const useFetchUsers = () => {
 
 
   const { setUsers } = useAuth()
   const { setUser } = useAuth()
-  const{setUsuarios} = useContextTable();
 
 
   const addUser = (user: User) => {
@@ -37,7 +35,6 @@ const useFetchUsers = () => {
       querySnapshot.forEach((doc) => {
         usuarios.push({ id: doc.id, ...doc.data() } as AllUsers)
       });
-      setUsuarios(usuarios)
       setUsers(usuarios);
     } catch (error) {
       console.error("Erro ao buscar usuários:", error);

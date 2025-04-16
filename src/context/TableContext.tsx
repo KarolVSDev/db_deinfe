@@ -6,12 +6,10 @@ interface TableContextType {
     arrayTopicoAchado: TopicoAchado[];
     arrayAchado: Achado[];
     arrayProcesso: Processo[];
-    usuarios: AllUsers[];
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
-    setUsuarios: Dispatch<SetStateAction<AllUsers[]>>;
 }
 
 interface Props {
@@ -24,7 +22,6 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayTopicoAchado, setArrayTopicoAchado] = useState<TopicoAchado[]>([]);
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
-    const [usuarios, setUsuarios] = useState<AllUsers[]>([])
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -62,12 +59,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayTopicoAchado,
             arrayAchado,
             arrayProcesso,
-            usuarios,
             handleLocalization,
             setArrayTopicoAchado,
             setArrayAchado,
             setArrayProcesso,
-            setUsuarios
         }}>
             {children}
         </TableContext.Provider>
