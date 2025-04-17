@@ -11,6 +11,7 @@ import { useState } from 'react';
 import Loader from '../Loader/Loader';
 import useFetchListData from '../../hooks/useFetchListData';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
+import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 
 
 
@@ -23,7 +24,8 @@ export interface VerificationProps {
 
 const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
     const [loading, setLoading] = useState(false)
-    const {deleteTema, deleteBeneficio, deleteAchado} = useFetchListData();
+    const {deleteTema} = useFetchListData();
+    const {deleteAchado} = useFetchAchado();
     const {deleteProcesso} = useFetchProcesso()
 
     const handleDelete = async () => {
@@ -44,15 +46,6 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
                 setLoading(false)
             } catch (error) {
                 console.error("Erro ao tentar excluir o Achado", error)
-            }
-        } else if (dataType === 'beneficio') {
-            setLoading(true)
-            try {
-                const id = selectedRow.toString();
-                deleteBeneficio(id)
-                setLoading(false)
-            } catch (error) {
-                console.error("Erro ao tentar excluir o Benefício", error)
             }
         } else if (dataType === 'processo') {
             setLoading(true)

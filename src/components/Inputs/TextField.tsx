@@ -1,12 +1,12 @@
 import { Grid, TextField } from "@mui/material";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
-import { BeneficioComAchado } from "../../types/types";
+import { Achado } from "../../types/types";
 
 
 export interface TextFieldProps {
-    id: keyof BeneficioComAchado;
+    id: keyof Achado;
     label: string;
-    register: UseFormRegister<BeneficioComAchado>;
+    register: UseFormRegister<Achado>;
     errors: FieldErrors<FieldValues>;
     criterioMuni?: string;
     criterioEst?: string;
@@ -42,7 +42,7 @@ const TextFieldComponent: React.FC<TextFieldProps> = ({ id, label, register, err
                         error={!!errors?.criterioMunicipal}
                         helperText={errors?.criterioMunicipal?.message as string}
 
-                        {...register(id as keyof BeneficioComAchado, {
+                        {...register(id as keyof Achado, {
                             validate: (value) => {
                                 if (typeof value !== "string") {
                                     return true; // Se não for string, não executa a validação
@@ -69,7 +69,7 @@ const TextFieldComponent: React.FC<TextFieldProps> = ({ id, label, register, err
                         error={!!errors?.criterioMunicipal}
                         helperText={errors?.criterioMunicipal?.message as string}
 
-                        {...register(id as keyof BeneficioComAchado, {
+                        {...register(id as keyof Achado, {
                             validate: (value) => {
                                 if (typeof value !== "string") {
                                     return true; // Se não for string, não executa a validação

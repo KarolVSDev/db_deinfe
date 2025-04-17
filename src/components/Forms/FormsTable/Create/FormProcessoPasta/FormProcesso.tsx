@@ -63,7 +63,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
                         variant='filled'
                         required
                         fullWidth
-                        placeholder='xxxxx'
+                        placeholder='XXXX/20XX'
                         autoFocus
                         id="numero"
                         label='Número'
@@ -72,7 +72,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
                         {...register('numero', {
                             required: 'Campo obrigatório',
                             pattern: {
-                                value: /^\d{5}$/,
+                                value: /^\d{5}\/\d{4}$/,
                                 message: 'Número de processo inválido'
                             }
                         })}

@@ -32,7 +32,6 @@ const useFetchUsers = () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'usuario'))
       const usuarios: AllUsers[] = [];
-      console.log(usuarios)
       querySnapshot.forEach((doc) => {
         usuarios.push({ id: doc.id, ...doc.data() } as AllUsers)
       });

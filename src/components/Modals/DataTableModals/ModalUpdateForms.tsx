@@ -4,9 +4,8 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { GridRowId } from '@mui/x-data-grid';
-import FormUpdateAchados from '../../Forms/FormsTable/Update/FormUpdateAchados';
+import FormUpdateAchados from '../../Forms/FormsTable/Create/FormAchadoPasta/FormUpdateAchados';
 import FormUpdateTopicoAchado from '../../Forms/FormsTable/Update/formUpdateTopicoAchado';
-import FormUpdateBeneficio from '../../Forms/FormsTable/Update/FormUpdateBeneficio';
 import { User } from '../../../types/types';
 import FormUpdateProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormUpdateProcesso';
 
@@ -42,9 +41,6 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
     switch (dataType) {
       case 'tema':
         return <FormUpdateTopicoAchado closeModal={onClose} id={id} user={user} />
-
-      case 'beneficio':
-        return <FormUpdateBeneficio closeModal={onClose} id={id} user={user} dataType={dataType} />
 
       case 'achado':
         return <FormUpdateAchados closeModal={onClose} id={id} user={user} dataType={dataType} />

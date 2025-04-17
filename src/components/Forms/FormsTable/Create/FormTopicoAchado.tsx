@@ -16,7 +16,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
-  const {setTema, getTemaByName} = useFetchListData();
+  const { setTema, getTemaByName } = useFetchListData();
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -53,7 +53,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
       }
     }
 
-   
+
 
   };
 

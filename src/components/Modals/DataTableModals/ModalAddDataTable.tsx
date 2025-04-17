@@ -6,11 +6,11 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
-import FormAchado from '../../Forms/FormsTable/Create/FormAchados';
-import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
+import FormAchado from '../../Forms/FormsTable/Create/FormAchadoPasta/FormAchados';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
 import FormProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormProcesso';
+import FormColeta from '../../Forms/FormsTable/Create/formColetaPasta/FormColeta';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -32,7 +32,8 @@ const style = {
 
 export interface ModalAddDataProps {
   dataType: string;
-  user: User | undefined;
+  user: User;
+  closeModal?:() => void;
 }
 
 
@@ -41,6 +42,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
 
 
   useEffect(() => {
@@ -77,8 +79,8 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
           <Box sx={style}>
             {(dataType === 'tema') && (<FormTopicoAchado closeModal={handleClose} user={user} />)}
             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType} />)}
-            {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'processo') && (<FormProcesso closeModal={handleClose} user={user} dataType={dataType} />)}
+            {(dataType === 'coleta') && (<FormColeta closeModal={handleClose} user={user} dataType={dataType} />)}
           </Box>
         </Fade>
       </Modal>

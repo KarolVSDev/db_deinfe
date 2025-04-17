@@ -75,7 +75,6 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
 
     const onSubmit = async (data: Processo) => {
         setLoading(true)
-
         try {
             const idProcesso = id?.toString();
             if (idProcesso) {
@@ -113,7 +112,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
                                 variant='filled'
                                 required
                                 fullWidth
-                                placeholder='xxxxx'
+                                placeholder='XXXX/20XX'
                                 autoFocus
                                 id="numero"
                                 label='Número'
@@ -122,7 +121,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
                                 {...register('numero', {
                                     required: 'Campo obrigatório',
                                     pattern: {
-                                        value: /^\d{5}$/,
+                                        value: /^\d{5}\/\d{4}$/,
                                         message: 'Número de processo inválido'
                                     }
                                 })}
@@ -190,7 +189,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
                                 variant='filled'
                                 required
                                 fullWidth
-                                placeholder='xxxxx'
+                                placeholder='XXXX'
                                 autoFocus
                                 id="exercicio"
                                 label='Exercício'
@@ -221,9 +220,10 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
                             />
                         </Grid>
                     </Grid>
-                    {loading ? <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
-                        <Loader />
-                    </Box> :
+                    {loading ?
+                        <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+                            <Loader />
+                        </Box> :
                         <RegisterButton text="Atualizar" />
                     }
                 </Box >

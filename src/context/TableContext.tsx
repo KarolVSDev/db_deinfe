@@ -1,18 +1,14 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import { TopicoAchado, Achado, Beneficio, AchadoBeneficio, Processo,} from "../types/types";
+import { TopicoAchado, Achado, Processo } from "../types/types";
 
 
 interface TableContextType {
     arrayTopicoAchado: TopicoAchado[];
     arrayAchado: Achado[];
-    arrayBeneficio: Beneficio[];
-    arrayAchadoBeneficio: AchadoBeneficio[];
     arrayProcesso: Processo[];
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
-    setArrayBeneficio: Dispatch<SetStateAction<Beneficio[]>>;
-    setArrayAchadoBeneficio: Dispatch<SetStateAction<AchadoBeneficio[]>>;
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
 }
 
@@ -24,9 +20,7 @@ const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayTopicoAchado, setArrayTopicoAchado] = useState<TopicoAchado[]>([]);
-    const [arrayBeneficio, setArrayBeneficio] = useState<Beneficio[]>([]);
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
-    const [arrayAchadoBeneficio, setArrayAchadoBeneficio] = useState<AchadoBeneficio[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
 
     const handleLocalization = {
@@ -64,14 +58,10 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         <TableContext.Provider value={{
             arrayTopicoAchado,
             arrayAchado,
-            arrayBeneficio,
-            arrayAchadoBeneficio,
             arrayProcesso,
             handleLocalization,
             setArrayTopicoAchado,
             setArrayAchado,
-            setArrayBeneficio,
-            setArrayAchadoBeneficio,
             setArrayProcesso,
         }}>
             {children}
