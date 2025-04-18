@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado, User } from '../../../../types/types';
 import RegisterButton from '../../../Buttons/RegisterButton';

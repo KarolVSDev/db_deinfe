@@ -3,7 +3,6 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { GridRowId } from '@mui/x-data-grid';
 import FormTopicoAchado from '../../FormTopicoAchado';
 import { User } from '../../../../../../types/types';
 import FormAchado from '../../FormAchadoPasta/FormAchados';
