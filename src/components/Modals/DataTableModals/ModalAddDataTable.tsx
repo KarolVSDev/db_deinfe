@@ -59,7 +59,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
 
   return (
     <div>
-      <Button onClick={handleOpen} disabled={isDisabled} variant='contained'  >
+      <Button onClick={handleOpen} disabled={isDisabled} variant='contained'>
         <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
       </Button>
       <Modal

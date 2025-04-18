@@ -15,6 +15,7 @@ import { formatCurrency } from "../../../../../hooks/DateFormate";
 import SelectSanado from "../../../../Inputs/SelectSanado";
 import useFetchColeta from "./useFetchColeta";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
+import GroupButtonColeta from "./formComponents/ButtonGroup";
 
 export interface FormColetaProps {
     closeModal: () => void;
@@ -85,33 +86,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     <CloseIcon />
                 </IconButton>
             </Box>
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                <Controller
-                    name="processoId"
-                    control={control}
-                    rules={{ required: 'Campo obrigatório' }}
-                    render={({ field }) => (
-                        <Autocomplete
-                            disablePortal
-                            autoFocus
-                            id="combo-box-demo"
-                            options={arrayProcesso}
-                            getOptionLabel={(option: Processo) => option.numero}
-                            isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
-                            onChange={(_, value) => field.onChange(value?.id || '')}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Processo"
-                                    variant="filled"
-                                    focused={true}
-                                    error={!!errors.processoId}
-                                    helperText={errors.processoId?.message}
-                                />
-                            )}
-                        />
-                    )}
-                />
+
+            <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
+                <GroupButtonColeta/>
             </Grid>
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Controller
@@ -127,6 +104,12 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                             getOptionLabel={(option: Achado) => option.achado}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
                             onChange={(_, value) => { field.onChange(value?.id || ''); setAchadoId(value?.id) }}
+                            ListboxProps={{
+                                style: {
+                                    maxHeight: '200px', 
+                                    overflow: 'auto',    
+                                },
+                            }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -141,9 +124,53 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     )}
                 />
             </Grid>
+            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+                <Controller
+                    name="processoId"
+                    control={control}
+                    rules={{ required: 'Campo obrigatório' }}
+                    render={({ field }) => (
+                        <Autocomplete
+                            disablePortal
+                            autoFocus
+                            id="combo-box-demo"
+                            options={arrayProcesso}
+                            getOptionLabel={(option: Processo) => option.numero}
+                            isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
+                            onChange={(_, value) => field.onChange(value?.id || '')}
+                            ListboxProps={{
+                                style: {
+                                    maxHeight: '200px', 
+                                    overflow: 'auto',    
+                                },
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Processo"
+                                    variant="filled"
+                                    focused={true}
+                                    error={!!errors.processoId}
+                                    helperText={errors.processoId?.message}
+                                />
+                            )}
+                        />
+                    )}
+                />
+            </Grid>
+
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+
+                    <SelectSanado
+                        id={"sanado"}
+                        label={"Sanado"}
+                        register={register}
+                        errors={errors}
+                        sanado={sanado}
+                    />
+
                     <TextField
                         variant="filled"
                         placeholder="R$ 0,00"
@@ -168,47 +195,24 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     )}
 
                     <TextField variant="filled"
-                        required
                         autoFocus
                         id="unidade"
                         label="Unidade"
                         type="text"
                         error={!!errors?.unidade}
-                        {...register('unidade', {
-                            required: 'Campo obrigatorio',
-                        })}
-                    />
-                    {errors?.unidade && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.unidade.message}
-                        </Typography>
-                    )}
-
-                    <SelectSanado
-                        id={"sanado"}
-                        label={"Sanado"}
-                        register={register}
-                        errors={errors}
-                        sanado={sanado}
+                        {...register('unidade')}
                     />
 
                     <TextField variant="filled"
-                        required
                         autoFocus
                         sx={{ width: "15%" }}
                         id="quantitativo"
                         label="Quantitativo"
                         type="number"
                         error={!!errors?.quantitativo}
-                        {...register('quantitativo', {
-                            required: 'Campo obrigatorio',
-                        })}
+                        {...register('quantitativo')}
                     />
-                    {errors?.quantitativo && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.quantitativo.message}
-                        </Typography>
-                    )}
+
                 </Box>
             </Grid>
             <RegisterButton text="Registrar" />

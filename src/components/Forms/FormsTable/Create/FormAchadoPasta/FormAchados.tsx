@@ -70,8 +70,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
   }
 
 
-  const onSubmit = async (data: Achado) => {
-
+  const onSubmit = async ( data: Achado) => {
     setLoading(true)
     //bloco que manipula e salva o achado
 
@@ -104,7 +103,11 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
   }
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate  onSubmit={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSubmit(onSubmit)(e);
+    }}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Achado</Typography>
         <IconButton onClick={closeModal} sx={{
@@ -128,6 +131,12 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               options={arrayTopicoAchado}
               getOptionLabel={(option: TopicoAchado) => option.tema}
               onChange={(_, value) => field.onChange(value?.id || '')}
+              ListboxProps={{
+                style: {
+                    maxHeight: '200px', 
+                    overflow: 'auto',    
+                },
+            }}
               renderInput={(params) => (
                 <TextField
                   {...params}

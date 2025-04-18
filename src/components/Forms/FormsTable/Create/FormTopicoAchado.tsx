@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado, User } from '../../../../types/types';
 import RegisterButton from '../../../Buttons/RegisterButton';
@@ -58,7 +58,11 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   };
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate  onSubmit={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSubmit(onSubmit)(e);
+    }}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Tema</Typography>
         <IconButton onClick={closeModal} sx={{

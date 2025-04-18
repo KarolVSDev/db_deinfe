@@ -63,7 +63,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
                         variant='filled'
                         required
                         fullWidth
-                        placeholder='XXXX/20XX'
+                        placeholder='XXXXX/20XX'
                         autoFocus
                         id="numero"
                         label='Número'

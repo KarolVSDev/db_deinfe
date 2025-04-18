@@ -167,6 +167,12 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                   getOptionLabel={(option: TopicoAchado) => option.tema}
                   defaultValue={arrayTopicoAchado.find(item => item.id === field.value) || null}
                   onChange={(_, value) => field.onChange(value?.id || '')}
+                  ListboxProps={{
+                    style: {
+                        maxHeight: '200px', 
+                        overflow: 'auto',    
+                    },
+                }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
