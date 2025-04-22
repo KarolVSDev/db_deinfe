@@ -5,7 +5,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
-import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
+import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTemaPasta/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchadoPasta/FormAchados';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
@@ -55,7 +55,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
 
   }, [open, dataType])
 
-
+ 
 
   return (
     <div>

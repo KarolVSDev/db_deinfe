@@ -4,13 +4,13 @@ import { db } from "../../../../../service/firebase.config";
 import { useContextTable } from "../../../../../context/TableContext";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
-import useFetchListData from "../../../../../hooks/useFetchListData";
+import useFetchTema from "../FormTemaPasta/useFetchTema";
 
 
 const useFetchAchado = () => {
 
   const { setArrayAchado } = useContextTable()
-  const { getTemaById } = useFetchListData();
+  const { getTemaById } = useFetchTema();
 
   //CREATE
   const setAchado = async (data: Achado) => {

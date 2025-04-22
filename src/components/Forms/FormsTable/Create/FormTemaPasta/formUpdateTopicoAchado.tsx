@@ -1,17 +1,17 @@
 import { Box, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { TopicoAchado, User } from '../../../../types/types';
+import { TopicoAchado, User } from '../../../../../types/types';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import RegisterButton from '../../../Buttons/RegisterButton';
-import { useContextTable } from '../../../../context/TableContext';
+import RegisterButton from '../../../../Buttons/RegisterButton';
+import { useContextTable } from '../../../../../context/TableContext';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CloseIcon from '@mui/icons-material/Close';
-import { TypeAlert } from '../../../../hooks/TypeAlert';
-import Loader from '../../../Loader/Loader';
-import TopicoSkeleton from '../../../Skeletons/TopicoSkeleton';
-import useFetchListData from '../../../../hooks/useFetchListData';
+import { TypeAlert } from '../../../../../hooks/TypeAlert';
+import Loader from '../../../../Loader/Loader';
+import TopicoSkeleton from '../../../../Skeletons/TopicoSkeleton';
+import useFetchTema from './useFetchTema';
 
 interface TopicoAchadoProp {
   closeModal: () => void;
@@ -27,7 +27,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { updateTema } = useFetchListData();
+  const { updateTema } = useFetchTema();
 
 
   // Função para buscar o tema do achado

@@ -8,15 +8,15 @@ import { useContextTable } from '../../../../../context/TableContext';
 import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { useEffect, useState } from 'react';
-import ButtonNovo from '../../../../Buttons/ButtonNovo';
 import CloseIcon from '@mui/icons-material/Close';
 import TextFieldComponent from '../../../../Inputs/TextField';
 import ToggleButtonsCriterios from '../../../../Inputs/ToggleInputs/ToggleInputCriterio';
 import RadioInput from '../../../../Inputs/RadioInput';
 import DateSelector from '../../../../Inputs/DatePicker';
 import Loader from '../../../../Loader/Loader';
-import useFetchListData from '../../../../../hooks/useFetchListData';
 import useFetchAchado from './useFetchAchado';
+import ModalTema from '../FormTemaPasta/ModalTema';
+import useFetchTema from '../FormTemaPasta/useFetchTema';
 
 export interface FormAchadoProps {
   closeModal: () => void;
@@ -24,14 +24,14 @@ export interface FormAchadoProps {
   dataType: string;
 }
 
-const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) => {
+const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
 
   const { control, register, handleSubmit, setValue, formState: { errors }, reset, watch } = useForm<Achado>({
     defaultValues: {
       gravidade: 'Baixa'
     }
   });
-  const { getAllTemas} = useFetchListData();
+  const { getAllTemas } = useFetchTema();
   const { getAchadobyName } = useFetchAchado();
   const { setAchado } = useFetchAchado();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
@@ -70,7 +70,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
   }
 
 
-  const onSubmit = async ( data: Achado) => {
+  const onSubmit = async (data: Achado) => {
     setLoading(true)
     //bloco que manipula e salva o achado
 
@@ -81,20 +81,20 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
         return
       }
 
-        if (user?.cargo !== 'chefe') {
-          data.situacaoAchado = false;
-        }
+      if (user?.cargo !== 'chefe') {
+        data.situacaoAchado = false;
+      }
 
-        const dataWithSituacao = {
-          ...data,
-          situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
-        };
+      const dataWithSituacao = {
+        ...data,
+        situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
+      };
 
-        await setAchado(dataWithSituacao);
-        TypeAlert("Achado adicionado", "success");
-        reset();
-        closeModal();
-        return; 
+      await setAchado(dataWithSituacao);
+      TypeAlert("Achado adicionado", "success");
+      reset();
+      closeModal();
+      return;
     } catch (error) {
       TypeAlert("Erro ao tentar adicionar o achado", "error");
       console.error(error)
@@ -103,7 +103,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
   }
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate  onSubmit={(e) => {
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={(e) => {
       e.preventDefault();
       e.stopPropagation();
       handleSubmit(onSubmit)(e);
@@ -133,10 +133,10 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
               onChange={(_, value) => field.onChange(value?.id || '')}
               ListboxProps={{
                 style: {
-                    maxHeight: '200px', 
-                    overflow: 'auto',    
+                  maxHeight: '200px',
+                  overflow: 'auto',
                 },
-            }}
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -151,7 +151,8 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           )}
         />
       </Grid>
-      <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
+
+      <ModalTema dataType='tema' user={user} />
       <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
         <TextField
           variant='filled'

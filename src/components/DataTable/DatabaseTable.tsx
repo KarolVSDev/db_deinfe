@@ -10,7 +10,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import ModalUpdatePF from '../Modals/DataTableModals/ModalUpdateForms';
 import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
-import useFetchListData from '../../hooks/useFetchListData';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
@@ -19,6 +18,7 @@ import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formateDateToPtBr, formatCurrency } from '../../hooks/DateFormate';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
+import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
 
 export default function DatabaseTable() {
 
@@ -33,7 +33,7 @@ export default function DatabaseTable() {
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { escutarTemas } = useFetchListData();
+  const { escutarTemas } = useFetchTema();
   const { escutarAchados } = useFetchAchado();
   const { escutarProcessos } = useFetchProcesso();
   const [_isLoading] = useState(true)

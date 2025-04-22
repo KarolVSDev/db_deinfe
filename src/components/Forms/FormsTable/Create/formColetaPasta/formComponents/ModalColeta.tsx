@@ -3,7 +3,7 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import FormTopicoAchado from '../../FormTopicoAchado';
+import FormTopicoAchado from '../../FormTemaPasta/FormTopicoAchado';
 import { User } from '../../../../../../types/types';
 import FormAchado from '../../FormAchadoPasta/FormAchados';
 import FormProcesso from '../../FormProcessoPasta/FormProcesso';
