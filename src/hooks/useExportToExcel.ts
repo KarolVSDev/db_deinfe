@@ -71,7 +71,7 @@ const useExportToExcel = () => {
 
                 break;
 
-            case 'processos':
+            case 'processo':
                 try {
                     const processos = await getAllProcessos();
 
@@ -90,11 +90,15 @@ const useExportToExcel = () => {
 
                     const ws = XLSX.utils.json_to_sheet(exportData);
                     const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'processo');
                     XLSX.writeFile(wb, fileName)
-                    XLSX.utils.book_append_sheet(wb, ws, 'processos');
+
                 } catch (error) {
                     console.error("erro ao tentar exportar os processos: ", error)
                 }
+
+
+
                 break;
 
 
