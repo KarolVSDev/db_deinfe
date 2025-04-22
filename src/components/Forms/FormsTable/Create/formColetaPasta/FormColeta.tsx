@@ -164,7 +164,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
 
                     <SelectSanado
-                        id={"sanado"}
+                        id={"situacao"}
                         label={"Sanado"}
                         register={register}
                         errors={errors}
