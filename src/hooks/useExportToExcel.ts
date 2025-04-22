@@ -1,5 +1,7 @@
 import * as  XLSX from 'xlsx';
 import useFetchTema from '../components/Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
+import useFetchAchado from '../components/Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
+import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { TopicoAchado } from '../types/types';
 
 
@@ -7,93 +9,100 @@ import { TopicoAchado } from '../types/types';
 
 const useExportToExcel = () => {
     const { getAllTemas } = useFetchTema();
+    const { getAllAchados } = useFetchAchado();
+    const { getAllProcessos } = useFetchProcesso();
     const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
 
-        if (dataType === 'tema') {
-            try {
-                const temas = await getAllTemas();
+        switch (dataType) {
 
-                if (!temas || temas.length === 0) {
-                    console.log("Nenhum tema encontrado.");
-                    return;
-                };
+            case 'tema':
+                try {
+                    const temas = await getAllTemas();
 
-                const exportData = temas.map((tema:TopicoAchado) => ({
-                    tema: tema.tema,
-                    situacao: tema.situacao === true ? 'Aprovado' : 'Pendente',
-                }));
+                    if (!temas || temas.length === 0) {
+                        console.log("Nenhum tema encontrado.");
+                        return;
+                    };
 
-                const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.json_to_sheet(exportData);
-                XLSX.utils.book_append_sheet(wb, ws, 'Temas');
-                XLSX.writeFile(wb, fileName)
-            } catch (error) {
-                console.error("erro ao tentar exportar os temas: ", error)
-            }
-        }
+                    const exportData = temas.map((tema: TopicoAchado) => ({
+                        tema: tema.tema,
+                        situacao: tema.situacao === true ? 'Aprovado' : 'Pendente',
+                    }));
 
-        const { getAllAchados } = useFetchAchado();
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(exportData);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Temas');
+                    XLSX.writeFile(wb, fileName)
+                } catch (error) {
+                    console.error("erro ao tentar exportar os temas: ", error)
+                }
 
-        if (dataType === 'achado') {
-            try {
-                const achado = await getAllAchados();
+                break;
 
-                if (!achado || achado.length === 0) {
-                    console.log("Nenhum achado encontrado.");
-                    return;
-                };
+            case 'achado':
 
-                const exportData = achado.map((achado) => ({
-                    achado: achado.achado,
-                    data: achado.data,
-                    gravidade: achado.gravidade,
-                    valorFinanceiro: achado.valorFinanceiro,
-                    criterioMunicipal: achado.criterioMunicipal,
-                    criterioEstadual: achado.criterioEstadual,
-                    criterioGeral: achado.criterioGeral,
-                    situacaoAchado: achado.situacaoAchado === true ? 'Aprovado' : 'Pendente',
-                    analise: achado.analise,
-                    tema_id: achado.tema_id
-                }));
+                try {
+                    const achado = await getAllAchados();
 
-                const wb = XLSX.utils.book_new();
-                const ws = XLSX.utils.json_to_sheet(exportData);
-                XLSX.utils.book_append_sheet(wb, ws, 'Achado');
-                XLSX.writeFile(wb, fileName)
-            } catch (error) {
-                console.error("erro ao tentar exportar os achados: ", error)
-            }
-        }
+                    if (!achado || achado.length === 0) {
+                        console.log("Nenhum achado encontrado.");
+                        return;
+                    };
 
-        const { getAllProcessos } = useFetchProcesso();
+                    const exportData = achado.map((achado) => ({
+                        achado: achado.achado,
+                        data: achado.data,
+                        gravidade: achado.gravidade,
+                        criterioMunicipal: achado.criterioMunicipal,
+                        criterioEstadual: achado.criterioEstadual,
+                        criterioGeral: achado.criterioGeral,
+                        situacaoAchado: achado.situacaoAchado === true ? 'Aprovado' : 'Pendente',
+                        analise: achado.analise,
+                        tema_id: achado.tema_id
+                    }));
 
-        if (dataType === 'processos') {
-            try {
-                const processos = await getAllProcessos();
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(exportData);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Achado');
+                    XLSX.writeFile(wb, fileName)
+                } catch (error) {
+                    console.error("erro ao tentar exportar os achados: ", error)
+                }
 
-                if (!processos || processos.length === 0) {
-                    console.log("Nenhum processo encontrado.");
-                    return;
-                };
+                break;
 
-                const exportData = processos.map((processos) => ({
-                    numero: processos.numero,
-                    exercicio: processos.numero,
-                    julgado: processos.julgado,
-                    unidadeGestora: processos.unidadeGestora,
-                    diretoria: processos.diretoria
-                }));
+            case 'processos':
+                try {
+                    const processos = await getAllProcessos();
 
-                const ws = XLSX.utils.json_to_sheet(exportData);
-                const wb = XLSX.utils.book_new();
-                XLSX.writeFile(wb, fileName)
-                XLSX.utils.book_append_sheet(wb, ws, 'processos');
-            } catch (error) {
-                console.error("erro ao tentar exportar os processos: ", error)
-            }
+                    if (!processos || processos.length === 0) {
+                        console.log("Nenhum processo encontrado.");
+                        return;
+                    };
+
+                    const exportData = processos.map((processos) => ({
+                        numero: processos.numero,
+                        exercicio: processos.numero,
+                        julgado: processos.julgado,
+                        unidadeGestora: processos.unidadeGestora,
+                        diretoria: processos.diretoria
+                    }));
+
+                    const ws = XLSX.utils.json_to_sheet(exportData);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.writeFile(wb, fileName)
+                    XLSX.utils.book_append_sheet(wb, ws, 'processos');
+                } catch (error) {
+                    console.error("erro ao tentar exportar os processos: ", error)
+                }
+                break;
+
+
+
+            default:
+                break;
         }
     }
-
 
     return {
         exportToExcel,
