@@ -95,7 +95,11 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
                 <ProcessoSkeleton isLoading={isLoading} />
             ) : (
 
-                <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)} >
+                <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formProcesso' noValidate onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSubmit(onSubmit)(e);
+                  }} >
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
                         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Processo</Typography>
                         <IconButton onClick={closeModal} sx={{

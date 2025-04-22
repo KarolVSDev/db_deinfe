@@ -1,11 +1,11 @@
 import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { TopicoAchado, User } from '../../../../types/types';
-import RegisterButton from '../../../Buttons/RegisterButton';
+import { useForm } from 'react-hook-form';  
+import { TopicoAchado, User } from '../../../../../types/types';
+import RegisterButton from '../../../../Buttons/RegisterButton';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import Loader from '../../../Loader/Loader';
-import useFetchListData from '../../../../hooks/useFetchListData';
+import Loader from '../../../../Loader/Loader';
+import useFetchTema from './useFetchTema';
 
 export interface FormTopicoAchadoProps {
   closeModal: () => void;
@@ -16,7 +16,8 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   const { handleSubmit, register, formState: { errors }, reset } = useForm<TopicoAchado>({});
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
-  const { setTema, getTemaByName } = useFetchListData();
+  const { getTemaByName } = useFetchTema();
+  const { setTema  } = useFetchTema();
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -58,7 +59,11 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   };
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate  onSubmit={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSubmit(onSubmit)(e);
+    }}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Tema</Typography>
         <IconButton onClick={closeModal} sx={{

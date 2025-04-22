@@ -1,13 +1,12 @@
 import * as  XLSX from 'xlsx';
-import useFetchListData from './useFetchListData';
-import useFetchAchado from '../components/Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
-import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
+import useFetchTema from '../components/Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
+import { TopicoAchado } from '../types/types';
 
 
 
 
 const useExportToExcel = () => {
-    const { getAllTemas } = useFetchListData();
+    const { getAllTemas } = useFetchTema();
     const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
 
         if (dataType === 'tema') {
@@ -19,7 +18,7 @@ const useExportToExcel = () => {
                     return;
                 };
 
-                const exportData = temas.map((tema) => ({
+                const exportData = temas.map((tema:TopicoAchado) => ({
                     tema: tema.tema,
                     situacao: tema.situacao === true ? 'Aprovado' : 'Pendente',
                 }));

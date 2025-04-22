@@ -47,7 +47,11 @@ const UpdateUserForm = () => {
   return (
     <div>
       {user && (
-        <Box noValidate component='form' name='updateUserForm' onSubmit={handleSubmit(onSubmit)}>
+        <Box noValidate component='form' name='updateUserForm' onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSubmit(onSubmit)(e);
+        }}>
           <Box
             sx={{
 

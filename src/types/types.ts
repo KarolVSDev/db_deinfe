@@ -42,7 +42,6 @@ export interface Achado {
   achado: string;
   data: Date;
   gravidade: string;
-  valorFinanceiro?:number;
   criterioMunicipal?: string;
   criterioEstadual?: string;
   criterioGeral?: string;
@@ -69,15 +68,14 @@ export interface ColumnConfig {
 
 export interface Coleta {
   id:string;
-  valorFinanceiro:number;
   quantitativo:number;
   unidade:string;
-  sitaucaoAchado:boolean;
+  situacao:boolean;
+  valorFinanceiro:number;
   coletadorId:string;
   temaId:string;
   achadoId:string;
   processoId:string;
-  responsavel:string;
 }
 
 export interface Processo {

@@ -5,7 +5,6 @@ import { Achado, TopicoAchado, User } from '../../../../../types/types';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
-import useFetchListData from '../../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DateSelector from '../../../../Inputs/DatePicker';
@@ -15,7 +14,7 @@ import TextFieldComponent from '../../../../Inputs/TextField';
 import Loader from '../../../../Loader/Loader';
 import AchadoSkeleton from './AchadoSkeleton';
 import useFetchAchado from './useFetchAchado';
-import { formatCurrency } from '../../../../../hooks/DateFormate';
+import useFetchTema from '../FormTemaPasta/useFetchTema';
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -28,7 +27,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [achado, setAchado] = useState<Achado>()
   const { arrayTopicoAchado } = useContextTable()
   const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
-  const { getAllTemas } = useFetchListData()
+  const { getAllTemas } = useFetchTema()
   const { getAchadoById } = useFetchAchado()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -37,7 +36,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       tema_id: tema.id, // Inicialize o id do tópico
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
-      valorFinanceiro: achado?.valorFinanceiro || 0,
       situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
       criterioEstadual: achado?.criterioEstadual,
       criterioGeral: achado?.criterioGeral,
@@ -45,8 +43,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
     },
   });
   const gravidade = watch('gravidade', achado?.gravidade);
-  const fieldValue = watch('valorFinanceiro');
-  const [displayValue, setDisplayValue] = useState('');
 
   const [alignment, setAlignment] = useState<keyof Achado>('criterioGeral');
   const { updateAchado } = useFetchAchado();
@@ -75,7 +71,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               tema_id: result.tema?.id || '',
               achado: result.achado?.achado || '',
               analise: result.achado?.analise || '',
-              valorFinanceiro: result.achado.valorFinanceiro || 0,
               situacaoAchado: result.achado?.situacaoAchado || false,
               criterioMunicipal: result.achado.criterioMunicipal || '',
               criterioEstadual: result.achado.criterioEstadual || '',
@@ -110,17 +105,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       setSituacaoAchado("Pendente")
     }
   }, [])
-
-  // Atualiza o valor formatado quando o valor do campo muda
-  useEffect(() => {
-    if (fieldValue !== undefined) {
-      setDisplayValue(formatCurrency(fieldValue.toString()));
-    }
-  }, [fieldValue]);
-
-
-
-
 
   const getTextFieldLabel = () => {
     switch (alignment) {
@@ -160,7 +144,11 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       {isLoading ? (
         <AchadoSkeleton isLoading={isLoading} />
       ) : (
-        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSubmit(onSubmit)(e);
+        }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Achado</Typography>
             <IconButton onClick={closeModal} sx={{
@@ -183,6 +171,12 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                   getOptionLabel={(option: TopicoAchado) => option.tema}
                   defaultValue={arrayTopicoAchado.find(item => item.id === field.value) || null}
                   onChange={(_, value) => field.onChange(value?.id || '')}
+                  ListboxProps={{
+                    style: {
+                        maxHeight: '200px', 
+                        overflow: 'auto',    
+                    },
+                }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -243,30 +237,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           </Grid>
           <Grid item xs={12} sm={4}>
             <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-              <TextField
-                variant="filled"
-                sx={{ mt: 3 }}
-                placeholder="R$ 0,00"
-                autoFocus
-                id="valorFinanceiro"
-                label="Valor Financeiro"
-                error={!!errors?.valorFinanceiro}
-                value={displayValue}
-                inputProps={{
-                  inputMode: 'numeric',
-                }}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const rawValue = e.target.value.replace(/\D/g, '');
-                  // Converte para número antes de setar o valor
-                  setValue('valorFinanceiro', Number(rawValue), { shouldValidate: true });
-                }}
-              // Remove o spread do register para evitar conflito com onChange
-              />
-              {errors?.valorFinanceiro && (
-                <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                  {errors.valorFinanceiro.message}
-                </Typography>
-              )}
               <DateSelector id='data' register={register} errors={errors} label='Data de registro' dataAchado={achado?.data} />
 
               <RadioInput id={'gravidade'}

@@ -3,14 +3,13 @@ import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } 
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
-import { topicoAchadoHeader, achadoHeader, processoHeader } from '../../service/columns';
+import { topicoAchadoHeader, achadoHeader, processoHeader, coletaHeader } from '../../service/columns';
 import { useContextTable } from '../../context/TableContext';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import ModalUpdatePF from '../Modals/DataTableModals/ModalUpdateForms';
 import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
-import useFetchListData from '../../hooks/useFetchListData';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useAuth } from '../../context/AuthContext';
 import useFetchUsers from '../../hooks/useFetchUsers';
@@ -19,13 +18,15 @@ import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formateDateToPtBr, formatCurrency } from '../../hooks/DateFormate';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
+import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
+import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchColeta';
 
 export default function DatabaseTable() {
 
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado,
+  const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado, setArrayColeta,
     setArrayAchado, setArrayProcesso } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
@@ -33,9 +34,10 @@ export default function DatabaseTable() {
   const { exportToExcel } = useExportToExcel()
   const { user } = useAuth()
   const { getUser } = useFetchUsers()
-  const { escutarTemas } = useFetchListData();
+  const { escutarTemas } = useFetchTema();
   const { escutarAchados } = useFetchAchado();
   const { escutarProcessos } = useFetchProcesso();
+  const { escutarColeta } = useFetchColeta();
   const [_isLoading] = useState(true)
 
   //Esse bloco controla a renderizaçao dos dados
@@ -66,6 +68,13 @@ export default function DatabaseTable() {
           setRows(createRows(processos))
         })
         return () => processoListener;
+      case 'coleta':
+        setColumns(createGridColumns(coletaHeader));
+        const coletaListener = escutarColeta((coleta) => {
+          setArrayColeta(coleta)
+          setRows(createRows(coleta))
+        })
+        return () => coletaListener;
       default:
         setColumns([]);
         setRows([])
@@ -147,8 +156,8 @@ export default function DatabaseTable() {
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'tema', string: 'Temas' },
     { value: 'achado', string: 'Achados' },
-    { value: 'coleta', string: 'Coleta' },
     { value: 'processo', string: 'Processos' },
+    { value: 'coleta', string: 'Coleta' },
   ]
 
 

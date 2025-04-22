@@ -4,13 +4,13 @@ import { db } from "../../../../../service/firebase.config";
 import { useContextTable } from "../../../../../context/TableContext";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
-import useFetchListData from "../../../../../hooks/useFetchListData";
+import useFetchTema from "../FormTemaPasta/useFetchTema";
 
 
 const useFetchAchado = () => {
 
   const { setArrayAchado } = useContextTable()
-  const { getTemaById } = useFetchListData();
+  const { getTemaById } = useFetchTema();
 
   //CREATE
   const setAchado = async (data: Achado) => {
@@ -126,7 +126,6 @@ const useFetchAchado = () => {
             criterioMunicipal: achadoData.criterioMunicipal,
             data: achadoData.data,
             gravidade: achadoData.gravidade,
-            valorFinanceiro: achadoData.valorFinanceiro,
             situacaoAchado: achadoData.situacaoAchado,
             tema_id: tema.tema || "Tema não encontrado",
           };
@@ -154,7 +153,6 @@ const useFetchAchado = () => {
       criterioGeral: data.criterioGeral,
       data: data.data,
       gravidade: data.gravidade,
-      valorFinanceiro: data.valorFinanceiro,
       tema_id: data.tema_id
     }
 

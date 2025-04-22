@@ -11,21 +11,29 @@ import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
 import { useContextTable } from "../../../../../context/TableContext";
 import useFetchProcesso from "../FormProcessoPasta/useFetchProcesso";
+import { formatCurrency } from "../../../../../hooks/DateFormate";
+import SelectSanado from "../../../../Inputs/SelectSanado";
+import useFetchColeta from "./useFetchColeta";
+import { TypeAlert } from "../../../../../hooks/TypeAlert";
+import GroupButtonColeta from "./formComponents/ButtonGroup";
 
 export interface FormColetaProps {
     closeModal: () => void;
-    user: User | undefined;
+    user: User;
     dataType: string;
 }
 
 const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
-    const { register, handleSubmit, control, formState: { errors } } = useForm<Coleta>({});
-    //const { addColeta } = useFetchColeta();
+    const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<Coleta>({});
+    const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { arrayAchado, arrayProcesso } = useContextTable();
     const [_, setAchadoId] = useState<string | undefined>()
+    const [displayValue, setDisplayValue] = useState('');
+    const fieldValue = watch('valorFinanceiro');
+    const [sanado] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,22 +43,34 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         fetchData();
     }, [arrayAchado, arrayProcesso])
 
-    const onSubmit = async (data: Coleta) => {
-        // const Coleta = await addColeta(data);
-        // if (Coleta) {
-        //     TypeAlert("Coleta adicionado", "success");
-        //     reset()
-        //     closeModal()
-        // } else {
-        //     TypeAlert("Erro ao tentar adicionar o coleta", "error")
-        //     reset()
-        //     closeModal()
-        // }
-        const formData = {
-            ...data,
-            coletador: user?.id
+    // Atualiza o valor formatado quando o valor do campo muda
+    useEffect(() => {
+        if (fieldValue !== undefined) {
+            setDisplayValue(formatCurrency(fieldValue.toString()));
         }
-        console.log(formData)
+    }, [fieldValue]);
+
+    const onSubmit = async (data: Coleta) => {
+        try {
+            const formData = {
+                ...data,
+                coletadorId: user.id
+            }
+
+            const Coleta = await addColeta(formData);
+            if (Coleta) {
+                TypeAlert("Coleta adicionada", "success");
+                reset()
+                closeModal()
+            } else {
+                TypeAlert("Erro ao tentar adicionar a coleta", "error")
+                reset()
+                closeModal()
+            }
+        } catch (error) {
+            console.log("Erro no Submit", error)
+        }
+
 
     }
 
@@ -66,33 +86,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     <CloseIcon />
                 </IconButton>
             </Box>
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                <Controller
-                    name="processoId"
-                    control={control}
-                    rules={{ required: 'Campo obrigatório' }}
-                    render={({ field }) => (
-                        <Autocomplete
-                            disablePortal
-                            autoFocus
-                            id="combo-box-demo"
-                            options={arrayProcesso}
-                            getOptionLabel={(option: Processo) => option.numero}
-                            isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
-                            onChange={(_, value) => field.onChange(value?.id || '')}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Processo"
-                                    variant="filled"
-                                    focused={true}
-                                    error={!!errors.processoId}
-                                    helperText={errors.processoId?.message}
-                                />
-                            )}
-                        />
-                    )}
-                />
+
+            <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
+                <GroupButtonColeta/>
             </Grid>
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Controller
@@ -108,6 +104,12 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                             getOptionLabel={(option: Achado) => option.achado}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
                             onChange={(_, value) => { field.onChange(value?.id || ''); setAchadoId(value?.id) }}
+                            ListboxProps={{
+                                style: {
+                                    maxHeight: '200px', 
+                                    overflow: 'auto',    
+                                },
+                            }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -122,61 +124,97 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     )}
                 />
             </Grid>
+            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+                <Controller
+                    name="processoId"
+                    control={control}
+                    rules={{ required: 'Campo obrigatório' }}
+                    render={({ field }) => (
+                        <Autocomplete
+                            disablePortal
+                            autoFocus
+                            id="combo-box-demo"
+                            options={arrayProcesso}
+                            getOptionLabel={(option: Processo) => option.numero}
+                            isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
+                            onChange={(_, value) => field.onChange(value?.id || '')}
+                            ListboxProps={{
+                                style: {
+                                    maxHeight: '200px', 
+                                    overflow: 'auto',    
+                                },
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Processo"
+                                    variant="filled"
+                                    focused={true}
+                                    error={!!errors.processoId}
+                                    helperText={errors.processoId?.message}
+                                />
+                            )}
+                        />
+                    )}
+                />
+            </Grid>
+
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-                    <TextField variant="filled"
-                        required
-                        autoFocus
-                        id="quantitativo"
-                        label="Quantitativo"
-                        type="number"
-                        error={!!errors?.quantitativo}
-                        {...register('quantitativo', {
-                            required: 'Campo obrigatorio',
-                        })}
+
+                    <SelectSanado
+                        id={"situacao"}
+                        label={"Sanado"}
+                        register={register}
+                        errors={errors}
+                        sanado={sanado}
                     />
-                    {errors?.quantitativo && (
+
+                    <TextField
+                        variant="filled"
+                        placeholder="R$ 0,00"
+                        autoFocus
+                        id="valorFinanceiro"
+                        label="Valor Financeiro"
+                        error={!!errors?.valorFinanceiro}
+                        value={displayValue}
+                        inputProps={{
+                            inputMode: 'numeric',
+                        }}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            const rawValue = e.target.value.replace(/\D/g, '');
+                            // Converte para número antes de setar o valor
+                            setValue('valorFinanceiro', Number(rawValue), { shouldValidate: true });
+                        }}
+                    />
+                    {errors?.valorFinanceiro && (
                         <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.quantitativo.message}
+                            {errors.valorFinanceiro.message}
                         </Typography>
                     )}
 
                     <TextField variant="filled"
-                        required
                         autoFocus
                         id="unidade"
                         label="Unidade"
                         type="text"
                         error={!!errors?.unidade}
-                        {...register('unidade', {
-                            required: 'Campo obrigatorio',
-                        })}
+                        {...register('unidade')}
                     />
-                    {errors?.unidade && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.unidade.message}
-                        </Typography>
-                    )}
+
                     <TextField variant="filled"
-                        required
                         autoFocus
-                        id="responsavel"
-                        label="Responsavel"
-                        type="text"
-                        error={!!errors?.responsavel}
-                        {...register('responsavel', {
-                            required: 'Campo obrigatorio',
-                        })}
+                        sx={{ width: "15%" }}
+                        id="quantitativo"
+                        label="Quantitativo"
+                        type="number"
+                        error={!!errors?.quantitativo}
+                        {...register('quantitativo')}
                     />
-                    {errors?.responsavel && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.responsavel.message}
-                        </Typography>
-                    )}
+
                 </Box>
             </Grid>
-
             <RegisterButton text="Registrar" />
         </Box >
     )

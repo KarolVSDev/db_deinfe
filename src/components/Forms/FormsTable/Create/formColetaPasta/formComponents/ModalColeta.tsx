@@ -3,11 +3,11 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import { GridRowId } from '@mui/x-data-grid';
-import FormUpdateAchados from '../../Forms/FormsTable/Create/FormAchadoPasta/FormUpdateAchados';
-import FormUpdateTopicoAchado from '../../Forms/FormsTable/Create/FormTemaPasta/formUpdateTopicoAchado';
-import { User } from '../../../types/types';
-import FormUpdateProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormUpdateProcesso';
+import FormTopicoAchado from '../../FormTemaPasta/FormTopicoAchado';
+import { User } from '../../../../../../types/types';
+import FormAchado from '../../FormAchadoPasta/FormAchados';
+import FormProcesso from '../../FormProcessoPasta/FormProcesso';
+
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -26,27 +26,26 @@ const style = {
   borderRadius: '10px',
 };
 
-interface ModalUpdateProps {
-  id: GridRowId;
+interface ModalColetaProps {
   dataType: string;
   open: boolean;
   onClose: () => void;
-  user: User | undefined;
+  user: User;
 }
 
 
-const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose, user }) => {
+const ModalColeta: React.FC<ModalColetaProps> = ({ dataType, open, onClose, user }) => {
 
   const renderForm = () => {
     switch (dataType) {
-      case 'tema':
-        return <FormUpdateTopicoAchado closeModal={onClose} id={id} user={user} />
+      case 'Tema':
+        return <FormTopicoAchado closeModal={onClose}  user={user} />
 
-      case 'achado':
-        return <FormUpdateAchados closeModal={onClose} id={id} user={user} dataType={dataType} />
+      case 'Achado':
+        return <FormAchado closeModal={onClose}  user={user} dataType={dataType} />
 
-      case 'processo':
-        return <FormUpdateProcesso closeModal={onClose} id={id} user={user} dataType={dataType} />
+      case 'Processo':
+        return <FormProcesso closeModal={onClose}  user={user} dataType={dataType} />
     }
   }
 
@@ -75,4 +74,4 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
   );
 }
 
-export default ModalUpdatePF;
+export default ModalColeta;

@@ -9,9 +9,9 @@ import { Box } from '@mui/material';
 import { GridRowId } from '@mui/x-data-grid';
 import { useState } from 'react';
 import Loader from '../Loader/Loader';
-import useFetchListData from '../../hooks/useFetchListData';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
+import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
 
 
 
@@ -24,7 +24,7 @@ export interface VerificationProps {
 
 const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose, open, dataType }) => {
     const [loading, setLoading] = useState(false)
-    const {deleteTema} = useFetchListData();
+    const {deleteTema} = useFetchTema();
     const {deleteAchado} = useFetchAchado();
     const {deleteProcesso} = useFetchProcesso()
 
