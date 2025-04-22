@@ -5,7 +5,6 @@ import { Achado, TopicoAchado, User } from '../../../../../types/types';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { GridRowId } from '@mui/x-data-grid';
-import useFetchListData from '../../../../../hooks/useFetchListData';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DateSelector from '../../../../Inputs/DatePicker';
@@ -15,6 +14,7 @@ import TextFieldComponent from '../../../../Inputs/TextField';
 import Loader from '../../../../Loader/Loader';
 import AchadoSkeleton from './AchadoSkeleton';
 import useFetchAchado from './useFetchAchado';
+import useFetchTema from '../FormTemaPasta/useFetchTema';
 
 export interface FormUpdateAchadoProps {
   closeModal: () => void;
@@ -27,7 +27,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
   const [achado, setAchado] = useState<Achado>()
   const { arrayTopicoAchado } = useContextTable()
   const [_situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
-  const { getAllTemas } = useFetchListData()
+  const { getAllTemas } = useFetchTema()
   const { getAchadoById } = useFetchAchado()
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -144,7 +144,11 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       {isLoading ? (
         <AchadoSkeleton isLoading={isLoading} />
       ) : (
-        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSubmit(onSubmit)(e);
+        }}>
           <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
             <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Achado</Typography>
             <IconButton onClick={closeModal} sx={{

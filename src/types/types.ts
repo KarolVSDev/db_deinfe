@@ -70,7 +70,7 @@ export interface Coleta {
   id:string;
   quantitativo:number;
   unidade:string;
-  sanado:boolean;
+  situacao:boolean;
   valorFinanceiro:number;
   coletadorId:string;
   temaId:string;

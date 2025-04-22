@@ -19,13 +19,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { formateDateToPtBr, formatCurrency } from '../../hooks/DateFormate';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
+import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchColeta';
 
 export default function DatabaseTable() {
 
   const [dataType, setDataType] = useState('pesquisa');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado,
+  const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado, setArrayColeta,
     setArrayAchado, setArrayProcesso } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
@@ -36,6 +37,7 @@ export default function DatabaseTable() {
   const { escutarTemas } = useFetchTema();
   const { escutarAchados } = useFetchAchado();
   const { escutarProcessos } = useFetchProcesso();
+  const { escutarColeta } = useFetchColeta();
   const [_isLoading] = useState(true)
 
   //Esse bloco controla a renderizaçao dos dados
@@ -68,12 +70,11 @@ export default function DatabaseTable() {
         return () => processoListener;
       case 'coleta':
         setColumns(createGridColumns(coletaHeader));
-        // const processoListener = escutarProcessos((processos) => {
-        //   setArrayProcesso(processos)
-        //   setRows(createRows(processos))
-        // })
-        // return () => processoListener;
-        break
+        const coletaListener = escutarColeta((coleta) => {
+          setArrayColeta(coleta)
+          setRows(createRows(coleta))
+        })
+        return () => coletaListener;
       default:
         setColumns([]);
         setRows([])
