@@ -13,9 +13,10 @@ export interface SelectSanadoProps {
     errors: FieldErrors<Coleta>;
     label: string
     sanado: string;
+    defaultValue?: string;
 }
 
-const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors, sanado }) => {
+const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors, sanado, defaultValue }) => {
 
     return (
         <div>
@@ -25,7 +26,7 @@ const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors
                     labelId={`${id}-label`}
                     id={id}
                     {...register(id, { required: "Este campo é obrigatório" })}
-                    defaultValue={sanado}
+                    defaultValue={defaultValue || sanado}
                 >
                     <MenuItem value="">
                         <em>Selecione...</em>

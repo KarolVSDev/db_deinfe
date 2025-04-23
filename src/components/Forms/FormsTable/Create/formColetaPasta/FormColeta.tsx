@@ -70,8 +70,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         } catch (error) {
             console.log("Erro no Submit", error)
         }
-
-
     }
 
     return (
@@ -164,7 +162,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
 
                     <SelectSanado
-                        id={"situacao"}
+                        id={"sanado"}
                         label={"Sanado"}
                         register={register}
                         errors={errors}

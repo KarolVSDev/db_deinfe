@@ -25,7 +25,7 @@ export const coletaHeader = [
     { id: 'quantitativo', label: 'Quantitativo', minWidth: 150 },
     { id: 'unidade', label: 'Unidade', minWidth: 150 },
     { id: 'coletadorId', label: 'Coletador', minWidth: 150 },
-    { id: 'situacao', label: 'Situação', minWidth: 150 },
+    { id: 'sanado', label: 'Situação', minWidth: 150 },
     { id: 'acoes', label: 'Acões', minWidth: 150 }
 ]
 export const processoHeader = [

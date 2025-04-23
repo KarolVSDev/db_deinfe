@@ -12,6 +12,7 @@ import Loader from '../Loader/Loader';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
+import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchColeta';
 
 
 
@@ -27,6 +28,7 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
     const {deleteTema} = useFetchTema();
     const {deleteAchado} = useFetchAchado();
     const {deleteProcesso} = useFetchProcesso()
+    const {deleteColeta} = useFetchColeta();
 
     const handleDelete = async () => {
         if (dataType === 'tema') {
@@ -55,6 +57,15 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
                 setLoading(false)
             } catch (error) {
                 console.error("Erro ao tentar excluir o Processo", error)
+            }
+        } else if (dataType === 'coleta') {
+            setLoading(true)
+            try {
+                const id = selectedRow.toString();
+                deleteColeta(id)
+                setLoading(false)
+            } catch (error) {
+                console.error("Erro ao tentar excluir o Registro", error)
             }
         }
         onClose()
