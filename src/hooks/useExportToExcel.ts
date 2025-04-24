@@ -43,11 +43,19 @@ const useExportToExcel = () => {
 
                 try {
                     const achado = await getAllAchados();
+                    const temas = await getAllTemas();
 
                     if (!achado || achado.length === 0) {
                         console.log("Nenhum achado encontrado.");
                         return;
                     };
+
+                    if (!temas || temas.length === 0) {
+                        console.log("Nenhum tema encontrado.");
+                        return;
+                    }
+
+                    const temaMap = new Map(temas.map((tema) => [tema.id, tema.tema]));
 
                     const exportData = achado.map((achado) => ({
                         achado: achado.achado,
@@ -58,7 +66,7 @@ const useExportToExcel = () => {
                         criterioGeral: achado.criterioGeral,
                         situacaoAchado: achado.situacaoAchado === true ? 'Aprovado' : 'Pendente',
                         analise: achado.analise,
-                        tema_id: achado.tema_id
+                        tema: temaMap.get(achado.tema_id) || 'Tema não encontrado'
                     }));
 
                     const wb = XLSX.utils.book_new();
@@ -82,7 +90,7 @@ const useExportToExcel = () => {
 
                     const exportData = processos.map((processos) => ({
                         numero: processos.numero,
-                        exercicio: processos.numero,
+                        exercicio: processos.exercicio,
                         julgado: processos.julgado,
                         unidadeGestora: processos.unidadeGestora,
                         diretoria: processos.diretoria
