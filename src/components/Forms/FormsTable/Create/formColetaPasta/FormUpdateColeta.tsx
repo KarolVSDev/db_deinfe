@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
-import { Processo, User, Coleta, Achado } from '../../../../../types/types';
+import { Processo, Coleta, Achado, ColetaUpdate } from '../../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
@@ -18,7 +18,8 @@ import { TypeAlert } from "../../../../../hooks/TypeAlert";
 import GroupButtonColeta from "./formComponents/ButtonGroup";
 import { GridRowId } from "@mui/x-data-grid";
 import ProcessoSkeleton from "../../../../Skeletons/ProcessoSkeleton";
-import { isLocale } from "validator";
+import Loader from "../../../../Loader/Loader";
+
 
 export interface FormUpdateColetaProps {
     closeModal: () => void;
@@ -28,30 +29,29 @@ export interface FormUpdateColetaProps {
 
 const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) => {
 
-    const [coleta, setColeta] = useState<Coleta>()
-  
+    const [coleta, setColeta] = useState<ColetaUpdate>()
+
     const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<Coleta>({
         defaultValues: {
-            id: coleta?.id,
-            achadoId: coleta?.achadoId,
-            processoId: coleta?.processoId,
-            coletadorId: coleta?.coletadorId,
-            valorFinanceiro: coleta?.valorFinanceiro,
-            sanado: coleta?.sanado,
-            unidade: coleta?.unidade,
-            quantitativo: coleta?.quantitativo,
+            id: coleta?.coleta.id,
+            achadoId: coleta?.achado.id,
+            processoId: coleta?.processo.id,
+            coletadorId: coleta?.coleta.coletadorId,
+            valorFinanceiro: coleta?.coleta.valorFinanceiro,
+            sanado: coleta?.coleta.sanado || '',
+            unidade: coleta?.coleta.unidade,
+            quantitativo: coleta?.coleta.quantitativo,
         },
     });
-    const { addColeta } = useFetchColeta();
+    const { updateColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { arrayAchado, arrayProcesso } = useContextTable();
     const [_, setAchadoId] = useState<string | undefined>()
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
-    const [sanado] = useState<string>('');
     const { getColetaById } = useFetchColeta();
-    
+    const [loading, setLoading] = useState(false);
     const [isloading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -66,27 +66,33 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     useEffect(() => {
         setIsLoading(true);
         const fetchColeta = async () => {
-            const registro = await getColetaById(id as string)
-            if(!registro) {
-                console.error("Erro qo buscar o registro de coleta")
-                return
+            try {
+                const registro = await getColetaById(id as string)
+                if (!registro) {
+                    console.error("Erro ao buscar o registro de coleta")
+                    return
+                }
+                setColeta(registro)
+                reset({
+                    id: registro.coleta.id,
+                    achadoId: registro.achado.id || '',
+                    processoId: registro.processo.id || '',
+                    coletadorId: registro.coleta.coletadorId || '',
+                    valorFinanceiro: registro.coleta.valorFinanceiro || 0,
+                    sanado: registro.coleta.sanado || '',
+                    unidade: registro.coleta.unidade || '',
+                    quantitativo: registro.coleta.quantitativo || 0,
+                })
+            } catch (error) {
+                console.error("Erro ao carregar coleta:", error);
+            } finally {
+                setIsLoading(false);
+
             }
-            setColeta(registro)
-            reset({
-                id:registro.id,
-                achadoId: registro.achadoId || '',    
-                processoId: registro.processoId || '',
-                coletadorId: registro.coletadorId || '',
-                valorFinanceiro: registro.valorFinanceiro || 0,
-                sanado: registro.sanado || '',
-                unidade: registro.unidade || '',
-                quantitativo: registro.quantitativo || 0,
-            })
+
         }
         fetchColeta();
-        setIsLoading(false);
     }, [id])
-
 
 
     // Atualiza o valor formatado quando o valor do campo muda
@@ -97,14 +103,25 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     }, [fieldValue]);
 
     const onSubmit = async (data: Coleta) => {
-        console.log
+        try {
+            setLoading(true)
+            updateColeta(data.id, data)
+            TypeAlert("Coleta atualizada com sucesso!", "success")
+            closeModal()
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            TypeAlert("Erro ao atualizar coleta", "error")
+            console.error("Erro ao atualizar coleta:", error);
+            closeModal()
+        }
     }
 
     return (
         <>
             {
                 isloading ? (
-                    <ProcessoSkeleton isLoading={false} />
+                    <ProcessoSkeleton isLoading={isloading} />
                 ) : (
                     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
                         <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
@@ -126,14 +143,15 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                 name="achadoId"
                                 control={control}
                                 rules={{ required: 'Campo obrigatório' }}
-                                defaultValue={coleta?.achadoId || ''}
+                                defaultValue={coleta?.achado.id || ''}
                                 render={({ field }) => (
                                     <Autocomplete
                                         disablePortal
                                         autoFocus
-                                        id="combo-box-demo"
+                                        id="autocomplete-achado"
                                         options={arrayAchado}
                                         getOptionLabel={(option: Achado) => option.achado}
+                                        defaultValue={arrayAchado.find(achado => achado.id === field.value || null)}
                                         isOptionEqualToValue={(option, value) => option.id === value.id}
                                         onChange={(_, value) => { field.onChange(value?.id || ''); setAchadoId(value?.id) }}
                                         ListboxProps={{
@@ -161,13 +179,15 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                 name="processoId"
                                 control={control}
                                 rules={{ required: 'Campo obrigatório' }}
+                                defaultValue={coleta?.processo.id || ""}
                                 render={({ field }) => (
                                     <Autocomplete
                                         disablePortal
                                         autoFocus
-                                        id="combo-box-demo"
+                                        id="autocomplete-processo"
                                         options={arrayProcesso}
                                         getOptionLabel={(option: Processo) => option.numero}
+                                        defaultValue={arrayProcesso.find(processo => processo.id === field.value || null)}
                                         isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
                                         onChange={(_, value) => field.onChange(value?.id || '')}
                                         ListboxProps={{
@@ -200,7 +220,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                     label={"Sanado"}
                                     register={register}
                                     errors={errors}
-                                    sanado={sanado}
+                                    sanado={coleta?.coleta.sanado as string}
                                 />
 
                                 <TextField
@@ -247,7 +267,12 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
 
                             </Box>
                         </Grid>
-                        <RegisterButton text="Registrar" />
+                        {loading ?
+                        <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+                            <Loader />
+                        </Box> :
+                        <RegisterButton text="Atualizar" />
+                    }
                     </Box >
                 )
 

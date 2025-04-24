@@ -59,12 +59,12 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   };
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formTopicoAchado' noValidate  onSubmit={(e) => {
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" id="formTopcioAchado" name='formTopicoAchado' noValidate  onSubmit={(e) => {
       e.preventDefault();
       e.stopPropagation();
       handleSubmit(onSubmit)(e);
     }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
+      <Box  sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Tema</Typography>
         <IconButton onClick={closeModal} sx={{
           '&:hover': {

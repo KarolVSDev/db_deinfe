@@ -78,6 +78,13 @@ export interface Coleta {
   processoId:string;
 }
 
+export interface ColetaUpdate {
+  coleta:Coleta;
+  processo:Processo;
+  achado:Achado;
+  tema:TopicoAchado
+}
+
 export interface Processo {
   id: string;
   numero: string;

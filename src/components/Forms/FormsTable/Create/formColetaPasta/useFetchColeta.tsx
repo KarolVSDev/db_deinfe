@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../../../service/firebase.config";
 import { Coleta } from "../../../../../types/types";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
@@ -11,9 +11,9 @@ import { useContextTable } from "../../../../../context/TableContext";
 
 const useFetchColeta = () => {
 
-    const { getAllAchados } = useFetchAchado();
+    const { getAllAchados, getAchadoById } = useFetchAchado();
     const { getAllTemas } = useFetchTema();
-    const { getAllProcessos } = useFetchProcesso();
+    const { getAllProcessos, getProcessoById } = useFetchProcesso();
     const { getUsers } = useFetchUsers();
     const {setArrayColeta} = useContextTable();
 
@@ -105,19 +105,48 @@ const useFetchColeta = () => {
         });
     };
 
-    const getColetaById = async (id: string): Promise<Coleta | null> => {
+    const getColetaById = async (id: string) => {
         try {
             const docRef = doc(db, "coleta", id);
             const docSnap = await getDoc(docRef);
             
-            if(docSnap.exists()) {
-                return {id: docSnap.id, ...docSnap.data()} as Coleta;;
+            if(!docSnap.exists()) {
+                console.error("Registro não encontrado")
             } 
+            const coleta = {id: docSnap.id, ...docSnap.data() }as Coleta;
+            const achado = await getAchadoById(coleta.achadoId)
+            const processo = await getProcessoById(coleta.processoId)
+
+            if (!achado || !processo) {
+                console.error("Achado ou processo não encontrado")
+                return null;
+            }
+
+            const coletaCompleta = {
+                coleta: coleta,
+                achado:  achado.achado,
+                tema: achado.tema,
+                processo: processo
+            };
+            
+            return coletaCompleta
+
         } catch (error) {
             console.error("Erro ao buscar coleta por ID: ", error);
+            return null;
         } 
-        return null;
     }
+
+    //UPDATE
+    const updateColeta = async (idColeta: string, data: Partial<Coleta>) => {
+        try {
+          const coletaRef = doc(db, "coleta", idColeta);
+          await updateDoc(coletaRef, data)
+          console.log("Coleta atualizada com sucesso!");
+        } catch (error) {
+            console.error("Erro ao atualizar coleta: ", error);
+        }
+      };
 
     //DELETE
     const deleteColeta = async (id: string) => {
@@ -133,7 +162,7 @@ const useFetchColeta = () => {
         }
     }
     return {
-        addColeta, escutarColeta, deleteColeta, getColetaById
+        addColeta, escutarColeta, deleteColeta, getColetaById, updateColeta
     }
 }
 export default useFetchColeta;

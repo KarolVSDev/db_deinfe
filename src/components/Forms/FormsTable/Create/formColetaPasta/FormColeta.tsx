@@ -25,7 +25,11 @@ export interface FormColetaProps {
 
 const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
-    const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<Coleta>({});
+    const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<Coleta>({
+        defaultValues: {
+            sanado: "",
+        }
+    });
     const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
@@ -73,7 +77,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     }
 
     return (
-        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formColeta' id='formColeta' noValidate onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
                 <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Coleta</Typography>
                 <IconButton onClick={closeModal} sx={{
@@ -97,7 +101,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         <Autocomplete
                             disablePortal
                             autoFocus
-                            id="combo-box-demo"
+                            id="autocomplete-achado"
                             options={arrayAchado}
                             getOptionLabel={(option: Achado) => option.achado}
                             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -131,7 +135,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         <Autocomplete
                             disablePortal
                             autoFocus
-                            id="combo-box-demo"
+                            id="autocomplete-processo"
                             options={arrayProcesso}
                             getOptionLabel={(option: Processo) => option.numero}
                             isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
