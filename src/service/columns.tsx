@@ -6,7 +6,7 @@ export const topicoAchadoHeader = [
 
 export const achadoHeader = [
     { id: 'tema_id', label: 'Tema', minWidth: 150 },
-    { id: 'achado', label: 'Achado', minWidth: 250 },
+    { id: 'achado', label: 'Achado', minWidth: 450 },
     { id: 'analise', label: 'Análise', minWidth: 150 },
     { id: 'data', label: 'Data', minWidth: 150 },
     { id: 'gravidade', label: 'Gravidade', minWidth: 150 },
@@ -20,7 +20,7 @@ export const achadoHeader = [
 export const coletaHeader = [
     { id: 'processoId', label: 'Processo', minWidth: 150 },
     { id: 'temaId', label: 'Tema', minWidth: 150 },
-    { id: 'achadoId', label: 'Achado', minWidth: 150 },
+    { id: 'achadoId', label: 'Achado', minWidth: 450 },
     { id: 'valorFinanceiro', label: 'Valor Financeiro', minWidth: 150 },
     { id: 'quantitativo', label: 'Quantitativo', minWidth: 150 },
     { id: 'unidade', label: 'Unidade', minWidth: 150 },
