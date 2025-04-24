@@ -8,6 +8,7 @@ import FormUpdateAchados from '../../Forms/FormsTable/Create/FormAchadoPasta/For
 import FormUpdateTopicoAchado from '../../Forms/FormsTable/Create/FormTemaPasta/formUpdateTopicoAchado';
 import { User } from '../../../types/types';
 import FormUpdateProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormUpdateProcesso';
+import FormUpdateColeta from '../../Forms/FormsTable/Create/formColetaPasta/FormUpdateColeta';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -47,6 +48,9 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
 
       case 'processo':
         return <FormUpdateProcesso closeModal={onClose} id={id} user={user} dataType={dataType} />
+
+      case 'coleta':
+        return <FormUpdateColeta closeModal={onClose} id={id}  dataType={dataType} />
     }
   }
 

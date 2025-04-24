@@ -103,7 +103,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
   }
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={(e) => {
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' id='formAchados' noValidate onSubmit={(e) => {
       e.preventDefault();
       e.stopPropagation();
       handleSubmit(onSubmit)(e);

@@ -86,7 +86,6 @@ const useFetchAchado = () => {
       }
 
      
-
       const achadoCompleto = {
         achado: achado,
         tema: tema,

@@ -36,6 +36,7 @@ const useFetchUsers = () => {
         usuarios.push({ id: doc.id, ...doc.data() } as AllUsers)
       });
       setUsers(usuarios);
+      return usuarios;
     } catch (error) {
       console.error("Erro ao buscar usuários:", error);
     }

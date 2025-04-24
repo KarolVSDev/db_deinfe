@@ -70,12 +70,19 @@ export interface Coleta {
   id:string;
   quantitativo:number;
   unidade:string;
-  situacao:boolean;
+  sanado:string;
   valorFinanceiro:number;
   coletadorId:string;
   temaId:string;
   achadoId:string;
   processoId:string;
+}
+
+export interface ColetaUpdate {
+  coleta:Coleta;
+  processo:Processo;
+  achado:Achado;
+  tema:TopicoAchado
 }
 
 export interface Processo {
@@ -90,6 +97,12 @@ export interface Processo {
 export interface Diretoria {
   id:string;
   label:string;
+}
+
+export interface ColetaTransformada extends Omit<Coleta, 'achadoId' | 'processoId' | 'temaId'> {
+  achadoId: string | Achado['achado'];
+  processoId: string | Processo['numero'];
+  temaId: string | TopicoAchado['tema'];
 }
 
 

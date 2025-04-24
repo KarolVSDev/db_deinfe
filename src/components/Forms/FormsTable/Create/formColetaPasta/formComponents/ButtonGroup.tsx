@@ -26,9 +26,9 @@ const GroupButtonColeta = () => {
     }
     return (
         <>
-            <ButtonGroup variant="contained" aria-label="Basic button group">
-                {itens.map((item) => (
-                    <Button onClick={(e) => handleModalForm(e)}><SaveIcon sx={{ mr: 0.5 }} />{item}</Button>
+            <ButtonGroup id="buttonGroup" variant="contained" aria-label="Basic button group">
+                {itens.map((item, index) => (
+                    <Button key={index} onClick={(e) => handleModalForm(e)}><SaveIcon sx={{ mr: 0.5 }} />{item}</Button>
                 ))}
             </ButtonGroup>
             <ModalColeta
