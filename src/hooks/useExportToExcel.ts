@@ -2,6 +2,7 @@ import * as  XLSX from 'xlsx';
 import useFetchTema from '../components/Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
 import useFetchAchado from '../components/Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
+import { useContextTable } from '../context/TableContext';
 import { TopicoAchado } from '../types/types';
 
 
@@ -11,6 +12,7 @@ const useExportToExcel = () => {
     const { getAllTemas } = useFetchTema();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
+    const { arrayColeta } = useContextTable();
     const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
 
         switch (dataType) {
@@ -104,9 +106,36 @@ const useExportToExcel = () => {
                 } catch (error) {
                     console.error("erro ao tentar exportar os processos: ", error)
                 }
+                break;
 
+            case 'coleta':
+                try {
 
+                    if (!arrayColeta || arrayColeta.length === 0) {
+                        console.log("Nenhuma coleta encontrada.");
+                        return;
+                    };
 
+                    const exportData = arrayColeta.map((coleta) => ({
+                        processoId: coleta.processoId,
+                        temaId: coleta.temaId,
+                        achadoId: coleta.achadoId,
+                        valorFinanceiro: coleta.valorFinanceiro,
+                        quantitativo: coleta.quantitativo,
+                        unidade: coleta.unidade,
+                        coletadorId: coleta.coletadorId,
+                        sanado: coleta.sanado,
+                        id: coleta.id,
+                    }));
+
+                    const ws = XLSX.utils.json_to_sheet(exportData);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'processo');
+                    XLSX.writeFile(wb, fileName)
+
+                } catch (error) {
+                    console.error("erro ao tentar exportar os processos: ", error)
+                }
                 break;
 
 
