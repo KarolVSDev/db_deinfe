@@ -17,8 +17,8 @@ import useFetchColeta from "./useFetchColeta";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
 import GroupButtonColeta from "./formComponents/ButtonGroup";
 import { GridRowId } from "@mui/x-data-grid";
-import ProcessoSkeleton from "../../../../Skeletons/ProcessoSkeleton";
 import Loader from "../../../../Loader/Loader";
+import ColetaSkeleton from "./formComponents/ColetaSkeleton";
 
 
 export interface FormUpdateColetaProps {
@@ -121,7 +121,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
         <>
             {
                 isloading ? (
-                    <ProcessoSkeleton isLoading={isloading} />
+                    <ColetaSkeleton isLoading={isloading} />
                 ) : (
                     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
                         <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
