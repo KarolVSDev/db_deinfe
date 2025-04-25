@@ -36,3 +36,4 @@ export const processoHeader = [
     { id: 'julgado', label: 'Julgado', minWidth: 150 },
     { id: 'acoes', label: 'Acões', minWidth: 150 }
 ]
+

@@ -1,5 +1,5 @@
 import Paper from '@mui/material/Paper';
-import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
@@ -20,6 +20,7 @@ import { formateDateToPtBr, formatCurrency } from '../../hooks/DateFormate';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
 import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchColeta';
+import DataTableSkeleton from '../Skeletons/DataTableSkeleton';
 
 export default function DatabaseTable() {
 
@@ -38,13 +39,14 @@ export default function DatabaseTable() {
   const { escutarAchados } = useFetchAchado();
   const { escutarProcessos } = useFetchProcesso();
   const { escutarColeta } = useFetchColeta();
-  const [_isLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
     // setSelectedRow(null);
+    setIsLoading(true);
 
     switch (value) {
       case 'tema':
@@ -52,6 +54,7 @@ export default function DatabaseTable() {
         const temaListener = escutarTemas((temas) => {
           setArrayTopicoAchado(temas)
           setRows(createRows(temas))
+          setIsLoading(false);
         })
         return () => temaListener;
       case 'achado':
@@ -59,6 +62,7 @@ export default function DatabaseTable() {
         const achadoListener = escutarAchados((achados) => {
           setArrayAchado(achados)
           setRows(createRows(achados))
+          setIsLoading(false);
         })
         return () => achadoListener;
       case 'processo':
@@ -66,6 +70,7 @@ export default function DatabaseTable() {
         const processoListener = escutarProcessos((processos) => {
           setArrayProcesso(processos)
           setRows(createRows(processos))
+          setIsLoading(false);
         })
         return () => processoListener;
       case 'coleta':
@@ -73,6 +78,7 @@ export default function DatabaseTable() {
         const coletaListener = escutarColeta((coleta) => {
           setArrayColeta(coleta)
           setRows(createRows(coleta))
+          setIsLoading(false);
         })
         return () => coletaListener;
       default:
@@ -80,8 +86,6 @@ export default function DatabaseTable() {
         setRows([])
     }
   };
-
-
 
   const createGridColumns = (headers: ColumnConfig[]): GridColDef[] => {
     return headers.map(header => ({
@@ -124,7 +128,23 @@ export default function DatabaseTable() {
             </span>
           );
         }
-        return params.value;
+        return (
+          <Tooltip
+            title={params.value || ''}
+            arrow
+            enterDelay={500}
+            placement="top-start"
+          >
+            <div style={{
+              width: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
+              {params.value}
+            </div>
+          </Tooltip>
+        );
       },
       filterable: true,
     }));
@@ -216,49 +236,58 @@ export default function DatabaseTable() {
         </Box>
         <Divider />
         <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            localeText={handleLocalization}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
+          {isLoading && (
+            <DataTableSkeleton
+              dataType={dataType}
+              isLoading={isLoading}
+              visibleRows={rows.length || 10}
+            />
+          )}
+          <Box sx={{ visibility: isLoading ? 'hidden' : 'visible', height: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              showCellVerticalBorder
+              localeText={handleLocalization}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
                 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
-            checkboxSelection={false}
-            disableRowSelectionOnClick
-            onRowClick={(params: GridRowParams) => {
-              setSelectedRow(params.id)
-            }}
-            getRowClassName={(params: GridRowParams) => {
-              return params.id === selectedRow ? 'selected-row' : '';
-            }}
-            onColumnVisibilityModelChange={(model: GridColumnVisibilityModel) => {
-              const visibleCols = getVisibleColumnsFromModel(columns, model);
-              return visibleCols
-            }}
-
-            sx={{
-              '& .MuiDataGrid-columnHeaders': {
-                position: 'relative',
-                zIndex: 1,
-                backgroundColor: '#fff',
-              },
-              '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
-                outline: 'none',
-              },
-              '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
-                outline: 'none',
-              },
-              '& .MuiDataGrid-row:hover': {
-                backgroundColor: '#e2e8f0', color: '#000',
-              },
-              cursor: 'pointer'
-            }}
-          />
+              }}
+              pageSizeOptions={[5, 10]}
+              checkboxSelection={false}
+              disableRowSelectionOnClick
+              onRowClick={(params: GridRowParams) => {
+                setSelectedRow(params.id);
+              }}
+              getRowClassName={(params: GridRowParams) => {
+                return params.id === selectedRow ? 'selected-row' : '';
+              }}
+              onColumnVisibilityModelChange={(model: GridColumnVisibilityModel) => {
+                const visibleCols = getVisibleColumnsFromModel(columns, model);
+                return visibleCols;
+              }}
+              sx={{
+                '& .MuiDataGrid-columnHeaders': {
+                  position: 'relative',
+                  zIndex: 1,
+                  backgroundColor: '#fff',
+                },
+                '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
+                  outline: 'none',
+                },
+                '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
+                  outline: 'none',
+                },
+                '& .MuiDataGrid-row:hover': {
+                  backgroundColor: '#e2e8f0', color: '#000',
+                },
+                cursor: 'pointer'
+              }}
+            />
+          </Box>
         </Box>
       </Paper>
       {selectedRow !== null && (
