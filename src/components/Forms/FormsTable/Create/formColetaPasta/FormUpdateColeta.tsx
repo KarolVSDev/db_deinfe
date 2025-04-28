@@ -86,7 +86,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
             } catch (error) {
                 console.error("Erro ao carregar coleta:", error);
             } finally {
-                setIsLoading(false);
+                setIsLoading(true);
 
             }
 
