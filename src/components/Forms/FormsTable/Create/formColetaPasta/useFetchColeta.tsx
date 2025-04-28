@@ -18,9 +18,10 @@ const useFetchColeta = () => {
     const {setArrayColeta} = useContextTable();
 
     const addColeta = async (data: Coleta) => {
+        const {temaId, ...resto} = data
         try {
             const coletaRef = collection(db, 'coleta');
-            await addDoc(coletaRef, data);
+            await addDoc(coletaRef, resto);
             console.log('Coleta cadastrada com sucesso');
             return true
         } catch (error) {

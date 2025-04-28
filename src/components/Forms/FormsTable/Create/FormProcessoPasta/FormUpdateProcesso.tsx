@@ -13,7 +13,7 @@ import useFetchProcesso from './useFetchProcesso';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import { diretoriasJson } from '../../../../../service/diretoriasJson';
 import { GridRowId } from '@mui/x-data-grid';
-import ProcessoSkeleton from '../../../../Skeletons/ProcessoSkeleton';
+import ProcessoSkeleton from './ProcessoSkeleton';
 import Loader from '../../../../Loader/Loader';
 
 export interface FormProcessoProps {
