@@ -20,7 +20,8 @@ import { formateDateToPtBr, formatCurrency } from '../../hooks/DateFormate';
 import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
 import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchColeta';
-import DataTableSkeleton from '../Skeletons/DataTableSkeleton';
+import DataTableSkeleton from './DataTableSkeleton';
+
 
 export default function DatabaseTable() {
 
@@ -256,7 +257,7 @@ export default function DatabaseTable() {
                   },
                 },
               }}
-              pageSizeOptions={[5, 10]}
+              pageSizeOptions={[5, 10, 20]}
               checkboxSelection={false}
               disableRowSelectionOnClick
               onRowClick={(params: GridRowParams) => {

@@ -10,7 +10,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import CloseIcon from '@mui/icons-material/Close';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import Loader from '../../../../Loader/Loader';
-import TopicoSkeleton from '../../../../Skeletons/TopicoSkeleton';
+import TopicoSkeleton from './TopicoSkeleton';
 import useFetchTema from './useFetchTema';
 
 interface TopicoAchadoProp {
