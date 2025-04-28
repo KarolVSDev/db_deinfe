@@ -124,8 +124,7 @@ const useExportToExcel = () => {
                         quantitativo: coleta.quantitativo,
                         unidade: coleta.unidade,
                         coletadorId: coleta.coletadorId,
-                        sanado: coleta.sanado,
-                        id: coleta.id,
+                        sanado: coleta.sanado
                     }));
 
                     const ws = XLSX.utils.json_to_sheet(exportData);
