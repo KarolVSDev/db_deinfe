@@ -220,10 +220,6 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
             fullWidth
             id="analise"
             label="Análise"
-            error={errors?.analise?.type === 'required'}
-            {...register('analise', {
-              required: 'Campo obrigatório',
-            })}
           />
         </Grid>
       </Grid>
