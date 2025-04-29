@@ -219,7 +219,7 @@ export default function DatabaseTable() {
           Catálogo
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height: '48px' }}>
-          <Select value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
+          <Select name="dataTypeSelect" id="dataTypeSelect" value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
             {optionsSelect.map((option) => (
               <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>
                 {option.string}

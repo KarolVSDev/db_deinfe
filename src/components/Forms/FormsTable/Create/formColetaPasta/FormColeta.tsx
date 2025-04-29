@@ -165,7 +165,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <ModalListAchados arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
                 {achadoLabel &&
                     <Paper>
-                        <Typography sx={{ mt: 2, p:2 }}>{achadoLabel}</Typography>
+                        <Typography sx={{ mt: 2, p:2 }}>Achado: {achadoLabel}</Typography>
                     </Paper>
                 }
             </Grid >

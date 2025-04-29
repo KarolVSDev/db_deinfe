@@ -127,7 +127,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
             <Autocomplete
               disablePortal
               autoFocus
-              id="combo-box-demo"
+              id="autocomplete-tema_id"
               options={arrayTopicoAchado}
               getOptionLabel={(option: TopicoAchado) => option.tema}
               onChange={(_, value) => field.onChange(value?.id || '')}
@@ -175,17 +175,18 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
       </Grid>
       <Grid item xs={12} sm={4}>
         {user?.cargo === 'chefe' ? (<ToggleButtonGroup
+          id="situacaoAchado"
           color="primary"
           value={situacaoAchado}
           exclusive
           onChange={handleChangeSituacaoAchado}
-          aria-label="Platform"
+          aria-label="Situação do Achado"
 
         >
           <ToggleButton value='Pendente' >Pendente</ToggleButton>
           <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
         </ToggleButtonGroup>) : (
-          <input type="hidden"{...register('situacaoAchado')} value="false" />
+          <input id="situacaoAchado" type="hidden"{...register('situacaoAchado')} value="false" />
         )}
       </Grid>
 
@@ -213,7 +214,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
           <Typography>Campo de Análise</Typography>
           <TextField
             variant='filled'
-            autoComplete="given-name"
+            autoComplete="analise"
             type="text"
             multiline
             rows={4}

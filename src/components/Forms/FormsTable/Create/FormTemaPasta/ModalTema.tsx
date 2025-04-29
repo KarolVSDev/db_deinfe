@@ -48,8 +48,8 @@ const ModalTema: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
                 <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
             </Button>
             <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
+                aria-labelledby="transition-modal-paraTema"
+                aria-describedby="transition-modal-para-abrir-o-tema"
                 open={open}
                 onClose={handleClose}
                 closeAfterTransition

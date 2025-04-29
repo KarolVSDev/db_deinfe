@@ -101,7 +101,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
           value={situacao}
           exclusive
           onChange={handleChange}
-          aria-label="Platform"
+          aria-label="toggleSituacaoTema"
         >
           <ToggleButton value='Pendente' >Pendente</ToggleButton>
           <ToggleButton value='Aprovado' >Aprovado</ToggleButton>

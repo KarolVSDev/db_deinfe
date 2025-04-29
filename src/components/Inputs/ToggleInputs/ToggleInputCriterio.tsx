@@ -22,8 +22,9 @@ const ToggleButtonsCriterios: React.FC<toggleComponentProps> = memo(({ alignment
             <ToggleButtonGroup
                 value={alignment}
                 exclusive
+                id="toggleCriterio"
                 onChange={handleAlignment}
-                aria-label="text alignment"
+                aria-label="toggleCriterio"
                 color="primary"
             >
                 <ToggleButton value="criterioMunicipal" aria-label="critério municipal">

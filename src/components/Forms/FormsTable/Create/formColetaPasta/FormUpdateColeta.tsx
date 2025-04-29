@@ -1,11 +1,11 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, Paper, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
-import { Processo, Coleta, Achado, ColetaUpdate } from '../../../../../types/types';
+import { Processo, Coleta, Achado, ColetaUpdate, TopicoAchado } from '../../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
@@ -15,10 +15,11 @@ import { formatCurrency } from "../../../../../hooks/DateFormate";
 import SelectSanado from "../../../../Inputs/SelectSanado";
 import useFetchColeta from "./useFetchColeta";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
-import GroupButtonColeta from "./formComponents/ButtonGroup";
 import { GridRowId } from "@mui/x-data-grid";
 import Loader from "../../../../Loader/Loader";
 import ColetaSkeleton from "./formComponents/ColetaSkeleton";
+import useFetchTema from "../FormTemaPasta/useFetchTema";
+import ModalListAchados from "./formComponents/ModalListAchado";
 
 
 export interface FormUpdateColetaProps {
@@ -34,6 +35,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<Coleta>({
         defaultValues: {
             id: coleta?.coleta.id,
+            temaId: coleta?.tema.id,
             achadoId: coleta?.achado.id,
             processoId: coleta?.processo.id,
             coletadorId: coleta?.coleta.coletadorId,
@@ -46,6 +48,8 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const { updateColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
+    const { getAllTemas } = useFetchTema();
+    const { arrayTopicoAchado } = useContextTable();
     const { arrayAchado, arrayProcesso } = useContextTable();
     const [_, setAchadoId] = useState<string | undefined>()
     const [displayValue, setDisplayValue] = useState('');
@@ -53,9 +57,13 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const { getColetaById } = useFetchColeta();
     const [loading, setLoading] = useState(false);
     const [isloading, setIsLoading] = useState(false);
+    const [filteredAchados, setFilteredAchados] = useState<Achado[]>([])
+    const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
+    const [achadoLabel, setAchadoLabel] = useState<string>()
 
     useEffect(() => {
         const fetchData = async () => {
+            await getAllTemas();
             await getAllAchados();
             await getAllProcessos();
         }
@@ -73,8 +81,10 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                     return
                 }
                 setColeta(registro)
+                setAchadoLabel(registro.achado.achado)
                 reset({
                     id: registro.coleta.id,
+                    temaId: registro.tema.id || '',
                     achadoId: registro.achado.id || '',
                     processoId: registro.processo.id || '',
                     coletadorId: registro.coleta.coletadorId || '',
@@ -93,6 +103,32 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
         }
         fetchColeta();
     }, [id])
+
+
+    const filterAchadosByTema = (temaId: string) => {
+        const filtered = arrayAchado.filter(achado => achado.tema_id === temaId);
+        setFilteredAchados(filtered);
+        return
+    }
+
+    const handleSelectAchado = (achado: Achado) => {
+        if (achado.id) {
+            setValue('achadoId', achado.id, { shouldValidate: true });
+            setAchadoLabel(achado.achado)
+        }
+    };
+
+    const handleTemaChange = (
+        _event: React.SyntheticEvent<Element, Event>,
+        value: TopicoAchado | null,
+        _reason: AutocompleteChangeReason,
+        _details?: AutocompleteChangeDetails<TopicoAchado>
+    ) => {
+        const temaId = value?.id || '';
+        setValue('temaId', temaId); // Atualiza o formulário
+        setSelectedTemaId(temaId); // Salva no estado
+        filterAchadosByTema(temaId); // Filtra os achados
+    };
 
 
     // Atualiza o valor formatado quando o valor do campo muda
@@ -125,7 +161,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                 ) : (
                     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
                         <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Coleta</Typography>
+                            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Coleta</Typography>
                             <IconButton onClick={closeModal} sx={{
                                 '&:hover': {
                                     bgcolor: '#1e293b', color: '#ffffff',
@@ -135,25 +171,23 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                             </IconButton>
                         </Box>
 
-                        <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
-                            <GroupButtonColeta />
-                        </Grid>
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                             <Controller
-                                name="achadoId"
+                                name="temaId"
                                 control={control}
                                 rules={{ required: 'Campo obrigatório' }}
-                                defaultValue={coleta?.achado.id || ''}
+                                defaultValue={coleta?.tema.id || ""}
                                 render={({ field }) => (
                                     <Autocomplete
                                         disablePortal
                                         autoFocus
-                                        id="autocomplete-achado"
-                                        options={arrayAchado}
-                                        getOptionLabel={(option: Achado) => option.achado}
-                                        defaultValue={arrayAchado.find(achado => achado.id === field.value || null)}
+                                        id="autocomplete-temaId"
+                                        options={arrayTopicoAchado}
+                                        getOptionLabel={(option: TopicoAchado) => option.tema}
+                                        defaultValue={arrayTopicoAchado.find(tema => tema.id === field.value || null)}
                                         isOptionEqualToValue={(option, value) => option.id === value.id}
-                                        onChange={(_, value) => { field.onChange(value?.id || ''); setAchadoId(value?.id) }}
+                                        onChange={handleTemaChange}
+                                     
                                         ListboxProps={{
                                             style: {
                                                 maxHeight: '200px',
@@ -163,17 +197,26 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
-                                                label="Achado"
+                                                label="Tema"
                                                 variant="filled"
                                                 focused={true}
-                                                error={!!errors.achadoId}
-                                                helperText={errors.achadoId?.message}
+                                                error={!!errors.temaId}
+                                                helperText={errors.temaId?.message}
                                             />
                                         )}
                                     />
                                 )}
                             />
                         </Grid>
+
+                        <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+                            <ModalListAchados arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
+                            {achadoLabel && 
+                                <Paper>
+                                    <Typography sx={{ mt: 2, p: 2 }}>Achado: {coleta?.achado.achado}</Typography>
+                                </Paper>
+                            }
+                        </Grid >
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                             <Controller
                                 name="processoId"
@@ -268,11 +311,11 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                             </Box>
                         </Grid>
                         {loading ?
-                        <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
-                            <Loader />
-                        </Box> :
-                        <RegisterButton text="Atualizar" />
-                    }
+                            <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+                                <Loader />
+                            </Box> :
+                            <RegisterButton text="Atualizar" />
+                        }
                     </Box >
                 )
 

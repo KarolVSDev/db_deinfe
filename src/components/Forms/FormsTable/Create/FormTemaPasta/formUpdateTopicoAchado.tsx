@@ -94,7 +94,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
     <>
       {temaAchado && (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}
-          component="form" name="formTopicoAchado" noValidate onSubmit={(e) => {
+          component="form" name="formUpdateTopicoAchado" id="formUpdateTopicoAchado" noValidate onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
             handleSubmit(onSubmit)(e);
@@ -139,7 +139,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
                   value={situacao}
                   exclusive
                   onChange={handleChange}
-                  aria-label="Platform"
+                  aria-label="toggleSituacaoTema"
                 >
                   <ToggleButton value='Pendente' >Pendente</ToggleButton>
                   <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
