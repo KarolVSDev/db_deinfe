@@ -1,9 +1,10 @@
-import * as  XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 import useFetchTema from '../components/Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
 import useFetchAchado from '../components/Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useContextTable } from '../context/TableContext';
-import { TopicoAchado } from '../types/types';
+// import { TopicoAchado } from '../types/types';
 
 
 
@@ -13,140 +14,149 @@ const useExportToExcel = () => {
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { arrayColeta } = useContextTable();
+
     const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet(dataType);
 
-        switch (dataType) {
+        let headers: string[] = [];
+        let rows: any[] = [];
 
-            case 'tema':
-                try {
-                    const temas = await getAllTemas();
+        try {
+            switch (dataType) {
 
-                    if (!temas || temas.length === 0) {
-                        console.log("Nenhum tema encontrado.");
-                        return;
-                    };
+                case 'tema': {
+                    try {
+                        const temas = await getAllTemas();
 
-                    const exportData = temas.map((tema: TopicoAchado) => ({
-                        tema: tema.tema,
-                        situacao: tema.situacao === true ? 'Aprovado' : 'Pendente',
-                    }));
+                        if (!temas || temas.length === 0) {
+                            console.log("Nenhum tema encontrado.");
+                            return;
+                        };
 
-                    const wb = XLSX.utils.book_new();
-                    const ws = XLSX.utils.json_to_sheet(exportData);
-                    XLSX.utils.book_append_sheet(wb, ws, 'Temas');
-                    XLSX.writeFile(wb, fileName)
-                } catch (error) {
-                    console.error("erro ao tentar exportar os temas: ", error)
-                }
+                        headers = ['Tema', 'Situação'];
+                        rows = temas.map((tema) => [tema.tema, tema.situacao ? 'Aprovado' : 'Pendente']);
 
-                break;
-
-            case 'achado':
-
-                try {
-                    const achado = await getAllAchados();
-                    const temas = await getAllTemas();
-
-                    if (!achado || achado.length === 0) {
-                        console.log("Nenhum achado encontrado.");
-                        return;
-                    };
-
-                    if (!temas || temas.length === 0) {
-                        console.log("Nenhum tema encontrado.");
-                        return;
+                    } catch (error) {
+                        console.error("erro ao tentar exportar os temas: ", error)
                     }
 
-                    const temaMap = new Map(temas.map((tema) => [tema.id, tema.tema]));
-
-                    const exportData = achado.map((achado) => ({
-                        achado: achado.achado,
-                        data: achado.data,
-                        gravidade: achado.gravidade,
-                        criterioMunicipal: achado.criterioMunicipal,
-                        criterioEstadual: achado.criterioEstadual,
-                        criterioGeral: achado.criterioGeral,
-                        situacaoAchado: achado.situacaoAchado === true ? 'Aprovado' : 'Pendente',
-                        analise: achado.analise,
-                        tema: temaMap.get(achado.tema_id) || 'Tema não encontrado'
-                    }));
-
-                    const wb = XLSX.utils.book_new();
-                    const ws = XLSX.utils.json_to_sheet(exportData);
-                    XLSX.utils.book_append_sheet(wb, ws, 'Achado');
-                    XLSX.writeFile(wb, fileName)
-                } catch (error) {
-                    console.error("erro ao tentar exportar os achados: ", error)
+                    break;
                 }
 
-                break;
+                case 'achado': {
 
-            case 'processo':
-                try {
-                    const processos = await getAllProcessos();
+                    try {
+                        const achado = await getAllAchados();
+                        const temas = await getAllTemas();
 
-                    if (!processos || processos.length === 0) {
-                        console.log("Nenhum processo encontrado.");
-                        return;
-                    };
+                        if (!achado || achado.length === 0) {
+                            console.log("Nenhum achado encontrado.");
+                            return;
+                        };
 
-                    const exportData = processos.map((processos) => ({
-                        numero: processos.numero,
-                        exercicio: processos.exercicio,
-                        julgado: processos.julgado,
-                        unidadeGestora: processos.unidadeGestora,
-                        diretoria: processos.diretoria
-                    }));
+                        if (!temas || temas.length === 0) {
+                            console.log("Nenhum tema encontrado.");
+                            return;
+                        }
 
-                    const ws = XLSX.utils.json_to_sheet(exportData);
-                    const wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, 'processo');
-                    XLSX.writeFile(wb, fileName)
+                        const temaMap = new Map(temas.map((tema) => [tema.id, tema.tema]));
 
-                } catch (error) {
-                    console.error("erro ao tentar exportar os processos: ", error)
+                        headers = ['Achado', 'Data', 'Gravidade', 'Critério Municipal', 'Critério Estadual', 'Critério Geral', 'Situação Achado', 'Análise', 'Temas'];
+                        rows = achado.map((achado) => [
+                            achado.achado,
+                            achado.data,
+                            achado.gravidade,
+                            achado.criterioMunicipal,
+                            achado.criterioEstadual,
+                            achado.criterioGeral,
+                            achado.situacaoAchado === true ? 'Aprovado' : 'Pendente',
+                            achado.analise,
+                            temaMap.get(achado.tema_id) || 'Tema não encontrado'
+                        ]);
+                    } catch (error) {
+                        console.error("erro ao tentar exportar os achados: ", error)
+                    }
+
+                    break;
                 }
-                break;
 
-            case 'coleta':
-                try {
+                case 'processo': {
+                    try {
+                        const processos = await getAllProcessos();
 
-                    if (!arrayColeta || arrayColeta.length === 0) {
-                        console.log("Nenhuma coleta encontrada.");
-                        return;
-                    };
+                        if (!processos || processos.length === 0) {
+                            console.log("Nenhum processo encontrado.");
+                            return;
+                        };
 
-                    const exportData = arrayColeta.map((coleta) => ({
-                        processoId: coleta.processoId,
-                        temaId: coleta.temaId,
-                        achadoId: coleta.achadoId,
-                        valorFinanceiro: coleta.valorFinanceiro,
-                        quantitativo: coleta.quantitativo,
-                        unidade: coleta.unidade,
-                        coletadorId: coleta.coletadorId,
-                        sanado: coleta.sanado
-                    }));
+                        headers = ['Número', 'Exercício', 'Julgado', 'Unidade Gestora', 'Diretoria'];
+                        rows = processos.map((processos) => [
+                            processos.numero,
+                            processos.exercicio,
+                            processos.julgado,
+                            processos.unidadeGestora,
+                            processos.diretoria
+                        ]);
+                    } catch (error) {
+                        console.error("erro ao tentar exportar os processos: ", error)
+                    }
+                    break;
+                };
 
-                    const ws = XLSX.utils.json_to_sheet(exportData);
-                    const wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, 'processo');
-                    XLSX.writeFile(wb, fileName)
+                case 'coleta': {
+                    try {
 
-                } catch (error) {
-                    console.error("erro ao tentar exportar os processos: ", error)
-                }
-                break;
+                        if (!arrayColeta || arrayColeta.length === 0) {
+                            console.log("Nenhuma coleta encontrada.");
+                            return;
+                        };
 
+                        headers = ['Processo ID', 'Tema ID', 'Achado ID', 'Valor Fianceiro', 'Quantitativo', 'Unidade', 'Coletador ID', 'Sanado'];
+                        rows = arrayColeta.map((coleta) => [
+                            coleta.processoId,
+                            coleta.temaId,
+                            coleta.achadoId,
+                            coleta.valorFinanceiro,
+                            coleta.quantitativo,
+                            coleta.unidade,
+                            coleta.coletadorId,
+                            coleta.sanado
+                        ])
+                    } catch (error) {
+                        console.error("erro ao tentar exportar os processos: ", error)
+                    }
+                    break;
+                };
 
+                default:
+                    console.warn('Tipo de dado não reconhecido: ', dataType);
+                    break;
+            }
 
-            default:
-                break;
+            sheet.addTable({
+                name: `Tabela_${dataType}`,
+                ref: 'A1',
+                headerRow: true,
+                style: {
+                    theme: 'TableStyleMedium2',
+                    showRowStripes: true,
+                },
+                columns: headers.map((header) => ({ name: header })),
+                rows: rows,
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            saveAs(new Blob([buffer]), fileName);
+        } catch (error) {
+            console.error(`Erro ao exportar dados de ${dataType}:`, error);
         }
-    }
+    };
 
     return {
-        exportToExcel,
-    }
+        exportToExcel
+    };
+
 }
 
-export default useExportToExcel;
+export default useExportToExcel
