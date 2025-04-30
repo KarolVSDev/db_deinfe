@@ -267,7 +267,8 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                     label={"Sanado"}
                                     register={register}
                                     errors={errors}
-                                    sanado={coleta?.coleta.sanado as string}
+                                   
+                                    defaultValue={coleta?.coleta.sanado}
                                 />
 
                                 <TextField

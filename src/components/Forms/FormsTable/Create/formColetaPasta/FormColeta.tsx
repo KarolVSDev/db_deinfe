@@ -40,7 +40,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const [achadoLabel, setAchadoLabel] = useState<string>()
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
-    const [sanado] = useState<string>('');
     const [filteredAchados, setFilteredAchados] = useState<Achado[]>([])
     const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
 
@@ -51,7 +50,8 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             await getAllProcessos();
         }
         fetchData();
-    }, [arrayProcesso, arrayTopicoAchado])
+        filterAchadosByTema(_selectedTemaId)
+    }, [arrayProcesso, arrayTopicoAchado, arrayAchado])
 
     // Atualiza o valor formatado quando o valor do campo muda
     useEffect(() => {
@@ -65,6 +65,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         setFilteredAchados(filtered);
         return
     }
+
 
     const handleSelectAchado = (achado: Achado) => {
         if (achado.id) {
@@ -214,7 +215,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         label={"Sanado"}
                         register={register}
                         errors={errors}
-                        sanado={sanado}
+                        
                     />
 
                     <TextField

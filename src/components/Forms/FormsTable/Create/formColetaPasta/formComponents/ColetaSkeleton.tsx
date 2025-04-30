@@ -10,10 +10,10 @@ const ColetaSkeleton: React.FC<ColetaSkeletonProps> = ({ isLoading }) => {
   return (
     <Box sx={{ width: '70vw' }}>
       <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, mt: 2, width: '25%' }} />}</Typography>
-      <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, width: '35%', height:'4vw' }} />}</Typography>
-      <Typography variant='h4'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, height: 100 }} />}</Typography>
-      <Skeleton sx={{ ml: 1, width: '12vw', height: '4vw' }} />
-      <Typography variant='h4'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, height: 100 }} />}</Typography>
+      <Typography variant='h4'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, height: 70 }} />}</Typography>
+      <Skeleton sx={{ ml: 1, width: '15vw', height: '4vw' }} />
+      <Typography variant='h4'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, height: 70 }} />}</Typography>
+      <Typography variant='h4'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, height: 70 }} />}</Typography>
       <Box sx={{ display: "flex", flexDirection: "row", gap: 2, mb: 2 }}>
         <Skeleton sx={{ ml: 1, width: '11vw', height: '6vw' }} />
         <Skeleton sx={{ ml: 0, width: '11vw', height: '6vw' }} />

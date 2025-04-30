@@ -12,11 +12,10 @@ export interface SelectSanadoProps {
     register: UseFormRegister<Coleta>;
     errors: FieldErrors<Coleta>;
     label: string
-    sanado: string;
     defaultValue?: string;
 }
 
-const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors, sanado, defaultValue }) => {
+const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors, defaultValue }) => {
 
     return (
         <div>
@@ -25,6 +24,9 @@ const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors
                 <Select
                     labelId={`${id}-label`}
                     id={id}
+                    defaultValue={defaultValue || ''}
+                    {...register(id)}
+                    error={!!errors[id]}
                 >
                     <MenuItem value="">
                         <em>Selecione...</em>
