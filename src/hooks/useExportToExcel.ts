@@ -4,7 +4,7 @@ import useFetchTema from '../components/Forms/FormsTable/Create/FormTemaPasta/us
 import useFetchAchado from '../components/Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useContextTable } from '../context/TableContext';
-// import { TopicoAchado } from '../types/types';
+
 
 
 
