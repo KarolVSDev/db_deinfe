@@ -25,16 +25,15 @@ const style = {
 export interface ModalListAchadoProps {
     arrayFiltrado: Achado[];
     onSelectAchado: (achado: Achado) => void;
-
 }
 
-const ModalListAchados: React.FC<ModalListAchadoProps> = ({ arrayFiltrado, onSelectAchado}) => {
+const ModalListAchados: React.FC<ModalListAchadoProps> = ({ arrayFiltrado, onSelectAchado }) => {
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     const handleOpen = () => setOpen(true);
 
     const handleSelect = (achado: Achado) => {
-        onSelectAchado(achado); 
+        onSelectAchado(achado);
     };
 
     return (

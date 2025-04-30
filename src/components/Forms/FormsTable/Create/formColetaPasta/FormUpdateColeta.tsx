@@ -51,7 +51,6 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const { getAllTemas } = useFetchTema();
     const { arrayTopicoAchado } = useContextTable();
     const { arrayAchado, arrayProcesso } = useContextTable();
-    const [_, setAchadoId] = useState<string | undefined>()
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
     const { getColetaById } = useFetchColeta();
@@ -82,6 +81,11 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                 }
                 setColeta(registro)
                 setAchadoLabel(registro.achado.achado)
+
+                if (registro.tema.id) {
+                    filterAchadosByTema(registro.tema.id);
+                }
+
                 reset({
                     id: registro.coleta.id,
                     temaId: registro.tema.id || '',
@@ -170,7 +174,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                 <CloseIcon />
                             </IconButton>
                         </Box>
-
+                        
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                             <Controller
                                 name="temaId"
@@ -210,10 +214,10 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                         </Grid>
 
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                            <ModalListAchados arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
+                            <ModalListAchados arrayFiltrado={filteredAchados}  onSelectAchado={handleSelectAchado}/>
                             {achadoLabel && 
                                 <Paper>
-                                    <Typography sx={{ mt: 2, p: 2 }}>Achado: {coleta?.achado.achado}</Typography>
+                                    <Typography sx={{ mt: 2, p: 2 }}>Achado: {achadoLabel}</Typography>
                                 </Paper>
                             }
                         </Grid >
