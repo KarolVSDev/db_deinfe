@@ -25,8 +25,6 @@ const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors
                 <Select
                     labelId={`${id}-label`}
                     id={id}
-                    {...register(id, { required: "Este campo é obrigatório" })}
-                    defaultValue={defaultValue || sanado || ""}
                 >
                     <MenuItem value="">
                         <em>Selecione...</em>

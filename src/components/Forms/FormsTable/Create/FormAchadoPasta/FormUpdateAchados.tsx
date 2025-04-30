@@ -271,10 +271,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               fullWidth
               id="analise"
               label="Análise"
-              error={errors?.analise?.type === 'required'}
-              {...register('analise', {
-                required: 'Campo obrigatório',
-              })}
             />
 
 
