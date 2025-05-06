@@ -56,7 +56,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     // Atualiza o valor formatado quando o valor do campo muda
     useEffect(() => {
         if (fieldValue !== undefined) {
-            setDisplayValue(formatCurrency(fieldValue.toString()));
+            setDisplayValue(formatCurrency(fieldValue.toString()))
         }
     }, [fieldValue]);
 
