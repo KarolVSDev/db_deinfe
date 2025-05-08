@@ -69,7 +69,8 @@ const useFetchColeta = () => {
         const usuarios = await getUsers();
 
         if (!achados || !temas || !processos || !usuarios) {
-            throw new Error("Não foi possível obter todos os dados necessários");
+            console.error("Não foi possível obter todos os dados necessários");
+            return []
         }
 
         const achadosMap = new Map(achados.map(achado => [achado.id, achado.achado]));
