@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     // Define apenas as variáveis necessárias para o cliente
     define: {
-      __APP_ENV__: JSON.stringify(env.VITE_APP_ENV), // Exemplo
+      __APP_ENV__: JSON.stringify(env.VITE_APP_ENV), 
     },
   };
 });
