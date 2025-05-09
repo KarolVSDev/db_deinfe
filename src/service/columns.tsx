@@ -10,9 +10,9 @@ export const achadoHeader = [
     { id: 'analise', label: 'Análise', minWidth: 150 },
     { id: 'data', label: 'Data', minWidth: 150 },
     { id: 'gravidade', label: 'Gravidade', minWidth: 150 },
+    { id: 'criterioGeral', label: 'Critério Geral/Nacional', minWidth: 150 },
     { id: 'criterioMunicipal', label: 'Critério Municipal', minWidth: 150 },
     { id: 'criterioEstadual', label: 'Critério Estadual', minWidth: 150 },
-    { id: 'criterioGeral', label: 'Critério Geral/Nacional', minWidth: 150 },
     { id: 'situacaoAchado', label: 'Situação', minWidth: 150 },
     { id: 'acoes', label: 'Acões', minWidth: 150 }
 ]
