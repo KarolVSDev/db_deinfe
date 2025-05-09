@@ -79,7 +79,7 @@ export default function DatabaseTable() {
         const coletaListener = escutarColeta((coleta) => {
           setArrayColeta(coleta)
           setRows(createRows(coleta))
-          setIsLoading(false);
+            setIsLoading(false);
         })
         return () => coletaListener;
       default:

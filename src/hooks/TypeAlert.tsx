@@ -16,7 +16,7 @@ export function TypeAlert(message: string, type: 'success' | 'error' | 'warning'
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)
       toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
+    },
   })
 }
 
@@ -24,5 +24,6 @@ export function TypeInfo(message: string, type: 'success' | 'error' | 'warning' 
   Swal.fire({
     text: message,
     icon: type,
+    
   })
 }

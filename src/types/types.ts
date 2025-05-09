@@ -25,6 +25,10 @@ export interface UserLogin {
   email: string;
   password: string;
 }
+
+export interface EmailChanger extends UserLogin {
+  
+}
 export interface AuthData {
   token: string;
   email: string;
