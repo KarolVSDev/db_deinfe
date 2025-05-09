@@ -2,7 +2,9 @@ import { AllUsers, User, UserUpdate } from '../types/types'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../service/firebase.config'
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
-import { TypeAlert } from './TypeAlert'
+import { TypeAlert, TypeInfo } from './TypeAlert'
+import { authBase } from '../service/firebase.config'
+import { sendPasswordResetEmail } from 'firebase/auth'
 
 const useFetchUsers = () => {
 
@@ -98,11 +100,24 @@ const useFetchUsers = () => {
 
   }
 
+  const passwordChanger = async (data:string) => {
+    try {
+      await sendPasswordResetEmail(authBase, data);
+      TypeInfo("E-mail enviado", "success")
+    } catch (error) {
+      TypeInfo("Algo deu errado, consulte o log", "error")
+      console.error("Erro ao mandar email", error)
+    }
+
+
+  }
+
   return {
     addUser,
     getUsers,
     getUser,
-    updateUser
+    updateUser,
+    passwordChanger
   }
 }
 

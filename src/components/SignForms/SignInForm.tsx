@@ -21,13 +21,14 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 import Loader from '../Loader/Loader';
+import { NavLink } from 'react-router-dom';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="/">
-        Focus
+        DEINFE
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -36,7 +37,7 @@ function Copyright(props: any) {
 }
 
 export default function SignInSide() {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<UserLogin>({})
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -158,7 +159,7 @@ export default function SignInSide() {
                 </Typography>
               )}
               {loading ? (
-                <Box sx={{margin:'15px auto'}}>
+                <Box sx={{ margin: '15px auto' }}>
                   <Loader />
                 </Box>
               ) : (
@@ -175,6 +176,28 @@ export default function SignInSide() {
                   Entrar
                 </Button>
               )}
+              <Box sx={{ mt: 2, m: 'auto' }}>
+                <NavLink to='/mudarsenha' style={({ isActive }) => ({
+                  isActive,
+                  textDecoration: 'none',
+                  transition: "all 0.3s ease-in-out"
+                })}><Typography sx={{
+                  color: "#6c6e8f",
+                  '&:hover': {
+                    color: "#1e293b", // Cor do texto no hover (opcional)
+                    textDecoration: "underline",
+                    textDecorationColor: "#1e293b", 
+
+                  },
+             
+                  '&.active': {
+                    color: "#ddd",
+                    textDecoration: "underline",
+                    textDecorationColor: "#ff5722", 
+                    fontWeight: "bold"
+                  }
+                }}>Trocar Senha</Typography></NavLink>
+              </Box>
               <Copyright sx={{ pt: '15px', m: 'auto' }} />
             </Box>
           </Box>
