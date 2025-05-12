@@ -22,6 +22,7 @@ function App() {
               <Route path='/' element={<Navigate to="/signin" />} />
               <Route path='/signin' element={<SignIn />} />
               <Route path='/mudarsenha' element={<PasswordChanger />} />
+              {/*coloque o componente aqui */}
               <Route path='/dashboard' element={<PrivateRoutes>
                 <Dashboard />
               </PrivateRoutes>} />
