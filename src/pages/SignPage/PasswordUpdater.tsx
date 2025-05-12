@@ -5,7 +5,7 @@ import { EmailChanger } from '../../types/types';
 import { NavLink } from 'react-router-dom';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { confirmPasswordReset } from 'firebase/auth';
+import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authBase } from '../../service/firebase.config';
 
@@ -29,6 +29,7 @@ const PasswordUpdater = () => {
                 return;
             }
 
+             await verifyPasswordResetCode(authBase, oobCode);
             // Confirma o código e atualiza a senha
             await confirmPasswordReset(authBase, oobCode, data.password);
 
