@@ -6,7 +6,7 @@ interface TableContextType {
     arrayTopicoAchado: TopicoAchado[];
     arrayAchado: Achado[];
     arrayProcesso: Processo[];
-    arrayColeta:Coleta[];
+    arrayColeta: Coleta[];
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
@@ -42,8 +42,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         filterPanelInputLabel: 'Valor',
         filterOperatorContains: 'contém',
         filterOperatorEquals: 'igual a',
-        filterOperatorStartsWith: 'começa com',
-        filterOperatorEndsWith: 'termina com',
+        filterOperatorStartsWith: 'termina com',
+        filterOperatorEndsWith: 'começa com',
         filterOperatorIsEmpty: 'está vazio',
         filterOperatorIsNotEmpty: 'não está vazio',
         filterOperatorIsAnyOf: 'é qualquer um',
