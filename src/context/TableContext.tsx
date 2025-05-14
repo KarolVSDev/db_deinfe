@@ -46,6 +46,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         filterOperatorEndsWith: 'começa com',
         filterOperatorIsEmpty: 'está vazio',
         filterOperatorIsNotEmpty: 'não está vazio',
+        filterPanelInputPlaceholder:"Filtrar valor",
+        paginationRowsPerPage: "Linhas por página",
         filterOperatorIsAnyOf: 'é qualquer um',
         noRowsLabel: 'sem dados',
         columnMenuUnsort: 'Desordenar',
