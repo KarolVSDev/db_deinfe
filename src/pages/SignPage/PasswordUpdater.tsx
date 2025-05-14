@@ -29,7 +29,7 @@ const PasswordUpdater = () => {
                 return;
             }
 
-             await verifyPasswordResetCode(authBase, oobCode);
+            await verifyPasswordResetCode(authBase, oobCode);
             // Confirma o código e atualiza a senha
             await confirmPasswordReset(authBase, oobCode, data.password);
 
@@ -63,6 +63,11 @@ const PasswordUpdater = () => {
                         <FormControl variant="outlined" fullWidth >
                             <InputLabel sx={{ p: 'px' }} htmlFor="Nova senha">Nova Senha</InputLabel>
                             <OutlinedInput
+                                sx={{
+                                    '& input::-ms-reveal': {
+                                        display: 'none'
+                                    }
+                                }}
                                 required
                                 id="password"
                                 type={showPassword ? 'text' : 'password'}
