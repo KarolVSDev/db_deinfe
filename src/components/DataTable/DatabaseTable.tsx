@@ -79,7 +79,7 @@ export default function DatabaseTable() {
         const coletaListener = escutarColeta((coleta) => {
           setArrayColeta(coleta)
           setRows(createRows(coleta))
-            setIsLoading(false);
+          setIsLoading(false);
         })
         return () => coletaListener;
       default:
@@ -135,6 +135,14 @@ export default function DatabaseTable() {
             arrow
             enterDelay={500}
             placement="top-start"
+            slotProps={{
+              tooltip: {
+                sx: {
+                  fontSize: '14px', 
+                 
+                },
+              },
+            }}
           >
             <div style={{
               width: '100%',

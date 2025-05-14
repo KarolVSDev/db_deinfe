@@ -9,6 +9,7 @@ import UsersAmin from './pages/Dashboard/Users_admin/UsersAdmin';
 import ProfilePage from './pages/Dashboard/Profile/ProfilePage';
 import PasswordChanger from './pages/SignPage/PasswordChanger';
 import { CssBaseline } from '@mui/material';
+import PasswordUpdater from './pages/SignPage/PasswordUpdater';
 
 
 
@@ -22,6 +23,8 @@ function App() {
               <Route path='/' element={<Navigate to="/signin" />} />
               <Route path='/signin' element={<SignIn />} />
               <Route path='/mudarsenha' element={<PasswordChanger />} />
+              <Route path='/reset-password' element={<PasswordUpdater />} />
+              {/*coloque o componente aqui */}
               <Route path='/dashboard' element={<PrivateRoutes>
                 <Dashboard />
               </PrivateRoutes>} />
