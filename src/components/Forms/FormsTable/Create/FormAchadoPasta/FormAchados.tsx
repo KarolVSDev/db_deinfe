@@ -221,6 +221,8 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
             fullWidth
             id="analise"
             label="Análise"
+            placeholder='Use # + barra de espaço para indicar um título. Ex: # Título'
+            {...register('analise')}
           />
         </Grid>
       </Grid>
