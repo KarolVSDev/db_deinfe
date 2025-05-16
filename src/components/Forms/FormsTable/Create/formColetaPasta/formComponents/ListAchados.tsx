@@ -37,16 +37,6 @@ const ListAchados: React.FC<ListAchadosProps> = ({ arrayDeAchados, onAchadoSelec
 
     };
 
-    if (!arrayDeAchados || arrayDeAchados.length === 0) {
-        return (
-            <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-                <List component="nav">
-                    <ListItemText primary="Nenhum Achado disponível" sx={{ textAlign: "center", p: 2 }} />
-                </List>
-            </Box>
-        );
-    };
-
     return (
         <Box sx={{ width: '100%', minWidth: 460, bgcolor: 'background.paper' }}>
             <List component="nav" aria-label="lista de achados">
@@ -76,10 +66,10 @@ const ListAchados: React.FC<ListAchadosProps> = ({ arrayDeAchados, onAchadoSelec
                     </ListItemButton>
                 ))}
             </List>
-            {arrayDeAchados.length === 0 && (
+            {achadosFiltrados.length === 0 && (
                 <ListItemText
-                    primary="Nenhum achado encontrado"
-                    sx={{ textAlign: "center", p: 2 }}
+                    primary="Esse achado ainda não existe!"
+                    sx={{ textAlign: "center", p:1}}
                 />
             )}
         </Box>
