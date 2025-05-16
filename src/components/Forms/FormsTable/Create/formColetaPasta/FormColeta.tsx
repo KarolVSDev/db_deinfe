@@ -51,7 +51,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         }
         fetchData();
         filterAchadosByTema(_selectedTemaId)
-    }, [arrayProcesso, arrayTopicoAchado, arrayAchado])
+    }, [arrayTopicoAchado, arrayAchado])
 
     // Atualiza o valor formatado quando o valor do campo muda
     useEffect(() => {
