@@ -57,6 +57,7 @@ const ListAchados: React.FC<ListAchadosProps> = ({ arrayDeAchados, onAchadoSelec
                 />
                 {achadosFiltrados.map((achado, index) => (
                     <ListItemButton
+                        key={achado.id}
                         selected={selectedIndex === index}
                         onClick={(event) => handleListItemClick(event, index, achado)}
                     >
@@ -69,7 +70,7 @@ const ListAchados: React.FC<ListAchadosProps> = ({ arrayDeAchados, onAchadoSelec
             {achadosFiltrados.length === 0 && (
                 <ListItemText
                     primary="Esse achado ainda não existe!"
-                    sx={{ textAlign: "center", p:1}}
+                    sx={{ textAlign: "center", p: 1 }}
                 />
             )}
         </Box>
