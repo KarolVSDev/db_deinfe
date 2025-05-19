@@ -2,7 +2,7 @@ import { Autocomplete, Paper, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import { Controller, set, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
 import { Processo, User, Coleta, Achado, TopicoAchado } from '../../../../../types/types';
@@ -34,7 +34,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     });
     const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
-    const { getAllProcessos, escutarProcessos } = useFetchProcesso();
+    const {  escutarProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
     const { arrayAchado, arrayProcesso, arrayTopicoAchado, setArrayProcesso } = useContextTable();
     const [achadoLabel, setAchadoLabel] = useState<string>()
