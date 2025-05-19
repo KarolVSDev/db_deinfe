@@ -2,7 +2,7 @@ import { Autocomplete, Paper, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, set, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
 import { Processo, User, Coleta, Achado, TopicoAchado } from '../../../../../types/types';
@@ -34,9 +34,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     });
     const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
-    const { getAllProcessos } = useFetchProcesso();
+    const { getAllProcessos, escutarProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
-    const { arrayAchado, arrayProcesso, arrayTopicoAchado } = useContextTable();
+    const { arrayAchado, arrayProcesso, arrayTopicoAchado, setArrayProcesso } = useContextTable();
     const [achadoLabel, setAchadoLabel] = useState<string>()
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
@@ -47,14 +47,11 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         const fetchData = async () => {
             await getAllAchados();
             await getAllTemas();
-            const processos = await getAllProcessos();
-            if (processos && processos.length === 0) {
-                console.log("Nenhum processo encontrado no formColeta");
-            }
+            await escutarProcessos((processo) => setArrayProcesso(processo));
         }
         fetchData();
         filterAchadosByTema(_selectedTemaId)
-    }, [arrayTopicoAchado, arrayAchado, arrayProcesso.length])
+    }, [arrayTopicoAchado, arrayAchado, arrayProcesso])
 
     // Atualiza o valor formatado quando o valor do campo muda
     useEffect(() => {
