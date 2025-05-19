@@ -47,8 +47,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         const fetchData = async () => {
             await getAllAchados();
             await getAllTemas();
-            if(arrayProcesso.length === 0) {
-                await getAllProcessos();
+            const processos = await getAllProcessos();
+            if (processos && processos.length === 0) {
+                console.log("Nenhum processo encontrado no formColeta");
             }
         }
         fetchData();
@@ -168,7 +169,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <ModalListAchados arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
                 {achadoLabel &&
                     <Paper>
-                        <Typography sx={{ mt: 2, p:2 }}>Achado: {achadoLabel}</Typography>
+                        <Typography sx={{ mt: 2, p: 2 }}>Achado: {achadoLabel}</Typography>
                     </Paper>
                 }
             </Grid >
@@ -217,7 +218,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         label={"Sanado"}
                         register={register}
                         errors={errors}
-                        
+
                     />
 
                     <TextField
