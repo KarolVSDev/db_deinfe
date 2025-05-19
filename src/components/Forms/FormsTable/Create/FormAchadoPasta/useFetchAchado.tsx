@@ -45,7 +45,7 @@ const useFetchAchado = () => {
           tema_id: doc.data().tema_id
         })) as Achado[];
 
-        setArrayAchado(achados); // Atualiza o estado com os achados
+        setArrayAchado(achados); 
         return achados
       } else {
         console.log("Nenhum achado encontrado.");

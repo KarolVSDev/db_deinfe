@@ -84,11 +84,12 @@ const getAllProcessos = async () => {
       return processos
     } else {
       console.log("Nenhum processo encontrado.");
+      return [];
     }
   } catch (error) {
     console.error("Erro ao tentar resgatar os Processos:", error);
+    return [];
   }
-
 }
 
 const getProcesso = async (id: string): Promise<Processo | null> => {
