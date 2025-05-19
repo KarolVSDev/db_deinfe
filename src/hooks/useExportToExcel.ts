@@ -4,6 +4,7 @@ import useFetchTema from '../components/Forms/FormsTable/Create/FormTemaPasta/us
 import useFetchAchado from '../components/Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useContextTable } from '../context/TableContext';
+import { TypeInfo } from './TypeAlert';
 
 
 
@@ -31,11 +32,14 @@ const useExportToExcel = () => {
 
                         if (!temas || temas.length === 0) {
                             console.log("Nenhum tema encontrado.");
+                            TypeInfo("Não há dados para exportar", "info");
                             return;
                         };
 
                         headers = ['Tema', 'Situação'];
-                        rows = temas.map((tema) => [tema.tema, tema.situacao ? 'Aprovado' : 'Pendente']);
+                        rows = temas.map((tema) => [
+                            tema.tema,
+                            tema.situacao ? 'Aprovado' : 'Pendente']);
 
                     } catch (error) {
                         console.error("erro ao tentar exportar os temas: ", error)
@@ -52,27 +56,29 @@ const useExportToExcel = () => {
 
                         if (!achado || achado.length === 0) {
                             console.log("Nenhum achado encontrado.");
+                            TypeInfo("Não há dados para exportar", "info");
                             return;
                         };
 
                         if (!temas || temas.length === 0) {
                             console.log("Nenhum tema encontrado.");
+                            TypeInfo("Não há dados para exportar", "info");
                             return;
                         }
 
                         const temaMap = new Map(temas.map((tema) => [tema.id, tema.tema]));
 
-                        headers = ['Achado', 'Data', 'Gravidade', 'Critério Municipal', 'Critério Estadual', 'Critério Geral', 'Situação Achado', 'Análise', 'Temas'];
+                        headers = ['Temas', 'Achado', 'Análise', 'Data', 'Gravidade', 'Critério Geral', 'Critério Municipal', 'Critério Estadual', 'Situação Achado'];
                         rows = achado.map((achado) => [
+                            temaMap.get(achado.tema_id) || 'Tema não encontrado',
                             achado.achado,
+                            achado.analise,
                             achado.data,
                             achado.gravidade,
+                            achado.criterioGeral,
                             achado.criterioMunicipal,
                             achado.criterioEstadual,
-                            achado.criterioGeral,
-                            achado.situacaoAchado === true ? 'Aprovado' : 'Pendente',
-                            achado.analise,
-                            temaMap.get(achado.tema_id) || 'Tema não encontrado'
+                            achado.situacaoAchado === true ? 'Aprovado' : 'Pendente'
                         ]);
                     } catch (error) {
                         console.error("erro ao tentar exportar os achados: ", error)
@@ -87,16 +93,17 @@ const useExportToExcel = () => {
 
                         if (!processos || processos.length === 0) {
                             console.log("Nenhum processo encontrado.");
+                            TypeInfo("Não há dados para exportar", "info");
                             return;
                         };
 
-                        headers = ['Número', 'Exercício', 'Julgado', 'Unidade Gestora', 'Diretoria'];
+                        headers = ['Número', 'Exercício', 'Unidade Gestora', 'Diretoria', 'Julgado'];
                         rows = processos.map((processos) => [
                             processos.numero,
                             processos.exercicio,
-                            processos.julgado,
                             processos.unidadeGestora,
-                            processos.diretoria
+                            processos.diretoria,
+                            processos.julgado
                         ]);
                     } catch (error) {
                         console.error("erro ao tentar exportar os processos: ", error)
@@ -109,6 +116,7 @@ const useExportToExcel = () => {
 
                         if (!arrayColeta || arrayColeta.length === 0) {
                             console.log("Nenhuma coleta encontrada.");
+                            TypeInfo("Não há dados para exportar", "info");
                             return;
                         };
 
