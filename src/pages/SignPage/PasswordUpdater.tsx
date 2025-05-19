@@ -48,11 +48,12 @@ const PasswordUpdater = () => {
             minHeight: '100vh',
             mb: 0,
             pb: 0,
-            backgroundImage: 'url(/images/recoverPassBackground.svg)',
+            backgroundImage: 'url(/images/tce_5.jpeg)',
+            backgroundBlendMode: 'multiply',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
-            backgroundColor: '#f0f0f0',
+            backgroundColor: 'rgba(1, 2, 19, 0.5)',
         }}>
             <FormControl component="form" onSubmit={handleSubmit(onSubmit)}>
                 <Paper sx={{ p: 6, pl: 10, pr: 10 }}>

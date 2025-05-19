@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { EmailChanger } from '../../types/types';
 import validator from 'validator';
 import { NavLink } from 'react-router-dom';
+import zIndex from '@mui/material/styles/zIndex';
+import { GradientRounded } from '@mui/icons-material';
 
 const PasswordChanger = () => {
 
@@ -20,14 +22,16 @@ const PasswordChanger = () => {
             justifyContent: 'center',
             alignItems: 'center',
             minHeight: '100vh',
-            mb:0,
-            pb:0,
-            backgroundImage: 'url(/images/recoverPassBackground.svg)',
+            mb: 0,
+            pb: 0,
+            backgroundImage: 'url(/images/tce_5.jpeg)',
+            backgroundBlendMode: 'multiply',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
-            backgroundColor: '#f0f0f0',
+            backgroundColor:'rgba(1, 2, 19, 0.5)'
         }}>
+
             <FormControl component="form" onSubmit={handleSubmit(onSubmit)}>
                 <Paper sx={{ p: 6, pl: 10, pr: 10 }}>
                     <FormGroup >
