@@ -47,7 +47,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         const fetchData = async () => {
             await getAllAchados();
             await getAllTemas();
-            await getAllProcessos();
+            if(arrayProcesso.length === 0) {
+                await getAllProcessos();
+            }
         }
         fetchData();
         filterAchadosByTema(_selectedTemaId)
