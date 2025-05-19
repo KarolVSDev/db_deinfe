@@ -80,12 +80,13 @@ const getAllProcessos = async () => {
         diretoria: doc.data().diretoria,
       })) as Processo[];
 
+      if(processos.length === 0) {
+        console.log("Nenhum processo encontrado.")
+      }
+
       setArrayProcesso(processos)
       return processos
-    } else {
-      console.log("Nenhum processo encontrado.");
-      return [];
-    }
+    } 
   } catch (error) {
     console.error("Erro ao tentar resgatar os Processos:", error);
     return [];
