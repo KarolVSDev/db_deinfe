@@ -127,6 +127,7 @@ export default function SignInSide() {
                   type={showPassword ? 'text' : 'password'}
                   fullWidth
                   label="Senha"
+                  autoComplete="current-password"
                   error={!!errors?.password}
                   {...register('password', {
                     required: 'Campo obrigatório',

@@ -138,8 +138,8 @@ export default function DatabaseTable() {
             slotProps={{
               tooltip: {
                 sx: {
-                  fontSize: '14px', 
-                 
+                  fontSize: '14px',
+
                 },
               },
             }}
@@ -258,6 +258,19 @@ export default function DatabaseTable() {
               columns={columns}
               showCellVerticalBorder
               localeText={handleLocalization}
+              slotProps={{
+                panel: {
+                  sx: {
+                    '& .MuiDataGrid-filterForm': {
+                      width: 700,
+                      gap: 2,
+                    },
+                    '.MuiDataGrid-filterFormValueInput': {
+                      width: 400,
+                    },
+                  },
+                },
+              }}
               initialState={{
                 pagination: {
                   paginationModel: {

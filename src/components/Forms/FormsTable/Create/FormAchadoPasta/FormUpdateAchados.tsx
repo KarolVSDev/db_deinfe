@@ -173,10 +173,10 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                   onChange={(_, value) => field.onChange(value?.id || '')}
                   ListboxProps={{
                     style: {
-                        maxHeight: '200px', 
-                        overflow: 'auto',    
+                      maxHeight: '200px',
+                      overflow: 'auto',
                     },
-                }}
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -261,19 +261,19 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           </Grid>
 
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+            <Typography>Campo de Análise</Typography>
             <TextField
               variant='filled'
-              autoComplete="given-name"
-              defaultValue={achado?.analise}
+              autoComplete="analise"
               type="text"
               multiline
               rows={4}
               fullWidth
               id="analise"
               label="Análise"
+              placeholder='Use # + barra de espaço para indicar um título. Ex: # Título'
+              {...register('analise')}
             />
-
-
           </Grid>
           {loading ? <Box sx={{ display: "flex", justifyContent: "start", mt: 3 }}>
             <Loader />

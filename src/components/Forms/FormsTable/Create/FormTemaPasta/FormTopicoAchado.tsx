@@ -1,5 +1,5 @@
 import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';  
+import { useForm } from 'react-hook-form';
 import { TopicoAchado, User } from '../../../../../types/types';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { useState } from 'react';
@@ -17,7 +17,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false)
   const { getTemaByName } = useFetchTema();
-  const { setTema  } = useFetchTema();
+  const { setTema } = useFetchTema();
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -29,14 +29,13 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   };
 
   const onSubmit = async (data: TopicoAchado) => {
-    const temaExiste = await getTemaByName(data.tema)
+    try {
+      setLoading(true);
 
-    if (temaExiste) {
-      return;
-    } else {
-      setLoading(true)
+      const temaExiste = await getTemaByName(data.tema)
 
-      try {
+      if (temaExiste) return;
+
         if (user?.cargo !== 'chefe') {
           data.situacao = false;
         }
@@ -46,25 +45,21 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
         }
         setTema(dataWithSituacao)
         reset()
-        closeModal()
       } catch (error) {
-        console.error("Erro no tryCacht do submit de topico: ", error)
+        console.error("Erro no tryCatch do submit de topico: ", error)
       } finally {
         setLoading(false)
+         closeModal()
       }
-    }
-
-
-
   };
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" id="formTopcioAchado" name='formTopicoAchado' noValidate  onSubmit={(e) => {
+    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" id="formTopcioAchado" name='formTopicoAchado' noValidate onSubmit={(e) => {
       e.preventDefault();
       e.stopPropagation();
       handleSubmit(onSubmit)(e);
     }}>
-      <Box  sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Tema</Typography>
         <IconButton onClick={closeModal} sx={{
           '&:hover': {

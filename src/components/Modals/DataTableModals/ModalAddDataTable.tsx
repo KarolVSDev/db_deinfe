@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTemaPasta/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchadoPasta/FormAchados';
 import SaveIcon from '@mui/icons-material/Save';
@@ -38,12 +38,14 @@ export interface ModalAddDataProps {
 
 
 const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
+  const openButtonRef  = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
-
-
+  const handleClose = () => {
+    openButtonRef .current?.focus();
+    setOpen(false);
+  }
 
   useEffect(() => {
 
@@ -59,7 +61,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
 
   return (
     <div>
-      <Button onClick={handleOpen} disabled={isDisabled} variant='contained'>
+      <Button ref={openButtonRef}  onClick={handleOpen} disabled={isDisabled} variant='contained'>
         <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
       </Button>
       <Modal
@@ -68,6 +70,9 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
         open={open}
         onClose={handleClose}
         closeAfterTransition
+        disableAutoFocus={true}
+        disableEnforceFocus={true}
+        disableRestoreFocus={false}
         slots={{ backdrop: Backdrop }}
         slotProps={{
           backdrop: {
