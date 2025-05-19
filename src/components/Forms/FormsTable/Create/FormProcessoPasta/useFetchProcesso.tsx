@@ -7,7 +7,7 @@ import { useContextTable } from "../../../../../context/TableContext";
 
 const useFetchProcesso = () => {
 
-  const { setArrayProcesso } = useContextTable();
+  const { setArrayProcesso, arrayProcesso } = useContextTable();
   //CREATE
   const addProcesso = async (data: Processo): Promise<boolean> => {
     try {
@@ -80,13 +80,13 @@ const getAllProcessos = async () => {
         diretoria: doc.data().diretoria,
       })) as Processo[];
 
-      setArrayProcesso(processos)
+      if(arrayProcesso.length === 0) {
+        setArrayProcesso(processos)
+      }
+
       return processos
 
-    } else {
-      console.log("Nenhum processo encontrado.")
-      return
-    }
+    } 
   } catch (error) {
     console.error("Erro ao tentar resgatar os Processos:", error);
     return [];

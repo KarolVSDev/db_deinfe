@@ -34,9 +34,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     });
     const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
-    const {  escutarProcessos } = useFetchProcesso();
+    const {  getAllProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
-    const { arrayAchado, arrayProcesso, arrayTopicoAchado, setArrayProcesso } = useContextTable();
+    const { arrayAchado, arrayProcesso, arrayTopicoAchado } = useContextTable();
     const [achadoLabel, setAchadoLabel] = useState<string>()
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
@@ -47,7 +47,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         const fetchData = async () => {
             await getAllAchados();
             await getAllTemas();
-            await escutarProcessos((processo) => setArrayProcesso(processo));
+            await getAllProcessos();
         }
         fetchData();
         filterAchadosByTema(_selectedTemaId)
@@ -179,7 +179,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     render={({ field }) => (
                         <Autocomplete
                             disablePortal
-                            autoFocus
                             id="autocomplete-processo"
                             options={arrayProcesso}
                             getOptionLabel={(option: Processo) => option.numero}
@@ -221,7 +220,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     <TextField
                         variant="filled"
                         placeholder="R$ 0,00"
-                        autoFocus
                         id="valorFinanceiro"
                         label="Valor Financeiro"
                         error={!!errors?.valorFinanceiro}
@@ -242,7 +240,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     )}
 
                     <TextField variant="filled"
-                        autoFocus
                         id="unidade"
                         label="Unidade"
                         type="text"
@@ -251,7 +248,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     />
 
                     <TextField variant="filled"
-                        autoFocus
                         sx={{ width: "15%" }}
                         id="quantitativo"
                         label="Quantitativo"
