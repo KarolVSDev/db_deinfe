@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../../../service/firebase.config"
 import { Processo } from "../../../../../types/types"
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
@@ -127,13 +127,24 @@ const updateProcesso = async (id: string, data: Partial<Processo>) => {
 const deleteProcesso = async (id: string) => {
   try {
     const processoRef = doc(db, "processo", id);
-    await deleteDoc(processoRef);
-    TypeAlert("O Processo foi excluído", "success")
+
+    const querySnapshot = await getDocs(
+      query(collection(db, "coleta"), where("processoId", "==", id))
+    );
+
+    if(!querySnapshot.empty) {
+      TypeAlert("Não é possível excluir o Processo, ele está vinculado a um ou mais Achados", "info")
+      return;
+    } else {
+      await deleteDoc(processoRef);
+      TypeAlert("O Processo foi excluído", "success")
+    }
   } catch (error) {
     console.error("Erro ao tentar excluir o Processo", error);
     throw error;
   }
 }
+
 return {
   addProcesso, getProcessoById, escutarProcessos, getProcesso, updateProcesso, deleteProcesso, getAllProcessos
 }

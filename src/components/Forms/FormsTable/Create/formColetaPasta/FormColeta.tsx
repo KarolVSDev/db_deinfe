@@ -34,7 +34,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     });
     const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
-    const {  getAllProcessos } = useFetchProcesso();
+    const { getAllProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
     const { arrayAchado, arrayProcesso, arrayTopicoAchado } = useContextTable();
     const [achadoLabel, setAchadoLabel] = useState<string>()
@@ -42,6 +42,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const fieldValue = watch('valorFinanceiro');
     const [filteredAchados, setFilteredAchados] = useState<Achado[]>([])
     const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
+    const [temaSelected, setTemaSelected] = useState<boolean>(true)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -81,6 +82,11 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         _details?: AutocompleteChangeDetails<TopicoAchado>
     ) => {
         const temaId = value?.id || '';
+        if (temaId !== undefined) {
+            setTemaSelected(false);
+        } else {
+            setTemaSelected(true);
+        }
         setValue('temaId', temaId); // Atualiza o formulário
         setSelectedTemaId(temaId); // Salva no estado
         filterAchadosByTema(temaId); // Filtra os achados
@@ -100,13 +106,12 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 TypeAlert("Coleta adicionada", "success");
                 reset()
                 closeModal()
-            } else {
-                TypeAlert("Erro ao tentar adicionar a coleta", "error")
-                reset()
-                closeModal()
             }
         } catch (error) {
+            TypeAlert("Erro ao tentar adicionar a coleta", "error")
             console.log("Erro no Submit", error)
+        } finally {
+
         }
     }
 
@@ -152,6 +157,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                                     {...params}
                                     label="Tema"
                                     variant="filled"
+                                    placeholder="Selecione um tema"
                                     focused={true}
                                     error={!!errors.temaId}
                                     helperText={errors.temaId?.message}
@@ -163,12 +169,13 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             </Grid>
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                <ModalListAchados arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
                 {achadoLabel &&
-                    <Paper>
-                        <Typography sx={{ mt: 2, p: 2 }}>Achado: {achadoLabel}</Typography>
+                    <Paper sx={{ mb: 2 }}>
+                        <Typography sx={{ mt: 2, pl: 2, pt: 1, fontWeight: 'bold' }}>Achado:</Typography>
+                        <Typography sx={{ p: 2, pt: 0 }}>{achadoLabel}</Typography>
                     </Paper>
                 }
+                <ModalListAchados temaSelected={temaSelected} arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
             </Grid >
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
@@ -195,7 +202,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                                     {...params}
                                     label="Processo"
                                     variant="filled"
-                                    focused={true}
+                                    placeholder="Selecione um processo"
                                     error={!!errors.processoId}
                                     helperText={errors.processoId?.message}
                                 />

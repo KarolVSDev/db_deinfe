@@ -75,7 +75,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
     //bloco que manipula e salva o achado
 
     try {
-      const achadoExiste = await getAchadobyName(data.achado);
+      const achadoExiste = await getAchadobyName(data.achado, data.tema_id);
       if (achadoExiste) {
         setLoading(false)
         return

@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../../../service/firebase.config";
 import { Coleta } from "../../../../../types/types";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
@@ -15,12 +15,24 @@ const useFetchColeta = () => {
     const { getAllTemas } = useFetchTema();
     const { getAllProcessos, getProcessoById } = useFetchProcesso();
     const { getUsers } = useFetchUsers();
-    const {setArrayColeta} = useContextTable();
+    const { setArrayColeta } = useContextTable();
 
     const addColeta = async (data: Coleta) => {
-        const {temaId, ...resto} = data
+        const { temaId, ...resto } = data
         try {
             const coletaRef = collection(db, 'coleta');
+            const querySnapshot = await getDocs(
+                query(
+                    coletaRef,
+                    where("achadoId", "==", resto.achadoId),
+                    where("processoId", "==", resto.processoId),
+                )
+            );
+            if (!querySnapshot.empty) {
+                TypeAlert("Já existe um registro cadastrado com esse achado e processo", "error")
+                return false
+            }
+
             await addDoc(coletaRef, resto);
             console.log('Coleta cadastrada com sucesso');
             return true
@@ -51,6 +63,7 @@ const useFetchColeta = () => {
 
                 // Transforma os IDs em valores legíveis
                 const coletasTransformadas = await editorDeArrayColeta(coletas);
+                console.log(coletasTransformadas)
                 setArrayColeta(coletasTransformadas);
                 callback(coletasTransformadas);
             });
@@ -111,11 +124,11 @@ const useFetchColeta = () => {
         try {
             const docRef = doc(db, "coleta", id);
             const docSnap = await getDoc(docRef);
-            
-            if(!docSnap.exists()) {
+
+            if (!docSnap.exists()) {
                 console.error("Registro não encontrado")
-            } 
-            const coleta = {id: docSnap.id, ...docSnap.data() }as Coleta;
+            }
+            const coleta = { id: docSnap.id, ...docSnap.data() } as Coleta;
             const achado = await getAchadoById(coleta.achadoId)
             const processo = await getProcessoById(coleta.processoId)
 
@@ -126,29 +139,44 @@ const useFetchColeta = () => {
 
             const coletaCompleta = {
                 coleta: coleta,
-                achado:  achado.achado,
+                achado: achado.achado,
                 tema: achado.tema,
                 processo: processo
             };
-            
+
             return coletaCompleta
 
         } catch (error) {
             console.error("Erro ao buscar coleta por ID: ", error);
             return null;
-        } 
+        }
     }
 
     //UPDATE
     const updateColeta = async (idColeta: string, data: Partial<Coleta>) => {
         try {
-          const coletaRef = doc(db, "coleta", idColeta);
-          await updateDoc(coletaRef, data)
-          console.log("Coleta atualizada com sucesso!");
+            const coletaRef = doc(db, "coleta", idColeta);
+
+            const querySnapshot = await getDocs(
+                query(
+                    collection(db, "coleta"),
+                    where("achadoId", "==", data.achadoId),
+                    where("processoId", "==", data.processoId),
+                )
+            );
+
+            if (!querySnapshot.empty) {
+                TypeAlert("Já existe um registro cadastrado com esse achado e processo", "error")
+                return false
+            } else {
+                await updateDoc(coletaRef, data)
+                TypeAlert("Coleta atualizada com sucesso!", "success")
+                return true
+            }
         } catch (error) {
             console.error("Erro ao atualizar coleta: ", error);
         }
-      };
+    };
 
     //DELETE
     const deleteColeta = async (id: string) => {
