@@ -1,20 +1,19 @@
-// import { Box, Typography } from "@mui/material"
-// import { useState } from "react"
+import { Box, Typography } from "@mui/material"
+import { ReactNode, useState, useEffect, useDebugValue } from "react"
+import Tooltip from "@mui/material/Tooltip";
 
+type HelperProps = {
+    children: React.ReactElement;
+    title: string;
+}
 
-// // const Helper = () => {
-// //     const [texto, setTexto] = useState("texto")
+const Helper = ({ children, title }: HelperProps) => {
 
-// //     setTexto("numero")
+    return <Tooltip title={title}
+        enterDelay={500}>
+        {children}
+    </Tooltip>
 
-// //     return (
-// //         <>
-// //             <Box><Typography>{texto}</Typography></Box>
+}
 
-// //         </>
-// //     )
-// // }
-
-// const Helper = () =>{
-
-// }
+export default Helper;

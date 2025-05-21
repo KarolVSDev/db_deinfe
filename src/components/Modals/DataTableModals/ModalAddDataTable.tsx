@@ -11,6 +11,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
 import FormProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormProcesso';
 import FormColeta from '../../Forms/FormsTable/Create/formColetaPasta/FormColeta';
+import Helper from '../../Dialog/Helper';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -61,9 +62,11 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
 
   return (
     <div>
+      <Helper title='Cadastrar novo'>
       <Button ref={openButtonRef}  onClick={handleOpen} disabled={isDisabled} variant='contained'>
         <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
       </Button>
+      </Helper>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

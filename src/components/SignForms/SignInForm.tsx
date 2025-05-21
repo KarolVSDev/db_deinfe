@@ -122,6 +122,11 @@ export default function SignInSide() {
               <FormControl sx={{ width: '100%' }} variant="outlined" error={!!errors?.password}>
                 <InputLabel sx={{ p: 'px' }} htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
+                  sx={{
+                    '& input::-ms-reveal': {
+                      display: 'none'
+                    }
+                  }}
                   required
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -187,14 +192,14 @@ export default function SignInSide() {
                   '&:hover': {
                     color: "#1e293b", // Cor do texto no hover (opcional)
                     textDecoration: "underline",
-                    textDecorationColor: "#1e293b", 
+                    textDecorationColor: "#1e293b",
 
                   },
-             
+
                   '&.active': {
                     color: "#ddd",
                     textDecoration: "underline",
-                    textDecorationColor: "#ff5722", 
+                    textDecorationColor: "#ff5722",
                     fontWeight: "bold"
                   }
                 }}>Trocar Senha</Typography></NavLink>

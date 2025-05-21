@@ -21,6 +21,7 @@ import useFetchAchado from '../Forms/FormsTable/Create/FormAchadoPasta/useFetchA
 import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema';
 import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchColeta';
 import DataTableSkeleton from './DataTableSkeleton';
+import Helper from '../Dialog/Helper';
 
 
 export default function DatabaseTable() {
@@ -236,11 +237,13 @@ export default function DatabaseTable() {
           </Select>
           <ModalAddData dataType={dataType} user={user} />
           <Box>
-            <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
-              exportToExcel(dataType, 'data.xlsx')
-            }}>
-              <FileDownloadIcon />
-            </Button>
+            <Helper title="Botão para exportar dados">
+              <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
+                exportToExcel(dataType, 'data.xlsx')
+              }}>
+                <FileDownloadIcon />
+              </Button>
+            </Helper>
           </Box>
         </Box>
         <Divider />

@@ -5,8 +5,6 @@ import { useForm } from 'react-hook-form';
 import { EmailChanger } from '../../types/types';
 import validator from 'validator';
 import { NavLink } from 'react-router-dom';
-import zIndex from '@mui/material/styles/zIndex';
-import { GradientRounded } from '@mui/icons-material';
 
 const PasswordChanger = () => {
 
