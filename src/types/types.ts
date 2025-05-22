@@ -57,17 +57,6 @@ export interface Achado {
   analise: string;
   tema_id: string;
 }
-
-export interface FormBeneficioType {
-  id: string;
-  beneficio: string;
-  situacaoBeneficio: boolean;
-  achados: Achado[];
-}
-export interface AchadoComTopico {
-  achado: Achado;
-  tema: TopicoAchado;
-}
 export interface ColumnConfig {
   id: string;
   label: string;

@@ -40,10 +40,10 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
   const [loading, setLoading] = useState(false);
   const gravidade = watch('gravidade', 'Baixa');
 
+
   useEffect(() => {
     getAllTemas()
   })
-
 
 
   const handleChangeSituacaoAchado = (
@@ -75,7 +75,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
     //bloco que manipula e salva o achado
 
     try {
-      const achadoExiste = await getAchadobyName(data.achado);
+      const achadoExiste = await getAchadobyName(data.achado, data.tema_id);
       if (achadoExiste) {
         setLoading(false)
         return
@@ -109,7 +109,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
       handleSubmit(onSubmit)(e);
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Achado</Typography>
+        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar proposta de Achado</Typography>
         <IconButton onClick={closeModal} sx={{
           '&:hover': {
             bgcolor: '#1e293b', color: '#ffffff',
@@ -142,6 +142,8 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
                   {...params}
                   label="Tema"
                   variant="filled"
+                  required
+                  placeholder='Selecione um Tema'
                   focused={true}
                   error={!!errors.tema_id}
                   helperText={errors.tema_id?.message}
@@ -207,7 +209,12 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
           <ToggleButtonsCriterios alignment={alignment} onChange={setAlignment} />
         </Grid>
         <Grid item xs={12}>
-          <TextFieldComponent id={alignment} label={getTextFieldLabel()} register={register} errors={errors} />
+          <TextFieldComponent
+            id={alignment}
+            label={getTextFieldLabel()}
+            register={register}
+            errors={errors}
+          />
         </Grid>
 
         <Grid item xs={12} sm={4} sx={{ mt: 3 }}>

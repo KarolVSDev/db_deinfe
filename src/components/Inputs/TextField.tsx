@@ -8,9 +8,9 @@ export interface TextFieldProps {
     label: string;
     register: UseFormRegister<Achado>;
     errors: FieldErrors<FieldValues>;
-    criterioMuni?: string;
-    criterioEst?: string;
-    criterioGeral?: string;
+    criterioMuni?: string | null;
+    criterioEst?: string | null;
+    criterioGeral?: string | null;
 }
 
 const TextFieldComponent: React.FC<TextFieldProps> = ({ id, label, register, errors, criterioEst, criterioGeral, criterioMuni     }) => {
@@ -24,7 +24,6 @@ const TextFieldComponent: React.FC<TextFieldProps> = ({ id, label, register, err
                 return criterioGeral || '';
         }
     }
-
    
     return (
         <>
@@ -68,6 +67,7 @@ const TextFieldComponent: React.FC<TextFieldProps> = ({ id, label, register, err
                         label={label}
                         error={!!errors?.criterioMunicipal}
                         helperText={errors?.criterioMunicipal?.message as string}
+
 
                         {...register(id as keyof Achado, {
                             validate: (value) => {

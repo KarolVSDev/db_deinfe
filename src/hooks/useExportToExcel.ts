@@ -111,12 +111,11 @@ const useExportToExcel = () => {
                     break;
                 };
 
-                case 'coleta': {
+                case 'relacionamentos': {
                     try {
 
                         if (!arrayColeta || arrayColeta.length === 0) {
-                            console.log("Nenhuma coleta encontrada.");
-                            TypeInfo("Não há dados para exportar", "info");
+                            console.log("Nenhum relacionamento encontrado.");
                             return;
                         };
 

@@ -67,7 +67,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
             await getAllProcessos();
         }
         fetchData();
-    }, [arrayAchado, arrayProcesso])
+    }, [])
 
 
     useEffect(() => {
@@ -146,7 +146,6 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
         try {
             setLoading(true)
             updateColeta(data.id, data)
-            TypeAlert("Coleta atualizada com sucesso!", "success")
             closeModal()
             setLoading(false)
         } catch (error) {
@@ -165,7 +164,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                 ) : (
                     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
                         <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Coleta</Typography>
+                            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Relacionamento</Typography>
                             <IconButton onClick={closeModal} sx={{
                                 '&:hover': {
                                     bgcolor: '#1e293b', color: '#ffffff',
@@ -174,7 +173,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                 <CloseIcon />
                             </IconButton>
                         </Box>
-                        
+
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                             <Controller
                                 name="temaId"
@@ -191,7 +190,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                         defaultValue={arrayTopicoAchado.find(tema => tema.id === field.value || null)}
                                         isOptionEqualToValue={(option, value) => option.id === value.id}
                                         onChange={handleTemaChange}
-                                     
+
                                         ListboxProps={{
                                             style: {
                                                 maxHeight: '200px',
@@ -214,10 +213,11 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                         </Grid>
 
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                            <ModalListAchados arrayFiltrado={filteredAchados}  onSelectAchado={handleSelectAchado}/>
-                            {achadoLabel && 
-                                <Paper>
-                                    <Typography sx={{ mt: 2, p: 2 }}>Achado: {achadoLabel}</Typography>
+                            <ModalListAchados arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
+                            {achadoLabel &&
+                                <Paper sx={{ mb: 2 }}>
+                                    <Typography sx={{ mt: 2, pl: 2, pt: 1, fontWeight: 'bold' }}>Achado:</Typography>
+                                    <Typography sx={{ p: 2, pt: 0 }}>{achadoLabel}</Typography>
                                 </Paper>
                             }
                         </Grid >
@@ -267,7 +267,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                                     label={"Sanado"}
                                     register={register}
                                     errors={errors}
-                                   
+
                                     defaultValue={coleta?.coleta.sanado}
                                 />
 

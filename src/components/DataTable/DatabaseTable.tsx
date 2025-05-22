@@ -75,7 +75,7 @@ export default function DatabaseTable() {
           setIsLoading(false);
         })
         return () => processoListener;
-      case 'coleta':
+      case 'relacionamentos':
         setColumns(createGridColumns(coletaHeader));
         const coletaListener = escutarColeta((coleta) => {
           setArrayColeta(coleta)
@@ -187,7 +187,7 @@ export default function DatabaseTable() {
     { value: 'tema', string: 'Temas' },
     { value: 'achado', string: 'Achados' },
     { value: 'processo', string: 'Processos' },
-    { value: 'coleta', string: 'Coleta' },
+    { value: 'relacionamentos', string: 'Relacionamentos' },
   ]
 
 

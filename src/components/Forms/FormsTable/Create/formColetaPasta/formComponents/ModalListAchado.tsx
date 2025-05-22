@@ -25,9 +25,10 @@ const style = {
 export interface ModalListAchadoProps {
     arrayFiltrado: Achado[];
     onSelectAchado: (achado: Achado) => void;
+    temaSelected?: boolean;
 }
 
-const ModalListAchados: React.FC<ModalListAchadoProps> = ({ arrayFiltrado, onSelectAchado }) => {
+const ModalListAchados: React.FC<ModalListAchadoProps> = ({ arrayFiltrado, onSelectAchado, temaSelected }) => {
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     const handleOpen = () => setOpen(true);
@@ -38,7 +39,7 @@ const ModalListAchados: React.FC<ModalListAchadoProps> = ({ arrayFiltrado, onSel
 
     return (
         <>
-            <Button onClick={handleOpen} variant="outlined" >Selecionar Achado</Button>
+            <Button disabled={temaSelected} onClick={handleOpen} variant="outlined" >Selecionar Achado</Button>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

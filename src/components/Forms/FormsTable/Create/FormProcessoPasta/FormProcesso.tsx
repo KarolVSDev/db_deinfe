@@ -52,7 +52,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
             handleSubmit(onSubmit)(e);
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Processo</Typography>
+                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar proposta de Processo</Typography>
                 <IconButton onClick={closeModal} sx={{
                     '&:hover': {
                         bgcolor: '#1e293b', color: '#ffffff',

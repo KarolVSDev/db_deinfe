@@ -69,7 +69,7 @@ const ListAchados: React.FC<ListAchadosProps> = ({ arrayDeAchados, onAchadoSelec
             </List>
             {achadosFiltrados.length === 0 && (
                 <ListItemText
-                    primary="Esse achado ainda não existe!"
+                    primary="Não foi possível encontrar o achado desejado"
                     sx={{ textAlign: "center", p: 1 }}
                 />
             )}
