@@ -40,10 +40,10 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
   const [loading, setLoading] = useState(false);
   const gravidade = watch('gravidade', 'Baixa');
 
+
   useEffect(() => {
     getAllTemas()
   })
-
 
 
   const handleChangeSituacaoAchado = (
@@ -209,7 +209,12 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
           <ToggleButtonsCriterios alignment={alignment} onChange={setAlignment} />
         </Grid>
         <Grid item xs={12}>
-          <TextFieldComponent id={alignment} label={getTextFieldLabel()} register={register} errors={errors} />
+          <TextFieldComponent
+            id={alignment}
+            label={getTextFieldLabel()}
+            register={register}
+            errors={errors}
+          />
         </Grid>
 
         <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
