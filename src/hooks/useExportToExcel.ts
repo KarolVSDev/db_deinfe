@@ -104,11 +104,11 @@ const useExportToExcel = () => {
                     break;
                 };
 
-                case 'coleta': {
+                case 'relacionamentos': {
                     try {
 
                         if (!arrayColeta || arrayColeta.length === 0) {
-                            console.log("Nenhuma coleta encontrada.");
+                            console.log("Nenhum relacionamento encontrado.");
                             return;
                         };
 
