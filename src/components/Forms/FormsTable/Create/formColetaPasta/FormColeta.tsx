@@ -1,4 +1,4 @@
-import { Autocomplete, Paper, TextField } from "@mui/material";
+import { Autocomplete, Divider, Paper, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -52,7 +52,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         }
         fetchData();
         filterAchadosByTema(_selectedTemaId)
-    }, [arrayTopicoAchado, arrayAchado, arrayProcesso])
+    }, [])
 
     // Atualiza o valor formatado quando o valor do campo muda
     useEffect(() => {
@@ -118,7 +118,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     return (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formColeta' id='formColeta' noValidate onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Coleta</Typography>
+                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Formulários de registro e relacionamentos de Temas, Achados e Processos</Typography>
                 <IconButton onClick={closeModal} sx={{
                     '&:hover': {
                         bgcolor: '#1e293b', color: '#ffffff',
@@ -129,7 +129,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             </Box>
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
+                <Divider textAlign="center" sx={{ my: 4, color:"#777"}}>Seção de Formulários</Divider>
                 <GroupButtonColeta />
+                <Divider textAlign="center" sx={{ my: 4, color:"#777"}}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Controller

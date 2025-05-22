@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { TopicoAchado } from "../../../../../types/types";
 import { db } from "../../../../../service/firebase.config";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
@@ -49,7 +49,8 @@ const useFetchTema = () => {
     const getAllTemas = async () => {
         try {
             const temasRef = collection(db, "tema");
-            const querySnapshot = await getDocs(temasRef);
+            const q = query(temasRef, orderBy("tema", "asc"));
+            const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
                 const temas = querySnapshot.docs.map((doc) => ({

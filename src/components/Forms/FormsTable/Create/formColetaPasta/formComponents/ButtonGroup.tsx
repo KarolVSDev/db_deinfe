@@ -17,20 +17,22 @@ const GroupButtonColeta = () => {
         setModalOpen(false)
     }
 
-    const handleModalForm = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const value = e.currentTarget.textContent?.replace(/^\w+\s/, '');
-        if (value) {
-            setDataType(value);
-            setModalOpen(true);
-        }
+    const handleModalForm = (item: string) => {
+        setDataType(item);
+        setModalOpen(true);
+
     }
     return (
         <>
-            <ButtonGroup id="buttonGroup" variant="contained" aria-label="Basic button group">
+            <ButtonGroup id="buttonGroupColeta" variant="contained" aria-label="Button group coleta">
                 {itens.map((item, index) => (
-                    <Button key={index} onClick={(e) => handleModalForm(e)}><SaveIcon sx={{ mr: 0.5 }} />{item}</Button>
+                    <Button key={index} onClick={() => handleModalForm(item)}>
+                        <SaveIcon sx={{ mr: 0.5 }} />
+                        Proposta de {item}
+                    </Button>
                 ))}
             </ButtonGroup>
+
             <ModalColeta
                 dataType={dataType}
                 open={modalOpen}

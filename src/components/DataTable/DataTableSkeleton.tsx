@@ -20,7 +20,7 @@ const DataTableSkeleton: React.FC<DataTableSkeletonProps> = ({
       case 'tema': return topicoAchadoHeader;
       case 'achado': return achadoHeader;
       case 'processo': return processoHeader;
-      case 'coleta': return coletaHeader;
+      case 'relacionamentos': return coletaHeader;
       default: return null; 
     }
   };
