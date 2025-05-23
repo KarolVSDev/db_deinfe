@@ -100,12 +100,16 @@ export default function DatabaseTable() {
         if (header.id === "acoes") {
           return (
             <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
-              <IconButton color="primary" onClick={() => handleUpdate(selectedRow)}>
-                <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-              </IconButton>
-              <IconButton color="error" onClick={() => handleDelete(selectedRow)}>
-                <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-              </IconButton>
+              <Helper title="Clique aqui para editar o registro">
+                <IconButton color="primary" onClick={() => handleUpdate(selectedRow)}>
+                  <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+                </IconButton>
+              </Helper>
+              <Helper title="Clique aqui para deletar o registro">
+                <IconButton color="error" onClick={() => handleDelete(selectedRow)}>
+                  <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+                </IconButton>
+              </Helper>
             </Box>
           );
         }

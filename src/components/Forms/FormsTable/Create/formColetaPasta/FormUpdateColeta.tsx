@@ -145,9 +145,17 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const onSubmit = async (data: Coleta) => {
         try {
             setLoading(true)
-            updateColeta(data.id, data)
-            closeModal()
-            setLoading(false)
+
+            const updatedColeta = await updateColeta(data.id, data);
+
+            if(updatedColeta) {
+                TypeAlert("Coleta atualizada com sucesso", "success")
+                closeModal()
+                setLoading(false)
+            } else {
+                setLoading(false)
+            }
+
         } catch (error) {
             setLoading(false)
             TypeAlert("Erro ao atualizar coleta", "error")

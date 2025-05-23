@@ -62,7 +62,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
 
   return (
     <div>
-      <Helper title='Cadastrar novo'>
+      <Helper title='Clique aqui para criar um novo registro'>
       <Button ref={openButtonRef}  onClick={handleOpen} disabled={isDisabled} variant='contained'>
         <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
       </Button>

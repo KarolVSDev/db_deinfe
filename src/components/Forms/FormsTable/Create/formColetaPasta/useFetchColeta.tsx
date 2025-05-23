@@ -21,6 +21,12 @@ const useFetchColeta = () => {
         const { temaId, ...resto } = data
         try {
             const coletaRef = collection(db, 'coleta');
+
+            if(!resto.achadoId) {
+                TypeAlert("Você não selecionou um achado", "error")
+                return false
+            }
+
             const querySnapshot = await getDocs(
                 query(
                     coletaRef,
@@ -29,7 +35,7 @@ const useFetchColeta = () => {
                 )
             );
             if (!querySnapshot.empty) {
-                TypeAlert("Já existe um registro cadastrado com esse achado e processo", "error")
+                TypeAlert("Já existe um relacionamento cadastrado com esse achado e processo", "error")
                 return false
             }
 
@@ -166,7 +172,7 @@ const useFetchColeta = () => {
             );
 
             if (!querySnapshot.empty) {
-                TypeAlert("Já existe um registro cadastrado com esse achado e processo", "error")
+                TypeAlert("Já existe um relacionamento cadastrado com esse achado e processo", "error")
                 return false
             } else {
                 await updateDoc(coletaRef, data)

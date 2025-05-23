@@ -4,6 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useAuth } from '../../../../../../context/AuthContext';
 import ModalColeta from './ModalColeta';
 import { useState } from 'react';
+import Helper from '../../../../../Dialog/Helper';
 
 
 
@@ -26,10 +27,12 @@ const GroupButtonColeta = () => {
         <>
             <ButtonGroup id="buttonGroupColeta" variant="contained" aria-label="Button group coleta">
                 {itens.map((item, index) => (
-                    <Button key={index} onClick={() => handleModalForm(item)}>
-                        <SaveIcon sx={{ mr: 0.5 }} />
-                        Proposta de {item}
-                    </Button>
+                    <Helper title="Clique aqui para criar um novo registro">
+                        <Button key={index} onClick={() => handleModalForm(item)}>
+                            <SaveIcon sx={{ mr: 0.5 }} />
+                            Proposta de {item}
+                        </Button>
+                    </Helper>
                 ))}
             </ButtonGroup>
 
