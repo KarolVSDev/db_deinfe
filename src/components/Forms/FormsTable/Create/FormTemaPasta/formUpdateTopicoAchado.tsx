@@ -65,9 +65,11 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
     try {
       const idTema = id?.toString();
       if (idTema) {
-        updateTema(idTema, updateData)
-        reset()
-        closeModal();
+        const temaUpdated = await updateTema(idTema, updateData)
+        if (temaUpdated) {
+          reset()
+          closeModal();
+        }
       }
     } catch (error) {
       TypeAlert("Erro ao tentar atualizar o registro", "error")
@@ -151,7 +153,6 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
             <Loader />
           </Box> : <RegisterButton text="Atualizar" />
           }
-
         </Box>
       )}
     </>

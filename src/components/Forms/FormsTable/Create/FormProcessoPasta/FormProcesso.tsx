@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import useFetchProcesso from './useFetchProcesso';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import { diretoriasJson } from '../../../../../service/diretoriasJson';
+import Loader from '../../../../Loader/Loader';
 
 export interface FormProcessoProps {
     closeModal: () => void;
@@ -24,6 +25,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<Processo>({});
     const [diretorias, setDiretorias] = useState<Diretoria[]>([])
     const { addProcesso } = useFetchProcesso();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchDiretorias = async () => {
@@ -33,15 +35,16 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
         fetchDiretorias();
     }, []);
     const onSubmit = async (data: Processo) => {
-        const processo = await addProcesso(data);
-        if (processo) {
-            TypeAlert("Processo adicionado", "success");
-            reset()
-            closeModal()
-        } else {
-            TypeAlert("Erro ao tentar adicionar o processo", "error")
-            reset()
-            closeModal()
+        try {     
+            setLoading(true)
+            const processo = await addProcesso(data);
+            if (processo) {
+                TypeAlert("Processo adicionado", "success");
+                reset()
+                closeModal()
+            } 
+        } catch (error) {
+            console.error("Erro ao adicionar processo:", error);
         }
     }
 
@@ -174,7 +177,12 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
                     />
                 </Grid>
             </Grid>
-            <RegisterButton text="Registrar" />
+           {loading ?
+                        <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+                            <Loader />
+                        </Box> :
+                        <RegisterButton text="Registrar" />
+                    }
         </Box>
     )
 }

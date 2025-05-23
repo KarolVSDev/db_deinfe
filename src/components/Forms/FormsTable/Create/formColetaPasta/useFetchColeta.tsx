@@ -189,8 +189,7 @@ const useFetchColeta = () => {
         try {
             const docRef = doc(db, "coleta", id);
             await deleteDoc(docRef);
-            console.log("Documento deletado da coleçao Coleta")
-            TypeAlert("O registro foi excluído", "success")
+            TypeAlert("O relacionamento foi excluído", "success")
             return
         } catch (error) {
             console.error("Erro ao tentar deletar o registro: ", error);

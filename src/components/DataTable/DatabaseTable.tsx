@@ -241,7 +241,7 @@ export default function DatabaseTable() {
           </Select>
           <ModalAddData dataType={dataType} user={user} />
           <Box>
-            <Helper title="Botão para exportar dados">
+            <Helper title="Clique aqui para exportar os dados dessa tabela">
               <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
                 exportToExcel(dataType, 'data.xlsx')
               }}>

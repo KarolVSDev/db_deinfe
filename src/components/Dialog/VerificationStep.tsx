@@ -58,7 +58,7 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
             } catch (error) {
                 console.error("Erro ao tentar excluir o Processo", error)
             }
-        } else if (dataType === 'coleta') {
+        } else if (dataType === 'relacionamentos') {
             setLoading(true)
             try {
                 const id = selectedRow.toString();

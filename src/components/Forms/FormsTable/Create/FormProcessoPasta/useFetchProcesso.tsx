@@ -12,6 +12,15 @@ const useFetchProcesso = () => {
   const addProcesso = async (data: Processo): Promise<boolean> => {
     try {
       const processoRef = collection(db, "processo");
+      const querySnapshot = await getDocs(
+        query(processoRef, where("numero", "==", data.numero))
+      );
+
+      if (!querySnapshot.empty) {
+        TypeAlert("Já existe um processo com esse número", "error");
+        return false;
+      }
+
       const docRef = await addDoc(processoRef, data);
       setArrayProcesso([...arrayProcesso, { ...data, id: docRef.id }])
       console.log("Processo adicionado com sucesso", docRef.id);
@@ -116,11 +125,23 @@ const useFetchProcesso = () => {
   const updateProcesso = async (id: string, data: Partial<Processo>) => {
     try {
       const docRef = doc(db, "processo", id);
+
+      const querySnapshot = await getDocs(
+        query(collection(db, "processo"),
+          where("numero", "==", data.numero),
+        ))
+
+      if (!querySnapshot.empty && querySnapshot.docs[0].id !== id) {
+        TypeAlert("Já existe um processo com esse número", "error");
+        return false
+      }
       await updateDoc(docRef, data);
-      console.log("Processo atualizado com sucesso!")
       TypeAlert("O Processo foi atualizado", "success")
+      return true
+
+
     } catch (error) {
-      console.error("Erro ao tentar atualizar o Processo", error);
+      console.error("Erro ao tentar atualizar o Processo useFetch", error);
       throw error;
     }
   }

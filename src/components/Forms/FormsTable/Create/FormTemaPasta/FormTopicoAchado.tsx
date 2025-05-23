@@ -109,7 +109,6 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
           <Loader />
         </Box> :
         <RegisterButton text="Registrar" />
-
       }
     </Box>
   );

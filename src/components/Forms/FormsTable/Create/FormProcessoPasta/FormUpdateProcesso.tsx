@@ -78,11 +78,16 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
         try {
             const idProcesso = id?.toString();
             if (idProcesso) {
-                updateProcesso(idProcesso, data)
-                reset()
-                closeModal();
-            }
+                const updatedProcesso = await updateProcesso(idProcesso, data)
+
+                if (updatedProcesso) {
+                    TypeAlert("Processo atualizado com sucesso", "success")
+                    reset()
+                    closeModal();
+                }
+            };
         } catch (error) {
+            console.log(error)
             TypeAlert("Erro ao tentar atualizar o registro", "error")
         } finally {
             setLoading(false)
@@ -99,7 +104,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
                     e.preventDefault();
                     e.stopPropagation();
                     handleSubmit(onSubmit)(e);
-                  }} >
+                }} >
                     <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
                         <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Processo</Typography>
                         <IconButton onClick={closeModal} sx={{

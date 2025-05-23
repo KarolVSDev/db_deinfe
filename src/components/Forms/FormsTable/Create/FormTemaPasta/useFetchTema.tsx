@@ -104,9 +104,16 @@ const useFetchTema = () => {
     const updateTema = async (id: string, data: Partial<TopicoAchado>) => {
         try {
             const docRef = doc(db, "tema", id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists() && docSnap.id === id) {
+                TypeAlert("O Tema já existe no banco de dados", "error")
+                return false
+            }
+
             await updateDoc(docRef, data);
-            console.log("Tema atualizado com sucesso!")
             TypeAlert("O Tema foi atualizado", "success")
+            return true
         } catch (error) {
             console.error("Erro ao tentar atualizar o Tema", error);
             throw error;

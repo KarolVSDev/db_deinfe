@@ -19,6 +19,7 @@ import GroupButtonColeta from "./formComponents/ButtonGroup";
 import useFetchTema from "../FormTemaPasta/useFetchTema";
 import { AutocompleteChangeReason, AutocompleteChangeDetails } from '@mui/material/Autocomplete';
 import ModalListAchados from "./formComponents/ModalListAchado";
+import Loader from "../../../../Loader/Loader";
 export interface FormColetaProps {
     closeModal: () => void;
     user: User;
@@ -44,6 +45,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
     const [temaSelected, setTemaSelected] = useState<boolean>(true);
     const [achadoTemaId, setAchadoTemaId] = useState<string>('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -90,7 +92,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             setValue('achadoId', ''); // Limpa também o valor do formulário
         }
 
-        if(temaId !== achadoTemaId) {
+        if (temaId !== achadoTemaId) {
             setAchadoLabel(null);
             setValue('achadoId', ''); // Limpa também o valor do formulário
         }
@@ -109,6 +111,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
     const onSubmit = async (data: Coleta) => {
         try {
+            setLoading(true)
             const formData = {
                 ...data,
                 coletadorId: user.id
@@ -124,7 +127,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             TypeAlert("Erro ao tentar adicionar a coleta", "error")
             console.log("Erro no Submit", error)
         } finally {
-
+            setLoading(false)
         }
     }
 
@@ -280,7 +283,12 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
                 </Box>
             </Grid>
-            <RegisterButton text="Registrar" />
+            {loading ?
+                <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+                    <Loader />
+                </Box> :
+                <RegisterButton text="Atualizar" />
+            }
         </Box >
     )
 }
