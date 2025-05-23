@@ -37,12 +37,13 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const { getAllProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
     const { arrayAchado, arrayProcesso, arrayTopicoAchado } = useContextTable();
-    const [achadoLabel, setAchadoLabel] = useState<string>()
+    const [achadoLabel, setAchadoLabel] = useState<string | null>();
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
-    const [filteredAchados, setFilteredAchados] = useState<Achado[]>([])
+    const [filteredAchados, setFilteredAchados] = useState<Achado[]>([]);
     const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
-    const [temaSelected, setTemaSelected] = useState<boolean>(true)
+    const [temaSelected, setTemaSelected] = useState<boolean>(true);
+    const [achadoTemaId, setAchadoTemaId] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,6 +73,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         if (achado.id) {
             setValue('achadoId', achado.id, { shouldValidate: true });
             setAchadoLabel(achado.achado)
+            setAchadoTemaId(achado.tema_id)
         }
     };
 
@@ -82,16 +84,27 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         _details?: AutocompleteChangeDetails<TopicoAchado>
     ) => {
         const temaId = value?.id || '';
+
+        if (!temaId) {
+            setAchadoLabel(null);
+            setValue('achadoId', ''); // Limpa também o valor do formulário
+        }
+
+        if(temaId !== achadoTemaId) {
+            setAchadoLabel(null);
+            setValue('achadoId', ''); // Limpa também o valor do formulário
+        }
+
         if (temaId !== undefined) {
             setTemaSelected(false);
         } else {
             setTemaSelected(true);
         }
+
         setValue('temaId', temaId); // Atualiza o formulário
         setSelectedTemaId(temaId); // Salva no estado
         filterAchadosByTema(temaId); // Filtra os achados
     };
-
 
 
     const onSubmit = async (data: Coleta) => {
@@ -129,9 +142,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             </Box>
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
-                <Divider textAlign="center" sx={{ my: 4, color:"#777"}}>Seção de Formulários</Divider>
+                <Divider textAlign="center" sx={{ my: 4, color: "#777" }}>Seção de Formulários</Divider>
                 <GroupButtonColeta />
-                <Divider textAlign="center" sx={{ my: 4, color:"#777"}}>Seção de relação Tema - Achado - Processo</Divider>
+                <Divider textAlign="center" sx={{ my: 4, color: "#777" }}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 <Controller

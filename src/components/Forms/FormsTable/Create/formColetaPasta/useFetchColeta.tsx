@@ -171,7 +171,7 @@ const useFetchColeta = () => {
                 )
             );
 
-            if (!querySnapshot.empty) {
+            if (!querySnapshot.empty && querySnapshot.docs[0].id !== idColeta) {
                 TypeAlert("Já existe um relacionamento cadastrado com esse achado e processo", "error")
                 return false
             } else {

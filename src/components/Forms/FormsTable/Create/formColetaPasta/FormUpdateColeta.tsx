@@ -58,7 +58,8 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const [isloading, setIsLoading] = useState(false);
     const [filteredAchados, setFilteredAchados] = useState<Achado[]>([])
     const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
-    const [achadoLabel, setAchadoLabel] = useState<string>()
+    const [achadoLabel, setAchadoLabel] = useState<string | null>()
+     const [achadoTemaId, setAchadoTemaId] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -119,6 +120,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
         if (achado.id) {
             setValue('achadoId', achado.id, { shouldValidate: true });
             setAchadoLabel(achado.achado)
+            setAchadoTemaId(achado.tema_id)
         }
     };
 
@@ -129,6 +131,17 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
         _details?: AutocompleteChangeDetails<TopicoAchado>
     ) => {
         const temaId = value?.id || '';
+
+        if (!temaId) {
+            setAchadoLabel(null);
+            setValue('achadoId', ''); // Limpa também o valor do formulário
+        }
+
+        if(temaId !== achadoTemaId) {
+            setAchadoLabel(null);
+            setValue('achadoId', ''); // Limpa também o valor do formulário
+        }
+
         setValue('temaId', temaId); // Atualiza o formulário
         setSelectedTemaId(temaId); // Salva no estado
         filterAchadosByTema(temaId); // Filtra os achados
