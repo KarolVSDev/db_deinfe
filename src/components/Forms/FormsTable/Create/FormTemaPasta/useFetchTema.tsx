@@ -106,7 +106,7 @@ const useFetchTema = () => {
             const docRef = doc(db, "tema", id);
             const docSnap = await getDoc(docRef);
 
-            if (docSnap.exists() && docSnap.id === id) {
+            if (docSnap.exists() && docSnap.id !== id) {
                 TypeAlert("O Tema já existe no banco de dados", "error")
                 return false
             }
