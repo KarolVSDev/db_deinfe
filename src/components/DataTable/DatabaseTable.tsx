@@ -189,9 +189,9 @@ export default function DatabaseTable() {
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'tema', string: 'Temas' },
-    { value: 'achado', string: 'Achados' },
+    { value: 'achado', string: 'Banco de Achados' },
     { value: 'processo', string: 'Processos' },
-    { value: 'relacionamentos', string: 'Relacionamentos' },
+    { value: 'relacionamentos', string: 'Achados' },
   ]
 
 
@@ -224,13 +224,6 @@ export default function DatabaseTable() {
   return (
     <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
       <Paper >
-        <Typography
-          gutterBottom
-          variant='h5'
-          component='div'
-          sx={{ padding: '20px' }}>
-          Catálogo
-        </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height: '48px' }}>
           <Select name="dataTypeSelect" id="dataTypeSelect" value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
             {optionsSelect.map((option) => (

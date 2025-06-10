@@ -125,6 +125,9 @@ const UpdateUserForm = () => {
                   defaultValue={user.cargo}
                   autoFocus
                   error={!!errors?.cargo}
+                  inputProps={{
+                    readOnly: true,
+                  }}
                   {...register('cargo', { required: true })}
                 />
                 {errors?.cargo && (

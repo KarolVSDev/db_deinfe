@@ -40,6 +40,7 @@ const useExportToExcel = () => {
                         rows = temas.map((tema) => [
                             tema.tema,
                             tema.situacao ? 'Aprovado' : 'Pendente']);
+                        rows.sort((a,b) => a[0].localeCompare(b[0]));
 
                     } catch (error) {
                         console.error("erro ao tentar exportar os temas: ", error)
@@ -80,6 +81,7 @@ const useExportToExcel = () => {
                             achado.criterioEstadual,
                             achado.situacaoAchado === true ? 'Aprovado' : 'Pendente'
                         ]);
+                        rows.sort((a,b) => a[0].localeCompare(b[0]));
                     } catch (error) {
                         console.error("erro ao tentar exportar os achados: ", error)
                     }
@@ -105,6 +107,7 @@ const useExportToExcel = () => {
                             processos.diretoria,
                             processos.julgado
                         ]);
+                        rows.sort((a,b) => a[1] - b[1]);
                     } catch (error) {
                         console.error("erro ao tentar exportar os processos: ", error)
                     }
@@ -129,7 +132,8 @@ const useExportToExcel = () => {
                             coleta.unidade,
                             coleta.coletadorId,
                             coleta.sanado
-                        ])
+                        ]);
+                        rows.sort((a,b) => a[1].localeCompare(b[1]));
                     } catch (error) {
                         console.error("erro ao tentar exportar os processos: ", error)
                     }
