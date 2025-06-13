@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Tooltip, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridColumnVisibilityModel, GridFilterModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
 import { topicoAchadoHeader, achadoHeader, processoHeader, coletaHeader } from '../../service/columns';
@@ -42,16 +42,20 @@ export default function DatabaseTable() {
   const { escutarProcessos } = useFetchProcesso();
   const { escutarColeta } = useFetchColeta();
   const [isLoading, setIsLoading] = useState(true);
+  const [textButton, setTextButton] = useState('')
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({
+    items: [],
+  });
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
-    // setSelectedRow(null);
     setIsLoading(true);
 
     switch (value) {
       case 'tema':
+        setTextButton('Tema')
         setColumns(createGridColumns(topicoAchadoHeader));
         const temaListener = escutarTemas((temas) => {
           setArrayTopicoAchado(temas)
@@ -60,6 +64,7 @@ export default function DatabaseTable() {
         })
         return () => temaListener;
       case 'achado':
+        setTextButton('Banco de Achado')
         setColumns(createGridColumns(achadoHeader));
         const achadoListener = escutarAchados((achados) => {
           setArrayAchado(achados)
@@ -68,6 +73,7 @@ export default function DatabaseTable() {
         })
         return () => achadoListener;
       case 'processo':
+        setTextButton('Processo')
         setColumns(createGridColumns(processoHeader));
         const processoListener = escutarProcessos((processos) => {
           setArrayProcesso(processos)
@@ -76,6 +82,7 @@ export default function DatabaseTable() {
         })
         return () => processoListener;
       case 'relacionamentos':
+        setTextButton('Coleta')
         setColumns(createGridColumns(coletaHeader));
         const coletaListener = escutarColeta((coleta) => {
           setArrayColeta(coleta)
@@ -189,9 +196,9 @@ export default function DatabaseTable() {
   const optionsSelect = [
     { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'tema', string: 'Temas' },
-    { value: 'achado', string: 'Achados' },
+    { value: 'achado', string: 'Banco de Achados' },
     { value: 'processo', string: 'Processos' },
-    { value: 'relacionamentos', string: 'Relacionamentos' },
+    { value: 'relacionamentos', string: 'Coleta' },
   ]
 
 
@@ -229,7 +236,7 @@ export default function DatabaseTable() {
           variant='h5'
           component='div'
           sx={{ padding: '20px' }}>
-          Catálogo
+          Coleta
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height: '48px' }}>
           <Select name="dataTypeSelect" id="dataTypeSelect" value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
@@ -239,7 +246,7 @@ export default function DatabaseTable() {
               </MenuItem>
             ))}
           </Select>
-          <ModalAddData dataType={dataType} user={user} />
+          <ModalAddData dataType={dataType} textButton={textButton} user={user} />
           <Box>
             <Helper title="Clique aqui para exportar os dados dessa tabela">
               <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
@@ -278,6 +285,7 @@ export default function DatabaseTable() {
                   },
                 },
               }}
+              filterMode="client"
               initialState={{
                 pagination: {
                   paginationModel: {

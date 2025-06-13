@@ -33,12 +33,13 @@ const style = {
 
 export interface ModalAddDataProps {
   dataType: string;
+  textButton:string;
   user: User;
   closeModal?:() => void;
 }
 
 
-const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
+const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user, textButton }) => {
   const openButtonRef  = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -47,6 +48,7 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
     openButtonRef .current?.focus();
     setOpen(false);
   }
+
 
   useEffect(() => {
 
@@ -58,13 +60,12 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
 
   }, [open, dataType])
 
- 
 
   return (
     <div>
       <Helper title='Clique aqui para criar um novo registro'>
       <Button ref={openButtonRef}  onClick={handleOpen} disabled={isDisabled} variant='contained'>
-        <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
+        <SaveIcon sx={{ mr: 1 }} /> Cadastrar {textButton}
       </Button>
       </Helper>
       <Modal
