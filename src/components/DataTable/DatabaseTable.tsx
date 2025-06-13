@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Tooltip, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridColumnVisibilityModel, GridFilterModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
 import { topicoAchadoHeader, achadoHeader, processoHeader, coletaHeader } from '../../service/columns';
@@ -43,9 +43,7 @@ export default function DatabaseTable() {
   const { escutarColeta } = useFetchColeta();
   const [isLoading, setIsLoading] = useState(true);
   const [textButton, setTextButton] = useState('')
-  const [filterModel, setFilterModel] = useState<GridFilterModel>({
-    items: [],
-  });
+ 
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
