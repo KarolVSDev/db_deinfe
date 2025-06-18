@@ -17,10 +17,11 @@ const useFetchTema = () => {
                 tema: data.tema,
                 situacao: data.situacao
             })
+            setArrayTopicoAchado((prev) => [...prev, { ...data, id: docRef.id }]); // Atualiza o estado com o novo tema
             console.log("Tema inserido com sucesso! ID:", docRef.id);
             TypeAlert('Tema adicionado', 'success');
         } catch (error) {
-            console.error("Erro ao inserir o documento")
+            console.error("Erro ao inserir o documento", error)
         }
     }
 

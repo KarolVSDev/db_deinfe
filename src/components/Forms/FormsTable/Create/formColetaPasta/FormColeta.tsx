@@ -37,11 +37,10 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
-    const { arrayAchado, arrayProcesso, arrayTopicoAchado } = useContextTable();
+    const { arrayAchado, arrayProcesso, arrayTopicoAchado, filteredAchados, setFilteredAchados } = useContextTable();
     const [achadoLabel, setAchadoLabel] = useState<string | null>();
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
-    const [filteredAchados, setFilteredAchados] = useState<Achado[]>([]);
     const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
     const [temaSelected, setTemaSelected] = useState<boolean>(true);
     const [achadoTemaId, setAchadoTemaId] = useState<string>('');
@@ -65,7 +64,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     }, [fieldValue]);
 
     const filterAchadosByTema = (temaId: string) => {
-        const filtered = arrayAchado.filter(achado => achado.tema_id === temaId);
+        const filtered = arrayAchado
+        .filter(achado => achado.tema_id === temaId);
+        filtered.sort((a,b) => a.achado.localeCompare(b.achado));
         setFilteredAchados(filtered);
         return
     }
