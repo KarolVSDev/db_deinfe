@@ -50,8 +50,6 @@ export interface Achado {
   achado: string;
   data: Date;
   gravidade: string;
-  criterioMunicipal?: string;
-  criterioEstadual?: string;
   criterioGeral?: string;
   situacaoAchado: boolean;
   analise: string;

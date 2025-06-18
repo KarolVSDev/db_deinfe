@@ -9,8 +9,6 @@ import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DateSelector from '../../../../Inputs/DatePicker';
 import RadioInput from '../../../../Inputs/RadioInput';
-import ToggleButtonsCriterios from '../../../../Inputs/ToggleInputs/ToggleInputCriterio';
-import TextFieldComponent from '../../../../Inputs/TextField';
 import Loader from '../../../../Loader/Loader';
 import AchadoSkeleton from './AchadoSkeleton';
 import useFetchAchado from './useFetchAchado';
@@ -37,14 +35,10 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       achado: achado?.achado || '', // Inicialize com o achado, caso disponível
       analise: achado?.analise || '', // Inicialize a análise, caso disponível
       situacaoAchado: achado?.situacaoAchado || false, // Inicialize com o estado padrão
-      criterioEstadual: achado?.criterioEstadual,
       criterioGeral: achado?.criterioGeral,
-      criterioMunicipal: achado?.criterioMunicipal
     },
   });
   const gravidade = watch('gravidade', achado?.gravidade);
-
-  const [alignment, setAlignment] = useState<keyof Achado>('criterioGeral');
   const { updateAchado } = useFetchAchado();
 
   useEffect(() => {
@@ -72,19 +66,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               achado: result.achado?.achado || '',
               analise: result.achado?.analise || '',
               situacaoAchado: result.achado?.situacaoAchado || false,
-              criterioMunicipal: result.achado.criterioMunicipal || '',
-              criterioEstadual: result.achado.criterioEstadual || '',
               criterioGeral: result.achado.criterioGeral || '',
             });
-
-            // Define o alinhamento com base nos critérios
-            if (result.achado.criterioMunicipal) {
-              setAlignment('criterioMunicipal');
-            } else if (result.achado.criterioEstadual) {
-              setAlignment('criterioEstadual');
-            } else {
-              setAlignment('criterioGeral');
-            }
           }
         } catch (error) {
           console.error('Erro ao buscar o achado:', error);
@@ -105,20 +88,6 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
       setSituacaoAchado("Pendente")
     }
   }, [])
-
-  const getTextFieldLabel = () => {
-    switch (alignment) {
-      case 'criterioMunicipal':
-        return 'Criterio Municipal';
-      case 'criterioEstadual':
-        return 'Criterio Estadual';
-      case 'criterioGeral':
-        return 'Criterio Geral';
-      default:
-        return 'criterioGeral'
-    }
-
-  }
 
   const onSubmit = async (data: Achado) => {
     setLoading(true)
@@ -247,17 +216,23 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             </Box>
           </Grid>
 
-          <Grid item xs={12}>
-            <ToggleButtonsCriterios alignment={alignment} onChange={setAlignment} />
-          </Grid>
-          <Grid item xs={12}>
-            <TextFieldComponent id={alignment}
-              label={getTextFieldLabel()}
-              register={register}
-              errors={errors}
-              criterioMuni={achado?.criterioMunicipal}
-              criterioEst={achado?.criterioEstadual}
-              criterioGeral={achado?.criterioGeral} />
+          <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+            <TextField
+              variant='filled'
+              autoComplete="given-name"
+              type="text"
+              fullWidth
+              id="criterioGeral"
+              label="Critério Geral"
+              error={errors?.criterioGeral?.type === 'required'}
+              {...register('criterioGeral', {
+              })}
+            />
+            {errors?.criterioGeral && (
+              <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+                {errors.criterioGeral?.message}
+              </Typography>
+            )}
           </Grid>
 
           <Grid item xs={12} sm={4} sx={{ mt: 3 }}>

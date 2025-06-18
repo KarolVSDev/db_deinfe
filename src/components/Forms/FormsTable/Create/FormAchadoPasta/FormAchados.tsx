@@ -9,8 +9,6 @@ import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from 
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { useEffect, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import TextFieldComponent from '../../../../Inputs/TextField';
-import ToggleButtonsCriterios from '../../../../Inputs/ToggleInputs/ToggleInputCriterio';
 import RadioInput from '../../../../Inputs/RadioInput';
 import DateSelector from '../../../../Inputs/DatePicker';
 import Loader from '../../../../Loader/Loader';
@@ -36,7 +34,6 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
   const { setAchado } = useFetchAchado();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
   const { arrayTopicoAchado } = useContextTable()
-  const [alignment, setAlignment] = useState<keyof Achado>('criterioGeral');
   const [loading, setLoading] = useState(false);
   const gravidade = watch('gravidade', 'Baixa');
 
@@ -54,20 +51,6 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
       setSituacaoAchado(newSituacao);
     }
   };
-
-  const getTextFieldLabel = () => {
-    switch (alignment) {
-      case 'criterioMunicipal':
-        return 'Criterio Municipal';
-      case 'criterioEstadual':
-        return 'Criterio Estadual';
-      case 'criterioGeral':
-        return 'Criterio Geral';
-      default:
-        return 'criterioGeral'
-    }
-
-  }
 
 
   const onSubmit = async (data: Achado) => {
@@ -205,16 +188,23 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
 
       <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
 
-        <Grid item xs={12}>
-          <ToggleButtonsCriterios alignment={alignment} onChange={setAlignment} />
-        </Grid>
-        <Grid item xs={12}>
-          <TextFieldComponent
-            id={alignment}
-            label={getTextFieldLabel()}
-            register={register}
-            errors={errors}
+        <Grid item xs={12} sm={4}>
+          <TextField
+            variant='filled'
+            autoComplete="given-name"
+            type="text"
+            fullWidth
+            id="criterioGeral"
+            label="Critério Geral"
+            error={errors?.criterioGeral?.type === 'required'}
+            {...register('criterioGeral', {
+            })}
           />
+          {errors?.criterioGeral && (
+            <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+              {errors.criterioGeral?.message}
+            </Typography>
+          )}
         </Grid>
 
         <Grid item xs={12} sm={4} sx={{ mt: 3 }}>

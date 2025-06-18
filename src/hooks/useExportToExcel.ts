@@ -77,8 +77,6 @@ const useExportToExcel = () => {
                             achado.data,
                             achado.gravidade,
                             achado.criterioGeral,
-                            achado.criterioMunicipal,
-                            achado.criterioEstadual,
                             achado.situacaoAchado === true ? 'Aprovado' : 'Pendente'
                         ]);
                         rows.sort((a,b) => a[0].localeCompare(b[0]));
