@@ -14,6 +14,12 @@ export const achadoHeader = [
     { id: 'situacaoAchado', label: 'Situação', minWidth: 150 },
     { id: 'acoes', label: 'Acões', minWidth: 150 }
 ]
+export const achadoPesquisaHeader = [
+    { id: 'tema_id', label: 'Tema', minWidth: 150 },
+    { id: 'achado', label: 'Achado', minWidth: 450 },
+    { id: 'data', label: 'Data', minWidth: 150 },
+    { id: 'situacaoAchado', label: 'Situação', minWidth: 150 },
+]
 
 export const coletaHeader = [
     { id: 'processoId', label: 'Processo', minWidth: 150 },

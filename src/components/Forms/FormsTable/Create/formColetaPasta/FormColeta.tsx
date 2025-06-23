@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
-import { Processo, User, Coleta, Achado, TopicoAchado } from '../../../../../types/types';
+import { Processo, User, Coleta, Achado } from '../../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
@@ -17,7 +17,6 @@ import useFetchColeta from "./useFetchColeta";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
 import GroupButtonColeta from "./formComponents/ButtonGroup";
 import useFetchTema from "../FormTemaPasta/useFetchTema";
-import { AutocompleteChangeReason, AutocompleteChangeDetails } from '@mui/material/Autocomplete';
 import ModalListAchados from "./formComponents/ModalListAchado";
 import Loader from "../../../../Loader/Loader";
 export interface FormColetaProps {
@@ -37,13 +36,11 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
-    const { arrayAchado, arrayProcesso, arrayTopicoAchado, filteredAchados, setFilteredAchados } = useContextTable();
+    const { arrayProcesso } = useContextTable();
     const [achadoLabel, setAchadoLabel] = useState<string | null>();
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
-    const [_selectedTemaId, setSelectedTemaId] = useState<string>('');
-    const [temaSelected, setTemaSelected] = useState<boolean>(true);
-    const [achadoTemaId, setAchadoTemaId] = useState<string>('');
+    const [_achadoTemaId, setAchadoTemaId] = useState<string>('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -53,7 +50,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             await getAllProcessos();
         }
         fetchData();
-        filterAchadosByTema(_selectedTemaId)
     }, [])
 
     // Atualiza o valor formatado quando o valor do campo muda
@@ -63,50 +59,14 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
         }
     }, [fieldValue]);
 
-    const filterAchadosByTema = (temaId: string) => {
-        const filtered = arrayAchado
-        .filter(achado => achado.tema_id === temaId);
-        filtered.sort((a,b) => a.achado.localeCompare(b.achado));
-        setFilteredAchados(filtered);
-        return
-    }
-
 
     const handleSelectAchado = (achado: Achado) => {
         if (achado.id) {
             setValue('achadoId', achado.id, { shouldValidate: true });
             setAchadoLabel(achado.achado)
             setAchadoTemaId(achado.tema_id)
+             console.log("Achado selecionado:", achado);
         }
-    };
-
-    const handleTemaChange = (
-        _event: React.SyntheticEvent<Element, Event>,
-        value: TopicoAchado | null,
-        _reason: AutocompleteChangeReason,
-        _details?: AutocompleteChangeDetails<TopicoAchado>
-    ) => {
-        const temaId = value?.id || '';
-
-        if (!temaId) {
-            setAchadoLabel(null);
-            setValue('achadoId', ''); // Limpa também o valor do formulário
-        }
-
-        if (temaId !== achadoTemaId) {
-            setAchadoLabel(null);
-            setValue('achadoId', ''); // Limpa também o valor do formulário
-        }
-
-        if (temaId !== undefined) {
-            setTemaSelected(false);
-        } else {
-            setTemaSelected(true);
-        }
-
-        setValue('temaId', temaId); // Atualiza o formulário
-        setSelectedTemaId(temaId); // Salva no estado
-        filterAchadosByTema(temaId); // Filtra os achados
     };
 
 
@@ -150,43 +110,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <GroupButtonColeta />
                 <Divider textAlign="center" sx={{ my: 4, color: "#777" }}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                <Controller
-                    name="temaId"
-                    control={control}
-                    rules={{ required: 'Campo obrigatório' }}
-                    render={({ field }) => (
-                        <Autocomplete
-                            disablePortal
-                            autoFocus
-                            id="autocomplete-temaId"
-                            options={arrayTopicoAchado}
-                            getOptionLabel={(option: TopicoAchado) => option.tema}
-                            isOptionEqualToValue={(option, value) => option.id === value.id}
-                            onChange={handleTemaChange}
-                            value={arrayTopicoAchado.find(option => option.id === field.value) || null}
-                            ListboxProps={{
-                                style: {
-                                    maxHeight: '200px',
-                                    overflow: 'auto',
-                                },
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Tema"
-                                    variant="filled"
-                                    placeholder="Selecione um tema"
-                                    focused={true}
-                                    error={!!errors.temaId}
-                                    helperText={errors.temaId?.message}
-                                />
-                            )}
-                        />
-                    )}
-                />
-            </Grid>
-
+           
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                 {achadoLabel &&
                     <Paper sx={{ mb: 2 }}>
@@ -194,7 +118,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         <Typography sx={{ p: 2, pt: 0 }}>{achadoLabel}</Typography>
                     </Paper>
                 }
-                <ModalListAchados temaSelected={temaSelected} arrayFiltrado={filteredAchados} onSelectAchado={handleSelectAchado} />
+                <ModalListAchados  onSelectAchado={handleSelectAchado} />
             </Grid >
 
             <Grid item xs={12} sm={4} sx={{ mb: 2 }}>

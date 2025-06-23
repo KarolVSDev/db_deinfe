@@ -55,6 +55,14 @@ export interface Achado {
   analise: string;
   tema_id: string;
 }
+
+export interface  AchadoPesquisa {
+  id?: string;
+  achado: string;
+  data: Date;
+  situacaoAchado: boolean;
+  tema_id: string;
+}
 export interface ColumnConfig {
   id: string;
   label: string;
