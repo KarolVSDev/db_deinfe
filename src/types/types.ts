@@ -102,6 +102,13 @@ export interface Diretoria {
   label:string;
 }
 
+export interface KeyWord {
+  id: string;
+  label: string;
+  type:string;
+  color:string;
+}
+
 export interface ColetaTransformada extends Omit<Coleta, 'achadoId' | 'processoId' | 'temaId'> {
   achadoId: string | Achado['achado'];
   processoId: string | Processo['numero'];

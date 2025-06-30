@@ -9,6 +9,7 @@ import useFetchAchado from '../../FormAchadoPasta/useFetchAchado';
 import { achadoPesquisaHeader } from '../../../../../../service/columns';
 import { formateDateToPtBr } from '../../../../../../hooks/DateFormate';
 import SearchIcon from '@mui/icons-material/Search';
+import HighlightedText from '../../../../../DataTable/HighLightMidleware';
 
 export interface ITableAchados {
     dataType: string;
@@ -84,6 +85,37 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
                         </span>
                     );
                 }
+
+                if (header.id === 'achado' || header.id === 'achadoId') {
+                    console.log(params.value)
+                    return (
+                        <Tooltip
+                            title={params.value || ''}
+                            arrow
+                            enterDelay={500}
+                            placement="top-start"
+                            slotProps={{
+                                tooltip: {
+                                    sx: {
+                                        fontSize: '14px',
+                                    },
+                                },
+                            }}
+                        >
+                            {/* Adicionamos uma div wrapper para o Tooltip */}
+                            <div style={{
+                                width: '100%',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                display: 'inline-block', // Importante para o Tooltip
+                            }}>
+                                <HighlightedText text={params.value || ''} />
+                            </div>
+                        </Tooltip>
+                    );
+                }
+
                 return (
                     <Tooltip
                         title={params.value || ''}
@@ -94,7 +126,6 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
                             tooltip: {
                                 sx: {
                                     fontSize: '14px',
-
                                 },
                             },
                         }}
@@ -103,7 +134,7 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
                             width: '100%',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
+                            whiteSpace: 'nowrap',
                         }}>
                             {params.value}
                         </div>
@@ -197,10 +228,10 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
                             columns={columns}
                             showCellVerticalBorder
                             localeText={handleLocalization}
-                            onRowDoubleClick={(params) => { 
+                            onRowDoubleClick={(params) => {
                                 if (onAchadoSelected) {
-                                    onAchadoSelected(params.row as Achado); 
-                                    closeFunction(); 
+                                    onAchadoSelected(params.row as Achado);
+                                    closeFunction();
                                 }
                             }}
                             slotProps={{

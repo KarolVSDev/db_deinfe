@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
     // Define apenas as variáveis necessárias para o cliente
     define: {
       __APP_ENV__: JSON.stringify(env.VITE_APP_ENV), 
+      global:'window',
     },
   };
 });

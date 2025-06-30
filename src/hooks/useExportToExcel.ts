@@ -40,7 +40,7 @@ const useExportToExcel = () => {
                         rows = temas.map((tema) => [
                             tema.tema,
                             tema.situacao ? 'Aprovado' : 'Pendente']);
-                        rows.sort((a,b) => a[0].localeCompare(b[0]));
+                        rows.sort((a, b) => a[0].localeCompare(b[0]));
 
                     } catch (error) {
                         console.error("erro ao tentar exportar os temas: ", error)
@@ -69,7 +69,7 @@ const useExportToExcel = () => {
 
                         const temaMap = new Map(temas.map((tema) => [tema.id, tema.tema]));
 
-                        headers = ['Temas', 'Achado', 'Análise', 'Data', 'Gravidade', 'Critério Geral', 'Critério Municipal', 'Critério Estadual', 'Situação Achado'];
+                        headers = ['Temas', 'Achado', 'Análise', 'Data', 'Gravidade', 'Critério Geral', 'Situação Achado'];
                         rows = achado.map((achado) => [
                             temaMap.get(achado.tema_id) || 'Tema não encontrado',
                             achado.achado,
@@ -79,7 +79,7 @@ const useExportToExcel = () => {
                             achado.criterioGeral,
                             achado.situacaoAchado === true ? 'Aprovado' : 'Pendente'
                         ]);
-                        rows.sort((a,b) => a[0].localeCompare(b[0]));
+                        rows.sort((a, b) => a[0].localeCompare(b[0]));
                     } catch (error) {
                         console.error("erro ao tentar exportar os achados: ", error)
                     }
@@ -105,7 +105,7 @@ const useExportToExcel = () => {
                             processos.diretoria,
                             processos.julgado
                         ]);
-                        rows.sort((a,b) => a[1] - b[1]);
+                        rows.sort((a, b) => a[1] - b[1]);
                     } catch (error) {
                         console.error("erro ao tentar exportar os processos: ", error)
                     }
@@ -120,7 +120,7 @@ const useExportToExcel = () => {
                             return;
                         };
 
-                        headers = ['Processo ID', 'Tema ID', 'Achado ID', 'Valor Fianceiro', 'Quantitativo', 'Unidade', 'Coletador ID', 'Sanado'];
+                        headers = ['Processo', 'Tema', 'Achado', 'Valor Fianceiro', 'Quantitativo', 'Unidade', 'Coletador ID', 'Sanado'];
                         rows = arrayColeta.map((coleta) => [
                             coleta.processoId,
                             coleta.temaId,
@@ -131,7 +131,7 @@ const useExportToExcel = () => {
                             coleta.coletadorId,
                             coleta.sanado
                         ]);
-                        rows.sort((a,b) => a[1].localeCompare(b[1]));
+                        rows.sort((a, b) => a[1].localeCompare(b[1]));
                     } catch (error) {
                         console.error("erro ao tentar exportar os processos: ", error)
                     }
@@ -154,6 +154,18 @@ const useExportToExcel = () => {
                 columns: headers.map((header) => ({ name: header })),
                 rows: rows,
             });
+
+            sheet.columns = headers.map((header, index) => ({
+                header,
+                key: header,
+                width: Math.max(
+                    10, // Largura mínima
+                    ...rows.map(row =>
+                        (row[index]?.toString()?.length || 0) + 2 // Adiciona um pequeno espaço extra
+                    ),
+                    header.length + 2 // Garante que o cabeçalho também caiba
+                )
+            }));
 
             const buffer = await workbook.xlsx.writeBuffer();
             saveAs(new Blob([buffer]), fileName);

@@ -1,0 +1,97 @@
+import { Typography } from '@mui/material';
+import React from 'react';
+
+const PALAVRAS_CHAVE_MOCK = [
+  { label: 'teste de achado', type: 'objeto', color: '#FF0000' },  // Vermelho
+  { label: 'Desvio de Finalidade', type: 'objeto', color: '#FF0000' },  // Vermelho
+  { label: 'falta', type: 'problema', color: '#FFD700' },         // Amarelo
+  { label: 'Irregularidades', type: 'outro valor', color: '#0000FF' }, // Azul
+];
+
+interface HighlightedTextProps {
+  text: string;
+}
+
+const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
+  // Prepara as palavras-chave: separa em palavras e mantém a informação original
+  const keywords = PALAVRAS_CHAVE_MOCK.map(item => ({
+    ...item,
+    words: item.label.toLowerCase().split(' '),
+    original: item.label
+  }));
+
+  // Ordena do maior para o menor (termos com mais palavras primeiro)
+  keywords.sort((a, b) => b.words.length - a.words.length);
+
+  // Divide o texto em tokens (palavras e espaços)
+  const tokens = text.split(/(\s+)/);
+
+
+  // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave
+  const checkForKeyword = (startIndex: number) => {
+    const remainingTokens = tokens.length - startIndex;
+    
+    for (const keyword of keywords) {
+      // Não tem tokens suficientes para esta palavra-chave
+      if (keyword.words.length * 2 - 1 > remainingTokens) continue;
+      
+      let match = true;
+      // Verifica cada palavra da palavra-chave (ignorando espaços)
+      for (let i = 0; i < keyword.words.length; i++) {
+        const tokenIndex = startIndex + i * 2; // Pula os espaços
+        if (tokens[tokenIndex].toLowerCase() !== keyword.words[i]) {
+          match = false;
+          break;
+        }
+      }
+      
+      if (match) {
+        return {
+          keyword,
+          length: keyword.words.length * 2 - 1 // Número de tokens que a palavra-chave ocupa
+        };
+      }
+    }
+    
+    return null;
+  };
+
+  const elements = [];
+  let i = 0;
+
+  while (i < tokens.length) {
+    const result = checkForKeyword(i);
+    
+    if (result) {
+      // Adiciona o termo destacado
+      elements.push(
+        <span
+          key={i}
+          style={{
+            color: result.keyword.color,
+            fontWeight: 'bold'
+          }}
+        >
+          {tokens.slice(i, i + result.length).join('')}
+        </span>
+      );
+      i += result.length;
+    } else {
+      // Adiciona o token normal
+      elements.push(
+        <span key={i}>
+          {tokens[i]}
+        </span>
+      );
+      i++;
+    }
+  }
+
+  return (
+    <Typography component="span">
+      {elements}
+    </Typography>
+  );
+};
+
+export default HighlightedText;

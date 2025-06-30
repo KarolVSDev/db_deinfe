@@ -181,7 +181,7 @@ const useFetchAchado = () => {
         TypeAlert("Não é possível excluir o achado, ele está vinculado a um ou mais Processos.", "info");
         return;
       } else {
-         //deleta o achado
+        //deleta o achado
         await deleteDoc(docRef);
         //feedback para o usuário
         TypeAlert("O Achado foi excluído", "success")

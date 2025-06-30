@@ -22,6 +22,11 @@ import useFetchTema from '../Forms/FormsTable/Create/FormTemaPasta/useFetchTema'
 import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchColeta';
 import DataTableSkeleton from './DataTableSkeleton';
 import Helper from '../Dialog/Helper';
+import HighlightedText from './HighLightMidleware';
+import ColorPickerComponent from '../Forms/FormsColors/FormColor';
+import ModalColor from '../Modals/DataTableModals/ModalColor';
+
+
 
 
 export default function DatabaseTable() {
@@ -43,7 +48,7 @@ export default function DatabaseTable() {
   const { escutarColeta } = useFetchColeta();
   const [isLoading, setIsLoading] = useState(true);
   const [textButton, setTextButton] = useState('')
- 
+
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -118,6 +123,7 @@ export default function DatabaseTable() {
             </Box>
           );
         }
+
         if (header.id === 'data') {
           return formateDateToPtBr(params.value)
         }
@@ -139,6 +145,37 @@ export default function DatabaseTable() {
             </span>
           );
         }
+
+        if (header.id === 'achado' || header.id === 'achadoId') {
+          console.log(params.value)
+          return (
+            <Tooltip
+              title={params.value || ''}
+              arrow
+              enterDelay={500}
+              placement="top-start"
+              slotProps={{
+                tooltip: {
+                  sx: {
+                    fontSize: '14px',
+                  },
+                },
+              }}
+            >
+              {/* Adicionamos uma div wrapper para o Tooltip */}
+              <div style={{
+                width: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                display: 'inline-block', // Importante para o Tooltip
+              }}>
+                <HighlightedText text={params.value || ''} />
+              </div>
+            </Tooltip>
+          );
+        }
+
         return (
           <Tooltip
             title={params.value || ''}
@@ -149,7 +186,6 @@ export default function DatabaseTable() {
               tooltip: {
                 sx: {
                   fontSize: '14px',
-
                 },
               },
             }}
@@ -158,7 +194,7 @@ export default function DatabaseTable() {
               width: '100%',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
             }}>
               {params.value}
             </div>
@@ -204,6 +240,7 @@ export default function DatabaseTable() {
     setSelectedRow(selectedRow);
     setOpenModal(true)
   }
+
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -254,6 +291,7 @@ export default function DatabaseTable() {
               </Button>
             </Helper>
           </Box>
+          <ModalColor />
         </Box>
         <Divider />
         <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>
