@@ -1,20 +1,15 @@
 import { Typography } from '@mui/material';
-import React from 'react';
-
-const PALAVRAS_CHAVE_MOCK = [
-  { label: 'teste de achado', type: 'objeto', color: '#FF0000' },  // Vermelho
-  { label: 'Desvio de Finalidade', type: 'objeto', color: '#FF0000' },  // Vermelho
-  { label: 'falta', type: 'problema', color: '#FFD700' },         // Amarelo
-  { label: 'Irregularidades', type: 'outro valor', color: '#0000FF' }, // Azul
-];
+import React, { useContext } from 'react';
+import { useContextTable } from '../../context/TableContext';
 
 interface HighlightedTextProps {
   text: string;
 }
 
 const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
+  const {arrayKeyWord} = useContextTable();
   // Prepara as palavras-chave: separa em palavras e mantém a informação original
-  const keywords = PALAVRAS_CHAVE_MOCK.map(item => ({
+  const keywords = arrayKeyWord.map(item => ({
     ...item,
     words: item.label.toLowerCase().split(' '),
     original: item.label

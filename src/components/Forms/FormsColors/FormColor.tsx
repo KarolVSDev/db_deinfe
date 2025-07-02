@@ -4,14 +4,33 @@ import { Box, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { KeyWord } from '../../../types/types';
 import RegisterButton from '../../Buttons/RegisterButton';
+import Loader from '../../Loader/Loader';
+import useFetchKeyWord from './useFetchKeyWord';
 
-export default function ColorPickerComponent() {
+export interface ColorPickerComponentProps {
+    handleExpanded: (expanded: boolean) => void;
+}
+
+export default function ColorPickerComponent({handleExpanded}: ColorPickerComponentProps) {
     const [color, setColor] = useState<string>('#ffffff');
     const { handleSubmit, register, formState: { errors }, reset, setValue} = useForm<KeyWord>({});
+    const [loading, setLoading] = useState(false);
+    const {addKeyWord} = useFetchKeyWord();
 
     const onSubmit = async (data: KeyWord) => {
-        // Aqui você pode lidar com o envio do formulário
-        console.log(data);
+        try {
+            setLoading(true)
+            addKeyWord(data);
+            reset();
+            
+        } catch (error) {
+            console.error("Erro ao adicionar a palavra-chave:", error);
+            setLoading(false)
+        } finally {
+            setLoading(false)
+            setColor('#ffffff');
+            handleExpanded(false);
+        }
     }
 
     return (
@@ -81,7 +100,10 @@ export default function ColorPickerComponent() {
                             title: 'Por favor, insira um valor hexadecimal válido (ex: #RRGGBB)'
                         }
                     }}
-                    onChange={(e) => setValue('color', e.target.value)}
+                    onChange={(e) => {
+                        setValue('color', e.target.value);
+                        setColor(e.target.value);
+                    }}
                 />
                 {errors?.color && (
                     <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
@@ -89,7 +111,9 @@ export default function ColorPickerComponent() {
                     </Typography>
                 )}
             </Grid>
-            <RegisterButton text="Registrar" />
+            {loading === false? <RegisterButton text="Registrar" /> : <Loader/>}
+            
         </Box>
     );
 }
+

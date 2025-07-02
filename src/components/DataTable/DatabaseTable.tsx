@@ -23,8 +23,7 @@ import useFetchColeta from '../Forms/FormsTable/Create/formColetaPasta/useFetchC
 import DataTableSkeleton from './DataTableSkeleton';
 import Helper from '../Dialog/Helper';
 import HighlightedText from './HighLightMidleware';
-import ColorPickerComponent from '../Forms/FormsColors/FormColor';
-import ModalColor from '../Modals/DataTableModals/ModalColor';
+import ModalColor from '../Forms/FormsColors/ModalColor';
 
 
 
@@ -147,7 +146,6 @@ export default function DatabaseTable() {
         }
 
         if (header.id === 'achado' || header.id === 'achadoId') {
-          console.log(params.value)
           return (
             <Tooltip
               title={params.value || ''}

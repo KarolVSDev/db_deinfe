@@ -102,13 +102,13 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
                                 },
                             }}
                         >
-                            {/* Adicionamos uma div wrapper para o Tooltip */}
+                          
                             <div style={{
                                 width: '100%',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap',
-                                display: 'inline-block', // Importante para o Tooltip
+                                display: 'inline-block', 
                             }}>
                                 <HighlightedText text={params.value || ''} />
                             </div>

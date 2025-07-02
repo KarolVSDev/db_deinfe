@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import { TopicoAchado, Achado, Processo, Coleta } from "../types/types";
+import { TopicoAchado, Achado, Processo, Coleta, KeyWord } from "../types/types";
 
 
 interface TableContextType {
@@ -7,11 +7,13 @@ interface TableContextType {
     arrayAchado: Achado[];
     arrayProcesso: Processo[];
     arrayColeta: Coleta[];
+    arrayKeyWord: KeyWord[];
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
     setArrayColeta: Dispatch<SetStateAction<Coleta[]>>;
+    setArrayKeyWord: Dispatch<SetStateAction<KeyWord[]>>;
 }
 
 interface Props {
@@ -25,6 +27,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
     const [arrayColeta, setArrayColeta] = useState<Coleta[]>([]);
+    const [arrayKeyWord, setArrayKeyWord] = useState<KeyWord[]>([]);
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -65,11 +68,13 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayAchado,
             arrayProcesso,
             arrayColeta,
+            arrayKeyWord,
             handleLocalization,
             setArrayTopicoAchado,
             setArrayAchado,
             setArrayProcesso,
-            setArrayColeta
+            setArrayColeta,
+            setArrayKeyWord
         }}>
             {children}
         </TableContext.Provider>
