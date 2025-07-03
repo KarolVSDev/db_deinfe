@@ -165,7 +165,9 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
             keywordUnsubscribe = escutarKeyWords((keywords) => {
                 setArrayKeyWord(keywords);
             });
-            
+
+            keywordUnsubscribe
+
             try {
                 setColumns(createGridColumns(achadoPesquisaHeader));
                 setRows(createRows(arrayAchado));

@@ -51,19 +51,19 @@ export default function DatabaseTable() {
   const { escutarKeyWords } = useFetchKeyWord();
 
 
+  
+
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
     const value = event.target.value as string;
     setDataType(value)
     setIsLoading(true);
-
     let keywordUnsubscribe: (() => void) | undefined;
 
     // Sempre escuta keywords
     keywordUnsubscribe = escutarKeyWords((keywords) => {
       setArrayKeyWord(keywords);
     });
-
     switch (value) {
       case 'tema':
         setTextButton('Tema')
@@ -108,6 +108,7 @@ export default function DatabaseTable() {
       default:
         setColumns([]);
         setRows([])
+        keywordUnsubscribe
     }
   };
 
