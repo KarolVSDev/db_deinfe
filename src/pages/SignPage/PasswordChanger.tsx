@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, FormLabel, Paper, TextField, Typography } from '@mui/material';
 import FormGroup from '@mui/material/FormGroup';
-import useFetchUsers from '../../hooks/useFetchUsers';
+import useFetchUsers from '../../components/Forms/SignForms/useFetchUsers';
 import { useForm } from 'react-hook-form';
 import { EmailChanger } from '../../types/types';
 import validator from 'validator';
@@ -27,7 +27,7 @@ const PasswordChanger = () => {
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
-            backgroundColor:'rgba(1, 2, 19, 0.5)'
+            backgroundColor: 'rgba(1, 2, 19, 0.5)'
         }}>
 
             <FormControl component="form" onSubmit={handleSubmit(onSubmit)}>

@@ -12,7 +12,7 @@ import ModalAddData from '../Modals/DataTableModals/ModalAddDataTable';
 import useExportToExcel from '../../hooks/useExportToExcel';
 import useFetchProcesso from '../Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useAuth } from '../../context/AuthContext';
-import useFetchUsers from '../../hooks/useFetchUsers';
+import useFetchUsers from '../Forms/SignForms/useFetchUsers';
 import ModalAnalises from '../Modals/DataTableModals/ModalAnalise';
 import DeleteVerification from '../Dialog/VerificationStep';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -271,7 +271,15 @@ export default function DatabaseTable() {
           sx={{ padding: '20px' }}>
           Coleta
         </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height: '48px' }}>
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 2,
+          height: 48,
+          mb: 2,
+          '& > *': { minWidth: 48 }
+        }}>
           <Select name="dataTypeSelect" id="dataTypeSelect" value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
             {optionsSelect.map((option) => (
               <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>
@@ -279,17 +287,30 @@ export default function DatabaseTable() {
               </MenuItem>
             ))}
           </Select>
-          <ModalAddData dataType={dataType} textButton={textButton} user={user} />
+          <Box sx={{ height: 40 }}>
+            <ModalAddData dataType={dataType} textButton={textButton} user={user} />
+          </Box>
+          <Box sx={{ height: 40 }}>
+            <ModalColor />
+          </Box>
           <Box>
             <Helper title="Clique aqui para exportar os dados dessa tabela">
-              <Button variant="contained" sx={{ bgcolor: '#ff3d00', '&:hover': { bgcolor: '#b22a00' } }} onClick={() => {
+              <Button variant="contained" sx={{
+                bgcolor: '#ff3d00',
+                '&:hover': { bgcolor: '#b22a00' },
+                minWidth: 40,
+                height: 40,
+                p: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }} onClick={() => {
                 exportToExcel(dataType, 'data.xlsx')
               }}>
                 <FileDownloadIcon />
               </Button>
             </Helper>
           </Box>
-          <ModalColor />
         </Box>
         <Divider />
         <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>

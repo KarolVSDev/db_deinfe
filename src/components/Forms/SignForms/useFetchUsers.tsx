@@ -1,9 +1,9 @@
-import { AllUsers, User, UserUpdate } from '../types/types'
-import { useAuth } from '../context/AuthContext'
-import { db } from '../service/firebase.config'
+import { AllUsers, User, UserUpdate } from '../../../types/types'
+import { useAuth } from '../../../context/AuthContext'
+import { db } from '../../../service/firebase.config'
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
-import { TypeAlert, TypeInfo } from './TypeAlert'
-import { authBase } from '../service/firebase.config'
+import { TypeAlert, TypeInfo } from '../../../hooks/TypeAlert'
+import { authBase } from '../../../service/firebase.config'
 import { sendPasswordResetEmail } from 'firebase/auth'
 
 const useFetchUsers = () => {
@@ -100,7 +100,7 @@ const useFetchUsers = () => {
 
   }
 
-  const passwordChanger = async (data:string) => {
+  const passwordChanger = async (data: string) => {
     try {
       await sendPasswordResetEmail(authBase, data);
       TypeInfo("E-mail enviado", "success")

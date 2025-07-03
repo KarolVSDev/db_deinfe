@@ -116,6 +116,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     <Paper sx={{ mb: 2 }}>
                         <Typography sx={{ mt: 2, pl: 2, pt: 1, fontWeight: 'bold' }}>Achado:</Typography>
                         <Typography sx={{ p: 2, pt: 0 }}>{achadoLabel}</Typography>
+                        
                     </Paper>
                 }
                 <ModalListAchados  onSelectAchado={handleSelectAchado} />

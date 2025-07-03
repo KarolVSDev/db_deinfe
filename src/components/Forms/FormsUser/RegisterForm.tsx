@@ -22,7 +22,7 @@ import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 import { User } from '../../../types/types'
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import CloseIcon from '@mui/icons-material/Close';
-import useFetchUsers from '../../../hooks/useFetchUsers';
+import useFetchUsers from '../SignForms/useFetchUsers';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { authBase } from '../../../service/firebase.config';
 import { useState } from 'react';
@@ -102,10 +102,10 @@ const RegisterForm: React.FC<SignUpProps> = ({ closeModal }) => {
           Registro de Usuário
         </Typography>
         <Box component="form" id='registerForm' noValidate onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleSubmit(onSubmit)(e);
-          }} sx={{ mt: 3 }}>
+          e.preventDefault();
+          e.stopPropagation();
+          handleSubmit(onSubmit)(e);
+        }} sx={{ mt: 3 }}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField

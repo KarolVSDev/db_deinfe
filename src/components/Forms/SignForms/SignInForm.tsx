@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { useForm } from 'react-hook-form';
-import { UserLogin } from '../../types/types';
+import { UserLogin } from '../../../types/types';
 import validator from 'validator';
 import FormControl from '@mui/material/FormControl/FormControl';
 import InputAdornment from '@mui/material/InputAdornment/InputAdornment';
@@ -18,9 +18,9 @@ import IconButton from '@mui/material/IconButton/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { useState } from 'react';
-import Loader from '../Loader/Loader';
+import Loader from '../../Loader/Loader';
 import { NavLink } from 'react-router-dom';
 
 function Copyright(props: any) {
@@ -36,7 +36,7 @@ function Copyright(props: any) {
   );
 }
 
-export default function SignInSide() {
+export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<UserLogin>({})
   const handleClickShowPassword = () => setShowPassword((show) => !show);

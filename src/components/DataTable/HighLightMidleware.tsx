@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useContextTable } from '../../context/TableContext';
 
 interface HighlightedTextProps {

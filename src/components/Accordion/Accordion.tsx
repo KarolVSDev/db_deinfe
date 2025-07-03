@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Fade from '@mui/material/Fade';
 import ColorPickerComponent from '../Forms/FormsColors/FormColor';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 export default function AccordionTransition() {
   const [expanded, setExpanded] = React.useState(false);
@@ -51,7 +52,9 @@ export default function AccordionTransition() {
           aria-controls="panel1-content"
           id="panel1-header"
         >
-          <Typography component="span">Adicionar palavra-chave</Typography>
+          <Typography sx={{display:'flex', m:1}} component="span"> 
+            <AddCircleOutlineIcon sx={{mr:1}}/>
+            Adicionar palavra-chave</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>

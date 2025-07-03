@@ -1,10 +1,10 @@
-import { Accordion, Backdrop, Box, Button, Divider, Fade, IconButton, ListItemButton, ListItemIcon, ListItemText, Modal, Paper, Typography } from '@mui/material'
+import { Backdrop, Box, Button, Divider, Fade, IconButton, ListItemButton, ListItemIcon, ListItemText, Modal, Paper } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react'
-import ColorPickerComponent from './FormColor';
 import KeyIcon from '@mui/icons-material/Key';
 import AccordionTransition from '../../Accordion/Accordion';
 import KeyWordList from './KeyWordList';
+import Helper from '../../Dialog/Helper';
 
 
 const style = {
@@ -33,7 +33,12 @@ const ModalColor = () => {
 
     return (
         <>
-            <Button onClick={handleOpen} variant="outlined" >Palavras-Chave</Button>
+            <Helper title='Clique para gerenciar palavras-chave'>
+                <Button onClick={handleOpen} variant="outlined">
+                    <KeyIcon fontSize="small" sx={{ mr: .5 }} />
+                    Palavras-Chave
+                </Button>
+            </Helper>
             <Modal
                 aria-labelledby="transition-modal-color"
                 aria-describedby="transition-modal-description-color"
@@ -49,9 +54,9 @@ const ModalColor = () => {
             >
                 <Fade in={open}>
                     <Paper sx={style}>
-                        <Box sx={{display:'flex', flexDirection:'row'}}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                             <ListItemButton component="a" href="#customized-list">
-                                <ListItemIcon sx={{ fontSize: 20 }}><KeyIcon /></ListItemIcon>
+                                <ListItemIcon sx={{ fontSize: 20 }}><KeyIcon fontSize="large" /></ListItemIcon>
                                 <ListItemText
                                     sx={{ my: 0 }}
                                     primary="Gerenciar palavras-chave"
@@ -62,7 +67,8 @@ const ModalColor = () => {
                                     }}
                                 />
                             </ListItemButton>
-                            <IconButton onClick={handleClose} sx={{m:2,
+                            <IconButton onClick={handleClose} sx={{
+                                m: 2,
                                 '&:hover': {
                                     bgcolor: '#1e293b', color: '#ffffff',
                                 }

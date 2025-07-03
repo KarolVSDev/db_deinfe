@@ -4,22 +4,22 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import {  useEffect } from 'react';
-import {  Grid } from '@mui/material';
+import { useEffect } from 'react';
+import { Grid } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import useFetchUsers from '../../hooks/useFetchUsers';
+import useFetchUsers from '../Forms/SignForms/useFetchUsers';
 import { useAuth } from '../../context/AuthContext';
 
 
 export default function ListUsers() {
 
-    const {users} = useAuth() 
-    const {getUsers} = useFetchUsers()
+    const { users } = useAuth()
+    const { getUsers } = useFetchUsers()
 
 
     useEffect(() => {
         try {
-            if(users.length === 0) {
+            if (users.length === 0) {
                 getUsers()
             }
         } catch (error) {
@@ -30,11 +30,11 @@ export default function ListUsers() {
     console.log(users)
 
     return (
-        <Grid sx={{overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }} >
-            <Grid container sx={{gap:2, p:0}}>{users?.map((user: any) => (
-                <List key={user.id} sx={{ display:"flex",  flexDirection:"column", justifyContent:"center",alignItems:"center", width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb: 2 }}>
+        <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }} >
+            <Grid container sx={{ gap: 2, p: 0 }}>{users?.map((user: any) => (
+                <List key={user.id} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: '100%', maxWidth: 380, bgcolor: 'background.paper', mb: 2 }}>
                     <AccountCircleIcon sx={{ fontSize: { xs: 30, sm: 40, md: 50 } }} />
-                    <ListItem alignItems="center" sx={{display:"flex", justifyContent:"center", textAlign:"center"}} >
+                    <ListItem alignItems="center" sx={{ display: "flex", justifyContent: "center", textAlign: "center" }} >
                         <ListItemText
                             primary={user.nome}
                             secondary={

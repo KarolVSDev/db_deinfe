@@ -6,23 +6,24 @@ import { KeyWord } from '../../../types/types';
 import RegisterButton from '../../Buttons/RegisterButton';
 import Loader from '../../Loader/Loader';
 import useFetchKeyWord from './useFetchKeyWord';
+import { ChromePicker } from 'react-color';
 
 export interface ColorPickerComponentProps {
     handleExpanded: (expanded: boolean) => void;
 }
 
-export default function ColorPickerComponent({handleExpanded}: ColorPickerComponentProps) {
+export default function ColorPickerComponent({ handleExpanded }: ColorPickerComponentProps) {
     const [color, setColor] = useState<string>('#ffffff');
-    const { handleSubmit, register, formState: { errors }, reset, setValue} = useForm<KeyWord>({});
+    const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<KeyWord>({});
     const [loading, setLoading] = useState(false);
-    const {addKeyWord} = useFetchKeyWord();
+    const { addKeyWord } = useFetchKeyWord();
 
     const onSubmit = async (data: KeyWord) => {
         try {
             setLoading(true)
             addKeyWord(data);
             reset();
-            
+
         } catch (error) {
             console.error("Erro ao adicionar a palavra-chave:", error);
             setLoading(false)
@@ -39,7 +40,7 @@ export default function ColorPickerComponent({handleExpanded}: ColorPickerCompon
             e.stopPropagation();
             handleSubmit(onSubmit)(e);
         }}>
-            <Typography variant="h6" gutterBottom>Inserir nova palavra chave</Typography>
+            <Typography variant="h6" gutterBottom>Inserir nova palavra-chave</Typography>
             <Grid item xs={12} sm={4} ></Grid>
             <Grid item xs={12} sm={4} sx={{ mb: 3 }}>
                 <TextField
@@ -85,34 +86,25 @@ export default function ColorPickerComponent({handleExpanded}: ColorPickerCompon
             </Grid>
 
             <Grid item xs={12} sm={4}>
-                <TextField
-                    label="Selecione uma cor"
-                    value={color}
-                    fullWidth
-                    InputProps={{
-                        style: {
-                            color: color,
-                            backgroundColor: `${color}10`
-                        },
-                        inputProps: {
-                            type: 'color',
-                            pattern: '^#[0-9A-Fa-f]{6}$',
-                            title: 'Por favor, insira um valor hexadecimal válido (ex: #RRGGBB)'
-                        }
-                    }}
-                    onChange={(e) => {
-                        setValue('color', e.target.value);
-                        setColor(e.target.value);
-                    }}
-                />
+                <Box display="flex" alignItems="center" gap={2}>
+                    <ChromePicker
+                        color={color}
+                        onChange={(colorResult) => {
+                            setColor(colorResult.hex);
+                            setValue('color', colorResult.hex);
+                        }}
+                        disableAlpha
+                    />
+                    
+                </Box>
                 {errors?.color && (
                     <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
                         {errors.color.message}
                     </Typography>
                 )}
             </Grid>
-            {loading === false? <RegisterButton text="Registrar" /> : <Loader/>}
-            
+            {loading === false ? <RegisterButton text="Registrar" /> : <Loader />}
+
         </Box>
     );
 }

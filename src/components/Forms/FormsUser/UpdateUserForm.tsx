@@ -8,7 +8,7 @@ import { TypeAlert } from '../../../hooks/TypeAlert';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useAuth } from '../../../context/AuthContext';
-import useFetchUsers from '../../../hooks/useFetchUsers';
+import useFetchUsers from '../SignForms/useFetchUsers';
 import { useNavigate } from 'react-router-dom';
 
 const UpdateUserForm = () => {
