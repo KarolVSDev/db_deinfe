@@ -7,7 +7,7 @@ interface HighlightedTextProps {
 }
 
 const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
-  const {arrayKeyWord} = useContextTable();
+  const { arrayKeyWord } = useContextTable();
   // Prepara as palavras-chave: separa em palavras e mantém a informação original
   const keywords = arrayKeyWord.map(item => ({
     ...item,
@@ -21,25 +21,32 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
   // Divide o texto em tokens (palavras e espaços)
   const tokens = text.split(/(\s+)/);
 
+  const normalize = (str: string) =>
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[.,;:!?()"'`´[\]{}<>]/g, '')
+      .toLowerCase();
 
   // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave
   const checkForKeyword = (startIndex: number) => {
     const remainingTokens = tokens.length - startIndex;
-    
+
     for (const keyword of keywords) {
       // Não tem tokens suficientes para esta palavra-chave
       if (keyword.words.length * 2 - 1 > remainingTokens) continue;
-      
+
       let match = true;
       // Verifica cada palavra da palavra-chave (ignorando espaços)
       for (let i = 0; i < keyword.words.length; i++) {
         const tokenIndex = startIndex + i * 2; // Pula os espaços
-        if (tokens[tokenIndex].toLowerCase() !== keyword.words[i]) {
+        // Use normalize aqui:
+        if (normalize(tokens[tokenIndex]) !== normalize(keyword.words[i])) {
           match = false;
           break;
         }
       }
-      
+
       if (match) {
         return {
           keyword,
@@ -47,7 +54,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
         };
       }
     }
-    
+
     return null;
   };
 
@@ -56,7 +63,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
 
   while (i < tokens.length) {
     const result = checkForKeyword(i);
-    
+
     if (result) {
       // Adiciona o termo destacado
       elements.push(

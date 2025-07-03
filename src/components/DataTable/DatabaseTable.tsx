@@ -24,6 +24,7 @@ import DataTableSkeleton from './DataTableSkeleton';
 import Helper from '../Dialog/Helper';
 import HighlightedText from './HighLightMidleware';
 import ModalColor from '../Forms/FormsColors/ModalColor';
+import useFetchKeyWord from '../Forms/FormsColors/useFetchKeyWord';
 
 
 
@@ -34,7 +35,7 @@ export default function DatabaseTable() {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado, setArrayColeta,
-    setArrayAchado, setArrayProcesso } = useContextTable();
+    setArrayAchado, setArrayProcesso, setArrayKeyWord } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
   const [openModalDelete, setOpenModalDelete] = useState(false)
@@ -47,6 +48,7 @@ export default function DatabaseTable() {
   const { escutarColeta } = useFetchColeta();
   const [isLoading, setIsLoading] = useState(true);
   const [textButton, setTextButton] = useState('')
+  const { escutarKeyWords } = useFetchKeyWord();
 
 
   //Esse bloco controla a renderizaçao dos dados
@@ -54,6 +56,13 @@ export default function DatabaseTable() {
     const value = event.target.value as string;
     setDataType(value)
     setIsLoading(true);
+
+    let keywordUnsubscribe: (() => void) | undefined;
+
+    // Sempre escuta keywords
+    keywordUnsubscribe = escutarKeyWords((keywords) => {
+      setArrayKeyWord(keywords);
+    });
 
     switch (value) {
       case 'tema':
@@ -69,6 +78,10 @@ export default function DatabaseTable() {
         setTextButton('Banco de Achado')
         setColumns(createGridColumns(achadoHeader));
         const achadoListener = escutarAchados((achados) => {
+          const keywordListener = escutarKeyWords((keyword) => {
+            return keyword;
+          })
+          keywordListener();
           setArrayAchado(achados)
           setRows(createRows(achados))
           setIsLoading(false);

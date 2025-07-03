@@ -10,6 +10,7 @@ import { achadoPesquisaHeader } from '../../../../../../service/columns';
 import { formateDateToPtBr } from '../../../../../../hooks/DateFormate';
 import SearchIcon from '@mui/icons-material/Search';
 import HighlightedText from '../../../../../DataTable/HighLightMidleware';
+import useFetchKeyWord from '../../../../FormsColors/useFetchKeyWord';
 
 export interface ITableAchados {
     dataType: string;
@@ -20,11 +21,12 @@ export interface ITableAchados {
 
 const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAchadoSelected }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const { handleLocalization, arrayAchado, setArrayAchado } = useContextTable();
+    const { handleLocalization, arrayAchado, setArrayAchado, setArrayKeyWord } = useContextTable();
     const { escutarAchados } = useFetchAchado();
     const [rows, setRows] = useState<any[]>([]);
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const {escutarKeyWords} = useFetchKeyWord();
 
     const achadosFiltrados = useMemo(() => {
         if (!searchTerm.trim()) return arrayAchado;
@@ -102,13 +104,13 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
                                 },
                             }}
                         >
-                          
+
                             <div style={{
                                 width: '100%',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 whiteSpace: 'nowrap',
-                                display: 'inline-block', 
+                                display: 'inline-block',
                             }}>
                                 <HighlightedText text={params.value || ''} />
                             </div>
@@ -156,6 +158,14 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
     useEffect(() => {
         const fecthData = async () => {
             setIsLoading(true);
+
+            let keywordUnsubscribe: (() => void) | undefined;
+
+            // Sempre escuta keywords
+            keywordUnsubscribe = escutarKeyWords((keywords) => {
+                setArrayKeyWord(keywords);
+            });
+            
             try {
                 setColumns(createGridColumns(achadoPesquisaHeader));
                 setRows(createRows(arrayAchado));
