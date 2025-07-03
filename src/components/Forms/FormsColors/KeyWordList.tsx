@@ -9,7 +9,7 @@ import Helper from '../../Dialog/Helper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteVerification from '../../Dialog/VerificationStep';
 import ColorCircleCopy from './ColorCircleCopy';
-import { InputAdornment, TextField } from '@mui/material';
+import { Box, InputAdornment, TextField, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 export default function KeyWordList() {
@@ -59,7 +59,7 @@ export default function KeyWordList() {
     };
 
     return (
-        <>
+        <>{arrayKeyWord && arrayKeyWord.length > 0? (
 
             <List sx={{ width: '100%', bgcolor: 'background.paper', p: 3 }}>
             <TextField
@@ -109,6 +109,12 @@ export default function KeyWordList() {
                     />
                 )}
             </List>
+        ):(
+            <Box sx={{display:'flex', justifyContent:'center', my:2}}>
+
+                <Typography>Sem palavra-chave</Typography>
+            </Box>
+        )}
         </>
 
     );
