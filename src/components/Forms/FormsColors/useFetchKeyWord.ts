@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import { KeyWord } from "../../../types/types";
 import { db } from "../../../service/firebase.config";
 import { TypeAlert } from "../../../hooks/TypeAlert";
@@ -8,6 +8,19 @@ const useFetchKeyWord = () => {
     const addKeyWord = async (data: KeyWord) => {
         try {
             const colecaoRef = collection(db, "keyword");
+
+            const querySnapshot = await getDocs(
+                query(
+                    colecaoRef,
+                    where('label', '==', data.label),
+                )
+            );
+
+            if (!querySnapshot.empty) {
+                TypeAlert("Essa palavra-chave já foi registrada", "error");
+                return false;
+            }
+
             const docRef = await addDoc(colecaoRef, {
                 label: data.label,
                 type: data.type,

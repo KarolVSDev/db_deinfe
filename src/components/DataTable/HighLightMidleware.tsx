@@ -8,25 +8,30 @@ interface HighlightedTextProps {
 
 const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
   const { arrayKeyWord } = useContextTable();
-  // Prepara as palavras-chave: separa em palavras e mantém a informação original
+  
+  // Prepara as palavras-chave mantendo a formatação original
   const keywords = arrayKeyWord.map(item => ({
     ...item,
-    words: item.label.toLowerCase().split(' '),
-    original: item.label
+    words: item.label.split(' '), // Mantém o case original
+    original: item.label,
+    length: item.label.length // Adicionamos o comprimento total
   }));
 
-  // Ordena do maior para o menor (termos com mais palavras primeiro)
-  keywords.sort((a, b) => b.words.length - a.words.length);
+  // Ordena por: 1) palavras com mais termos, 2) termos mais longos
+  keywords.sort((a, b) => {
+    if (b.words.length !== a.words.length) {
+      return b.words.length - a.words.length; // Mais palavras primeiro
+    }
+    return b.length - a.length; // Mais longo primeiro
+  });
 
   // Divide o texto em tokens (palavras e espaços)
   const tokens = text.split(/(\s+)/);
 
-  const normalize = (str: string) =>
-    str
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[.,;:!?()"'`´[\]{}<>]/g, '')
-      .toLowerCase();
+  // Função para verificar correspondência exata (incluindo case)
+  const checkExactMatch = (token: string, keywordWord: string) => {
+    return token === keywordWord;
+  };
 
   // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave
   const checkForKeyword = (startIndex: number) => {
@@ -40,8 +45,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
       // Verifica cada palavra da palavra-chave (ignorando espaços)
       for (let i = 0; i < keyword.words.length; i++) {
         const tokenIndex = startIndex + i * 2; // Pula os espaços
-        // Use normalize aqui:
-        if (normalize(tokens[tokenIndex]) !== normalize(keyword.words[i])) {
+        if (!checkExactMatch(tokens[tokenIndex], keyword.words[i])) {
           match = false;
           break;
         }
@@ -77,7 +81,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
           {tokens.slice(i, i + result.length).join('')}
         </span>
       );
-      i += result.length;
+      i += result.length; // Pula os tokens já processados
     } else {
       // Adiciona o token normal
       elements.push(
@@ -88,6 +92,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
       i++;
     }
   }
+
 
   return (
     <Typography component="span">
