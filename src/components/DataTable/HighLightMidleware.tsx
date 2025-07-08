@@ -8,7 +8,7 @@ interface HighlightedTextProps {
 
 const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
   const { arrayKeyWord } = useContextTable();
-  
+
   // Prepara as palavras-chave mantendo a formatação original
   const keywords = arrayKeyWord.map(item => ({
     ...item,
@@ -28,9 +28,11 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
   // Divide o texto em tokens (palavras e espaços)
   const tokens = text.split(/(\s+)/);
 
+  const normalize = (str: string) => str.replace(/[.,;!?()]/g, '').toLowerCase();
+
   // Função para verificar correspondência exata (incluindo case)
   const checkExactMatch = (token: string, keywordWord: string) => {
-    return token === keywordWord;
+    return normalize(token) === normalize(keywordWord);
   };
 
   // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave
