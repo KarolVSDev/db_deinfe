@@ -55,6 +55,10 @@ export default function ColorPickerComponent({ handleExpanded }: ColorPickerComp
                     {...register('label', {
                         required: 'Campo obrigatório'
                     })}
+                    onBlur={(e) => {
+                        const trimmed = e.target.value.trimEnd();
+                        setValue('label', trimmed, { shouldValidate: true });
+                    }}
                 />
 
                 {errors?.label && (
@@ -95,7 +99,7 @@ export default function ColorPickerComponent({ handleExpanded }: ColorPickerComp
                         }}
                         disableAlpha
                     />
-                    
+
                 </Box>
                 {errors?.color && (
                     <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
