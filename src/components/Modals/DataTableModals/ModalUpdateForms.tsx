@@ -32,7 +32,7 @@ interface ModalUpdateProps {
   dataType: string;
   open: boolean;
   onClose: () => void;
-  user: User | undefined;
+  user: User;
 }
 
 
@@ -50,7 +50,8 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
         return <FormUpdateProcesso closeModal={onClose} id={id} user={user} dataType={dataType} />
 
       case 'relacionamentos':
-        return <FormUpdateColeta closeModal={onClose} id={id}  dataType={dataType} />
+        //o formUpdateColeta usa um dataTypeLocal para conseguir abrir o formUpdateAchado
+        return <FormUpdateColeta closeModal={onClose} id={id}  user={user} />
     }
   }
 

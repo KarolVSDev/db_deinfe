@@ -14,6 +14,8 @@ import { useAppStore } from '../../hooks/appStore';
 import { useAuth } from '../../context/AuthContext';
 import { LogoutOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import androidImage from '../../../public/images/android-chrome-192x192.png'
+import { Avatar } from '@mui/material';
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -120,14 +122,20 @@ export default function NavBar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            DB Deinfe
-          </Typography>
+            <Avatar
+              src={androidImage}
+              alt="Logo"
+              sx={{ width: 32, height: 32, mr: 1 }}
+            />
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: 'none', sm: 'block' } }}
+            >
+              Banco de Achados
+            </Typography>
+      
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

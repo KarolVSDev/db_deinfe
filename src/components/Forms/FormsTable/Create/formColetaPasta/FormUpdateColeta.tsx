@@ -1,11 +1,11 @@
-import { Autocomplete, Paper, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
-import { Processo, Coleta, Achado, ColetaUpdate } from '../../../../../types/types';
+import { Processo, Coleta, Achado, ColetaUpdate, User } from '../../../../../types/types';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
@@ -20,15 +20,16 @@ import Loader from "../../../../Loader/Loader";
 import ColetaSkeleton from "./formComponents/ColetaSkeleton";
 import useFetchTema from "../FormTemaPasta/useFetchTema";
 import ModalListAchados from "./formComponents/ModalListAchado";
+import AchadoPaper from "./formComponents/AchadoPaper";
 
 
 export interface FormUpdateColetaProps {
     closeModal: () => void;
-    dataType: string;
     id: GridRowId;
+    user:User;
 }
 
-const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) => {
+const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, user }) => {
 
     const [coleta, setColeta] = useState<ColetaUpdate>()
 
@@ -55,9 +56,11 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const { getColetaById } = useFetchColeta();
     const [loading, setLoading] = useState(false);
     const [isloading, setIsLoading] = useState(false);
-    const [achadoLabel, setAchadoLabel] = useState<string | null>()
+    const [achado, setAchado] = useState<Achado | null>();
     const [_achadoTemaId, setAchadoTemaId] = useState<string>('');
-
+    const [openModal, setOpenModal] = useState(false)
+    const {getAchadoById} = useFetchAchado();
+    const [dataTypeLocal] = useState('achado')
     useEffect(() => {
         const fetchData = async () => {
             await getAllTemas();
@@ -78,7 +81,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                     return
                 }
                 setColeta(registro)
-                setAchadoLabel(registro.achado.achado)
+                setAchado(registro.achado)
 
 
                 reset({
@@ -103,11 +106,22 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
         fetchColeta();
     }, [id])
 
+    const handleUpdate = () => {
+        setOpenModal(true)
+    }
+
+    const handleCloseModal = async () => {
+        setOpenModal(false);
+        if(achado?.id) {
+            const updatedAchado = await getAchadoById(achado.id);
+            if(updatedAchado) setAchado(updatedAchado.achado)
+        }
+    };
 
     const handleSelectAchado = (achado: Achado) => {
         if (achado.id) {
             setValue('achadoId', achado.id, { shouldValidate: true });
-            setAchadoLabel(achado.achado)
+            setAchado(achado)
             setAchadoTemaId(achado.tema_id)
         }
     };
@@ -126,7 +140,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
 
             const updatedColeta = await updateColeta(data.id, data);
 
-            if(updatedColeta) {
+            if (updatedColeta) {
                 TypeAlert("Coleta atualizada com sucesso", "success")
                 closeModal()
                 setLoading(false)
@@ -150,7 +164,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                 ) : (
                     <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
                         <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Relacionamento</Typography>
+                            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Coleta</Typography>
                             <IconButton onClick={closeModal} sx={{
                                 '&:hover': {
                                     bgcolor: '#1e293b', color: '#ffffff',
@@ -161,12 +175,9 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                         </Box>
 
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                            <ModalListAchados  onSelectAchado={handleSelectAchado} />
-                            {achadoLabel &&
-                                <Paper sx={{ mb: 2 }}>
-                                    <Typography sx={{ mt: 2, pl: 2, pt: 1, fontWeight: 'bold' }}>Achado:</Typography>
-                                    <Typography sx={{ p: 2, pt: 0 }}>{achadoLabel}</Typography>
-                                </Paper>
+                            <ModalListAchados onSelectAchado={handleSelectAchado} />
+                            {achado &&
+                                <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal}/>
                             }
                         </Grid >
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
