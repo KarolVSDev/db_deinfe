@@ -36,21 +36,21 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
 
       if (temaExiste) return;
 
-        if (user?.cargo !== 'chefe') {
-          data.situacao = false;
-        }
-        const dataWithSituacao = {
-          ...data,
-          situacao: situacao === 'Aprovado' ? true : false
-        }
-        setTema(dataWithSituacao)
-        reset()
-      } catch (error) {
-        console.error("Erro no tryCatch do submit de topico: ", error)
-      } finally {
-        setLoading(false)
-         closeModal()
+      if (user?.cargo !== 'chefe') {
+        data.situacao = false;
       }
+      const dataWithSituacao = {
+        ...data,
+        situacao: situacao === 'Aprovado' ? true : false
+      }
+      setTema(dataWithSituacao)
+      reset()
+    } catch (error) {
+      console.error("Erro no tryCatch do submit de topico: ", error)
+    } finally {
+      setLoading(false)
+      closeModal()
+    }
   };
 
   return (
@@ -69,40 +69,41 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
           <CloseIcon />
         </IconButton>
       </Box>
-      <Grid item xs={12} sm={4}>
-        <TextField
-          variant='filled'
-          required
-          fullWidth
-          autoFocus
-          id="tema"
-          label='Proposta de Tema'
-          type="text"
-          error={!!errors?.tema}
-          {...register('tema', {
-            required: 'Campo obrigatório'
-          })}
-        />
-
-        {errors?.tema && (
-          <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-            {errors.tema.message}
-          </Typography>
-        )}
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        {user?.cargo === 'chefe' ? (<ToggleButtonGroup
-          color="primary"
-          value={situacao}
-          exclusive
-          onChange={handleChange}
-          aria-label="toggleSituacaoTema"
-        >
-          <ToggleButton value='Pendente' >Pendente</ToggleButton>
-          <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-        </ToggleButtonGroup>) : (
-          <input type="hidden"{...register('situacao')} value="false" />
-        )}
+      <Grid container spacing={2}>
+        <Grid item xs={12} >
+          <TextField
+            variant='filled'
+            required
+            fullWidth
+            autoFocus
+            id="tema"
+            label='Proposta de Tema'
+            type="text"
+            error={!!errors?.tema}
+            {...register('tema', {
+              required: 'Campo obrigatório'
+            })}
+          />
+          {errors?.tema && (
+            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+              {errors.tema.message}
+            </Typography>
+          )}
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          {user?.cargo === 'chefe' ? (<ToggleButtonGroup
+            color="primary"
+            value={situacao}
+            exclusive
+            onChange={handleChange}
+            aria-label="toggleSituacaoTema"
+          >
+            <ToggleButton value='Pendente' >Pendente</ToggleButton>
+            <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
+          </ToggleButtonGroup>) : (
+            <input type="hidden"{...register('situacao')} value="false" />
+          )}
+        </Grid>
       </Grid>
       {loading ?
         <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>

@@ -28,7 +28,6 @@ const style = {
   scrollbarWidth: 'thin',
   background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
   borderRadius: '10px',
-
 };
 
 export interface ModalAddDataProps {

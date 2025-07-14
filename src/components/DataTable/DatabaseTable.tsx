@@ -330,7 +330,7 @@ export default function DatabaseTable() {
             </Helper>
           </Grid>
           <Grid item xs>
-            <SearchComponent setRows={setRows} createRows={createRows} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <SearchComponent dataType={dataType} setRows={setRows} createRows={createRows} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </Grid>
         </Grid>
         <Divider />

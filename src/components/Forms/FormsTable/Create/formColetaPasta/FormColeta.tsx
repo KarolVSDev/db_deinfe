@@ -124,20 +124,20 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 </IconButton>
             </Box>
 
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
+            <Grid item xs={12}  sx={{ mb: 2 }} >
                 <Divider textAlign="center" sx={{ my: 4, color: "#777" }}>Seção de Formulários</Divider>
                 <GroupButtonColeta />
                 <Divider textAlign="center" sx={{ my: 4, color: "#777" }}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
 
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
                 {achado &&
                     <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal} />
                 }
                 <ModalListAchados onSelectAchado={handleSelectAchado} />
             </Grid >
 
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
                 <Controller
                     name="processoId"
                     control={control}
@@ -171,8 +171,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 />
             </Grid>
 
-
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+            <Grid item xs={12}  sx={{ mb: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
 
                     <SelectSanado
