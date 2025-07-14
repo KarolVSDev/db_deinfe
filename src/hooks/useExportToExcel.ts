@@ -14,7 +14,7 @@ const useExportToExcel = () => {
     const { getAllTemas } = useFetchTema();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
-    const { arrayColeta } = useContextTable();
+    const { arrayColeta, arrayKeyWord } = useContextTable();
 
     const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
         const workbook = new ExcelJS.Workbook();
@@ -166,6 +166,71 @@ const useExportToExcel = () => {
                     header.length + 2 // Garante que o cabeçalho também caiba
                 )
             }));
+
+            // Destaca palavras-chave na coluna 'Achado' usando lógica semelhante ao middleware
+            const achadoColIdx = headers.findIndex(h => h.toLowerCase() === 'achado');
+            if (achadoColIdx !== -1) {
+                // Prepara as palavras-chave mantendo a formatação original
+                const keywords = arrayKeyWord.map(item => ({
+                    ...item,
+                    words: item.label.split(' '),
+                    original: item.label,
+                    length: item.label.length
+                }));
+                // Ordena por: 1) palavras com mais termos, 2) termos mais longos
+                keywords.sort((a, b) => {
+                    if (b.words.length !== a.words.length) {
+                        return b.words.length - a.words.length;
+                    }
+                    return b.length - a.length;
+                });
+                rows.forEach((row, i) => {
+                    const cellValue = row[achadoColIdx];
+                    if (typeof cellValue === 'string' && keywords.length > 0) {
+                        // Divide o texto em tokens (palavras e espaços)
+                        const tokens = cellValue.split(/(\s+)/);
+                        let richTextArr = [];
+                        let idx = 0;
+                        while (idx < tokens.length) {
+                            // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave
+                            const checkForKeyword = (startIndex: number) => {
+                                const remainingTokens = tokens.length - startIndex;
+                                for (const keyword of keywords) {
+                                    if (keyword.words.length * 2 - 1 > remainingTokens) continue;
+                                    let match = true;
+                                    for (let j = 0; j < keyword.words.length; j++) {
+                                        const tokenIndex = startIndex + j * 2;
+                                        if (tokens[tokenIndex] !== keyword.words[j]) {
+                                            match = false;
+                                            break;
+                                        }
+                                    }
+                                    if (match) {
+                                        return {
+                                            keyword,
+                                            length: keyword.words.length * 2 - 1
+                                        };
+                                    }
+                                }
+                                return null;
+                            };
+                            const result = checkForKeyword(idx);
+                            if (result) {
+                                richTextArr.push({
+                                    text: tokens.slice(idx, idx + result.length).join(''),
+                                    font: { color: { argb: result.keyword.color.replace('#', '') }, bold: true }
+                                });
+                                idx += result.length;
+                            } else {
+                                richTextArr.push({ text: tokens[idx] });
+                                idx++;
+                            }
+                        }
+                        const cell = sheet.getCell(i + 2, achadoColIdx + 1);
+                        cell.value = { richText: richTextArr };
+                    }
+                });
+            }
 
             const buffer = await workbook.xlsx.writeBuffer();
             saveAs(new Blob([buffer]), fileName);
