@@ -128,7 +128,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               <CloseIcon />
             </IconButton>
           </Box>
-          <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+          <Grid item xs={12} sx={{ mb: 2 }}>
             <Controller
               name="tema_id"
               control={control}
@@ -160,7 +160,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             />
           </Grid>
 
-          <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+          <Grid item xs={12} sx={{ mt: 3 }}>
             <TextField
               variant='filled'
               defaultValue={achado?.achado}
@@ -183,7 +183,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
           </Grid>
 
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12}>
             {user?.cargo === 'chefe' ? (<Controller
               name="situacaoAchado"
               defaultValue={achado?.situacaoAchado}
@@ -216,7 +216,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             </Box>
           </Grid>
 
-          <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+          <Grid item xs={12}  sx={{ mt: 3 }}>
             <TextField
               variant='filled'
               autoComplete="given-name"
@@ -235,7 +235,7 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
             )}
           </Grid>
 
-          <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+          <Grid item xs={12} sx={{ mt: 3 }}>
             <Typography>Campo de Análise</Typography>
             <TextField
               variant='filled'
