@@ -15,6 +15,7 @@ import Loader from '../../../../Loader/Loader';
 import useFetchAchado from './useFetchAchado';
 import ModalTema from '../FormTemaPasta/ModalTema';
 import useFetchTema from '../FormTemaPasta/useFetchTema';
+import CloseIconComponent from '../../../../Inputs/CloseIcon';
 
 export interface FormAchadoProps {
   closeModal: () => void;
@@ -91,16 +92,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
       e.stopPropagation();
       handleSubmit(onSubmit)(e);
     }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar proposta de Achado</Typography>
-        <IconButton onClick={closeModal} sx={{
-          '&:hover': {
-            bgcolor: '#1e293b', color: '#ffffff',
-          }
-        }}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
+      <CloseIconComponent closeModal={closeModal} textType='Achado' />
       <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
         <Controller
           name="tema_id"

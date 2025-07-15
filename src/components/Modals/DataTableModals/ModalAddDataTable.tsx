@@ -12,6 +12,8 @@ import { User } from '../../../types/types';
 import FormProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormProcesso';
 import FormColeta from '../../Forms/FormsTable/Create/formColetaPasta/FormColeta';
 import Helper from '../../Dialog/Helper';
+import { Typography } from '@mui/material';
+
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -26,7 +28,6 @@ const style = {
   height: 'fit-content',
   maxHeight: '95vh',
   scrollbarWidth: 'thin',
-  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
   borderRadius: '10px',
 
 };
@@ -65,7 +66,8 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user, textButton 
     <div>
       <Helper title='Clique aqui para criar um novo registro'>
       <Button ref={openButtonRef}  onClick={handleOpen} disabled={isDisabled} variant='contained'>
-        <SaveIcon sx={{ mr: 1 }} /> Cadastrar {textButton}
+        <SaveIcon sx={{ mr: 1 }} /> 
+        <Typography>Cadastrar {textButton}</Typography>
       </Button>
       </Helper>
       <Modal

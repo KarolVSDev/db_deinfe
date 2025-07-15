@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { TopicoAchado, User } from '../../../../../types/types';
 import RegisterButton from '../../../../Buttons/RegisterButton';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import Loader from '../../../../Loader/Loader';
 import useFetchTema from './useFetchTema';
+import CloseIconComponent from '../../../../Inputs/CloseIcon';
 
 export interface FormTopicoAchadoProps {
   closeModal: () => void;
@@ -18,6 +19,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   const [loading, setLoading] = useState(false)
   const { getTemaByName } = useFetchTema();
   const { setTema } = useFetchTema();
+  const theme = useTheme();
 
   const handleChange = (
     _: React.MouseEvent<HTMLElement>,
@@ -36,21 +38,21 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
 
       if (temaExiste) return;
 
-        if (user?.cargo !== 'chefe') {
-          data.situacao = false;
-        }
-        const dataWithSituacao = {
-          ...data,
-          situacao: situacao === 'Aprovado' ? true : false
-        }
-        setTema(dataWithSituacao)
-        reset()
-      } catch (error) {
-        console.error("Erro no tryCatch do submit de topico: ", error)
-      } finally {
-        setLoading(false)
-         closeModal()
+      if (user?.cargo !== 'chefe') {
+        data.situacao = false;
       }
+      const dataWithSituacao = {
+        ...data,
+        situacao: situacao === 'Aprovado' ? true : false
+      }
+      setTema(dataWithSituacao)
+      reset()
+    } catch (error) {
+      console.error("Erro no tryCatch do submit de topico: ", error)
+    } finally {
+      setLoading(false)
+      closeModal()
+    }
   };
 
   return (
@@ -59,16 +61,9 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
       e.stopPropagation();
       handleSubmit(onSubmit)(e);
     }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar proposta de Tema</Typography>
-        <IconButton onClick={closeModal} sx={{
-          '&:hover': {
-            bgcolor: '#1e293b', color: '#ffffff',
-          }
-        }}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
+
+      <CloseIconComponent closeModal={closeModal} textType='Tema' />
+
       <Grid item xs={12} sm={4}>
         <TextField
           variant='filled'

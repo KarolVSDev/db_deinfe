@@ -3,16 +3,16 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useForm } from 'react-hook-form';
-import { FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { Processo, User, Diretoria } from '../../../../../types/types';
-import CloseIcon from '@mui/icons-material/Close';
 import SelectInput from '../../../../Inputs/SelectInput';
 import { useEffect, useState } from 'react';
 import useFetchProcesso from './useFetchProcesso';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import { diretoriasJson } from '../../../../../service/diretoriasJson';
 import Loader from '../../../../Loader/Loader';
+import CloseIconComponent from '../../../../Inputs/CloseIcon';
 
 export interface FormProcessoProps {
     closeModal: () => void;
@@ -54,16 +54,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
             e.stopPropagation();
             handleSubmit(onSubmit)(e);
           }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar proposta de Processo</Typography>
-                <IconButton onClick={closeModal} sx={{
-                    '&:hover': {
-                        bgcolor: '#1e293b', color: '#ffffff',
-                    }
-                }}>
-                    <CloseIcon />
-                </IconButton>
-            </Box>
+            <CloseIconComponent closeModal={closeModal} textType='Processo' />
             <Grid container spacing={2} sx={{ pb: 1 }}>
                 <Grid item xs={12} sx={{ pb: 1 }}>
                     <TextField

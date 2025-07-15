@@ -1,5 +1,5 @@
 import Paper from '@mui/material/Paper';
-import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, IconButton, MenuItem, Select, Tooltip, Typography, useTheme } from '@mui/material';
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowId, GridRowParams } from '@mui/x-data-grid';
 import { ColumnConfig } from '../../types/types';
 import { useEffect, useRef, useState } from 'react';
@@ -49,9 +49,10 @@ export default function DatabaseTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [textButton, setTextButton] = useState('')
   const { escutarKeyWords } = useFetchKeyWord();
+  const theme = useTheme();
 
 
-  
+
 
   //Esse bloco controla a renderizaçao dos dados
   const handleDataTypeChange = (event: { target: { value: string; }; }) => {
@@ -147,9 +148,11 @@ export default function DatabaseTable() {
           return <ModalAnalises key={params.row.id} analise={params.row.analise} />
         }
         if (['situacaoAchado', 'situacao'].includes(header.id) && typeof params.value === 'boolean') {
+          const aprovadoColor = theme.palette.mode === 'dark' ? '#22c55e' : '#86efac';   // verde escuro ou claro
+          const pendenteColor = theme.palette.mode === 'dark' ? '#facc15' : '#fcd34d';   // amarelo escuro ou claro
           return (
             <span style={{
-              background: params.value ? '#86efac' : '#fcd34d',
+              background: params.value ? aprovadoColor : pendenteColor,
               fontWeight: 'bold',
               padding: '5px 5px',
               borderRadius: '5px'
@@ -310,8 +313,11 @@ export default function DatabaseTable() {
           <Box>
             <Helper title="Clique aqui para exportar os dados dessa tabela">
               <Button variant="contained" sx={{
-                bgcolor: '#ff3d00',
-                '&:hover': { bgcolor: '#b22a00' },
+                bgcolor: theme.palette.mode === 'dark' ? '#fde68a' : '#fb923c', 
+                color: theme.palette.mode === 'dark' ? '#232b3b' : '#fff',     
+                '&:hover': {
+                  bgcolor: theme.palette.mode === 'dark' ? '#fbbf24' : '#fdba74', 
+                },
                 minWidth: 40,
                 height: 40,
                 p: 0,

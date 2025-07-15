@@ -25,6 +25,7 @@ import ModalUpdatePF from "../../../../Modals/DataTableModals/ModalUpdateForms";
 import { GridRowId } from "@mui/x-data-grid";
 import ModalColor from "../../../FormsColors/ModalColor";
 import HighlightedText from "../../../../DataTable/HighLightMidleware";
+import CloseIconComponent from "../../../../Inputs/CloseIcon";
 export interface FormColetaProps {
     closeModal: () => void;
     user: User;
@@ -49,7 +50,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const [loading, setLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false)
     const [dataType, setDataType] = useState<string>('')
-    const {getAchadoById} = useFetchAchado();
+    const { getAchadoById } = useFetchAchado();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -84,9 +85,9 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
     const handleCloseModal = async () => {
         setOpenModal(false);
-        if(achado?.id) {
+        if (achado?.id) {
             const updatedAchado = await getAchadoById(achado.id);
-            if(updatedAchado) setAchado(updatedAchado.achado)
+            if (updatedAchado) setAchado(updatedAchado.achado)
         }
     };
 
@@ -115,17 +116,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
     return (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formColeta' id='formColeta' noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Formulários de registro e relacionamentos de Temas, Achados e Processos</Typography>
-                <IconButton onClick={closeModal} sx={{
-                    '&:hover': {
-                        bgcolor: '#1e293b', color: '#ffffff',
-                    }
-                }}>
-                    <CloseIcon />
-                </IconButton>
-            </Box>
-
+            <CloseIconComponent closeModal={closeModal} textType='Coleta' />
             <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
                 <Divider textAlign="center" sx={{ my: 4, color: "#777" }}>Seção de Formulários</Divider>
                 <GroupButtonColeta />
@@ -136,10 +127,10 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 {achado &&
                     <Paper sx={{ mb: 2 }}>
                         <Typography sx={{ mt: 2, pl: 2, pt: 1, fontWeight: 'bold' }}>Achado:</Typography>
-                        <Typography sx={{ p: 2, pt: 0 }}><HighlightedText text={achado.achado}/></Typography>
-                        
+                        <Typography sx={{ p: 2, pt: 0 }}><HighlightedText text={achado.achado} /></Typography>
+
                         <Divider />
-                        <Box sx={{bgColor:'#f1f5f9'}}>
+                        <Box sx={{ bgColor: '#f1f5f9' }}>
                             <Helper title="Clique aqui para editar o registro">
                                 <IconButton sx={{ mx: 1 }} color="primary" onClick={() => handleUpdate()}>
                                     <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
