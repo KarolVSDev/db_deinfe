@@ -19,13 +19,12 @@ import GroupButtonColeta from "./formComponents/ButtonGroup";
 import useFetchTema from "../FormTemaPasta/useFetchTema";
 import ModalListAchados from "./formComponents/ModalListAchado";
 import Loader from "../../../../Loader/Loader";
-import EditIcon from '@mui/icons-material/Edit';
-import Helper from "../../../../Dialog/Helper";
 import ModalUpdatePF from "../../../../Modals/DataTableModals/ModalUpdateForms";
 import { GridRowId } from "@mui/x-data-grid";
 import ModalColor from "../../../FormsColors/ModalColor";
 import HighlightedText from "../../../../DataTable/HighLightMidleware";
 import CloseIconComponent from "../../../../Inputs/CloseIcon";
+import AchadoPaper from "./formComponents/AchadoPaper";
 export interface FormColetaProps {
     closeModal: () => void;
     user: User;
@@ -50,9 +49,10 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const [loading, setLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false)
     const [dataType, setDataType] = useState<string>('')
-    const { getAchadoById } = useFetchAchado();
+    const {  getAchadoById  } = useFetchAchado();
     const theme = useTheme();
-    
+    const [dataTypeLocal] = useState('achado')
+
     useEffect(() => {
         const fetchData = async () => {
             await getAllAchados();
@@ -124,27 +124,14 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <Divider textAlign="center" sx={{ my: 4, color: theme.palette.text.primary }}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
 
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
                 {achado &&
-                    <Paper sx={{ mb: 2 }}>
-                        <Typography sx={{ mt: 2, pl: 2, pt: 1, fontWeight: 'bold' }}>Achado:</Typography>
-                        <Typography sx={{ p: 2, pt: 0 }}><HighlightedText text={achado.achado} /></Typography>
-
-                        <Divider />
-                        <Box sx={{ bgColor: '#f1f5f9' }}>
-                            <Helper title="Clique aqui para editar o registro">
-                                <IconButton sx={{ mx: 1 }} color="primary" onClick={() => handleUpdate()}>
-                                    <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
-                                </IconButton>
-                            </Helper>
-                            <ModalColor />
-                        </Box>
-                    </Paper>
+                    <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal} />
                 }
                 <ModalListAchados onSelectAchado={handleSelectAchado} />
             </Grid >
 
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
                 <Controller
                     name="processoId"
                     control={control}
@@ -178,8 +165,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 />
             </Grid>
 
-
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+            <Grid item xs={12}  sx={{ mb: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
 
                     <SelectSanado
@@ -235,7 +221,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
                     <Loader />
                 </Box> :
-                <RegisterButton text="Atualizar" />
+                <RegisterButton text="Registrar" />
             }
             {achado?.id !== null && (
                 <ModalUpdatePF

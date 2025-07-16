@@ -29,7 +29,6 @@ const style = {
   maxHeight: '95vh',
   scrollbarWidth: 'thin',
   borderRadius: '10px',
-
 };
 
 export interface ModalAddDataProps {

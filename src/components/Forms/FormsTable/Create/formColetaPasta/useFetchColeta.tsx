@@ -69,7 +69,6 @@ const useFetchColeta = () => {
 
                 // Transforma os IDs em valores legíveis
                 const coletasTransformadas = await editorDeArrayColeta(coletas);
-                console.log(coletasTransformadas)
                 setArrayColeta(coletasTransformadas);
                 callback(coletasTransformadas);
             });
@@ -197,7 +196,7 @@ const useFetchColeta = () => {
         }
     }
     return {
-        addColeta, escutarColeta, deleteColeta, getColetaById, updateColeta
+        addColeta, escutarColeta, deleteColeta, getColetaById, updateColeta, editorDeArrayColeta
     }
 }
 export default useFetchColeta;

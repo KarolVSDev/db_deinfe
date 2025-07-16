@@ -25,7 +25,7 @@ import Helper from '../Dialog/Helper';
 import HighlightedText from './HighLightMidleware';
 import ModalColor from '../Forms/FormsColors/ModalColor';
 import useFetchKeyWord from '../Forms/FormsColors/useFetchKeyWord';
-
+import SearchComponent from './SearchComponent';
 
 
 
@@ -49,7 +49,9 @@ export default function DatabaseTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [textButton, setTextButton] = useState('')
   const { escutarKeyWords } = useFetchKeyWord();
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const theme = useTheme();
+
 
 
 
@@ -288,29 +290,29 @@ export default function DatabaseTable() {
           sx={{ padding: '20px' }}>
           Coleta
         </Typography>
-        <Box sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 2,
-          height: 48,
-          mb: 2,
-          '& > *': { minWidth: 48 }
-        }}>
-          <Select name="dataTypeSelect" id="dataTypeSelect" value={dataType} onChange={handleDataTypeChange} sx={{ ml: '20px', mb: '10px' }}>
-            {optionsSelect.map((option) => (
-              <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>
-                {option.string}
-              </MenuItem>
-            ))}
-          </Select>
-          <Box sx={{ height: 40 }}>
+        <Grid container alignItems="center" spacing={2} sx={{ mb: 2, mt: 1, pl:2, pr:2 }}>
+          <Grid item>
+            <Select
+              name="dataTypeSelect"
+              id="dataTypeSelect"
+              value={dataType}
+              onChange={handleDataTypeChange}
+              sx={{ minWidth: 140 }}
+            >
+              {optionsSelect.map((option) => (
+                <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>
+                  {option.string}
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+          <Grid item>
             <ModalAddData dataType={dataType} textButton={textButton} user={user} />
-          </Box>
-          <Box sx={{ height: 40 }}>
+          </Grid>
+          <Grid item>
             <ModalColor />
-          </Box>
-          <Box>
+          </Grid>
+          <Grid item>
             <Helper title="Clique aqui para exportar os dados dessa tabela">
               <Button variant="contained" sx={{
                 bgcolor: theme.palette.mode === 'dark' ? '#fde68a' : '#fb923c', 
@@ -330,8 +332,11 @@ export default function DatabaseTable() {
                 <FileDownloadIcon />
               </Button>
             </Helper>
-          </Box>
-        </Box>
+          </Grid>
+          <Grid item xs>
+            <SearchComponent dataType={dataType} setRows={setRows} createRows={createRows} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </Grid>
+        </Grid>
         <Divider />
         <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>
           {isLoading && (

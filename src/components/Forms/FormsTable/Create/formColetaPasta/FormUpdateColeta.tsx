@@ -1,12 +1,11 @@
-import { Autocomplete, Paper, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
-import { Processo, Coleta, Achado, ColetaUpdate } from '../../../../../types/types';
-import CloseIcon from '@mui/icons-material/Close';
+import { Processo, Coleta, Achado, ColetaUpdate, User } from '../../../../../types/types';
 import { useEffect, useState } from "react";
 import useFetchAchado from "../FormAchadoPasta/useFetchAchado";
 import { useContextTable } from "../../../../../context/TableContext";
@@ -22,15 +21,16 @@ import useFetchTema from "../FormTemaPasta/useFetchTema";
 import ModalListAchados from "./formComponents/ModalListAchado";
 import CloseIconComponent from "../../../../Inputs/CloseIcon";
 import { useTheme } from '@mui/material/styles';
+import AchadoPaper from "./formComponents/AchadoPaper";
 
 
 export interface FormUpdateColetaProps {
     closeModal: () => void;
-    dataType: string;
     id: GridRowId;
+    user:User;
 }
 
-const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) => {
+const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, user }) => {
 
     const [coleta, setColeta] = useState<ColetaUpdate>()
 
@@ -57,8 +57,11 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
     const { getColetaById } = useFetchColeta();
     const [loading, setLoading] = useState(false);
     const [isloading, setIsLoading] = useState(false);
-    const [achadoLabel, setAchadoLabel] = useState<string | null>()
+    const [achado, setAchado] = useState<Achado | null>();
     const [_achadoTemaId, setAchadoTemaId] = useState<string>('');
+    const [openModal, setOpenModal] = useState(false)
+    const {getAchadoById} = useFetchAchado();
+    const [dataTypeLocal] = useState('achado')
     const theme = useTheme();
 
     useEffect(() => {
@@ -81,7 +84,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
                     return
                 }
                 setColeta(registro)
-                setAchadoLabel(registro.achado.achado)
+                setAchado(registro.achado)
 
 
                 reset({
@@ -106,11 +109,22 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
         fetchColeta();
     }, [id])
 
+    const handleUpdate = () => {
+        setOpenModal(true)
+    }
+
+    const handleCloseModal = async () => {
+        setOpenModal(false);
+        if(achado?.id) {
+            const updatedAchado = await getAchadoById(achado.id);
+            if(updatedAchado) setAchado(updatedAchado.achado)
+        }
+    };
 
     const handleSelectAchado = (achado: Achado) => {
         if (achado.id) {
             setValue('achadoId', achado.id, { shouldValidate: true });
-            setAchadoLabel(achado.achado)
+            setAchado(achado)
             setAchadoTemaId(achado.tema_id)
         }
     };
@@ -156,11 +170,8 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) =
 
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
                             <ModalListAchados onSelectAchado={handleSelectAchado} />
-                            {achadoLabel &&
-                                <Paper sx={{ mb: 2 }}>
-                                    <Typography sx={{ mt: 2, pl: 2, pt: 1, fontWeight: 'bold' }}>Achado:</Typography>
-                                    <Typography sx={{ p: 2, pt: 0 }}>{achadoLabel}</Typography>
-                                </Paper>
+                            {achado &&
+                                <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal}/>
                             }
                         </Grid >
                         <Grid item xs={12} sm={4} sx={{ mb: 2 }}>

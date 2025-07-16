@@ -131,7 +131,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
       </Grid>
 
       <ModalTema dataType='tema' user={user} />
-      <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+      <Grid item xs={12} sx={{ mt: 3 }}>
         <TextField
           variant='filled'
           autoComplete="given-name"
@@ -151,7 +151,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
           </Typography>
         )}
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12}>
         {user?.cargo === 'chefe' ? (<ToggleButtonGroup
           id="situacaoAchado"
           color="primary"
@@ -179,9 +179,8 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
         </Box>
       </Grid>
 
-      <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-
-        <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sx={{ mt: 3 }}>
+        <Grid item xs={12}>
           <TextField
             variant='filled'
             autoComplete="given-name"
@@ -200,7 +199,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
           )}
         </Grid>
 
-        <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
+        <Grid item xs={12} sx={{ mt: 3 }}>
           <Typography>Campo de Análise</Typography>
           <TextField
             variant='filled'
