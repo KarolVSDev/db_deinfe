@@ -1,13 +1,13 @@
 import TextField from "@mui/material/TextField";
 import { FormControl, FormHelperText, Grid } from "@mui/material";
-import { BeneficioComAchado } from "../../types/types";
+import { Achado } from "../../types/types";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 export interface DateInputProps {
-  id: keyof BeneficioComAchado;
+  id: keyof Achado;
   label: string;
-  register: UseFormRegister<BeneficioComAchado>;
-  errors: FieldErrors<BeneficioComAchado>;
+  register: UseFormRegister<Achado>;
+  errors: FieldErrors<Achado>;
   dataAchado?:Date;
 }
 
@@ -64,4 +64,4 @@ const DateSelector:React.FC<DateInputProps> = ({id, label, register, errors, dat
 };
 
 export default DateSelector;
-
+  

@@ -1,19 +1,19 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import { TopicoAchado, Achado, Beneficio, AchadoBeneficio, Processo,} from "../types/types";
+import { TopicoAchado, Achado, Processo, Coleta, KeyWord } from "../types/types";
 
 
 interface TableContextType {
     arrayTopicoAchado: TopicoAchado[];
     arrayAchado: Achado[];
-    arrayBeneficio: Beneficio[];
-    arrayAchadoBeneficio: AchadoBeneficio[];
     arrayProcesso: Processo[];
+    arrayColeta: Coleta[];
+    arrayKeyWord: KeyWord[];
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
-    setArrayBeneficio: Dispatch<SetStateAction<Beneficio[]>>;
-    setArrayAchadoBeneficio: Dispatch<SetStateAction<AchadoBeneficio[]>>;
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
+    setArrayColeta: Dispatch<SetStateAction<Coleta[]>>;
+    setArrayKeyWord: Dispatch<SetStateAction<KeyWord[]>>;
 }
 
 interface Props {
@@ -24,10 +24,10 @@ const TableContext = createContext<TableContextType | undefined>(undefined);
 
 export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayTopicoAchado, setArrayTopicoAchado] = useState<TopicoAchado[]>([]);
-    const [arrayBeneficio, setArrayBeneficio] = useState<Beneficio[]>([]);
     const [arrayAchado, setArrayAchado] = useState<Achado[]>([]);
-    const [arrayAchadoBeneficio, setArrayAchadoBeneficio] = useState<AchadoBeneficio[]>([]);
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
+    const [arrayColeta, setArrayColeta] = useState<Coleta[]>([]);
+    const [arrayKeyWord, setArrayKeyWord] = useState<KeyWord[]>([]);
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -45,10 +45,12 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         filterPanelInputLabel: 'Valor',
         filterOperatorContains: 'contém',
         filterOperatorEquals: 'igual a',
-        filterOperatorStartsWith: 'começa com',
-        filterOperatorEndsWith: 'termina com',
+        filterOperatorStartsWith: 'termina com',
+        filterOperatorEndsWith: 'começa com',
         filterOperatorIsEmpty: 'está vazio',
         filterOperatorIsNotEmpty: 'não está vazio',
+        filterPanelInputPlaceholder:"Filtrar valor",
+        paginationRowsPerPage: "Linhas por página",
         filterOperatorIsAnyOf: 'é qualquer um',
         noRowsLabel: 'sem dados',
         columnMenuUnsort: 'Desordenar',
@@ -64,15 +66,15 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
         <TableContext.Provider value={{
             arrayTopicoAchado,
             arrayAchado,
-            arrayBeneficio,
-            arrayAchadoBeneficio,
             arrayProcesso,
+            arrayColeta,
+            arrayKeyWord,
             handleLocalization,
             setArrayTopicoAchado,
             setArrayAchado,
-            setArrayBeneficio,
-            setArrayAchadoBeneficio,
             setArrayProcesso,
+            setArrayColeta,
+            setArrayKeyWord
         }}>
             {children}
         </TableContext.Provider>

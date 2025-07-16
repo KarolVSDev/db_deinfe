@@ -8,8 +8,9 @@ import { TypeAlert } from '../../../hooks/TypeAlert';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useAuth } from '../../../context/AuthContext';
-import useFetchUsers from '../../../hooks/useFetchUsers';
+import useFetchUsers from '../SignForms/useFetchUsers';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
 
 const UpdateUserForm = () => {
   const [email] = useState(localStorage.getItem('email'))
@@ -17,7 +18,8 @@ const UpdateUserForm = () => {
   const { user } = useAuth();
   const { register, handleSubmit, formState: { errors } } = useForm<UserUpdate>({})
   const navigate = useNavigate();
-
+  const theme = useTheme()
+;
   useEffect(() => {
     const fetchUser = async () => {
       await getUser()
@@ -47,18 +49,22 @@ const UpdateUserForm = () => {
   return (
     <div>
       {user && (
-        <Box noValidate component='form' name='updateUserForm' onSubmit={handleSubmit(onSubmit)}>
+        <Box noValidate component='form' name='updateUserForm' onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSubmit(onSubmit)(e);
+        }}>
           <Box
             sx={{
-
+              mt:3,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
           >
             <Avatar sx={{
-              m: 1, bgcolor: 'rgb(17 24 39)', '&:hover': {
-                bgcolor: '#1e293b',
+              m: 1, bgcolor: 'primary.main', '&:hover': {
+                bgcolor: 'secondary.main',
               }
             }}>
               <ManageAccountsIcon />
@@ -121,6 +127,9 @@ const UpdateUserForm = () => {
                   defaultValue={user.cargo}
                   autoFocus
                   error={!!errors?.cargo}
+                  inputProps={{
+                    readOnly: true,
+                  }}
                   {...register('cargo', { required: true })}
                 />
                 {errors?.cargo && (

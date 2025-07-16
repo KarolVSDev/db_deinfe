@@ -12,7 +12,7 @@ interface AuthContextType {
     login: (data: UserLogin, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => void;
     logout: () => void;
     auth: any
-    user: User | undefined;
+    user: User;
     setUser: (user: User) => void;
     users: AllUsers[];
     setUsers: (users: AllUsers[]) => void;
@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     const navigate = useNavigate()
     const cookies = new Cookies()
     const auth = cookies.get('focusToken');
-    const [user, setUser] = useState<User>()
+    const [user, setUser] = useState<User>({}  as User)
     const [users, setUsers] = useState<AllUsers[]>([])
 
 
@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
             setIsLoggedIn(true)
             navigate('/dashboard/table');
         } catch (error: any) {
-            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+            if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
                 TypeAlert('Email ou senha incorretos', 'error');
             } else {
                 TypeAlert(error.message, 'error');

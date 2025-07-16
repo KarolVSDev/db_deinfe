@@ -3,18 +3,19 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useForm } from 'react-hook-form';
-import { FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { Processo, User, Diretoria } from '../../../../../types/types';
-import CloseIcon from '@mui/icons-material/Close';
 import SelectInput from '../../../../Inputs/SelectInput';
 import { useEffect, useState } from 'react';
 import useFetchProcesso from './useFetchProcesso';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import { diretoriasJson } from '../../../../../service/diretoriasJson';
 import { GridRowId } from '@mui/x-data-grid';
-import ProcessoSkeleton from '../../../../Skeletons/ProcessoSkeleton';
+import ProcessoSkeleton from './ProcessoSkeleton';
 import Loader from '../../../../Loader/Loader';
+import CloseIconComponent from '../../../../Inputs/CloseIcon';
 
 export interface FormProcessoProps {
     closeModal: () => void;
@@ -40,6 +41,7 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
     });
     const [loading, setLoading] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const theme = useTheme();
 
     useEffect(() => {
         if (id) {
@@ -78,11 +80,16 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
         try {
             const idProcesso = id?.toString();
             if (idProcesso) {
-                updateProcesso(idProcesso, data)
-                reset()
-                closeModal();
-            }
+                const updatedProcesso = await updateProcesso(idProcesso, data)
+
+                if (updatedProcesso) {
+                    TypeAlert("Processo atualizado com sucesso", "success")
+                    reset()
+                    closeModal();
+                }
+            };
         } catch (error) {
+            console.log(error)
             TypeAlert("Erro ao tentar atualizar o registro", "error")
         } finally {
             setLoading(false)
@@ -95,17 +102,12 @@ const FormUpdateProcesso: React.FC<FormProcessoProps> = ({ closeModal, id }) => 
                 <ProcessoSkeleton isLoading={isLoading} />
             ) : (
 
-                <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)} >
-                    <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Atualizar Processo</Typography>
-                        <IconButton onClick={closeModal} sx={{
-                            '&:hover': {
-                                bgcolor: '#1e293b', color: '#ffffff',
-                            }
-                        }}>
-                            <CloseIcon />
-                        </IconButton>
-                    </Box>
+                <Box sx={{ backgroundColor: theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formProcesso' noValidate onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSubmit(onSubmit)(e);
+                }} >
+                    <CloseIconComponent closeModal={closeModal} textType='Atualizar Processo' />
                     <Grid container spacing={2} sx={{ pb: 1 }}>
                         <Grid item xs={12} sx={{ pb: 1 }}>
                             <TextField

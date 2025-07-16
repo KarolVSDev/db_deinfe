@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../../../service/firebase.config"
 import { Processo } from "../../../../../types/types"
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
@@ -7,12 +7,22 @@ import { useContextTable } from "../../../../../context/TableContext";
 
 const useFetchProcesso = () => {
 
-  const { setArrayProcesso } = useContextTable();
+  const { setArrayProcesso, arrayProcesso } = useContextTable();
   //CREATE
   const addProcesso = async (data: Processo): Promise<boolean> => {
     try {
       const processoRef = collection(db, "processo");
+      const querySnapshot = await getDocs(
+        query(processoRef, where("numero", "==", data.numero))
+      );
+
+      if (!querySnapshot.empty) {
+        TypeAlert("Já existe um processo com esse número", "error");
+        return false;
+      }
+
       const docRef = await addDoc(processoRef, data);
+      setArrayProcesso([...arrayProcesso, { ...data, id: docRef.id }])
       console.log("Processo adicionado com sucesso", docRef.id);
       return true
     } catch (error) {
@@ -23,6 +33,23 @@ const useFetchProcesso = () => {
   }
 
   //READ
+  const getProcessoById = async (id: string): Promise<Processo | null> => {
+    try {
+      const processoRef = doc(db, "processo", id);
+      const docRef = await getDoc(processoRef);
+      if (docRef.exists()) {
+        return { id: docRef.id, ...docRef.data() } as Processo;
+      } else {
+        console.log("Processo não encontrado");
+        return null;
+      }
+    } catch (error) {
+      console.error("Erro ao tentar buscar o processo", error);
+      return null;
+    }
+
+  }
+
   const escutarProcessos = (callback: (temas: Processo[]) => void) => {
     try {
       const colecaoRef = collection(db, "processo");
@@ -51,7 +78,8 @@ const useFetchProcesso = () => {
   const getAllProcessos = async () => {
     try {
       const processoRef = collection(db, "processo");
-      const querySnapshot = await getDocs(processoRef);
+      const q = query(processoRef, orderBy("numero", "asc"));
+      const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
         const processos = querySnapshot.docs.map((doc) => ({
@@ -65,13 +93,15 @@ const useFetchProcesso = () => {
 
         setArrayProcesso(processos)
         return processos
+
       } else {
         console.log("Nenhum processo encontrado.");
+        return [];
       }
     } catch (error) {
       console.error("Erro ao tentar resgatar os Processos:", error);
-    } 
-
+      return [];
+    }
   }
 
   const getProcesso = async (id: string): Promise<Processo | null> => {
@@ -95,11 +125,23 @@ const useFetchProcesso = () => {
   const updateProcesso = async (id: string, data: Partial<Processo>) => {
     try {
       const docRef = doc(db, "processo", id);
+
+      const querySnapshot = await getDocs(
+        query(collection(db, "processo"),
+          where("numero", "==", data.numero),
+        ))
+
+      if (!querySnapshot.empty && querySnapshot.docs[0].id !== id) {
+        TypeAlert("Já existe um processo com esse número", "error");
+        return false
+      }
       await updateDoc(docRef, data);
-      console.log("Processo atualizado com sucesso!")
       TypeAlert("O Processo foi atualizado", "success")
+      return true
+
+
     } catch (error) {
-      console.error("Erro ao tentar atualizar o Processo", error);
+      console.error("Erro ao tentar atualizar o Processo useFetch", error);
       throw error;
     }
   }
@@ -108,15 +150,26 @@ const useFetchProcesso = () => {
   const deleteProcesso = async (id: string) => {
     try {
       const processoRef = doc(db, "processo", id);
-      await deleteDoc(processoRef);
-      TypeAlert("O Processo foi excluído", "success")
+
+      const querySnapshot = await getDocs(
+        query(collection(db, "coleta"), where("processoId", "==", id))
+      );
+
+      if (!querySnapshot.empty) {
+        TypeAlert("Não é possível excluir o Processo, ele está vinculado a um ou mais Achados", "info")
+        return;
+      } else {
+        await deleteDoc(processoRef);
+        TypeAlert("O Processo foi excluído", "success")
+      }
     } catch (error) {
       console.error("Erro ao tentar excluir o Processo", error);
       throw error;
     }
   }
+
   return {
-    addProcesso, escutarProcessos, getProcesso, updateProcesso, deleteProcesso, getAllProcessos
+    addProcesso, getProcessoById, escutarProcessos, getProcesso, updateProcesso, deleteProcesso, getAllProcessos
   }
 }
 

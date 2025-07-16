@@ -1,17 +1,17 @@
-import { Box, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Grid, TextField, Typography, useTheme } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { TopicoAchado, User } from '../../../../types/types';
+import { TopicoAchado, User } from '../../../../../types/types';
 import { GridRowId } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import RegisterButton from '../../../Buttons/RegisterButton';
-import { useContextTable } from '../../../../context/TableContext';
+import RegisterButton from '../../../../Buttons/RegisterButton';
+import { useContextTable } from '../../../../../context/TableContext';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import CloseIcon from '@mui/icons-material/Close';
-import { TypeAlert } from '../../../../hooks/TypeAlert';
-import Loader from '../../../Loader/Loader';
-import TopicoSkeleton from '../../../Skeletons/TopicoSkeleton';
-import useFetchListData from '../../../../hooks/useFetchListData';
+import { TypeAlert } from '../../../../../hooks/TypeAlert';
+import Loader from '../../../../Loader/Loader';
+import TopicoSkeleton from './TopicoSkeleton';
+import useFetchTema from './useFetchTema';
+import CloseIconComponent from '../../../../Inputs/CloseIcon';
 
 interface TopicoAchadoProp {
   closeModal: () => void;
@@ -27,7 +27,8 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   const [situacao, setSituacao] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { updateTema } = useFetchListData();
+  const { updateTema } = useFetchTema();
+  const theme = useTheme();
 
 
   // Função para buscar o tema do achado
@@ -65,9 +66,11 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
     try {
       const idTema = id?.toString();
       if (idTema) {
-        updateTema(idTema, updateData)
-        reset()
-        closeModal();
+        const temaUpdated = await updateTema(idTema, updateData)
+        if (temaUpdated) {
+          reset()
+          closeModal();
+        }
       }
     } catch (error) {
       TypeAlert("Erro ao tentar atualizar o registro", "error")
@@ -93,21 +96,13 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   return (
     <>
       {temaAchado && (
-        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}
-          component="form" name="formTopicoAchado" noValidate onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-            <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>
-              Atualizar Tema
-            </Typography>
-            <IconButton onClick={closeModal} sx={{
-              mr: 0, '&:hover': {
-                bgcolor: '#1e293b', color: '#ffffff',
-              }
-            }}>
-              <CloseIcon />
-            </IconButton>
-
-          </Box>
+        <Box sx={{backgroundColor: theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}
+          component="form" name="formUpdateTopicoAchado" id="formUpdateTopicoAchado" noValidate onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSubmit(onSubmit)(e);
+          }}>
+           <CloseIconComponent closeModal={closeModal} textType='Atualizar Tema' />
           <Grid item xs={12} sm={4}>
             <TextField
               variant="filled"
@@ -135,7 +130,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
                   value={situacao}
                   exclusive
                   onChange={handleChange}
-                  aria-label="Platform"
+                  aria-label="toggleSituacaoTema"
                 >
                   <ToggleButton value='Pendente' >Pendente</ToggleButton>
                   <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
@@ -147,7 +142,6 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
             <Loader />
           </Box> : <RegisterButton text="Atualizar" />
           }
-
         </Box>
       )}
     </>

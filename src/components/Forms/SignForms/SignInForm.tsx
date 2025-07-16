@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { useForm } from 'react-hook-form';
-import { UserLogin } from '../../types/types';
+import { UserLogin } from '../../../types/types';
 import validator from 'validator';
 import FormControl from '@mui/material/FormControl/FormControl';
 import InputAdornment from '@mui/material/InputAdornment/InputAdornment';
@@ -18,16 +18,17 @@ import IconButton from '@mui/material/IconButton/IconButton';
 import OutlinedInput from '@mui/material/OutlinedInput/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel/InputLabel';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { useState } from 'react';
-import Loader from '../Loader/Loader';
+import Loader from '../../Loader/Loader';
+import { NavLink } from 'react-router-dom';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="/">
-        Focus
+        DEINFE
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -35,8 +36,8 @@ function Copyright(props: any) {
   );
 }
 
-export default function SignInSide() {
-  const [showPassword, setShowPassword] = React.useState(false);
+export default function SignInForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<UserLogin>({})
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -121,11 +122,17 @@ export default function SignInSide() {
               <FormControl sx={{ width: '100%' }} variant="outlined" error={!!errors?.password}>
                 <InputLabel sx={{ p: 'px' }} htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
+                  sx={{
+                    '& input::-ms-reveal': {
+                      display: 'none'
+                    }
+                  }}
                   required
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   fullWidth
                   label="Senha"
+                  autoComplete="current-password"
                   error={!!errors?.password}
                   {...register('password', {
                     required: 'Campo obrigatório',
@@ -158,7 +165,7 @@ export default function SignInSide() {
                 </Typography>
               )}
               {loading ? (
-                <Box sx={{margin:'15px auto'}}>
+                <Box sx={{ margin: '15px auto' }}>
                   <Loader />
                 </Box>
               ) : (
@@ -175,6 +182,28 @@ export default function SignInSide() {
                   Entrar
                 </Button>
               )}
+              <Box sx={{ mt: 2, m: 'auto' }}>
+                <NavLink to='/mudarsenha' style={({ isActive }) => ({
+                  isActive,
+                  textDecoration: 'none',
+                  transition: "all 0.3s ease-in-out"
+                })}><Typography sx={{
+                  color: "#6c6e8f",
+                  '&:hover': {
+                    color: "#1e293b", // Cor do texto no hover (opcional)
+                    textDecoration: "underline",
+                    textDecorationColor: "#1e293b",
+
+                  },
+
+                  '&.active': {
+                    color: "#ddd",
+                    textDecoration: "underline",
+                    textDecorationColor: "#ff5722",
+                    fontWeight: "bold"
+                  }
+                }}>Trocar Senha</Typography></NavLink>
+              </Box>
               <Copyright sx={{ pt: '15px', m: 'auto' }} />
             </Box>
           </Box>

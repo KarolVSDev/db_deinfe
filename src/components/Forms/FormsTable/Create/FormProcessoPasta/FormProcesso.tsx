@@ -3,15 +3,17 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useForm } from 'react-hook-form';
-import { FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { Processo, User, Diretoria } from '../../../../../types/types';
-import CloseIcon from '@mui/icons-material/Close';
 import SelectInput from '../../../../Inputs/SelectInput';
 import { useEffect, useState } from 'react';
 import useFetchProcesso from './useFetchProcesso';
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import { diretoriasJson } from '../../../../../service/diretoriasJson';
+import Loader from '../../../../Loader/Loader';
+import CloseIconComponent from '../../../../Inputs/CloseIcon';
+import { useTheme } from '@mui/material/styles';
 
 export interface FormProcessoProps {
     closeModal: () => void;
@@ -24,6 +26,8 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<Processo>({});
     const [diretorias, setDiretorias] = useState<Diretoria[]>([])
     const { addProcesso } = useFetchProcesso();
+    const [loading, setLoading] = useState(false);
+    const theme = useTheme();
 
     useEffect(() => {
         const fetchDiretorias = async () => {
@@ -33,37 +37,33 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
         fetchDiretorias();
     }, []);
     const onSubmit = async (data: Processo) => {
-        const processo = await addProcesso(data);
-        if (processo) {
-            TypeAlert("Processo adicionado", "success");
-            reset()
-            closeModal()
-        } else {
-            TypeAlert("Erro ao tentar adicionar o processo", "error")
-            reset()
-            closeModal()
+        try {     
+            setLoading(true)
+            const processo = await addProcesso(data);
+            if (processo) {
+                TypeAlert("Processo adicionado", "success");
+                reset()
+                closeModal()
+            } 
+        } catch (error) {
+            console.error("Erro ao adicionar processo:", error);
         }
     }
 
     return (
-        <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formProcesso' noValidate onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-                <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Processo</Typography>
-                <IconButton onClick={closeModal} sx={{
-                    '&:hover': {
-                        bgcolor: '#1e293b', color: '#ffffff',
-                    }
-                }}>
-                    <CloseIcon />
-                </IconButton>
-            </Box>
+        <Box sx={{backgroundColor:theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formProcesso' noValidate onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSubmit(onSubmit)(e);
+          }}>
+            <CloseIconComponent closeModal={closeModal} textType='Cadastrar proposa de Processo' />
             <Grid container spacing={2} sx={{ pb: 1 }}>
                 <Grid item xs={12} sx={{ pb: 1 }}>
                     <TextField
                         variant='filled'
                         required
                         fullWidth
-                        placeholder='XXXX/20XX'
+                        placeholder='XXXXX/20XX'
                         autoFocus
                         id="numero"
                         label='Número'
@@ -170,7 +170,12 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
                     />
                 </Grid>
             </Grid>
-            <RegisterButton text="Registrar" />
+           {loading ?
+                        <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>
+                            <Loader />
+                        </Box> :
+                        <RegisterButton text="Registrar" />
+                    }
         </Box>
     )
 }

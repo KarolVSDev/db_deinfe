@@ -2,24 +2,10 @@ import { Backdrop, Box, Button, Fade, IconButton, Modal, Typography } from '@mui
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react'
 import Divider from '@mui/material/Divider';
+import { useTheme, Theme } from '@mui/material/styles';
 
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 'fit-content',
-  bgcolor: 'background.paper',
-  border: '1px solid #000',
-  boxShadow: 24,
-  overflowY: 'auto',
-  height: 'fit-content',
-  maxHeight: '95vh',
-  scrollbarWidth: 'thin',
-  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
-  borderRadius: '10px',
-};
+
 
 export interface ModalAnalisesProps {
   analise: string
@@ -31,10 +17,28 @@ const ModalAnalises: React.FC<ModalAnalisesProps> = ({ analise }) => {
   const handleOpen = () => setOpen(true);
   const isTitle = (text: string) => text.startsWith('# ') && !text.includes('\n');
 
+  const theme = useTheme<Theme>();
+
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 'fit-content',
+    bgcolor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    boxShadow: 24,
+    overflowY: 'auto',
+    height: 'fit-content',
+    maxHeight: '95vh',
+    scrollbarWidth: 'thin',
+    borderRadius: '10px',
+    color: theme.palette.text.primary,
+  };
 
   return (
     <>
-      <Button onClick={handleOpen} variant="outlined" sx={{ borderColor: '#1e293b', color: '#1e293b', '&:hover': { color: '#fff', borderColor: '#475569', bgcolor: '#1e293b' } }}>Exibir</Button>
+      <Button onClick={handleOpen} variant="outlined">Exibir</Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -52,10 +56,10 @@ const ModalAnalises: React.FC<ModalAnalisesProps> = ({ analise }) => {
           <Box sx={style}>
             {analise ? (
               <>
-                <Box sx={{display:'flex', alignItems:'center', justifyContent:'space-between',p:1}}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1 }}>
                   <Typography variant='h6'>Texto de Análise: </Typography>
                   <IconButton onClick={handleClose} sx={{
-                     '&:hover': {
+                    '&:hover': {
                       bgcolor: '#1e293b', color: '#ffffff',
                     }
                   }}>
@@ -65,17 +69,17 @@ const ModalAnalises: React.FC<ModalAnalisesProps> = ({ analise }) => {
                 <Divider></Divider>
                 {analise.split('\n').map((line, index) => (
                   <Box
-                  key={index}
-                  sx={{
-                    borderRadius: 2,
-                    padding: '10px',
-                    textAlign: 'justify',
-                    width:'70vw',
-                    fontWeight: isTitle(line) ? 'bold' : 'normal'
-                  }}>
+                    key={index}
+                    sx={{
+                      borderRadius: 2,
+                      padding: '10px',
+                      textAlign: 'justify',
+                      width: '70vw',
+                      fontWeight: isTitle(line) ? 'bold' : 'normal'
+                    }}>
                     <Typography
                       key={index}
-                      sx={{width:'68vw'}}
+                      sx={{ width: '68vw' }}
                       variant={isTitle(line) ? 'h6' : 'body1'}
                     >
                       {isTitle(line) ? line.substring(2) : line}

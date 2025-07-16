@@ -14,7 +14,9 @@ import { useAppStore } from '../../hooks/appStore';
 import { useAuth } from '../../context/AuthContext';
 import { LogoutOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
+import { useThemeContext } from '../../context/ThemeContext';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme }) => ({
@@ -23,6 +25,7 @@ const AppBar = styled(MuiAppBar, {
 
 
 export default function NavBar() {
+  const { isDark, setIsDark } = useThemeContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -109,7 +112,7 @@ export default function NavBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
-        <Toolbar sx={{ backgroundColor: 'rgb(17 24 39)' }}>
+        <Toolbar >
           <IconButton
             size="large"
             edge="start"
@@ -131,6 +134,13 @@ export default function NavBar() {
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <IconButton
+              color="inherit"
+              onClick={() => setIsDark((prev) => !prev)}
+              sx={{ ml: 2 }}
+            >
+              {isDark ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
             <IconButton
               size="large"
               edge="end"

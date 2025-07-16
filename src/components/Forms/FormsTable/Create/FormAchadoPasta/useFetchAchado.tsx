@@ -1,23 +1,24 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
-import { Achado, BeneficioComAchado } from "../../../../../types/types";
+import { Achado } from "../../../../../types/types";
 import { db } from "../../../../../service/firebase.config";
 import { useContextTable } from "../../../../../context/TableContext";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
 import { GridRowId } from "@mui/x-data-grid";
-import useFetchListData from "../../../../../hooks/useFetchListData";
+import useFetchTema from "../FormTemaPasta/useFetchTema";
+
 
 
 const useFetchAchado = () => {
 
   const { setArrayAchado } = useContextTable()
-  const { getTemaById, processAchadoBeneficio, getDocsByAchadoId, deleteRelacao } = useFetchListData();
-
+  const { getTemaById } = useFetchTema();
   //CREATE
   const setAchado = async (data: Achado) => {
     try {
       const colecaoRef = collection(db, "achado");
       const docRef = await addDoc(colecaoRef, data)
       console.log("Achado adicionado", docRef.id)
+      setArrayAchado((prev) => [...prev, { ...data, id: docRef.id }]);
       return docRef.id
     } catch (error) {
       console.error("Erro ao tentar criar o novo achado", error);
@@ -36,8 +37,6 @@ const useFetchAchado = () => {
           id: doc.id,
           achado: doc.data().achado,
           analise: doc.data().analise,
-          criterioMunicipal: doc.data().criterioMunicipal,
-          criterioEstadual: doc.data().criterioEstadual,
           criterioGeral: doc.data().criterioGeral,
           data: doc.data().data,
           gravidade: doc.data().gravidade,
@@ -45,7 +44,7 @@ const useFetchAchado = () => {
           tema_id: doc.data().tema_id
         })) as Achado[];
 
-        setArrayAchado(achados); // Atualiza o estado com os achados
+        setArrayAchado(achados);
         return achados
       } else {
         console.log("Nenhum achado encontrado.");
@@ -55,13 +54,20 @@ const useFetchAchado = () => {
     }
   };
 
-  const getAchadobyName = async (achadoName: string) => {
+  const getAchadobyName = async (achadoName: string, temaId: string) => {
     try {
-      const achadoRef = collection(db, "achado");
-      const q = query(achadoRef, where("achado", "==", achadoName));
+      const achadoRef = collection(db, "achado")
+      const q = query(
+        achadoRef,
+        where("achado", "==", achadoName),
+        where("tema_id", "==", temaId)
+      );
+
       const querySnapshot = await getDocs(q);
+
       if (!querySnapshot.empty) {
-        TypeAlert('O achado já existe no banco de dados', 'info');
+        TypeAlert('Já existe um achado com este texto para o tema selecionado', 'info');
+        console.log(querySnapshot.docs[0].data())
         return true
       }
       return false
@@ -85,12 +91,10 @@ const useFetchAchado = () => {
         throw new Error("Tema não encontrado");
       }
 
-      const beneficios = await processAchadoBeneficio(idAchado) || [];
 
       const achadoCompleto = {
         achado: achado,
         tema: tema,
-        beneficios: beneficios
       }
 
       return achadoCompleto;
@@ -122,12 +126,9 @@ const useFetchAchado = () => {
             id: doc.id,
             achado: achadoData.achado,
             analise: achadoData.analise,
-            criterioEstadual: achadoData.criterioEstadual,
             criterioGeral: achadoData.criterioGeral,
-            criterioMunicipal: achadoData.criterioMunicipal,
             data: achadoData.data,
             gravidade: achadoData.gravidade,
-            valorFinanceiro: achadoData.valorFinanceiro,
             situacaoAchado: achadoData.situacaoAchado,
             tema_id: tema.tema || "Tema não encontrado",
           };
@@ -144,19 +145,16 @@ const useFetchAchado = () => {
   };
 
   //UPDATE
-  const updateAchado = async (idAchado: string, data: Partial<BeneficioComAchado>) => {
+  const updateAchado = async (idAchado: string, data: Partial<Achado>) => {
 
     const achado = {
       achado: data.achado,
       analise: data.analise,
       situacaoAchado: data.situacaoAchado,
-      criterioMunicipal: data.criterioMunicipal,
-      criterioEstadual: data.criterioEstadual,
       criterioGeral: data.criterioGeral,
       data: data.data,
       gravidade: data.gravidade,
-      valorFinanceiro: data.valorFinanceiro,
-      tema_id: data.tema_id
+      tema_id: data.tema_id,
     }
 
     const filteredAchado = Object.fromEntries(
@@ -166,67 +164,36 @@ const useFetchAchado = () => {
       const achadoRef = doc(db, "achado", idAchado);
       await updateDoc(achadoRef, filteredAchado)
       console.log("Achado atualizado com sucesso!");
-
-      //Lógica para atualizar os benefícios
-      const currentBeneficios = await getDocsByAchadoId(idAchado);
-
-      // Extrair os IDs dos benefícios atuais e dos novos benefícios
-      const currentBeneficioIds = currentBeneficios?.map((b) => b.beneficio_id);
-      const newBeneficioIds = data.beneficios?.map((b) => b.id);
-
-      const beneficiosToAdd = newBeneficioIds?.filter(
-        (id) => !currentBeneficioIds?.includes(id)
-      );
-
-      const beneficiosToRemove = currentBeneficios?.filter(
-        (b) => !newBeneficioIds?.includes(b.beneficio_id)
-      );
-
-      const achadoBeneficioRef = collection(db, "achadoBeneficio");
-
-      // Adicionar novas relações
-      if (beneficiosToAdd) {
-        for (const beneficioId of beneficiosToAdd) {
-          try {
-            await addDoc(achadoBeneficioRef, {
-              achado_id: idAchado,
-              beneficio_id: beneficioId,
-            });
-          } catch (error) {
-            console.error("Erro ao tentar adicionar novas relações de achadoBeneficio", error)
-            throw error
-          }
-        }
-      }
-
-      //Excluir relações
-      if (beneficiosToRemove) {
-        for (const beneficio of beneficiosToRemove) {
-          const docRef = doc(db, "achadoBeneficio", beneficio.id);
-          await deleteDoc(docRef);
-        }
-      }
-
     } catch (error) {
-
     }
   };
 
   const deleteAchado = async (id: string) => {
     try {
-      //deleta as relações da entidade pai 
-      deleteRelacao(id)
-      //deleta o achado
       const docRef = doc(db, "achado", id);
-      await deleteDoc(docRef);
-      //feedback para o usuário 
-      TypeAlert("O Achado foi excluído", "success")
-      console.log(`Achado ${id} e suas relações foram excluídos`)
+
+      //verifica se tem coleta vinculada
+      const querySnapshot = await getDocs(
+        query(collection(db, "coleta"), where("achadoId", "==", id))
+      );
+
+      if (!querySnapshot.empty) {
+        TypeAlert("Não é possível excluir o achado, ele está vinculado a um ou mais Processos.", "info");
+        return;
+      } else {
+        //deleta o achado
+        await deleteDoc(docRef);
+        //feedback para o usuário
+        TypeAlert("O Achado foi excluído", "success")
+      }
+
+
     } catch (error) {
       console.error("Erro ao excluir Achado:", error);
       TypeAlert("Erro ao excluir o benefício", "error");
     }
   }
+
 
   return {
     setAchado, getAllAchados, getAchadobyName, getAchadoById, escutarAchados, updateAchado, deleteAchado

@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
@@ -7,8 +8,10 @@ export interface ProcessoSkeletonProps {
 }
 
 const ProcessoSkeleton: React.FC<ProcessoSkeletonProps> = ({ isLoading }) => {
+  const theme = useTheme();
   return (
-    <Box sx={{ width: '70vw' }}>
+    <Box sx={{ width: '70vw', bgcolor:theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}>
+      <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, mt: 2, width: '15vw' }} />}</Typography>
       <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, mt: 2 }} />}</Typography>
       <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3 }} />}</Typography>
       <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3 }} />}</Typography>

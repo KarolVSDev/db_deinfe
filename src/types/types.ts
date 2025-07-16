@@ -25,6 +25,14 @@ export interface UserLogin {
   email: string;
   password: string;
 }
+
+export interface EmailChanger extends UserLogin {
+  
+}
+
+export interface PasswordChanger extends UserLogin {
+  confirmPassword:string;
+}
 export interface AuthData {
   token: string;
   email: string;
@@ -42,62 +50,18 @@ export interface Achado {
   achado: string;
   data: Date;
   gravidade: string;
-  valorFinanceiro?:number;
-  criterioMunicipal?: string;
-  criterioEstadual?: string;
   criterioGeral?: string;
   situacaoAchado: boolean;
   analise: string;
   tema_id: string;
 }
 
-
-export interface Beneficio {
+export interface  AchadoPesquisa {
   id?: string;
-  beneficio: string;
-  situacaoBeneficio: boolean;
-}
-
-export interface BeneficioUpdate {
-  id?: string;
-  beneficio: string;
-  situacaoBeneficio: boolean;
-  achados: Achado[];
-}
-
-export interface AchadoBeneficio {
-  id?: string;
-  achado_id: string;
-  beneficio_id: string;
-}
-
-export interface BeneficioComAchado {
-  id: string;
-  beneficio?: string;
-  beneficios?: Beneficio[];
-  situacaoBeneficio?: boolean;
   achado: string;
   data: Date;
-  gravidade: string;
-  valorFinanceiro: number;
-  criterioMunicipal?: string;
-  criterioEstadual?: string;
-  criterioGeral?: string;
   situacaoAchado: boolean;
-  analise: string;
   tema_id: string;
-  tema: TopicoAchado;
-}
-export interface FormBeneficioType {
-  id: string;
-  beneficio: string;
-  situacaoBeneficio: boolean;
-  achados: Achado[];
-}
-export interface AchadoComTopico {
-  achado: Achado;
-  tema: TopicoAchado;
-  beneficios: Beneficio[];
 }
 export interface ColumnConfig {
   id: string;
@@ -107,16 +71,21 @@ export interface ColumnConfig {
 
 export interface Coleta {
   id:string;
-  valorFinanceiro:number;
   quantitativo:number;
-  unidadeGestora:string;
-  beneficio:Beneficio[];
-  sitaucaoAchado:boolean;
-  coletador:string;
+  unidade:string;
+  sanado:string;
+  valorFinanceiro:number;
+  coletadorId:string;
   temaId:string;
   achadoId:string;
   processoId:string;
-  responsavelId:string;
+}
+
+export interface ColetaUpdate {
+  coleta:Coleta;
+  processo:Processo;
+  achado:Achado;
+  tema:TopicoAchado
 }
 
 export interface Processo {
@@ -131,6 +100,19 @@ export interface Processo {
 export interface Diretoria {
   id:string;
   label:string;
+}
+
+export interface KeyWord {
+  id: string;
+  label: string;
+  type:string;
+  color:string;
+}
+
+export interface ColetaTransformada extends Omit<Coleta, 'achadoId' | 'processoId' | 'temaId'> {
+  achadoId: string | Achado['achado'];
+  processoId: string | Processo['numero'];
+  temaId: string | TopicoAchado['tema'];
 }
 
 

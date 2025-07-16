@@ -4,14 +4,16 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
-import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTopicoAchado';
+import { useEffect, useRef, useState } from 'react';
+import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTemaPasta/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchadoPasta/FormAchados';
-import FormBeneficio from '../../Forms/FormsTable/Create/FormBeneficio';
 import SaveIcon from '@mui/icons-material/Save';
 import { User } from '../../../types/types';
 import FormProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormProcesso';
 import FormColeta from '../../Forms/FormsTable/Create/formColetaPasta/FormColeta';
+import Helper from '../../Dialog/Helper';
+import { Typography } from '@mui/material';
+
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -26,23 +28,27 @@ const style = {
   height: 'fit-content',
   maxHeight: '95vh',
   scrollbarWidth: 'thin',
-  background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
   borderRadius: '10px',
 
 };
 
 export interface ModalAddDataProps {
   dataType: string;
-  user: User | undefined;
+  textButton:string;
+  user: User;
+  closeModal?:() => void;
 }
 
 
-const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
+const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user, textButton }) => {
+  const openButtonRef  = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true)
-
+  const handleClose = () => {
+    openButtonRef .current?.focus();
+    setOpen(false);
+  }
 
 
   useEffect(() => {
@@ -56,18 +62,23 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
   }, [open, dataType])
 
 
-
   return (
     <div>
-      <Button onClick={handleOpen} disabled={isDisabled} variant='contained'  >
-        <SaveIcon sx={{ mr: 1 }} /> Cadastrar {dataType}
+      <Helper title='Clique aqui para criar um novo registro'>
+      <Button ref={openButtonRef}  onClick={handleOpen} disabled={isDisabled} variant='contained'>
+        <SaveIcon sx={{ mr: 1 }} /> 
+        <Typography>Cadastrar {textButton}</Typography>
       </Button>
+      </Helper>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
         onClose={handleClose}
         closeAfterTransition
+        disableAutoFocus={true}
+        disableEnforceFocus={true}
+        disableRestoreFocus={false}
         slots={{ backdrop: Backdrop }}
         slotProps={{
           backdrop: {
@@ -79,9 +90,8 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user }) => {
           <Box sx={style}>
             {(dataType === 'tema') && (<FormTopicoAchado closeModal={handleClose} user={user} />)}
             {(dataType === 'achado') && (<FormAchado closeModal={handleClose} user={user} dataType={dataType} />)}
-            {(dataType === 'beneficio') && (<FormBeneficio closeModal={handleClose} user={user} dataType={dataType} />)}
             {(dataType === 'processo') && (<FormProcesso closeModal={handleClose} user={user} dataType={dataType} />)}
-            {(dataType === 'coleta') && (<FormColeta closeModal={handleClose} user={user} dataType={dataType} />)}
+            {(dataType === 'relacionamentos') && (<FormColeta closeModal={handleClose} user={user} />)}
           </Box>
         </Fade>
       </Modal>

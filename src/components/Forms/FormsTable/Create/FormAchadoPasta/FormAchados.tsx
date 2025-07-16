@@ -2,240 +2,84 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Controller, useForm } from 'react-hook-form';
-import { BeneficioComAchado, TopicoAchado, User } from '../../../../../types/types'
+import { Achado, TopicoAchado, User } from '../../../../../types/types'
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../../context/TableContext';
-import { Autocomplete, Grid, IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Autocomplete, Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { useEffect, useState } from 'react';
-import ButtonNovo from '../../../../Buttons/ButtonNovo';
-import CloseIcon from '@mui/icons-material/Close';
-import TextFieldComponent from '../../../../Inputs/TextField';
-import ToggleButtonsCriterios from '../../../../Inputs/ToggleInputs/ToggleInputCriterio';
 import RadioInput from '../../../../Inputs/RadioInput';
 import DateSelector from '../../../../Inputs/DatePicker';
 import Loader from '../../../../Loader/Loader';
-import useFetchListData from '../../../../../hooks/useFetchListData';
 import useFetchAchado from './useFetchAchado';
-import { formatCurrency } from '../../../../../hooks/DateFormate';
+import ModalTema from '../FormTemaPasta/ModalTema';
+import useFetchTema from '../FormTemaPasta/useFetchTema';
+import CloseIconComponent from '../../../../Inputs/CloseIcon';
+import { useTheme } from '@mui/material/styles';
 
 export interface FormAchadoProps {
   closeModal: () => void;
-  user: User | undefined;
+  user: User;
   dataType: string;
 }
 
-const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) => {
+const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
 
-  const { control, register, handleSubmit, setValue, formState: { errors }, reset, watch } = useForm<BeneficioComAchado>({
+  const { control, register, handleSubmit, setValue, formState: { errors }, reset, watch } = useForm<Achado>({
     defaultValues: {
       gravidade: 'Baixa'
     }
   });
-  const { getAllTemas, setBeneficio,
-    setAchadoBeneficio, getAllBeneficios, getBeneficioByName } = useFetchListData();
+  const { getAllTemas } = useFetchTema();
   const { getAchadobyName } = useFetchAchado();
   const { setAchado } = useFetchAchado();
   const [situacaoAchado, setSituacaoAchado] = useState<string | null>(null);
-  const [situacaoBeneficio, setSituacaoBeneficio] = useState<string | null>(null);
-  const { arrayTopicoAchado, arrayBeneficio } = useContextTable()
-  const [alignment, setAlignment] = useState<keyof BeneficioComAchado>('criterioGeral');
+  const { arrayTopicoAchado } = useContextTable()
   const [loading, setLoading] = useState(false);
   const gravidade = watch('gravidade', 'Baixa');
-  const fieldValue = watch('valorFinanceiro');
-  const [displayValue, setDisplayValue] = useState('');
+  const theme = useTheme();
+
 
   useEffect(() => {
     getAllTemas()
-    getAllBeneficios()
   })
-
-  // Atualiza o valor formatado quando o valor do campo muda
-  useEffect(() => {
-    if (fieldValue !== undefined) {
-      setDisplayValue(formatCurrency(fieldValue.toString()));
-    }
-  }, [fieldValue]);
-
 
 
   const handleChangeSituacaoAchado = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newSituacao: string | null
   ) => {
     if (newSituacao !== null) {
       setSituacaoAchado(newSituacao);
     }
-    console.log(event)
   };
 
-  const handleChangeSituacaoBeneficio = (
-    _: React.MouseEvent<HTMLElement>,
-    newSituacao: string | null
-  ) => {
-    if (newSituacao !== null) {
-      setSituacaoBeneficio(newSituacao);
-    }
-  };
 
-  const getTextFieldLabel = () => {
-    switch (alignment) {
-      case 'criterioMunicipal':
-        return 'Criterio Municipal';
-      case 'criterioEstadual':
-        return 'Criterio Estadual';
-      case 'criterioGeral':
-        return 'Criterio Geral';
-      default:
-        return 'criterioGeral'
-    }
-
-  }
-
-
-  const onSubmit = async (data: BeneficioComAchado) => {
-
+  const onSubmit = async (data: Achado) => {
     setLoading(true)
     //bloco que manipula e salva o achado
 
     try {
-      const achadoExiste = await getAchadobyName(data.achado);
+      const achadoExiste = await getAchadobyName(data.achado, data.tema_id);
       if (achadoExiste) {
         setLoading(false)
         return
       }
 
-      if (data.beneficios?.length === 0 && !data.beneficio) {
-        // Se não houver benefícios, apenas salva o achado
-        const { beneficio, beneficios, ...dataSemBeneficio } = data;
-
-        if (user?.cargo !== 'chefe') {
-          data.situacaoAchado = false;
-          data.situacaoBeneficio = false;
-        }
-
-        const dataWithSituacao = {
-          ...dataSemBeneficio,
-          situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
-        };
-
-        const { situacaoBeneficio, ...dataWithoutSituacaoBeneficio } = dataWithSituacao;
-
-        await setAchado(dataWithoutSituacaoBeneficio);
-
-        reset();
-        closeModal();
-        return; // Interrompe o processo aqui se não houver benefício
+      if (user?.cargo !== 'chefe') {
+        data.situacaoAchado = false;
       }
 
-      // Caso haja benefício, ou se o array de benefícios não estiver vazio, o fluxo continua
-      if (data.beneficio) {
-        // Verifique se o benefício já existe antes de continuar
-        const beneficioExist = await getBeneficioByName(data.beneficio)
+      const dataWithSituacao = {
+        ...data,
+        situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
+      };
 
-        if (beneficioExist) {
-          setLoading(false)
-          return;
-        } else {
-          setLoading(true)
-        }
-
-        if (user?.cargo !== 'chefe') {
-          data.situacaoAchado = false;
-          data.situacaoBeneficio = false;
-        }
-
-        const dataWithSituacao = {
-
-          ...data,
-          situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
-        };
-
-        // Bloco que manipula e salva o beneficio
-        const objBeneficio = { beneficio: data.beneficio, situacaoBeneficio: data.situacaoBeneficio };
-
-        const objBeneficioWithSituacao = {
-          ...objBeneficio,
-          situacaoBeneficio: situacaoBeneficio === "Aprovado" ? true : false
-        };
-
-        const achado = {
-          achado: dataWithSituacao.achado,
-          situacaoAchado: dataWithSituacao.situacaoAchado,
-          data: dataWithSituacao.data,
-          gravidade: dataWithSituacao.gravidade,
-          valorFinanceiro: dataWithSituacao.valorFinanceiro,
-          criterioMunicipal: dataWithSituacao.criterioMunicipal || "",
-          criterioEstadual: dataWithSituacao.criterioEstadual || "",
-          criterioGeral: dataWithSituacao.criterioEstadual || "",
-          analise: dataWithSituacao.analise,
-          tema_id: dataWithSituacao.tema_id
-        }
-
-        //const retornoBeneficio = setBeneficio(objBeneficioWithSituacao);
-        const retornoAchado = await setAchado(achado)
-
-        const retornoBeneficio = await setBeneficio(objBeneficioWithSituacao)
-
-
-        //Bloco que manipula e salva o AchadoBeneficio
-        if ((retornoAchado && retornoBeneficio) || (data.beneficios && data.beneficios.length > 0)) {
-          // Caso haja múltiplos benefícios
-          if (data.beneficios && data.beneficios.length > 0) {
-            const { beneficios } = data;
-
-            if (retornoBeneficio) {
-              beneficios.push(retornoBeneficio)
-            }
-
-            beneficios.forEach((beneficio) => {
-              if (beneficio.id) {
-                const objAchadoBeneficio = { achado_id: retornoAchado, beneficio_id: beneficio.id };
-                setAchadoBeneficio(objAchadoBeneficio);
-              }
-            });
-          } else if (data.beneficios && data.beneficios.length === 0) {
-            //se só houver um benefício
-            if (retornoBeneficio?.id) {
-              const achadoBeneficio = { achado_id: retornoAchado, beneficio_id: retornoBeneficio.id }
-              setAchadoBeneficio(achadoBeneficio)
-            }
-          }
-        }
-      } else if (!data.beneficio && (data.beneficios && data.beneficios?.length > 0)) {
-        //se o input de benefício não for preenchido, mas o input com vários benefícios for
-        const { beneficios } = data;
-
-        const dataWithSituacao = {
-          ...data,
-          situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
-        };
-
-        const achado = {
-          achado: dataWithSituacao.achado,
-          situacaoAchado: dataWithSituacao.situacaoAchado,
-          data: dataWithSituacao.data,
-          gravidade: dataWithSituacao.gravidade,
-          criterioMunicipal: dataWithSituacao.criterioMunicipal || "",
-          criterioEstadual: dataWithSituacao.criterioEstadual || "",
-          criterioGeral: dataWithSituacao.criterioEstadual || "",
-          analise: dataWithSituacao.analise,
-          tema_id: dataWithSituacao.tema_id
-        }
-
-        const retornoAchado = await setAchado(achado);
-
-        beneficios.forEach((beneficio) => {
-          if (beneficio.id) {
-            const objAchadoBeneficio = { achado_id: retornoAchado, beneficio_id: beneficio.id };
-            setAchadoBeneficio(objAchadoBeneficio);
-          }
-        });
-      }
-
-      TypeAlert('Achado adicionado', 'success');
+      await setAchado(dataWithSituacao);
+      TypeAlert("Achado adicionado", "success");
       reset();
       closeModal();
+      return;
     } catch (error) {
       TypeAlert("Erro ao tentar adicionar o achado", "error");
       console.error(error)
@@ -244,17 +88,12 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
   }
 
   return (
-    <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '70vw', justifyContent: 'space-between' }}>
-        <Typography variant="h5" sx={{ pt: 3, pb: 3, color: '#1e293b' }}>Cadastrar Achado</Typography>
-        <IconButton onClick={closeModal} sx={{
-          '&:hover': {
-            bgcolor: '#1e293b', color: '#ffffff',
-          }
-        }}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
+    <Box sx={{ backgroundColor:theme.palette.background.paper ,borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' id='formAchados' noValidate onSubmit={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSubmit(onSubmit)(e);
+    }}>
+      <CloseIconComponent closeModal={closeModal} textType='Cadastrar proposta de Achado' />
       <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
         <Controller
           name="tema_id"
@@ -264,15 +103,23 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
             <Autocomplete
               disablePortal
               autoFocus
-              id="combo-box-demo"
+              id="autocomplete-tema_id"
               options={arrayTopicoAchado}
               getOptionLabel={(option: TopicoAchado) => option.tema}
               onChange={(_, value) => field.onChange(value?.id || '')}
+              ListboxProps={{
+                style: {
+                  maxHeight: '200px',
+                  overflow: 'auto',
+                },
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Tema"
                   variant="filled"
+                  required
+                  placeholder='Selecione um Tema'
                   focused={true}
                   error={!!errors.tema_id}
                   helperText={errors.tema_id?.message}
@@ -282,7 +129,8 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
           )}
         />
       </Grid>
-      <ButtonNovo dataType={dataType} closeModal={closeModal} user={user} />
+
+      <ModalTema dataType='tema' user={user} />
       <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
         <TextField
           variant='filled'
@@ -305,47 +153,23 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
       </Grid>
       <Grid item xs={12} sm={4}>
         {user?.cargo === 'chefe' ? (<ToggleButtonGroup
+          id="situacaoAchado"
           color="primary"
           value={situacaoAchado}
           exclusive
           onChange={handleChangeSituacaoAchado}
-          aria-label="Platform"
+          aria-label="Situação do Achado"
 
         >
           <ToggleButton value='Pendente' >Pendente</ToggleButton>
           <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
         </ToggleButtonGroup>) : (
-          <input type="hidden"{...register('situacaoAchado')} value="false" />
+          <input id="situacaoAchado" type="hidden"{...register('situacaoAchado')} value="false" />
         )}
       </Grid>
 
       <Grid item xs={12} sm={4}>
         <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-          <TextField
-            variant="filled"
-            sx={{ mt: 3 }}
-            placeholder="R$ 0,00"
-            autoFocus
-            id="valorFinanceiro"
-            label="Valor Financeiro"
-            error={!!errors?.valorFinanceiro}
-            value={displayValue}
-            inputProps={{
-              inputMode: 'numeric',
-            }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              const rawValue = e.target.value.replace(/\D/g, '');
-              // Converte para número antes de setar o valor
-              setValue('valorFinanceiro', Number(rawValue), { shouldValidate: true });
-            }}
-          // Remove o spread do register para evitar conflito com onChange
-          />
-          {errors?.valorFinanceiro && (
-            <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-              {errors.valorFinanceiro.message}
-            </Typography>
-          )}
-
           <DateSelector id='data' register={register} errors={errors} label='Data de registro' />
           <RadioInput id={'gravidade'}
             label='Gravidade'
@@ -357,95 +181,40 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user, dataType }) =
 
       <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
 
-        <Grid item xs={12}>
-          <ToggleButtonsCriterios alignment={alignment} onChange={setAlignment} />
-        </Grid>
-        <Grid item xs={12}>
-          <TextFieldComponent id={alignment} label={getTextFieldLabel()} register={register} errors={errors} />
+        <Grid item xs={12} sm={4}>
+          <TextField
+            variant='filled'
+            autoComplete="given-name"
+            type="text"
+            fullWidth
+            id="criterioGeral"
+            label="Critério Geral"
+            error={errors?.criterioGeral?.type === 'required'}
+            {...register('criterioGeral', {
+            })}
+          />
+          {errors?.criterioGeral && (
+            <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+              {errors.criterioGeral?.message}
+            </Typography>
+          )}
         </Grid>
 
         <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
           <Typography>Campo de Análise</Typography>
           <TextField
             variant='filled'
-            autoComplete="given-name"
+            autoComplete="analise"
             type="text"
             multiline
             rows={4}
             fullWidth
             id="analise"
             label="Análise"
-            error={errors?.analise?.type === 'required'}
-            {...register('analise', {
-              required: 'Campo obrigatório',
-            })}
+            placeholder='Use # + barra de espaço para indicar um título. Ex: # Título'
+            {...register('analise')}
           />
         </Grid>
-
-        <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-          <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Adicionar um Beneficio</Typography>
-          <TextField
-            variant='filled'
-            fullWidth
-            id="beneficio"
-            label='Proposta de Benefício'
-            type="text"
-            error={!!errors?.beneficio}
-            {...register('beneficio')}
-          />
-
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          {user?.cargo === 'chefe' ? (<ToggleButtonGroup
-            color="primary"
-            value={situacaoBeneficio}
-            exclusive
-            onChange={handleChangeSituacaoBeneficio}
-            aria-label="Platform"
-
-          >
-            <ToggleButton value='Pendente' >Pendente</ToggleButton>
-            <ToggleButton value='Aprovado' >Aprovado</ToggleButton>
-          </ToggleButtonGroup>) : (
-            <input type="hidden"{...register('situacaoBeneficio')} value="false" />
-          )}
-        </Grid>
-        {errors?.analise && (
-          <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
-            {errors.analise?.message}
-          </Typography>
-        )}
-
-      </Grid>
-      <Grid item xs={12} sm={4} sx={{ mt: 3 }}>
-        <Typography variant='h6' sx={{ mb: 2, color: 'rgb(17 24 39)' }}>Relacionar Beneficio(s)</Typography>
-        <Controller
-          name="beneficios"
-          control={control}
-          defaultValue={[]}
-          render={({ field }) => (
-            <Autocomplete
-              multiple
-              id="beneficios"
-              options={arrayBeneficio}
-              getOptionLabel={(option) => option.beneficio}
-              filterSelectedOptions
-              value={field.value || []}
-              onChange={(_, value) => field.onChange(value)}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Relação de Benefícios"
-                  placeholder="Selecione os benefícios"
-                  variant="filled"
-                  error={!!errors.beneficios}
-                  helperText={errors.beneficios?.message}
-                />
-              )}
-            />
-          )}
-        />
       </Grid>
       {loading ? <Box sx={{ display: "flex", justifyContent: "start", mt: 3 }}><Loader />
       </Box> :
