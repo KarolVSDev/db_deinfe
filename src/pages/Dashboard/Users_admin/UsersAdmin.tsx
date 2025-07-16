@@ -8,10 +8,9 @@ const UsersAmin = () => {
   return (
     <>
       <NavBar />
-      <Box />
       <Box sx={{ display: 'flex' }}>
         <SideNav />
-        <Box component="main" sx={{ flexGrow: 1, height: '100vh' }}>
+        <Box component="main" sx={{bgcolor:'background.default', flexGrow: 1, height: '100vh' }}>
           <ListUsers />
         </Box>
       </Box>

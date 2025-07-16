@@ -41,8 +41,8 @@ export default function ColorPickerComponent({ handleExpanded }: ColorPickerComp
             handleSubmit(onSubmit)(e);
         }}>
             <Typography variant="h6" gutterBottom>Inserir nova palavra-chave</Typography>
-            <Grid item xs={12} sm={4} ></Grid>
-            <Grid item xs={12} sm={4} sx={{ mb: 3 }}>
+            <Grid item xs={12} ></Grid>
+            <Grid item xs={12} sx={{ mb: 3 }}>
                 <TextField
                     variant='filled'
                     required
@@ -63,7 +63,7 @@ export default function ColorPickerComponent({ handleExpanded }: ColorPickerComp
                     </Typography>
                 )}
             </Grid>
-            <Grid item xs={12} sm={4} sx={{ mb: 3 }}>
+            <Grid item xs={12} sx={{ mb: 3 }}>
                 <TextField
                     variant='filled'
                     required
@@ -85,7 +85,7 @@ export default function ColorPickerComponent({ handleExpanded }: ColorPickerComp
                 )}
             </Grid>
 
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12}>
                 <Box display="flex" alignItems="center" gap={2}>
                     <ChromePicker
                         color={color}

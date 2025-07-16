@@ -56,7 +56,7 @@ const FormProcesso: React.FC<FormProcessoProps> = ({ closeModal }) => {
             e.stopPropagation();
             handleSubmit(onSubmit)(e);
           }}>
-            <CloseIconComponent closeModal={closeModal} textType='Cadastrar proposa de Processo' />
+            <CloseIconComponent closeModal={closeModal} textType='Cadastrar proposta de Processo' />
             <Grid container spacing={2} sx={{ pb: 1 }}>
                 <Grid item xs={12} sx={{ pb: 1 }}>
                     <TextField

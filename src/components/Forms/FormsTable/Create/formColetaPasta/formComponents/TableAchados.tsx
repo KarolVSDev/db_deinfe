@@ -11,6 +11,7 @@ import { formateDateToPtBr } from '../../../../../../hooks/DateFormate';
 import SearchIcon from '@mui/icons-material/Search';
 import HighlightedText from '../../../../../DataTable/HighLightMidleware';
 import useFetchKeyWord from '../../../../FormsColors/useFetchKeyWord';
+import CloseIconComponent from '../../../../../Inputs/CloseIcon';
 
 export interface ITableAchados {
     dataType: string;
@@ -192,22 +193,8 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
     return (
         <Grid >
             <Paper >
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1 }}>
-                    <Typography
-                        gutterBottom
-                        variant='h5'
-                        component='div'
-                    >
-                        Lista de Achados
-                    </Typography>
-                    <IconButton onClick={closeFunction} sx={{
-                        '&:hover': {
-                            bgcolor: '#1e293b', color: '#ffffff',
-                        }
-                    }}>
-                        <CloseIcon />
-                    </IconButton>
-
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1, pr:2, pl:2 }}>
+                   <CloseIconComponent closeModal={closeFunction} textType={'Lista de Achados'} />
                 </Box>
                 <TextField
                     fullWidth

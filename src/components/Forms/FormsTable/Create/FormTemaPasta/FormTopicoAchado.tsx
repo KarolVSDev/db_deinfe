@@ -55,7 +55,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
   };
 
   return (
-    <Box sx={{ backgroundColor: theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" id="formTopcioAchado" name='formTopicoAchado' noValidate onSubmit={(e) => {
+    <Box sx={{ backgroundColor: theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px',width:'30vw', boxShadow: '1px 2px 4px' }} component="form" id="formTopcioAchado" name='formTopicoAchado' noValidate onSubmit={(e) => {
       e.preventDefault();
       e.stopPropagation();
       handleSubmit(onSubmit)(e);
@@ -63,7 +63,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
 
       <CloseIconComponent closeModal={closeModal} textType='Cadastrar proposta de Tema' />
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} >
         <TextField
           variant='filled'
           required
@@ -84,7 +84,7 @@ const FormTopicoAchado: React.FC<FormTopicoAchadoProps> = ({ closeModal, user })
           </Typography>
         )}
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12}>
         {user?.cargo === 'chefe' ? (<ToggleButtonGroup
           color="primary"
           value={situacao}

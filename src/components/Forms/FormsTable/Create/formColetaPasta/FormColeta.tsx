@@ -1,10 +1,9 @@
-import { Autocomplete, Divider, Paper, TextField } from "@mui/material";
+import { Autocomplete, Divider, TextField } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
-import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
 import { Processo, User, Coleta, Achado } from '../../../../../types/types';
 import { useEffect, useState } from "react";
@@ -21,8 +20,6 @@ import ModalListAchados from "./formComponents/ModalListAchado";
 import Loader from "../../../../Loader/Loader";
 import ModalUpdatePF from "../../../../Modals/DataTableModals/ModalUpdateForms";
 import { GridRowId } from "@mui/x-data-grid";
-import ModalColor from "../../../FormsColors/ModalColor";
-import HighlightedText from "../../../../DataTable/HighLightMidleware";
 import CloseIconComponent from "../../../../Inputs/CloseIcon";
 import AchadoPaper from "./formComponents/AchadoPaper";
 export interface FormColetaProps {
@@ -49,7 +46,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const [loading, setLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false)
     const [dataType, setDataType] = useState<string>('')
-    const {  getAchadoById  } = useFetchAchado();
+    const { getAchadoById } = useFetchAchado();
     const theme = useTheme();
     const [dataTypeLocal] = useState('achado')
 
@@ -118,8 +115,8 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     return (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formColeta' id='formColeta' noValidate onSubmit={handleSubmit(onSubmit)}>
             <CloseIconComponent closeModal={closeModal} textType='Cadastro de proposta de Coleta' />
-            <Grid item xs={12} sm={4} sx={{ mb: 2 }} >
-                <Divider textAlign="center" sx={{my: 4 , color:theme.palette.text.primary}}>Seção de Formulários</Divider>
+            <Grid item xs={12}  sx={{ mb: 2 }} >
+                <Divider textAlign="center" sx={{ my: 4, color: theme.palette.text.primary }}>Seção de Formulários</Divider>
                 <GroupButtonColeta />
                 <Divider textAlign="center" sx={{ my: 4, color: theme.palette.text.primary }}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
@@ -165,7 +162,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 />
             </Grid>
 
-            <Grid item xs={12}  sx={{ mb: 2 }}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
 
                     <SelectSanado
@@ -207,7 +204,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     />
 
                     <TextField variant="filled"
-                        sx={{ width: "15%" }}
                         id="quantitativo"
                         label="Quantitativo"
                         type="number"

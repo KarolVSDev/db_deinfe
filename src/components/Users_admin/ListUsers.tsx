@@ -27,8 +27,6 @@ export default function ListUsers() {
         }
     }, [users])
 
-    console.log(users)
-
     return (
         <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }} >
             <Grid container sx={{ gap: 2, p: 0 }}>{users?.map((user: any) => (
