@@ -1,17 +1,32 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface ThemeContextType {
   isDark: boolean;
-  setIsDark: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleTheme: () => void;
 }
+
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    if(typeof window!== 'undefined') {
+      const savedTheme = localStorage.getItem("theme");
+      return savedTheme ? JSON.parse(savedTheme) : false;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('theme', JSON.stringify(isDark));
+  }, [isDark]);
+
+  const toggleTheme = () => {
+    setIsDark((prev: boolean) => !prev);
+  };
 
   return (
-    <ThemeContext.Provider value={{ isDark, setIsDark }}>
+    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -97,7 +97,7 @@ export default function SignInForm() {
 
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'rgb(17 24 39)' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'primary.main', '&:hover': { bgcolor: 'secondary.main' } }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -174,8 +174,8 @@ export default function SignInForm() {
                   fullWidth
                   variant="contained"
                   sx={{
-                    mt: 3, mb: 2, bgcolor: 'rgb(17 24 39)', '&:hover': {
-                      bgcolor: '#1e293b',
+                    mt: 3, mb: 2, bgcolor: 'primary.main', '&:hover': {
+                      bgcolor: 'primary.dark',
                     },
                   }}
                 >

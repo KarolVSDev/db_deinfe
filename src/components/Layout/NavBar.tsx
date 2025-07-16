@@ -25,7 +25,7 @@ const AppBar = styled(MuiAppBar, {
 
 
 export default function NavBar() {
-  const { isDark, setIsDark } = useThemeContext();
+  const { isDark, toggleTheme } = useThemeContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -136,7 +136,7 @@ export default function NavBar() {
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               color="inherit"
-              onClick={() => setIsDark((prev) => !prev)}
+              onClick={toggleTheme}
               sx={{ ml: 2 }}
             >
               {isDark ? <Brightness7Icon /> : <Brightness4Icon />}

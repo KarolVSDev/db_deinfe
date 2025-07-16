@@ -5,9 +5,14 @@ import KeyIcon from '@mui/icons-material/Key';
 import AccordionTransition from '../../Accordion/Accordion';
 import KeyWordList from './KeyWordList';
 import Helper from '../../Dialog/Helper';
+import CloseIconComponent from '../../Inputs/CloseIcon';
 
+const ModalColor = () => {
+    const [open, setOpen] = useState(false);
+    const handleClose = () => setOpen(false);
+    const handleOpen = () => setOpen(true);
 
-const style = {
+    const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
@@ -20,17 +25,9 @@ const style = {
     height: 'fit-content',
     maxHeight: '95vh',
     scrollbarWidth: 'thin',
-    background: 'linear-gradient(90deg, #e2e8f0, #f1f5f9)',
     borderRadius: '10px',
 };
-
-
-const ModalColor = () => {
-    const [open, setOpen] = useState(false);
-    const handleClose = () => setOpen(false);
-    const handleOpen = () => setOpen(true);
-
-
+    
     return (
         <>
             <Helper title='Clique para gerenciar palavras-chave'>
@@ -54,27 +51,8 @@ const ModalColor = () => {
             >
                 <Fade in={open}>
                     <Paper sx={style}>
-                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <ListItemButton component="a" href="#customized-list">
-                                <ListItemIcon sx={{ fontSize: 20 }}><KeyIcon fontSize="large" /></ListItemIcon>
-                                <ListItemText
-                                    sx={{ my: 0 }}
-                                    primary="Gerenciar palavras-chave"
-                                    primaryTypographyProps={{
-                                        fontSize: 20,
-                                        fontWeight: 'medium',
-                                        letterSpacing: 0,
-                                    }}
-                                />
-                            </ListItemButton>
-                            <IconButton onClick={handleClose} sx={{
-                                m: 2,
-                                '&:hover': {
-                                    bgcolor: '#1e293b', color: '#ffffff',
-                                }
-                            }}>
-                                <CloseIcon />
-                            </IconButton>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', pl:2, pr:2 }}>
+                            <CloseIconComponent closeModal={handleClose} textType='Gerenciar Palavras-chave' />
                         </Box>
                         <Divider />
                         <Box >
