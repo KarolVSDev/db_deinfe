@@ -31,7 +31,7 @@ import SearchComponent from './SearchComponent';
 
 export default function DatabaseTable() {
 
-  const [dataType, setDataType] = useState('pesquisa');
+  const [dataType, setDataType] = useState('relacionamentos');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
   const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado, setArrayColeta,
@@ -53,6 +53,20 @@ export default function DatabaseTable() {
   const theme = useTheme();
 
 
+
+  // Carrega os dados iniciais quando o componente monta
+useEffect(() => {
+  
+  const initialLoadEvent = { 
+    target: { 
+      value: dataType 
+    } 
+  };
+  handleDataTypeChange(initialLoadEvent);
+  
+  
+  return () => {};
+}, []); 
 
 
 
@@ -245,7 +259,6 @@ export default function DatabaseTable() {
   };
 
   const optionsSelect = [
-    { value: 'pesquisa', string: 'Pesquisa' },
     { value: 'tema', string: 'Temas' },
     { value: 'achado', string: 'Banco de Achados' },
     { value: 'processo', string: 'Processos' },
@@ -300,7 +313,7 @@ export default function DatabaseTable() {
               sx={{ minWidth: 140 }}
             >
               {optionsSelect.map((option) => (
-                <MenuItem key={option.value} value={option.value} disabled={option.value === 'pesquisa'}>
+                <MenuItem key={option.value} value={option.value}>
                   {option.string}
                 </MenuItem>
               ))}

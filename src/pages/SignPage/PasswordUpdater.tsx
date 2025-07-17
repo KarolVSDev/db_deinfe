@@ -8,6 +8,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { authBase } from '../../service/firebase.config';
+import backgroundImageTCESenha from '../../images/tce_5.jpeg';
 
 
 const PasswordUpdater = () => {
@@ -48,7 +49,7 @@ const PasswordUpdater = () => {
             minHeight: '100vh',
             mb: 0,
             pb: 0,
-            backgroundImage: 'url(/images/tce_5.jpeg)',
+            backgroundImage: `url(${backgroundImageTCESenha})`,
             backgroundBlendMode: 'multiply',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
