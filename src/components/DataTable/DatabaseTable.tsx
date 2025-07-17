@@ -55,18 +55,18 @@ export default function DatabaseTable() {
 
 
   // Carrega os dados iniciais quando o componente monta
-useEffect(() => {
-  
-  const initialLoadEvent = { 
-    target: { 
-      value: dataType 
-    } 
-  };
-  handleDataTypeChange(initialLoadEvent);
-  
-  
-  return () => {};
-}, []); 
+  useEffect(() => {
+
+    const initialLoadEvent = {
+      target: {
+        value: dataType
+      }
+    };
+    handleDataTypeChange(initialLoadEvent);
+
+
+    return () => { };
+  }, []);
 
 
 
@@ -136,6 +136,7 @@ useEffect(() => {
       headerName: header.label,
       width: header.minWidth,
       editable: false,
+      headerClassName: 'bold-header',
       renderCell: (params) => {
         if (header.id === "acoes") {
           return (
@@ -226,6 +227,7 @@ useEffect(() => {
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
+
             }}>
               {params.value}
             </div>
@@ -294,8 +296,18 @@ useEffect(() => {
   }
 
   return (
-    <Grid sx={{ overflowY: 'auto', height: '95vh', scrollbarWidth: 'thin', pt: 10, pl: 2, pr: 2 }}>
-      <Paper >
+    <Grid sx={{
+      height: '95vh',
+      pt: 10,
+      pl: 2,
+      pr: 2,
+      overflow: 'hidden'
+    }}>
+      <Paper sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
         <Typography
           gutterBottom
           variant='h5'
@@ -303,7 +315,7 @@ useEffect(() => {
           sx={{ padding: '20px' }}>
           Coleta
         </Typography>
-        <Grid container alignItems="center" spacing={2} sx={{ mb: 2, mt: 1, pl:2, pr:2 }}>
+        <Grid container alignItems="center" spacing={2} sx={{ mb: 2, mt: 1, pl: 2, pr: 2 }}>
           <Grid item>
             <Select
               name="dataTypeSelect"
@@ -328,10 +340,10 @@ useEffect(() => {
           <Grid item>
             <Helper title="Clique aqui para exportar os dados dessa tabela">
               <Button variant="contained" sx={{
-                bgcolor: theme.palette.mode === 'dark' ? '#fde68a' : '#fb923c', 
-                color: theme.palette.mode === 'dark' ? '#232b3b' : '#fff',     
+                bgcolor: theme.palette.mode === 'dark' ? '#fde68a' : '#fb923c',
+                color: theme.palette.mode === 'dark' ? '#232b3b' : '#fff',
                 '&:hover': {
-                  bgcolor: theme.palette.mode === 'dark' ? '#fbbf24' : '#fdba74', 
+                  bgcolor: theme.palette.mode === 'dark' ? '#fbbf24' : '#fdba74',
                 },
                 minWidth: 40,
                 height: 40,
@@ -351,7 +363,12 @@ useEffect(() => {
           </Grid>
         </Grid>
         <Divider />
-        <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>
+        <Box sx={{
+          flex: 1,
+          minHeight: 0,
+          width: '100%',
+          position: 'relative'
+        }}>
           {isLoading && (
             <DataTableSkeleton
               dataType={dataType}
@@ -359,7 +376,7 @@ useEffect(() => {
               visibleRows={rows.length || 10}
             />
           )}
-          <Box sx={{ visibility: isLoading ? 'hidden' : 'visible', height: '100%' }}>
+          <Box sx={{ visibility: isLoading ? 'hidden' : 'visible', height: '100%', width: '100%' }}>
             <DataGrid
               rows={rows}
               columns={columns}
@@ -400,10 +417,20 @@ useEffect(() => {
                 return visibleCols;
               }}
               sx={{
+                '& .MuiDataGrid-virtualScroller': {
+                  overflowX: 'hidden' // Esconde o scroll horizontal se necessário
+                },
+
                 '& .MuiDataGrid-columnHeaders': {
-                  position: 'relative',
-                  zIndex: 1,
-                  backgroundColor: '#fff',
+                  position: 'sticky', // Mantém os headers visíveis
+                  top: 0,
+                  backgroundColor: 'primary.main',
+                  zIndex: 1
+
+                },
+                '& .MuiDataGrid-columnHeaderTitle': {
+                  fontWeight: 'bold !important',
+                  fontSize: '0.875rem',
                 },
                 '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
                   outline: 'none',
@@ -411,7 +438,7 @@ useEffect(() => {
                 '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
                   outline: 'none',
                 },
-                
+
                 cursor: 'pointer'
               }}
             />

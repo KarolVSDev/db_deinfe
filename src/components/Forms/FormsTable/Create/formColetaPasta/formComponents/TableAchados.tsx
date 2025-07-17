@@ -1,10 +1,9 @@
-import { Box, Divider, Grid, IconButton, InputAdornment, Paper, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, Grid, InputAdornment, Paper, TextField, Tooltip } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react'
 import DataTableSkeleton from '../../../../../DataTable/DataTableSkeleton';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useContextTable } from '../../../../../../context/TableContext';
 import { Achado, ColumnConfig } from '../../../../../../types/types';
-import CloseIcon from '@mui/icons-material/Close';
 import useFetchAchado from '../../FormAchadoPasta/useFetchAchado';
 import { achadoPesquisaHeader } from '../../../../../../service/columns';
 import { formateDateToPtBr } from '../../../../../../hooks/DateFormate';
@@ -74,19 +73,6 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
 
                 if (header.id === 'data') {
                     return formateDateToPtBr(params.value)
-                }
-
-                if (['situacaoAchado', 'situacao'].includes(header.id) && typeof params.value === 'boolean') {
-                    return (
-                        <span style={{
-                            background: params.value ? '#86efac' : '#fcd34d',
-                            fontWeight: 'bold',
-                            padding: '5px 5px',
-                            borderRadius: '5px'
-                        }}>
-                            {params.value ? "Aprovado" : "Pendente"}
-                        </span>
-                    );
                 }
 
                 if (header.id === 'achado' || header.id === 'achadoId') {
