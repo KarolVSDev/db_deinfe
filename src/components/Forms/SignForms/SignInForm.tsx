@@ -22,7 +22,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useState } from 'react';
 import Loader from '../../Loader/Loader';
 import { NavLink } from 'react-router-dom';
-
+import backgroundTceImage from '../../../images/tce_1.jpeg'
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -63,7 +63,7 @@ export default function SignInForm() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(/images/tce_1.jpeg)',
+            backgroundImage: `url(${backgroundTceImage})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

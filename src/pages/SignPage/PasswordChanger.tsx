@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { EmailChanger } from '../../types/types';
 import validator from 'validator';
 import { NavLink } from 'react-router-dom';
+import backgroundImageTCE from '../../images/tce_5.jpeg';
 
 const PasswordChanger = () => {
 
@@ -22,7 +23,7 @@ const PasswordChanger = () => {
             minHeight: '100vh',
             mb: 0,
             pb: 0,
-            backgroundImage: 'url(/images/tce_5.jpeg)',
+            backgroundImage: `url(${backgroundImageTCE})`,
             backgroundBlendMode: 'multiply',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
