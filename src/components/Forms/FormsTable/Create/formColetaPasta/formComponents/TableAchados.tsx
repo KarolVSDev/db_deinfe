@@ -89,7 +89,6 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
                 }
 
                 if (header.id === 'achado' || header.id === 'achadoId') {
-                    console.log(params.value)
                     return (
                         <Tooltip
                             title={params.value || ''}

@@ -14,7 +14,7 @@ import { useAppStore } from '../../hooks/appStore';
 import { useAuth } from '../../context/AuthContext';
 import { LogoutOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import androidImage from '../../../public/images/android-chrome-192x192.png'
+import androidImage from '../../images/android-chrome-192x192.png'
 import { Avatar } from '@mui/material';
 
 const AppBar = styled(MuiAppBar, {

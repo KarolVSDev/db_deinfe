@@ -72,7 +72,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             setAchado(achado)
             setDataType('achado')
             setAchadoTemaId(achado.tema_id)
-            console.log("Achado selecionado:", achado);
         }
     };
 
