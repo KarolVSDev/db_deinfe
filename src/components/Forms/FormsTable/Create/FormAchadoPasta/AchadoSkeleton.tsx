@@ -9,8 +9,8 @@ export interface AchadoSkeletonProps {
 const AchadoSkeleton: React.FC<AchadoSkeletonProps> = ({ isLoading }) => {
   const theme = useTheme();
   return (
-    <Box sx={{ bgcolor:theme.palette.background.paper, width: '70vw' }}>
-      <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, width: '25vw'}} />}</Typography>
+    <Box sx={{ bgcolor:theme.palette.background.paper}}>
+      <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, minWidth: '40vw'}} />}</Typography>
       <Skeleton sx={{ ml: 1, mr: 3, height: '90px' }} />
       <Skeleton sx={{ ml: 1, mr: 3, height: '90px' }} />
       <Skeleton sx={{ ml: 1, mr: 3, height: '75px', width: '15vw', mt: '-30px' }} />

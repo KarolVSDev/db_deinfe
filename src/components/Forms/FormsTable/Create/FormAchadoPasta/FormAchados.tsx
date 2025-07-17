@@ -169,7 +169,7 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
       </Grid>
 
       <Grid item xs={12} sm={4} >
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+        <Box sx={{ display: "flex", flexDirection: "row", gap: 12 }}>
           <DateSelector id='data' register={register} errors={errors} label='Data de registro' />
           <RadioInput id={'gravidade'}
             label='Gravidade'

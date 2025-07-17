@@ -10,7 +10,7 @@ export interface ColetaSkeletonProps {
 const ColetaSkeleton: React.FC<ColetaSkeletonProps> = ({ isLoading }) => {
   const theme = useTheme();
   return (
-    <Box sx={{backgroundColor:theme.palette.background.paper , width: '70vw' }}>
+    <Box sx={{backgroundColor:theme.palette.background.paper , minWidth: '40vw' }}>
       <Typography variant='h2'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, width: '25%' }} />}</Typography>
       <Typography variant='h4'>{isLoading && <Skeleton sx={{ ml: 1, mr: 3, height: 70 }} />}</Typography>
       <Skeleton sx={{ ml: 1, width: '15vw', height: '4vw' }} />

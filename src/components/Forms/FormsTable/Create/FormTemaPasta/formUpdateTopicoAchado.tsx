@@ -96,7 +96,7 @@ const FormUpdateTopicoAchado: React.FC<TopicoAchadoProp> = ({ closeModal, id, us
   return (
     <>
       {temaAchado && (
-        <Box sx={{backgroundColor: theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }}
+        <Box sx={{backgroundColor: theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', minWidth: '40vw', boxShadow: '1px 2px 4px' }}
           component="form" name="formUpdateTopicoAchado" id="formUpdateTopicoAchado" noValidate onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
