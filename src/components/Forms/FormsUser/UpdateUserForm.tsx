@@ -10,7 +10,6 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useAuth } from '../../../context/AuthContext';
 import useFetchUsers from '../SignForms/useFetchUsers';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
 
 const UpdateUserForm = () => {
   const [email] = useState(localStorage.getItem('email'))
@@ -18,7 +17,6 @@ const UpdateUserForm = () => {
   const { user } = useAuth();
   const { register, handleSubmit, formState: { errors } } = useForm<UserUpdate>({})
   const navigate = useNavigate();
-  const theme = useTheme()
 ;
   useEffect(() => {
     const fetchUser = async () => {

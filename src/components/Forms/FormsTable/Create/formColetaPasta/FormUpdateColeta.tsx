@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
-import { IconButton, } from '@mui/material';
 import RegisterButton from "../../../../Buttons/RegisterButton";
 import { Processo, Coleta, Achado, ColetaUpdate, User } from '../../../../../types/types';
 import { useEffect, useState } from "react";

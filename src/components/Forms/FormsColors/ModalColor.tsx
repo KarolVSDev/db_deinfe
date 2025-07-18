@@ -1,5 +1,4 @@
-import { Backdrop, Box, Button, Divider, Fade, IconButton, ListItemButton, ListItemIcon, ListItemText, Modal, Paper } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close';
+import { Backdrop, Box, Button, Divider, Fade, Modal, Paper } from '@mui/material'
 import { useState } from 'react'
 import KeyIcon from '@mui/icons-material/Key';
 import AccordionTransition from '../../Accordion/Accordion';

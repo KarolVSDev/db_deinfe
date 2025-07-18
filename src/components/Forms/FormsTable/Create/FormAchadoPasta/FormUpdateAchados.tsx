@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
+import { Autocomplete, Box, Grid, TextField, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
 import { useContextTable } from '../../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
 import { Achado, TopicoAchado, User } from '../../../../../types/types';

@@ -17,8 +17,6 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import {  useState, useEffect } from 'react';
 import env from '../../service/env';
-import { useContextTable } from '../../context/TableContext';
-import { useAuth } from '../../context/AuthContext';
 
 const drawerWidth = 240;
 
@@ -73,7 +71,6 @@ export default function SideNav() {
   const theme = useTheme();
   const open = useAppStore((state) => state.dopen);
   const [email] = useState(localStorage.getItem('email'))
-  const { user } = useAuth();
   
 
   const [pages, setPages] = useState<any>([
