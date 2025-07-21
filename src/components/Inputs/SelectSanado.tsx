@@ -19,7 +19,7 @@ const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors
 
     return (
         <div>
-            <FormControl variant="filled" sx={{ minWidth: 180 }}>
+            <FormControl fullWidth variant="filled" >
                 <InputLabel id={`${id}-label`}>{label}</InputLabel>
                 <Select
                     labelId={`${id}-label`}

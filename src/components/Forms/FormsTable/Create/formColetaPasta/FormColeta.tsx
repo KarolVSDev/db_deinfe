@@ -1,7 +1,6 @@
 import { Autocomplete, Divider, TextField } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Controller, useForm } from 'react-hook-form';
 import RegisterButton from "../../../../Buttons/RegisterButton";
@@ -114,56 +113,59 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     return (
         <Box sx={{ borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formColeta' id='formColeta' noValidate onSubmit={handleSubmit(onSubmit)}>
             <CloseIconComponent closeModal={closeModal} textType='Cadastro de proposta de Coleta' />
-            <Grid item xs={12}  sx={{ mb: 2 }} >
+            <Grid item xs={12} sx={{ mb: 2 }} >
                 <Divider textAlign="center" sx={{ my: 4, color: theme.palette.text.primary }}>Seção de Formulários</Divider>
                 <GroupButtonColeta />
                 <Divider textAlign="center" sx={{ my: 4, color: theme.palette.text.primary }}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
 
+
             <Grid item xs={12} sx={{ mb: 2 }}>
                 {achado &&
                     <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal} />
                 }
-                <ModalListAchados onSelectAchado={handleSelectAchado} />
             </Grid >
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-                <Controller
-                    name="processoId"
-                    control={control}
-                    rules={{ required: 'Campo obrigatório' }}
-                    render={({ field }) => (
-                        <Autocomplete
-                            disablePortal
-                            id="autocomplete-processo"
-                            options={arrayProcesso}
-                            getOptionLabel={(option: Processo) => option.numero}
-                            isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
-                            onChange={(_, value) => field.onChange(value?.id || '')}
-                            ListboxProps={{
-                                style: {
-                                    maxHeight: '200px',
-                                    overflow: 'auto',
-                                },
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Processo"
-                                    variant="filled"
-                                    placeholder="Selecione um processo"
-                                    error={!!errors.processoId}
-                                    helperText={errors.processoId?.message}
-                                />
-                            )}
-                        />
-                    )}
-                />
-            </Grid>
+            <ModalListAchados onSelectAchado={handleSelectAchado} />
+            <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
+                {/* Processo - Ocupa metade da linha */}
+                <Grid item xs={12} md={6}>
+                    <Controller
+                        name="processoId"
+                        control={control}
+                        rules={{ required: 'Campo obrigatório' }}
+                        render={({ field }) => (
+                            <Autocomplete
+                                disablePortal
+                                id="autocomplete-processo"
+                                options={arrayProcesso}
+                                getOptionLabel={(option: Processo) => option.numero}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                onChange={(_, value) => field.onChange(value?.id || '')}
+                                ListboxProps={{
+                                    style: {
+                                        maxHeight: '200px',
+                                        overflow: 'auto',
+                                    },
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Processo"
+                                        variant="filled"
+                                        placeholder="Selecione um processo"
+                                        error={!!errors.processoId}
+                                        helperText={errors.processoId?.message}
+                                        fullWidth
+                                    />
+                                )}
+                            />
+                        )}
+                    />
+                </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-                <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-
+                {/* Sanado - Ocupa metade da linha */}
+                <Grid item xs={12} md={6}>
                     <SelectSanado
                         id={"sanado"}
                         label={"Sanado"}
@@ -171,7 +173,13 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         errors={errors}
 
                     />
+                </Grid>
+            </Grid>
 
+            {/* Segunda linha com 2 campos */}
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+                {/* Valor Financeiro - Ocupa metade da linha */}
+                <Grid item xs={12} md={6}>
                     <TextField
                         variant="filled"
                         placeholder="R$ 0,00"
@@ -184,33 +192,54 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         }}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             const rawValue = e.target.value.replace(/\D/g, '');
-                            // Converte para número antes de setar o valor
                             setValue('valorFinanceiro', Number(rawValue), { shouldValidate: true });
                         }}
+                        fullWidth
                     />
-                    {errors?.valorFinanceiro && (
-                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                            {errors.valorFinanceiro.message}
-                        </Typography>
-                    )}
+                </Grid>
 
-                    <TextField variant="filled"
+                {/* Unidade - Ocupa metade da linha */}
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        variant="filled"
                         id="unidade"
                         label="Unidade"
                         type="text"
                         error={!!errors?.unidade}
                         {...register('unidade')}
+                        fullWidth
                     />
+                </Grid>
+            </Grid>
 
-                    <TextField variant="filled"
+            {/* Terceira linha com 2 campos */}
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+                {/* Quantitativo - Ocupa metade da linha */}
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        variant="filled"
                         id="quantitativo"
                         label="Quantitativo"
                         type="number"
                         error={!!errors?.quantitativo}
                         {...register('quantitativo')}
+                        fullWidth
                     />
+                </Grid>
 
-                </Box>
+                {/* Situação Encontrada - Ocupa metade da linha */}
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        variant="filled"
+                        id="situacao_encontrada"
+                        multiline
+                        label="Situação Encontrada"
+                        type="text"
+                        error={!!errors?.situacao_encontrada}
+                        {...register('situacao_encontrada')}
+                        fullWidth
+                    />
+                </Grid>
             </Grid>
             {loading ?
                 <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>

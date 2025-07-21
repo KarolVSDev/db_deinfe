@@ -26,7 +26,7 @@ import AchadoPaper from "./formComponents/AchadoPaper";
 export interface FormUpdateColetaProps {
     closeModal: () => void;
     id: GridRowId;
-    user:User;
+    user: User;
 }
 
 const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, user }) => {
@@ -43,6 +43,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
             valorFinanceiro: coleta?.coleta.valorFinanceiro,
             sanado: coleta?.coleta.sanado || '',
             unidade: coleta?.coleta.unidade,
+            situacao_encontrada: coleta?.coleta.situacao_encontrada || '',
             quantitativo: coleta?.coleta.quantitativo,
         },
     });
@@ -59,7 +60,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
     const [achado, setAchado] = useState<Achado | null>();
     const [_achadoTemaId, setAchadoTemaId] = useState<string>('');
     const [openModal, setOpenModal] = useState(false)
-    const {getAchadoById} = useFetchAchado();
+    const { getAchadoById } = useFetchAchado();
     const [dataTypeLocal] = useState('achado')
     const theme = useTheme();
 
@@ -95,6 +96,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                     valorFinanceiro: registro.coleta.valorFinanceiro || 0,
                     sanado: registro.coleta.sanado || '',
                     unidade: registro.coleta.unidade || '',
+                    situacao_encontrada: registro.coleta.situacao_encontrada || '',
                     quantitativo: registro.coleta.quantitativo || 0,
                 })
             } catch (error) {
@@ -114,9 +116,9 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
 
     const handleCloseModal = async () => {
         setOpenModal(false);
-        if(achado?.id) {
+        if (achado?.id) {
             const updatedAchado = await getAchadoById(achado.id);
-            if(updatedAchado) setAchado(updatedAchado.achado)
+            if (updatedAchado) setAchado(updatedAchado.achado)
         }
     };
 
@@ -164,71 +166,81 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                 isloading ? (
                     <ColetaSkeleton isLoading={isloading} />
                 ) : (
-                    <Box sx={{ backgroundColor: theme.palette.background.paper ,borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
+                    <Box sx={{ 
+                        backgroundColor: theme.palette.background.paper, 
+                        borderRadius: 2, 
+                        padding: '20px 20px 20px', 
+                        boxShadow: '1px 2px 4px',
+                        minWidth: '30vw'
+                    }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
                         <CloseIconComponent closeModal={closeModal} textType='Atualizar Coleta' />
 
-                        <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
+                        <Grid item xs={12} md={6} sx={{ mb: 2 }}>
                             <ModalListAchados onSelectAchado={handleSelectAchado} />
                             {achado &&
-                                <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal}/>
+                                <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal} />
                             }
                         </Grid >
-                        <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                            <Controller
-                                name="processoId"
-                                control={control}
-                                rules={{ required: 'Campo obrigatório' }}
-                                defaultValue={coleta?.processo.id || ""}
-                                render={({ field }) => (
-                                    <Autocomplete
-                                        disablePortal
-                                        autoFocus
-                                        id="autocomplete-processo"
-                                        options={arrayProcesso}
-                                        getOptionLabel={(option: Processo) => option.numero}
-                                        defaultValue={arrayProcesso.find(processo => processo.id === field.value || null)}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
-                                        onChange={(_, value) => field.onChange(value?.id || '')}
-                                        ListboxProps={{
-                                            style: {
-                                                maxHeight: '200px',
-                                                overflow: 'auto',
-                                            },
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Processo"
-                                                variant="filled"
-                                                focused={true}
-                                                error={!!errors.processoId}
-                                                helperText={errors.processoId?.message}
-                                            />
-                                        )}
-                                    />
-                                )}
-                            />
-                        </Grid>
+                        <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
 
+                            <Grid item xs={12} md={6}>
+                                <Controller
+                                    name="processoId"
+                                    control={control}
+                                    rules={{ required: 'Campo obrigatório' }}
+                                    defaultValue={coleta?.processo.id || ""}
+                                    render={({ field }) => (
+                                        <Autocomplete
+                                            disablePortal
+                                            autoFocus
+                                            id="autocomplete-processo"
+                                            options={arrayProcesso}
+                                            getOptionLabel={(option: Processo) => option.numero}
+                                            defaultValue={arrayProcesso.find(processo => processo.id === field.value || null)}
+                                            isOptionEqualToValue={(option, value) => option.id === value.id} // eu uso essa opção pra comparar a opção com o valor real no array Compara por ID
+                                            onChange={(_, value) => field.onChange(value?.id || '')}
+                                            ListboxProps={{
+                                                style: {
+                                                    maxHeight: '200px',
+                                                    overflow: 'auto',
+                                                },
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label="Processo"
+                                                    variant="filled"
+                                                    focused={true}
+                                                    error={!!errors.processoId}
+                                                    helperText={errors.processoId?.message}
+                                                />
+                                            )}
+                                        />
+                                    )}
+                                />
+                            </Grid>
 
-                        <Grid item xs={12} sm={4} sx={{ mb: 2 }}>
-                            <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-
+                            <Grid item xs={12} md={6}>
                                 <SelectSanado
                                     id={"sanado"}
                                     label={"Sanado"}
                                     register={register}
                                     errors={errors}
-
                                     defaultValue={coleta?.coleta.sanado}
-                                />
 
+                                />
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid item xs={12} md={6}>
                                 <TextField
                                     variant="filled"
                                     placeholder="R$ 0,00"
                                     autoFocus
                                     id="valorFinanceiro"
                                     label="Valor Financeiro"
+                                    fullWidth
                                     error={!!errors?.valorFinanceiro}
                                     value={displayValue}
                                     inputProps={{
@@ -245,27 +257,44 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                                         {errors.valorFinanceiro.message}
                                     </Typography>
                                 )}
+                            </Grid>
 
-                                <TextField variant="filled"
-                                    autoFocus
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    variant="filled"
                                     id="unidade"
                                     label="Unidade"
                                     type="text"
                                     error={!!errors?.unidade}
                                     {...register('unidade')}
+                                    fullWidth
                                 />
-
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid item xs={12} md={6}>
                                 <TextField variant="filled"
                                     autoFocus
-                                    sx={{ width: "15%" }}
                                     id="quantitativo"
                                     label="Quantitativo"
                                     type="number"
+                                    fullWidth
                                     error={!!errors?.quantitativo}
                                     {...register('quantitativo')}
                                 />
-
-                            </Box>
+                            </Grid>
+                            <Grid item xs={12} md={12}>
+                                <TextField
+                                    variant="filled"
+                                    id="situacao_encontrada"
+                                    multiline
+                                    label="Situação Encontrada"
+                                    type="text"
+                                    error={!!errors?.situacao_encontrada}
+                                    {...register('situacao_encontrada')}
+                                    fullWidth
+                                />
+                            </Grid>
                         </Grid>
                         {loading ?
                             <Box sx={{ display: 'flex', justifyContent: 'start', mt: 3 }}>

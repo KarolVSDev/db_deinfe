@@ -25,6 +25,7 @@ export const coletaHeader = [
     { id: 'achadoId', label: 'Achado', minWidth: 450 },
     { id: 'valorFinanceiro', label: 'Valor Financeiro', minWidth: 150 },
     { id: 'quantitativo', label: 'Quantitativo', minWidth: 150 },
+    { id: 'situacao_encontrada', label: 'Situação Encontrada', minWidth: 170 },
     { id: 'unidade', label: 'Unidade', minWidth: 150 },
     { id: 'coletadorId', label: 'Coletador', minWidth: 150 },
     { id: 'sanado', label: 'Situação', minWidth: 150 },

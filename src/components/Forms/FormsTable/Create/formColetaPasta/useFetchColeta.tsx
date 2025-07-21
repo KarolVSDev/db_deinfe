@@ -64,6 +64,7 @@ const useFetchColeta = () => {
                     valorFinanceiro: doc.data().valorFinanceiro,
                     sanado: doc.data().sanado,
                     unidade: doc.data().unidade,
+                    situacao_encontrada: doc.data().situacao_encontrada,
                     quantitativo: doc.data().quantitativo,
                 }));
 
