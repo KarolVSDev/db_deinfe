@@ -120,7 +120,7 @@ const useExportToExcel = () => {
                             return;
                         };
 
-                        headers = ['Processo', 'Tema', 'Achado', 'Valor Fianceiro', 'Quantitativo', 'Unidade', 'Coletador ID', 'Sanado'];
+                        headers = ['Processo', 'Tema', 'Achado', 'Valor Fianceiro', 'Quantitativo', 'Unidade', 'Coletador ID', 'Sanado', 'Situação Encontrada'];
                         rows = arrayColeta.map((coleta) => [
                             coleta.processoId,
                             coleta.temaId,
@@ -129,7 +129,8 @@ const useExportToExcel = () => {
                             coleta.quantitativo,
                             coleta.unidade,
                             coleta.coletadorId,
-                            coleta.sanado
+                            coleta.sanado,
+                            coleta.situacao_encontrada
                         ]);
                         rows.sort((a, b) => a[1].localeCompare(b[1]));
                     } catch (error) {
