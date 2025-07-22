@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -44,6 +44,8 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
             sanado: coleta?.coleta.sanado || '',
             unidade: coleta?.coleta.unidade,
             situacao_encontrada: coleta?.coleta.situacao_encontrada || '',
+            comentario: coleta?.coleta.comentario || '',
+            tipo_financeiro: coleta?.coleta.tipo_financeiro || false,
             quantitativo: coleta?.coleta.quantitativo,
         },
     });
@@ -97,6 +99,8 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                     sanado: registro.coleta.sanado || '',
                     unidade: registro.coleta.unidade || '',
                     situacao_encontrada: registro.coleta.situacao_encontrada || '',
+                    comentario: registro.coleta.comentario || '',
+                    tipo_financeiro: registro.coleta.tipo_financeiro || false,
                     quantitativo: registro.coleta.quantitativo || 0,
                 })
             } catch (error) {
@@ -166,10 +170,10 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                 isloading ? (
                     <ColetaSkeleton isLoading={isloading} />
                 ) : (
-                    <Box sx={{ 
-                        backgroundColor: theme.palette.background.paper, 
-                        borderRadius: 2, 
-                        padding: '20px 20px 20px', 
+                    <Box sx={{
+                        backgroundColor: theme.palette.background.paper,
+                        borderRadius: 2,
+                        padding: '20px 20px 20px',
                         boxShadow: '1px 2px 4px',
                         minWidth: '30vw'
                     }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
@@ -282,6 +286,42 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                                     error={!!errors?.quantitativo}
                                     {...register('quantitativo')}
                                 />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    variant="filled"
+                                    id="comentario"
+                                    multiline
+                                    label="Comentário"
+                                    type="text"
+                                    error={!!errors?.comentario}
+                                    {...register('comentario')}
+                                    fullWidth
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid item xs={12} md={6}>
+                                <FormControl>
+                                    <FormLabel id="demo-controlled-radio-buttons-group-tipo-financeiro">Tipo Financeiro</FormLabel>
+                                    <Controller
+                                        name='tipo_financeiro'
+                                        control={control}
+                                        defaultValue={false}
+                                        render={({ field }) => (
+                                            <RadioGroup
+                                                row
+                                                aria-labelledby="demo-controlled-radio-buttons-group-tipo-financeiro"
+                                                name="tipo_financeiro"
+                                                value={field.value}
+                                                onChange={(e) => field.onChange(e.target.value === 'true')}
+                                            >
+                                                <FormControlLabel value={true} control={<Radio />} label="Sim" />
+                                                <FormControlLabel value={false} control={<Radio />} label="Não" />
+                                            </RadioGroup>
+                                        )}
+                                    />
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12} md={12}>
                                 <TextField

@@ -1,4 +1,4 @@
-import { Autocomplete, Divider, TextField } from "@mui/material";
+import { Autocomplete, Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -229,6 +229,43 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
                 {/* Situação Encontrada - Ocupa metade da linha */}
                 <Grid item xs={12} md={6}>
+                    <TextField
+                        variant="filled"
+                        id="comentario"
+                        multiline
+                        label="Comentário"
+                        type="text"
+                        error={!!errors?.comentario}
+                        {...register('comentario')}
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+                {/* Situação Encontrada - Ocupa toda a linha */}
+                <Grid item xs={12} md={6}>
+                    <FormControl>
+                        <FormLabel id="demo-controlled-radio-buttons-group-tipo-financeiro">Tipo Financeiro</FormLabel>
+                        <Controller
+                        name='tipo_financeiro'
+                        control={control}
+                        defaultValue={false}
+                        render={({ field }) => (
+                            <RadioGroup
+                            row
+                            aria-labelledby="demo-controlled-radio-buttons-group-tipo-financeiro"
+                            name="tipo_financeiro"
+                            value={field.value}
+                            onChange={(e) => field.onChange(e.target.value === 'true')}
+                        >
+                            <FormControlLabel value={true} control={<Radio />} label="Sim" />
+                            <FormControlLabel value={false} control={<Radio />} label="Não" />
+                        </RadioGroup>
+                        )}
+                        />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={12}>
                     <TextField
                         variant="filled"
                         id="situacao_encontrada"

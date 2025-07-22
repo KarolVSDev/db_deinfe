@@ -208,6 +208,29 @@ export default function DatabaseTable() {
           );
         }
 
+        if (header.id === 'tipo_financeiro') {
+          return (
+            <span style={{
+              background: params.value
+                ? theme.palette.success.main
+                : theme.palette.error.main,
+              color: theme.palette.getContrastText(
+                params.value
+                  ? theme.palette.success.dark
+                  : theme.palette.error.dark
+              ),
+              padding: '5px 10px',
+              borderRadius: '5px',
+              fontWeight: 'bold',
+              fontSize: '0.875rem',
+              minWidth: '50px',
+              textAlign: 'center'
+            }}>
+              {params.value ? "Sim" : "Não"}
+            </span>
+          );
+        }
+
         return (
           <Tooltip
             title={params.value || ''}

@@ -65,6 +65,8 @@ const useFetchColeta = () => {
                     sanado: doc.data().sanado,
                     unidade: doc.data().unidade,
                     situacao_encontrada: doc.data().situacao_encontrada,
+                    comentario: doc.data().comentario,
+                    tipo_financeiro: doc.data().tipo_financeiro,
                     quantitativo: doc.data().quantitativo,
                 }));
 

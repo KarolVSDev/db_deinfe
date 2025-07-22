@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, InputAdornment, Paper, TextField, Tooltip } from '@mui/material';
+import { Box, Divider, Grid, Paper, Tooltip } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react'
 import DataTableSkeleton from '../../../../../DataTable/DataTableSkeleton';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -7,10 +7,10 @@ import { Achado, ColumnConfig } from '../../../../../../types/types';
 import useFetchAchado from '../../FormAchadoPasta/useFetchAchado';
 import { achadoPesquisaHeader } from '../../../../../../service/columns';
 import { formateDateToPtBr } from '../../../../../../hooks/DateFormate';
-import SearchIcon from '@mui/icons-material/Search';
 import HighlightedText from '../../../../../DataTable/HighLightMidleware';
 import useFetchKeyWord from '../../../../FormsColors/useFetchKeyWord';
 import CloseIconComponent from '../../../../../Inputs/CloseIcon';
+import SearchComponent from '../../../../../DataTable/SearchComponent';
 
 export interface ITableAchados {
     dataType: string;
@@ -26,7 +26,8 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
     const [rows, setRows] = useState<any[]>([]);
     const [columns, setColumns] = useState<GridColDef[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const {escutarKeyWords} = useFetchKeyWord();
+    const { escutarKeyWords } = useFetchKeyWord();
+
 
     const achadosFiltrados = useMemo(() => {
         if (!searchTerm.trim()) return arrayAchado;
@@ -178,24 +179,18 @@ const TableAchados: React.FC<ITableAchados> = ({ dataType, closeFunction, onAcha
     return (
         <Grid >
             <Paper >
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1, pr:2, pl:2 }}>
-                   <CloseIconComponent closeModal={closeFunction} textType={'Lista de Achados'} />
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1, pr: 2, pl: 2 }}>
+                    <CloseIconComponent closeModal={closeFunction} textType={'Lista de Achados'} />
                 </Box>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    placeholder="Buscar achado..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    sx={{ mb: 2, p: 1, borderRadius: '5px' }}
-                />
+                <Box sx={{ mb: 2, p: 1, borderRadius: '5px' }}>
+                    <SearchComponent
+                        dataType={dataType}
+                        setRows={setRows}
+                        createRows={createRows}
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                    />
+                </Box>
 
                 <Divider />
                 <Box sx={{ height: '70vh', width: '100%', overflow: 'auto', position: 'relative' }}>

@@ -76,6 +76,8 @@ export interface Coleta {
   sanado:string;
   valorFinanceiro:number;
   situacao_encontrada?:string;
+  comentario:string;
+  tipo_financeiro:boolean;
   coletadorId:string;
   temaId:string;
   achadoId:string;
