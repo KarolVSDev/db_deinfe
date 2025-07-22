@@ -277,15 +277,27 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                         </Grid>
                         <Grid container spacing={2} sx={{ mb: 2 }}>
                             <Grid item xs={12} md={6}>
-                                <TextField variant="filled"
-                                    autoFocus
+                                <TextField
+                                    variant="filled"
                                     id="quantitativo"
                                     label="Quantitativo"
                                     type="number"
-                                    fullWidth
                                     error={!!errors?.quantitativo}
-                                    {...register('quantitativo')}
+                                    {...register('quantitativo', {
+                                        valueAsNumber: true,
+                                        validate: {
+                                            positive: (value) =>
+                                                value >= 0 || "O campo não pode ser vazio ou negativo"
+                                        },
+                                        min: 0
+                                    })}
+                                    fullWidth
                                 />
+                                {errors?.quantitativo && (
+                                    <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                                        {errors.quantitativo.message}
+                                    </Typography>
+                                )}
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <TextField

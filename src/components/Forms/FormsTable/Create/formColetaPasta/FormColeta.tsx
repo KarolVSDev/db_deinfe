@@ -1,4 +1,4 @@
-import { Autocomplete, Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from "@mui/material";
+import { Autocomplete, Divider, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -222,9 +222,21 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         label="Quantitativo"
                         type="number"
                         error={!!errors?.quantitativo}
-                        {...register('quantitativo')}
+                        {...register('quantitativo', {
+                            valueAsNumber: true,
+                            validate: {
+                                positive: (value) =>
+                                    value >= 0 || "O campo não pode ser vazio ou negativo"
+                            },
+                            min: 0
+                        })}
                         fullWidth
                     />
+                    {errors?.quantitativo && (
+                        <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
+                            {errors.quantitativo.message}
+                        </Typography>
+                    )}
                 </Grid>
 
                 {/* Situação Encontrada - Ocupa metade da linha */}
@@ -247,21 +259,21 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     <FormControl>
                         <FormLabel id="demo-controlled-radio-buttons-group-tipo-financeiro">Tipo Financeiro</FormLabel>
                         <Controller
-                        name='tipo_financeiro'
-                        control={control}
-                        defaultValue={false}
-                        render={({ field }) => (
-                            <RadioGroup
-                            row
-                            aria-labelledby="demo-controlled-radio-buttons-group-tipo-financeiro"
-                            name="tipo_financeiro"
-                            value={field.value}
-                            onChange={(e) => field.onChange(e.target.value === 'true')}
-                        >
-                            <FormControlLabel value={true} control={<Radio />} label="Sim" />
-                            <FormControlLabel value={false} control={<Radio />} label="Não" />
-                        </RadioGroup>
-                        )}
+                            name='tipo_financeiro'
+                            control={control}
+                            defaultValue={false}
+                            render={({ field }) => (
+                                <RadioGroup
+                                    row
+                                    aria-labelledby="demo-controlled-radio-buttons-group-tipo-financeiro"
+                                    name="tipo_financeiro"
+                                    value={field.value}
+                                    onChange={(e) => field.onChange(e.target.value === 'true')}
+                                >
+                                    <FormControlLabel value={true} control={<Radio />} label="Sim" />
+                                    <FormControlLabel value={false} control={<Radio />} label="Não" />
+                                </RadioGroup>
+                            )}
                         />
                     </FormControl>
                 </Grid>
