@@ -115,11 +115,11 @@ export default function SignInForm() {
                 {...register("email", { required: 'Campo obrigatório', validate: (value) => validator.isEmail(value) || 'Insira um E-mail válido' })}
               />
               {errors?.email && (
-                <Typography variant="caption" sx={{ color: 'red' }}>
+                <Typography variant="caption" sx={{ color: 'error.light' }}>
                   {errors.email.message}
                 </Typography>
               )}
-              <FormControl sx={{ width: '100%' }} variant="outlined" error={!!errors?.password}>
+              <FormControl sx={{ width: '100%', mt:1 }} variant="outlined" error={!!errors?.password}>
                 <InputLabel sx={{ p: 'px' }} htmlFor="senha">Senha</InputLabel>
                 <OutlinedInput
                   sx={{
@@ -160,7 +160,7 @@ export default function SignInForm() {
                 />
               </FormControl>
               {errors?.password && (
-                <Typography variant="caption" sx={{ mr: '30px', color: 'red' }}>
+                <Typography variant="caption" sx={{ mr: '30px', color: 'error.light' }}>
                   {errors.password.message}
                 </Typography>
               )}

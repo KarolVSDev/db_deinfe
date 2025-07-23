@@ -283,14 +283,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                                     label="Quantitativo"
                                     type="number"
                                     error={!!errors?.quantitativo}
-                                    {...register('quantitativo', {
-                                        valueAsNumber: true,
-                                        validate: {
-                                            positive: (value) =>
-                                                value >= 0 || "O campo não pode ser vazio ou negativo"
-                                        },
-                                        min: 0
-                                    })}
+                                    {...register('quantitativo')}
                                     fullWidth
                                 />
                                 {errors?.quantitativo && (

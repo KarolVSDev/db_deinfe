@@ -99,7 +99,7 @@ const DeleteVerification: React.FC<VerificationProps> = ({ selectedRow, onClose,
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Essa ação vai excluir o registro da tabela.
+                        Essa ação vai excluir o registro permanentemente.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

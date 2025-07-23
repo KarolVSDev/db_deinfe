@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
 import { KeyWord } from "../../../types/types";
 import { db } from "../../../service/firebase.config";
 import { TypeAlert } from "../../../hooks/TypeAlert";
@@ -58,6 +58,46 @@ const useFetchKeyWord = () => {
         }
     };
 
+    //UPDATE
+    const updateKeyWord = async (data: KeyWord) => {
+        try {
+            const keywordRef = doc(db, 'keyword', data.id);
+
+            //passo 1 - verificar se o documento atual mudou de label
+            const currentDoc = await getDoc(keywordRef);
+            if(currentDoc.data()?.label === data.label) {
+                TypeAlert("Palavra-chave mantida sem alterações", "info");
+                return true
+            }
+
+            //passo 2 - verificando se existe outra palavra-chave no banco com esse label
+            const querySnapshot = await getDocs(
+                query(
+                    collection(db, 'keyword'),
+                    where('label', "==", data.label),
+                )
+            );
+    
+            if (!querySnapshot.empty && querySnapshot.docs.some(doc => doc.id !== data.id)) {
+                TypeAlert("Essa palavra-chave já foi registrada", "error");
+                return false;
+            }
+
+            const updateData = {
+                label:data.label
+            }
+
+            await updateDoc(keywordRef, updateData)
+            TypeAlert("Palavra-chave atualizada com sucesso!", "success")
+            return true
+        } catch (error) {
+            console.log("erro no método de update da palavra-chave: ", error)
+            TypeAlert("Erro ao atualizar a palavra-chave, confira o log no console", "error")
+            return false
+        }
+
+    }
+
     //DELETE
     const deleteKeyword = async (id: string) => {
         try {
@@ -75,7 +115,8 @@ const useFetchKeyWord = () => {
     return {
         addKeyWord,
         escutarKeyWords,
-        deleteKeyword
+        updateKeyWord,
+        deleteKeyword,
     }
 
 }

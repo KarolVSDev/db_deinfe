@@ -30,7 +30,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
 
   // Função para verificar correspondência exata (incluindo case)
   const checkExactMatch = (token: string, keywordWord: string) => {
-    return token === keywordWord;
+    return token.toLocaleLowerCase() === keywordWord;
   };
 
   // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave

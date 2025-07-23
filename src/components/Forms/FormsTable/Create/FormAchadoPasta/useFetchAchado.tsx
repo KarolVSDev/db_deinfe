@@ -18,7 +18,7 @@ const useFetchAchado = () => {
       const colecaoRef = collection(db, "achado");
       const docRef = await addDoc(colecaoRef, data)
       console.log("Achado adicionado", docRef.id)
-      setArrayAchado((prev) => [...prev, { ...data, id: docRef.id }]);
+     
       return docRef.id
     } catch (error) {
       console.error("Erro ao tentar criar o novo achado", error);

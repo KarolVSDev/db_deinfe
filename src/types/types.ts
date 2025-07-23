@@ -112,6 +112,10 @@ export interface KeyWord {
   color:string;
 }
 
+export interface KeyWordUpdate extends KeyWord {
+  
+}
+
 export interface ColetaTransformada extends Omit<Coleta, 'achadoId' | 'processoId' | 'temaId'> {
   achadoId: string | Achado['achado'];
   processoId: string | Processo['numero'];
