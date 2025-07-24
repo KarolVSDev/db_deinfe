@@ -12,7 +12,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
   // Prepara as palavras-chave mantendo a formatação original
   const keywords = arrayKeyWord.map(item => ({
     ...item,
-    words: item.label.split(' '), // Mantém o case original
+    words: item.label.toLowerCase().split(' '), // Mantém o case original
     original: item.label,
     length: item.label.length // Adicionamos o comprimento total
   }));
@@ -30,9 +30,8 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({ text }) => {
 
   // Função para verificar correspondência exata (incluindo case)
   const checkExactMatch = (token: string, keywordWord: string) => {
-    return token.toLocaleLowerCase() === keywordWord;
+    return token.toLowerCase() === keywordWord.toLowerCase();
   };
-
   // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave
   const checkForKeyword = (startIndex: number) => {
     const remainingTokens = tokens.length - startIndex;
