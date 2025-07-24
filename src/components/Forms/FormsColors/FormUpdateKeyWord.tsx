@@ -1,28 +1,20 @@
-import { Box, Divider, FormControl, IconButton, keyframes, TextField, Typography } from "@mui/material";
+import { Box, Divider, FormControl, IconButton, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { KeyWord, KeyWordUpdate } from "../../../types/types";
 import EditIcon from '@mui/icons-material/Edit';
 import useFetchKeyWord from "./useFetchKeyWord";
 import Helper from "../../Dialog/Helper";
-import DeleteIcon from '@mui/icons-material/Delete';
 
 
-const grow = keyframes`
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.2);
-  }
-`;
+
+
 
 interface FormUpdateKeyWordProps {
     keyword: KeyWord;
-    handleCloseModalDelete: () => void;
 }
 
 
-const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ keyword, handleCloseModalDelete }) => {
+const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ keyword }) => {
     const { handleSubmit, register, formState: { errors } } = useForm<KeyWordUpdate>({
         defaultValues: {
             label: keyword.label,
@@ -37,10 +29,6 @@ const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ keyword, handleCl
             id: keyword.id
         }
         await updateKeyWord(dataToUpdate)
-    }
-
-    const handleDelete = () => {
-        handleCloseModalDelete(); // Esta função deve abrir o modal no componente pai
     }
 
     return (
@@ -82,7 +70,7 @@ const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ keyword, handleCl
                         sx={{
                             '&:hover': {
                                 backgroundColor: 'transparent',
-                                animation: `${grow} 0.2s ease-in-out forwards`
+                               // animation: `${grow} 0.2s ease-in-out forwards`
                             }
                         }}
                     >
@@ -90,18 +78,7 @@ const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ keyword, handleCl
                     </IconButton>
                 </Helper>
 
-                <Helper title="Clique aqui para deletar o registro">
-                    <IconButton color="error" onClick={() => handleDelete()}
-                        sx={{
-                            '&:hover': {
-                                backgroundColor: 'transparent',
-                                animation: `${grow} 0.2s ease-in-out forwards`
-                            }
-                        }}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                </Helper>
+                
             </FormControl>
         </Box>
 
