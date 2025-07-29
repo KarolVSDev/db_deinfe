@@ -100,8 +100,8 @@ const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ closeModal, id })
                             errors={errors}
                             defaultValue={keyword?.type}
                             options={[
-                                { value: "problema", label: "Problema" },
-                                { value: "objeto", label: "Objeto" }
+                                { value: "problema", label: "problema" },
+                                { value: "objeto", label: "objeto" }
                             ]}
                         />
                     </Grid>
