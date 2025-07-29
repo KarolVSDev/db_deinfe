@@ -1,41 +1,36 @@
-import { Tooltip, IconButton } from '@mui/material';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { Tooltip, IconButton, useTheme } from '@mui/material';
 
 interface ColorCircleCopyProps {
-    color: string;
+    type:string;
 }
 
-const ColorCircleCopy = ({ color }: ColorCircleCopyProps) => {
-    const handleCopy = async () => {
-        try {
-            await navigator.clipboard.writeText(color);
-        } catch (e) {
-            // fallback para browsers antigos
-            const textarea = document.createElement('textarea');
-            textarea.value = color;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-        }
-    };
+const ColorCircleCopy = ({ type }: ColorCircleCopyProps) => {
+    const theme = useTheme();
+    
+    const color = type === 'problema' 
+        ? theme.palette.error.main 
+        : theme.palette.primary.main;
 
     return (
-        <Tooltip title={`Copiar cor: ${color}`}>
-            <IconButton onClick={handleCopy} size="small" sx={{ p: 0.5 }}>
+        <Tooltip title={`Tipo: ${type}`}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span
                     style={{
                         display: 'inline-block',
                         width: 22,
                         height: 22,
-                        borderRadius: '50%',
+                        borderRadius: '100%',
                         background: color,
                         border: '1px solid #cbd5e1',
                         marginRight: 8,
                     }}
                 />
-                <ContentCopyIcon sx={{ fontSize: 16, color: '#64748b' }} />
-            </IconButton>
+                <IconButton 
+                    size="small" 
+                  
+                >
+                </IconButton>
+            </div>
         </Tooltip>
     );
 };

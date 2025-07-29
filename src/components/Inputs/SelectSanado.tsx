@@ -1,21 +1,30 @@
-import * as React from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Coleta } from '../../types/types';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { FormHelperText } from '@mui/material';
+import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form';
 
-export interface SelectSanadoProps {
-    id: keyof Coleta;
-    register: UseFormRegister<Coleta>;
-    errors: FieldErrors<Coleta>;
-    label: string
-    defaultValue?: string;
+export interface SelectSanadoProps<T extends FieldValues> {
+    id: Path<T>;
+    register: UseFormRegister<T>;
+    errors: FieldErrors<T>;
+    label: string;
+    defaultValue?: T[Path<T>];
+    options: {
+        value: T[Path<T>];
+        label: string;
+    }[];
 }
 
-const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors, defaultValue }) => {
+
+const SelectSanado = <T extends FieldValues>({
+    label,
+    id,
+    register,
+    errors,
+    defaultValue,
+    options
+}: SelectSanadoProps<T>) => {
 
     return (
         <div>
@@ -24,19 +33,19 @@ const SelectSanado: React.FC<SelectSanadoProps> = ({ label, id, register, errors
                 <Select
                     labelId={`${id}-label`}
                     id={id}
-                    defaultValue={defaultValue || ''}
+                    defaultValue={typeof defaultValue === 'string' ? defaultValue.toLowerCase() : (defaultValue || '')}
                     {...register(id)}
                     error={!!errors[id]}
                 >
                     <MenuItem value="">
                         <em>Selecione...</em>
                     </MenuItem>
-                    <MenuItem value="sanado">Sanado</MenuItem>
-                    <MenuItem value="não sanado">Não Sanado</MenuItem>
+                    {options.map((option) => (
+                        <MenuItem key={option.value} value={option.value.toLowerCase()}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
                 </Select>
-                {errors?.[id] && (
-                    <FormHelperText sx={{ color: 'red', ml: '10px' }}>{errors[id]?.message}</FormHelperText>
-                )}
             </FormControl>
         </div>
     );

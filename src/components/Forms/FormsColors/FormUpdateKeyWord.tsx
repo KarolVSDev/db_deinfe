@@ -1,86 +1,118 @@
-import { Box, Divider, FormControl, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Grid, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { KeyWord, KeyWordUpdate } from "../../../types/types";
-import EditIcon from '@mui/icons-material/Edit';
+import { KeyWord, KeyWordUpdate, User } from "../../../types/types";
 import useFetchKeyWord from "./useFetchKeyWord";
-import Helper from "../../Dialog/Helper";
-
-
-
-
+import { GridRowId } from "@mui/x-data-grid";
+import RegisterButton from "../../Buttons/RegisterButton";
+import Loader from "../../Loader/Loader";
+import { useEffect, useState } from "react";
+import CloseIconComponent from "../../Inputs/CloseIcon";
+import SelectSanado from "../../Inputs/SelectSanado";
+import KeywordSkelelton from "./KeywordSkeleton";
 
 interface FormUpdateKeyWordProps {
-    keyword: KeyWord;
+    closeModal: () => void;
+    id: GridRowId | string;
+    user: User;
 }
 
-
-const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ keyword }) => {
-    const { handleSubmit, register, formState: { errors } } = useForm<KeyWordUpdate>({
-        defaultValues: {
-            label: keyword.label,
-        }
+const FormUpdateKeyWord: React.FC<FormUpdateKeyWordProps> = ({ closeModal, id }) => {
+    const [keyword, setKeyword] = useState<KeyWord>();
+    const { handleSubmit, register, reset, formState: { errors } } = useForm<KeyWord>({
     });
-
     const { updateKeyWord } = useFetchKeyWord();
+    const [loading, setLoading] = useState(false);
+    const { getKeywordById } = useFetchKeyWord();
+
+    console.log(id)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const keyword = await getKeywordById(id);
+            if (keyword) {
+                setKeyword(keyword);
+            }
+        };
+        fetchData();
+    }, [id, getKeywordById, reset]);
 
     const onSubmit = async (data: KeyWordUpdate) => {
-        const dataToUpdate = {
-            ...data,
-            id: keyword.id
+        try {
+            setLoading(true)
+            if (keyword) {
+                const dataToUpdate = {
+                    ...data,
+                    id: keyword.id
+                }
+                await updateKeyWord(dataToUpdate)
+            }
+
+        } catch (error) {
+            console.log("erro no submit de updatekeyword", error)
+        } finally {
+            setLoading(false)
+            closeModal()
         }
-        await updateKeyWord(dataToUpdate)
     }
 
     return (
-        <Box
-            component="form"
-            name='formKeyWordUpdate'
-            id='formKeyWordUpdate'
-            onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleSubmit(onSubmit)(e);
-            }}
-            sx={{ display: 'flex', flexDirection: 'row' }}
-        >
-            <FormControl sx={{ display: 'flex', flexDirection: 'row' }} >
-                <TextField
-                    variant='outlined'
-                    required
-                    fullWidth
-                    size="small"
-                    id="label"
-                    label='Palavra Chave'
-                    type="text"
-                    error={!!errors?.label}
-                    {...register('label', {
-                        required: 'Campo obrigatório'
-                    })}
-                />
+        <>
+            {keyword ? (
+                <Box sx={{
+                    borderRadius: 2,
+                    padding: '20px 20px 20px',
+                    boxShadow: '1px 2px 4px',
+                    backgroundColor:'background.paper'
 
-                {errors?.label && (
-                    <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                        {errors.label.message}
-                    </Typography>
-                )}
+                }}
+                    component="form" name='formUpdateColor' id='formUpdateColor' noValidate onSubmit={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSubmit(onSubmit)(e);
+                    }}>
+                    <CloseIconComponent closeModal={closeModal} textType='Atualizar Palavra-chave' />
+                    <Grid item xs={12} sx={{ mb: 3 }}>
+                        <TextField
+                            variant='filled'
+                            autoComplete="given-name"
+                            type="text"
+                            defaultValue={keyword?.label}
+                            required
+                            fullWidth
+                            id="label"
+                            label="Palavra-chave"
+                            error={errors?.label?.type === 'required'}
+                            {...register('label', {
+                                required: 'Campo obrigatório',
+                            })}
+                        />
+                        {errors?.label && (
+                            <Typography variant="caption" sx={{ color: 'red', ml: '10px', mb: 0 }}>
+                                {errors.label?.message}
+                            </Typography>
+                        )}
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <SelectSanado
+                            id={"type"}
+                            label={"Tipo"}
+                            register={register}
+                            errors={errors}
+                            defaultValue={keyword?.type}
+                            options={[
+                                { value: "problema", label: "Problema" },
+                                { value: "objeto", label: "Objeto" }
+                            ]}
+                        />
+                    </Grid>
+                    {loading === false ? <RegisterButton text="Atualizar" /> : <Loader />}
 
-                <Divider orientation="vertical" flexItem sx={{ mr: 2, ml: 2 }} />
-                <Helper title="Clique aqui para editar o registro">
-                    <IconButton type='submit'
-                        sx={{
-                            '&:hover': {
-                                backgroundColor: 'transparent',
-                               // animation: `${grow} 0.2s ease-in-out forwards`
-                            }
-                        }}
-                    >
-                        <EditIcon sx={{ color: 'primary.main' }} />
-                    </IconButton>
-                </Helper>
+                </Box>
 
-                
-            </FormControl>
-        </Box>
+            ) : (
+                <KeywordSkelelton isLoading={loading}/>
+            )}
+        </>
 
 
     )

@@ -2,6 +2,8 @@ import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query,
 import { KeyWord } from "../../../types/types";
 import { db } from "../../../service/firebase.config";
 import { TypeAlert } from "../../../hooks/TypeAlert";
+import { get } from "http";
+import { GridRowId } from "@mui/x-data-grid";
 
 const useFetchKeyWord = () => {
 
@@ -24,7 +26,6 @@ const useFetchKeyWord = () => {
             const docRef = await addDoc(colecaoRef, {
                 label: data.label,
                 type: data.type,
-                color: data.color
             });
             TypeAlert("Uma nova palavra-chave foi adicionada", "success");
             return docRef.id;
@@ -58,45 +59,78 @@ const useFetchKeyWord = () => {
         }
     };
 
+    const getKeywordById = async (id: string | GridRowId) => {
+        try {
+            const docRef = doc(db, "keyword", id.toString());
+            const docSnapshot = await getDoc(docRef);
+
+            if (!docSnapshot.exists()) {
+                TypeAlert("Essa Keyword não existe", "error")
+            }
+
+            const keywordData = {
+                id: docSnapshot.id,
+                ...docSnapshot.data()
+            } as KeyWord
+
+            keywordData.type.toLowerCase();
+
+            return keywordData;
+
+            // return {
+            //     id: docSnapshot.id,
+            //     ...docSnapshot.data()
+            // } as KeyWord;
+
+        } catch (error) {
+            console.log(error)
+            TypeAlert("Erro ao buscar a Keyword, VERIFIQUE O LOG NO CONSOLE", "error")
+        }
+    }
+
     //UPDATE
     const updateKeyWord = async (data: KeyWord) => {
         try {
             const keywordRef = doc(db, 'keyword', data.id);
-
-            //passo 1 - verificar se o documento atual mudou de label
             const currentDoc = await getDoc(keywordRef);
-            if(currentDoc.data()?.label === data.label) {
+
+            if (!currentDoc.exists()) {
+                TypeAlert("Palavra-chave não encontrada", "error");
+                return;
+            }
+
+            const currentData = currentDoc.data();
+            const hasLabelChanged = currentData?.label !== data.label;
+            const hasTypeChanged = currentData?.type !== data.type;
+
+            // Se nada mudou
+            if (!hasLabelChanged && !hasTypeChanged) {
                 TypeAlert("Palavra-chave mantida sem alterações", "info");
-                return true
+                return;
             }
 
-            //passo 2 - verificando se existe outra palavra-chave no banco com esse label
-            const querySnapshot = await getDocs(
-                query(
-                    collection(db, 'keyword'),
-                    where('label', "==", data.label),
-                )
-            );
-    
-            if (!querySnapshot.empty && querySnapshot.docs.some(doc => doc.id !== data.id)) {
-                TypeAlert("Essa palavra-chave já foi registrada", "error");
-                return false;
+            // Dados para atualizar
+            const updateData: Partial<KeyWord> = {};
+
+            if (hasLabelChanged) {
+                updateData.label = data.label;
             }
 
-            const updateData = {
-                label:data.label
+            if (hasTypeChanged) {
+                updateData.type = data.type;
             }
 
-            await updateDoc(keywordRef, updateData)
-            TypeAlert("Palavra-chave atualizada com sucesso!", "success")
-            return true
+            // Atualiza apenas os campos que mudaram
+            await updateDoc(keywordRef, updateData);
+            TypeAlert("Palavra-chave atualizada com sucesso!", "success");
+            return;
+
         } catch (error) {
-            console.log("erro no método de update da palavra-chave: ", error)
-            TypeAlert("Erro ao atualizar a palavra-chave, confira o log no console", "error")
-            return false
+            console.error("Erro ao atualizar palavra-chave:", error);
+            TypeAlert("Erro ao atualizar palavra-chave", "error");
+            return;
         }
-
-    }
+    };
 
     //DELETE
     const deleteKeyword = async (id: string) => {
@@ -117,6 +151,7 @@ const useFetchKeyWord = () => {
         escutarKeyWords,
         updateKeyWord,
         deleteKeyword,
+        getKeywordById
     }
 
 }

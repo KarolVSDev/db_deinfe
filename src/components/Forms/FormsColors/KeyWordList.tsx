@@ -6,19 +6,13 @@ import { useEffect, useMemo, useState } from 'react';
 import useFetchKeyWord from './useFetchKeyWord';
 import DeleteVerification from '../../Dialog/VerificationStep';
 import ColorCircleCopy from './ColorCircleCopy';
-import { Box, IconButton, InputAdornment, keyframes, TextField, Typography } from '@mui/material';
+import { Box, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Helper from '../../Dialog/Helper';
-
-const grow = keyframes`
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.2);
-  }
-`;
+import EditIcon from '@mui/icons-material/Edit';
+import ModalUpdatePF from '../../Modals/DataTableModals/ModalUpdateForms';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function KeyWordList() {
     const { arrayKeyWord, setArrayKeyWord } = useContextTable();
@@ -27,6 +21,9 @@ export default function KeyWordList() {
     const [selectedKey, setSelectedKey] = useState('')
     const [dataType] = useState('keyword')
     const [searchTerm, setSearchTerm] = useState('')
+    const [selectedRow, setSelectedRow] = useState<string>('')
+    const [openModal, setOpenModal] = useState(false)
+    const { user } = useAuth();
 
     const arrayKeyWordFiltrado = useMemo(() => {
         if (!searchTerm.trim()) return arrayKeyWord;
@@ -46,7 +43,14 @@ export default function KeyWordList() {
     }, [arrayKeyWord, searchTerm]);
 
 
+    function handleUpdate(selectedRow: string) {
+        setSelectedRow(selectedRow);
+        setOpenModal(true)
+    }
 
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
 
     useEffect(() => {
         const unsubscribe = escutarKeyWords((keywords) => {
@@ -87,32 +91,41 @@ export default function KeyWordList() {
                     sx={{ p: 1, borderRadius: '5px' }}
                 />
                 {arrayKeyWordFiltrado.map((value, index) => (
-                    <ListItem
+                    <ListItem sx={{p:2}}
                         key={index}
                         disableGutters
                     >
-                        <ListItemText
+                        <ListItemText 
                             primary={
                                 <span style={{ display: 'flex', alignItems: 'center' }}>
-                                    <ColorCircleCopy color={value.color} />
+                                    <ColorCircleCopy type={value.type} />
                                     {value.label}
                                 </span>
                             }
                             secondary={`tipo: ${value.type}`} />
+                        <Helper title="Clique aqui para editar o registro">
+                            <IconButton color="primary" onClick={() => handleUpdate(value.id)}>
+                                <EditIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
+                            </IconButton>
+                        </Helper>
                         <Helper title="Clique aqui para deletar o registro">
                             <IconButton color="error" onClick={() => handleDelete(value.id)}
-                                sx={{
-                                    '&:hover': {
-                                        backgroundColor: 'transparent',
-                                        animation: `${grow} 0.2s ease-in-out forwards`
-                                    }
-                                }}
+
                             >
-                                <DeleteIcon />
+                                <DeleteIcon sx={{ fontSize: '30px', mb: 1, animation: 'flipInX 0.5s ease-in-out' }} />
                             </IconButton>
                         </Helper>
                     </ListItem>
                 ))}
+                {selectedRow !== null && (
+                    <ModalUpdatePF
+                        id={selectedRow}
+                        dataType={dataType}
+                        open={openModal}
+                        user={user}
+                        onClose={handleCloseModal}
+                    />
+                )}
                 {selectedKey !== null && (
                     <DeleteVerification
                         selectedRow={selectedKey}

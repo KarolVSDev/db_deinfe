@@ -171,7 +171,10 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         label={"Sanado"}
                         register={register}
                         errors={errors}
-
+                        options={[
+                            { value: "sanado", label: "sanado" },
+                            { value: "não sanado", label: "não Sanado" }
+                        ]}
                     />
                 </Grid>
             </Grid>

@@ -226,13 +226,16 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
 
                             <Grid item xs={12} md={6}>
                                 <SelectSanado
-                                    id={"sanado"}
-                                    label={"Sanado"}
-                                    register={register}
-                                    errors={errors}
-                                    defaultValue={coleta?.coleta.sanado}
-
-                                />
+                        id={"sanado"}
+                        label={"Sanado"}
+                        register={register}
+                        errors={errors}
+                        defaultValue={coleta?.coleta.sanado}
+                        options={[
+                            { value: "sanado", label: "Sanado" },
+                            { value: "não sanado", label: "Não Sanado" }
+                        ]}
+                    />
                             </Grid>
                         </Grid>
 

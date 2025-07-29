@@ -109,7 +109,6 @@ export interface KeyWord {
   id: string;
   label: string;
   type:string;
-  color:string;
 }
 
 export interface KeyWordUpdate extends KeyWord {

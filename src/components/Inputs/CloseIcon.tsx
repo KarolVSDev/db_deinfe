@@ -10,7 +10,7 @@ export interface CloseIconComponentProps {
 const CloseIconComponent = ({ closeModal, textType }: CloseIconComponentProps) => {
     const theme = useTheme();
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between'}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between', gap:5}}>
             <Typography
                 variant="h5"
                 sx={{

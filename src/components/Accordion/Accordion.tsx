@@ -10,7 +10,7 @@ import AccordionDetails, {
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Fade from '@mui/material/Fade';
-import ColorPickerComponent from '../Forms/FormsColors/FormColor';
+import ColorPickerComponent from '../Forms/FormsColors/formKeyWord';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 export default function AccordionTransition() {

@@ -9,6 +9,7 @@ import FormUpdateTopicoAchado from '../../Forms/FormsTable/Create/FormTemaPasta/
 import { User } from '../../../types/types';
 import FormUpdateProcesso from '../../Forms/FormsTable/Create/FormProcessoPasta/FormUpdateProcesso';
 import FormUpdateColeta from '../../Forms/FormsTable/Create/formColetaPasta/FormUpdateColeta';
+import FormUpdateKeyWord from '../../Forms/FormsColors/FormUpdateKeyWord';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -28,7 +29,7 @@ const style = {
 };
 
 interface ModalUpdateProps {
-  id: GridRowId;
+  id: GridRowId | string;
   dataType: string;
   open: boolean;
   onClose: () => void;
@@ -52,6 +53,10 @@ const ModalUpdatePF: React.FC<ModalUpdateProps> = ({ id, dataType, open, onClose
       case 'relacionamentos':
         //o formUpdateColeta usa um dataTypeLocal para conseguir abrir o formUpdateAchado
         return <FormUpdateColeta closeModal={onClose} id={id}  user={user} />
+
+      case 'keyword':
+        //o formUpdateColeta usa um dataTypeLocal para conseguir abrir o formUpdateAchado
+        return <FormUpdateKeyWord closeModal={onClose} id={id}  user={user} />
     }
   }
 

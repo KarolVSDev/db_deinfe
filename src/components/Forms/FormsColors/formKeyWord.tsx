@@ -1,4 +1,3 @@
-// components/ColorPicker.tsx
 import { useState } from 'react';
 import { Box, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -6,15 +5,15 @@ import { KeyWord } from '../../../types/types';
 import RegisterButton from '../../Buttons/RegisterButton';
 import Loader from '../../Loader/Loader';
 import useFetchKeyWord from './useFetchKeyWord';
-import { ChromePicker } from 'react-color';
+import SelectSanado from '../../Inputs/SelectSanado';
 
-export interface ColorPickerComponentProps {
+export interface formKeyWordProps {
     handleExpanded: (expanded: boolean) => void;
 }
 
-export default function ColorPickerComponent({ handleExpanded }: ColorPickerComponentProps) {
-    const [color, setColor] = useState<string>('#ffffff');
-    const { handleSubmit, register, formState: { errors }, reset, setValue } = useForm<KeyWord>({});
+export default function formKeyWord({ handleExpanded }: formKeyWordProps) {
+    const [_color, setColor] = useState<string>('#ffffff');
+    const { handleSubmit, register, formState: { errors }, reset } = useForm<KeyWord>({});
     const [loading, setLoading] = useState(false);
     const { addKeyWord } = useFetchKeyWord();
 
@@ -63,45 +62,17 @@ export default function ColorPickerComponent({ handleExpanded }: ColorPickerComp
                     </Typography>
                 )}
             </Grid>
-            <Grid item xs={12} sx={{ mb: 3 }}>
-                <TextField
-                    variant='filled'
-                    required
-                    fullWidth
-                    autoFocus
-                    id="type"
-                    label='Tipo'
-                    type="text"
-                    error={!!errors?.type}
-                    {...register('type', {
-                        required: 'Campo obrigatório'
-                    })}
+            <Grid item xs={12} >
+                <SelectSanado
+                    id={"type"}
+                    label={"Tipo"}
+                    register={register}
+                    errors={errors}
+                    options={[
+                        { value: "problema", label: "problema" },
+                        { value: "objeto", label: "objeto" }
+                    ]}
                 />
-
-                {errors?.type && (
-                    <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                        {errors.type.message}
-                    </Typography>
-                )}
-            </Grid>
-
-            <Grid item xs={12}>
-                <Box display="flex" alignItems="center" gap={2}>
-                    <ChromePicker
-                        color={color}
-                        onChange={(colorResult) => {
-                            setColor(colorResult.hex);
-                            setValue('color', colorResult.hex);
-                        }}
-                        disableAlpha
-                    />
-                    
-                </Box>
-                {errors?.color && (
-                    <Typography variant="caption" sx={{ color: 'red', ml: '10px' }}>
-                        {errors.color.message}
-                    </Typography>
-                )}
             </Grid>
             {loading === false ? <RegisterButton text="Registrar" /> : <Loader />}
 
