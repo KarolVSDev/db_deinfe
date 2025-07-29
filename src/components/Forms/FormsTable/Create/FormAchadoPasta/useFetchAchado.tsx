@@ -107,42 +107,51 @@ const useFetchAchado = () => {
 
   const escutarAchados = async (callback: (achados: Achado[]) => void) => {
     try {
-      const temasRef = collection(db, "tema");
-      const temasSnapshot = await getDocs(temasRef);
-      const temasMap = new Map<string, any>();
+        // Primeiro obtemos todos os temas de uma vez
+        const temasRef = collection(db, "tema");
+        const temasSnapshot = await getDocs(temasRef);
+        const temasMap = new Map<string, string>(); // Map<ID, Nome do Tema>
 
-      temasSnapshot.forEach((doc) => {
-        temasMap.set(doc.id, doc.data());
-      })
+        // Preenchemos o mapa com os IDs e nomes dos temas
+        temasSnapshot.forEach((doc) => {
+            const temaData = doc.data();
+            temasMap.set(doc.id, temaData.tema); // Armazena apenas o nome do tema
+        });
 
-      const colecaoRef = collection(db, "achado");
+        const colecaoRef = collection(db, "achado");
 
-      const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
-        const achados = querySnapshot.docs.map((doc) => {
-          const achadoData = doc.data();
-          const tema = temasMap.get(achadoData.tema_id);
+        const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
+            const achados = querySnapshot.docs.map((doc) => {
+                const achadoData = doc.data();
+                
+                // Obtemos o nome do tema usando o mapa
+                const nomeTema = achadoData.tema_id && temasMap.has(achadoData.tema_id) 
+                    ? temasMap.get(achadoData.tema_id)!
+                    : "Tema não encontrado";
 
-          return {
-            id: doc.id,
-            achado: achadoData.achado,
-            analise: achadoData.analise,
-            criterioGeral: achadoData.criterioGeral,
-            data: achadoData.data,
-            gravidade: achadoData.gravidade,
-            situacaoAchado: achadoData.situacaoAchado,
-            tema_id: tema.tema || "Tema não encontrado",
-          };
-        }) as Achado[];
+                return {
+                    id: doc.id,
+                    achado: achadoData.achado,
+                    analise: achadoData.analise,
+                    criterioGeral: achadoData.criterioGeral,
+                    data: achadoData.data,
+                    gravidade: achadoData.gravidade,
+                    situacaoAchado: achadoData.situacaoAchado,
+                    tema_id: nomeTema, // Já armazenamos o nome diretamente
+                    // Mantemos também o ID original se necessário para referência
+                    tema_id_original: achadoData.tema_id 
+                };
+            }) as Achado[];
 
-        callback(achados); // Passa a lista de achados atualizada para o callback
-      });
+            callback(achados);
+        });
 
-      return unsubscribe; // Retorna a função para parar de escutar as mudanças
+        return unsubscribe;
     } catch (error) {
-      console.error("Erro ao escutar achados: ", error);
-      throw error;
+        console.error("Erro ao escutar achados: ", error);
+        throw error;
     }
-  };
+};
 
   //UPDATE
   const updateAchado = async (idAchado: string, data: Partial<Achado>) => {

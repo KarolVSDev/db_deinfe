@@ -2,7 +2,6 @@ import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query,
 import { KeyWord } from "../../../types/types";
 import { db } from "../../../service/firebase.config";
 import { TypeAlert } from "../../../hooks/TypeAlert";
-import { get } from "http";
 import { GridRowId } from "@mui/x-data-grid";
 
 const useFetchKeyWord = () => {

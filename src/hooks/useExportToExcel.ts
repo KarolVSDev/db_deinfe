@@ -4,6 +4,7 @@ import useFetchTema from '../components/Forms/FormsTable/Create/FormTemaPasta/us
 import useFetchAchado from '../components/Forms/FormsTable/Create/FormAchadoPasta/useFetchAchado';
 import useFetchProcesso from '../components/Forms/FormsTable/Create/FormProcessoPasta/useFetchProcesso';
 import { useContextTable } from '../context/TableContext';
+import { useTheme } from '@mui/material/styles';
 import { TypeInfo } from './TypeAlert';
 
 
@@ -15,6 +16,7 @@ const useExportToExcel = () => {
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { arrayColeta, arrayKeyWord } = useContextTable();
+    const theme = useTheme();
 
     const exportToExcel = async (dataType: string, fileName: 'data.xlsx') => {
         const workbook = new ExcelJS.Workbook();
@@ -192,6 +194,11 @@ const useExportToExcel = () => {
                         const tokens = cellValue.split(/(\s+)/);
                         let richTextArr = [];
                         let idx = 0;
+
+                        const checkExactMatch = (token: string, keywordWord: string) => {
+                            return token.toLowerCase() === keywordWord.toLowerCase();
+                        };
+
                         while (idx < tokens.length) {
                             // Função para verificar se uma sequência de tokens corresponde a uma palavra-chave
                             const checkForKeyword = (startIndex: number) => {
@@ -201,7 +208,7 @@ const useExportToExcel = () => {
                                     let match = true;
                                     for (let j = 0; j < keyword.words.length; j++) {
                                         const tokenIndex = startIndex + j * 2;
-                                        if (tokens[tokenIndex] !== keyword.words[j]) {
+                                        if (!checkExactMatch(tokens[tokenIndex], keyword.words[j])) {
                                             match = false;
                                             break;
                                         }
@@ -219,7 +226,12 @@ const useExportToExcel = () => {
                             if (result) {
                                 richTextArr.push({
                                     text: tokens.slice(idx, idx + result.length).join(''),
-                                    font: { color: { argb: result.keyword.color.replace('#', '') }, bold: true }
+                                    font: {
+                                        color: {
+                                            argb: result.keyword.type === 'problema' ? theme.palette.error.main.replace('#', '') : theme.palette.primary.main.replace('#', ''),
+                                        },
+                                        bold: true,
+                                    }
                                 });
                                 idx += result.length;
                             } else {

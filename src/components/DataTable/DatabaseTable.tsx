@@ -208,6 +208,7 @@ export default function DatabaseTable() {
           );
         }
 
+
         if (header.id === 'tipo_financeiro') {
           return (
             <span style={{
