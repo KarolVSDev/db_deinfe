@@ -14,7 +14,7 @@ const useFetchColeta = () => {
     const { getAllAchados, getAchadoById } = useFetchAchado();
     const { getAllTemas } = useFetchTema();
     const { getAllProcessos, getProcessoById } = useFetchProcesso();
-    const { getUsers } = useFetchUsers();
+    const { getUsers, getUserById } = useFetchUsers();
     const { setArrayColeta } = useContextTable();
 
     const addColeta = async (data: Coleta) => {
@@ -66,7 +66,6 @@ const useFetchColeta = () => {
                     unidade: doc.data().unidade,
                     situacao_encontrada: doc.data().situacao_encontrada,
                     comentario: doc.data().comentario,
-                    tipo_financeiro: doc.data().tipo_financeiro,
                     quantitativo: doc.data().quantitativo,
                 }));
 
@@ -178,6 +177,17 @@ const useFetchColeta = () => {
                 return false
             } else {
                 await updateDoc(coletaRef, data)
+
+                const coletaTransformada = await editorDeColeta(querySnapshot.docs[0].data() as Coleta)
+
+                if (coletaTransformada) {
+                    setArrayColeta(prevColetas =>
+                        prevColetas.map(coleta =>
+                            coleta.id === coletaTransformada.id ? coletaTransformada : coleta
+                        )
+                    );
+                }
+
                 TypeAlert("Coleta atualizada com sucesso!", "success")
                 return true
             }
@@ -185,6 +195,28 @@ const useFetchColeta = () => {
             console.error("Erro ao atualizar coleta: ", error);
         }
     };
+
+    const editorDeColeta = async (coleta: Coleta): Promise<ColetaTransformada | null> => {
+        const achado = await getAchadoById(coleta.achadoId)
+        const processo = await getProcessoById(coleta.processoId)
+        const usuario = await getUserById(coleta.coletadorId)
+
+
+        if (!achado || !processo || !usuario) {
+            console.error("Achado ou processo ou usuário não encontrado")
+            return null;
+        }
+
+        const coletaEditada: ColetaTransformada = {
+            ...coleta,
+            achadoId: achado.achado.achado,
+            temaId: achado.tema.tema,
+            processoId: processo?.numero,
+            coletadorId: usuario?.nome,
+        };
+
+        return coletaEditada;
+    }
 
     //DELETE
     const deleteColeta = async (id: string) => {

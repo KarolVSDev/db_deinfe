@@ -54,6 +54,7 @@ export interface Achado {
   situacaoAchado: boolean;
   analise: string;
   tema_id: string;
+  tipo_financeiro:boolean;
 }
 
 export interface  AchadoPesquisa {
@@ -77,7 +78,6 @@ export interface Coleta {
   valorFinanceiro:number;
   situacao_encontrada?:string;
   comentario:string;
-  tipo_financeiro:boolean;
   coletadorId:string;
   temaId:string;
   achadoId:string;

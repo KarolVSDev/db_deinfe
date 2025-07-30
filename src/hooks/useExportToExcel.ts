@@ -7,10 +7,6 @@ import { useContextTable } from '../context/TableContext';
 import { useTheme } from '@mui/material/styles';
 import { TypeInfo } from './TypeAlert';
 
-
-
-
-
 const useExportToExcel = () => {
     const { getAllTemas } = useFetchTema();
     const { getAllAchados } = useFetchAchado();
@@ -71,12 +67,13 @@ const useExportToExcel = () => {
 
                         const temaMap = new Map(temas.map((tema) => [tema.id, tema.tema]));
 
-                        headers = ['Temas', 'Achado', 'Análise', 'Data', 'Gravidade', 'Critério Geral', 'Situação Achado'];
+                        headers = ['Temas', 'Achado', 'Análise', 'Data', 'Tipo financeiro' , 'Gravidade', 'Critério Geral', 'Situação Achado'];
                         rows = achado.map((achado) => [
                             temaMap.get(achado.tema_id) || 'Tema não encontrado',
                             achado.achado,
                             achado.analise,
                             achado.data,
+                            achado.tipo_financeiro ? 'sim' : 'não',
                             achado.gravidade,
                             achado.criterioGeral,
                             achado.situacaoAchado === true ? 'Aprovado' : 'Pendente'

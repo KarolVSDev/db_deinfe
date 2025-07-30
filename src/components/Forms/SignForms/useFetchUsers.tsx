@@ -78,6 +78,19 @@ const useFetchUsers = () => {
     }
   };
 
+  const getUserById = async (id: string) => {
+    try {
+      const userRef = doc(db, "usuario", id);
+      const docRef = await getDoc(userRef);
+      const user = { id: docRef.id, ...docRef.data() } as User;
+      return user;
+    } catch (error) {
+      console.error("Erro ao buscar usuário por ID: ", error);
+      return null;
+    }
+  }
+
+
   const updateUser = async (id: string, data: Partial<UserUpdate>) => {
     try {
       const userRef = doc(db, "usuario", id);
@@ -117,7 +130,8 @@ const useFetchUsers = () => {
     getUsers,
     getUser,
     updateUser,
-    passwordChanger
+    passwordChanger,
+    getUserById
   }
 }
 

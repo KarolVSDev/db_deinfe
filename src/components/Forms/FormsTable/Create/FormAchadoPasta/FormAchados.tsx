@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Achado, TopicoAchado, User } from '../../../../../types/types'
 import { TypeAlert } from '../../../../../hooks/TypeAlert';
 import { useContextTable } from '../../../../../context/TableContext';
-import { Autocomplete, Grid, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Autocomplete, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import RegisterButton from '../../../../Buttons/RegisterButton';
 import { useEffect, useState } from 'react';
 import RadioInput from '../../../../Inputs/RadioInput';
@@ -58,7 +58,6 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
   const onSubmit = async (data: Achado) => {
     setLoading(true)
     //bloco que manipula e salva o achado
-
     try {
       const achadoExiste = await getAchadobyName(data.achado, data.tema_id);
       if (achadoExiste) {
@@ -75,6 +74,8 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
         situacaoAchado: situacaoAchado === 'Aprovado' ? true : false,
       };
 
+      console.log(dataWithSituacao)
+
       await setAchado(dataWithSituacao);
       TypeAlert("Achado adicionado", "success");
       reset();
@@ -88,14 +89,14 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
   }
 
   return (
-    <Box sx={{ backgroundColor:theme.palette.background.paper ,borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' id='formAchados' noValidate 
-    onSubmit={(e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleSubmit(onSubmit)(e);
-    }}>
+    <Box sx={{ backgroundColor: theme.palette.background.paper, borderRadius: 2, padding: '20px 20px 20px', boxShadow: '1px 2px 4px' }} component="form" name='formAchados' id='formAchados' noValidate
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleSubmit(onSubmit)(e);
+      }}>
       <CloseIconComponent closeModal={closeModal} textType='Cadastrar proposta de Achado' />
-      <Grid item xs={12}  sx={{ mb: 2 }}>
+      <Grid item xs={12} sx={{ mb: 2 }}>
         <Controller
           name="tema_id"
           control={control}
@@ -178,6 +179,28 @@ const FormAchado: React.FC<FormAchadoProps> = ({ closeModal, user }) => {
             value={gravidade}
             setValue={setValue} />
         </Box>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <FormControl>
+          <FormLabel id="demo-controlled-radio-buttons-group-tipo-financeiro">Tipo Financeiro</FormLabel>
+          <Controller
+            name='tipo_financeiro'
+            control={control}
+            defaultValue={false}
+            render={({ field }) => (
+              <RadioGroup
+                row
+                aria-labelledby="demo-controlled-radio-buttons-group-tipo-financeiro"
+                name="tipo_financeiro"
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value === 'true')}
+              >
+                <FormControlLabel value={true} control={<Radio />} label="Sim" />
+                <FormControlLabel value={false} control={<Radio />} label="Não" />
+              </RadioGroup>
+            )}
+          />
+        </FormControl>
       </Grid>
 
       <Grid item xs={12} sx={{ mt: 3 }}>

@@ -41,6 +41,7 @@ const useFetchAchado = () => {
           data: doc.data().data,
           gravidade: doc.data().gravidade,
           situacaoAchado: doc.data().situacaoAchado,
+          tipo_financeiro: doc.data().tipo_financeiro,
           tema_id: doc.data().tema_id
         })) as Achado[];
 
@@ -139,7 +140,8 @@ const useFetchAchado = () => {
                     situacaoAchado: achadoData.situacaoAchado,
                     tema_id: nomeTema, // Já armazenamos o nome diretamente
                     // Mantemos também o ID original se necessário para referência
-                    tema_id_original: achadoData.tema_id 
+                    tema_id_original: achadoData.tema_id ,
+                    tipo_financeiro: achadoData.tipo_financeiro
                 };
             }) as Achado[];
 
@@ -155,7 +157,6 @@ const useFetchAchado = () => {
 
   //UPDATE
   const updateAchado = async (idAchado: string, data: Partial<Achado>) => {
-
     const achado = {
       achado: data.achado,
       analise: data.analise,
@@ -164,19 +165,23 @@ const useFetchAchado = () => {
       data: data.data,
       gravidade: data.gravidade,
       tema_id: data.tema_id,
+      tipo_financeiro: data.tipo_financeiro
     }
 
     const filteredAchado = Object.fromEntries(
       Object.entries(achado).filter(([_, value]) => value !== undefined)
     );
+
     try {
       const achadoRef = doc(db, "achado", idAchado);
       await updateDoc(achadoRef, filteredAchado)
+
       console.log("Achado atualizado com sucesso!");
     } catch (error) {
     }
   };
 
+  //DELETE
   const deleteAchado = async (id: string) => {
     try {
       const docRef = doc(db, "achado", id);

@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Grid, TextField, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
+import { Autocomplete, Box, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
 import { useContextTable } from '../../../../../context/TableContext';
 import { Controller, useForm } from 'react-hook-form';
 import { Achado, TopicoAchado, User } from '../../../../../types/types';
@@ -68,6 +68,8 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
               achado: result.achado?.achado || '',
               analise: result.achado?.analise || '',
               situacaoAchado: result.achado?.situacaoAchado || false,
+              tipo_financeiro: result.achado?.tipo_financeiro || false,
+              gravidade: result.achado?.gravidade || '',
               criterioGeral: result.achado.criterioGeral || '',
             });
           }
@@ -210,8 +212,30 @@ const FormUpdateAchados: React.FC<FormUpdateAchadoProps> = ({ closeModal, id, us
                 setValue={setValue} />
             </Box>
           </Grid>
+          <Grid item xs={12} md={6}>
+            <FormControl>
+              <FormLabel id="demo-controlled-radio-buttons-group-tipo-financeiro">Tipo Financeiro</FormLabel>
+              <Controller
+                name='tipo_financeiro'
+                control={control}
+                defaultValue={false}
+                render={({ field }) => (
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-controlled-radio-buttons-group-tipo-financeiro"
+                    name="tipo_financeiro"
+                    value={field.value}
+                    onChange={(e) => field.onChange(e.target.value === 'true')}
+                  >
+                    <FormControlLabel value={true} control={<Radio />} label="Sim" />
+                    <FormControlLabel value={false} control={<Radio />} label="Não" />
+                  </RadioGroup>
+                )}
+              />
+            </FormControl>
+          </Grid>
 
-          <Grid item xs={12}  sx={{ mt: 3 }}>
+          <Grid item xs={12} sx={{ mt: 3 }}>
             <TextField
               variant='filled'
               autoComplete="given-name"

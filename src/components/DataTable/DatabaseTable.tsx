@@ -34,7 +34,7 @@ export default function DatabaseTable() {
   const [dataType, setDataType] = useState('relacionamentos');
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [rows, setRows] = useState<any[]>([]);
-  const { handleLocalization, arrayTopicoAchado, setArrayTopicoAchado, setArrayColeta,
+  const { handleLocalization, arrayTopicoAchado,arrayColeta, setArrayTopicoAchado, setArrayColeta,
     setArrayAchado, setArrayProcesso, setArrayKeyWord } = useContextTable();
   const [selectedRow, setSelectedRow] = useState<GridRowId>(0)
   const [openModal, setOpenModal] = useState(false)
@@ -309,7 +309,7 @@ export default function DatabaseTable() {
 
   useEffect(() => {
     dataTypeRef.current = dataType;
-  }, [dataType, arrayTopicoAchado, selectedRow]);
+  }, [dataType, arrayTopicoAchado, selectedRow, arrayColeta]);
 
 
 
