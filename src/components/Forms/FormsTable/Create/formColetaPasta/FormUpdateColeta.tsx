@@ -29,7 +29,7 @@ export interface FormUpdateColetaProps {
     user: User;
 }
 
-const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, user }) => {
+const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id }) => {
 
     const [coleta, setColeta] = useState<ColetaUpdate>()
 
@@ -60,9 +60,6 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
     const [isloading, setIsLoading] = useState(false);
     const [achado, setAchado] = useState<Achado | null>();
     const [_achadoTemaId, setAchadoTemaId] = useState<string>('');
-    const [openModal, setOpenModal] = useState(false)
-    const { getAchadoById } = useFetchAchado();
-    const [dataTypeLocal] = useState('achado')
     const theme = useTheme();
 
     useEffect(() => {
@@ -111,18 +108,6 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
         }
         fetchColeta();
     }, [id])
-
-    const handleUpdate = () => {
-        setOpenModal(true)
-    }
-
-    const handleCloseModal = async () => {
-        setOpenModal(false);
-        if (achado?.id) {
-            const updatedAchado = await getAchadoById(achado.id);
-            if (updatedAchado) setAchado(updatedAchado.achado)
-        }
-    };
 
     const handleSelectAchado = (achado: Achado) => {
         if (achado.id) {
@@ -177,14 +162,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                     }} component="form" name='formAchados' noValidate onSubmit={handleSubmit(onSubmit)} >
                         <CloseIconComponent closeModal={closeModal} textType='Atualizar Coleta' />
 
-                        <Grid item xs={12} md={6} sx={{ mb: 2 }}>
-                            <ModalListAchados onSelectAchado={handleSelectAchado} />
-                            {achado &&
-                                <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal} />
-                            }
-                        </Grid >
-                        <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
-
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
                             <Grid item xs={12} md={6}>
                                 <Controller
                                     name="processoId"
@@ -221,23 +199,28 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                                     )}
                                 />
                             </Grid>
-
+                        </Grid>
+                        <Grid item xs={12} md={6} sx={{ mb: 2 }}>
+                            <ModalListAchados onSelectAchado={handleSelectAchado} />
+                            {achado &&
+                                <AchadoPaper achado={achado} />
+                            }
+                        </Grid >
+                        <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
                             <Grid item xs={12} md={6}>
                                 <SelectSanado
-                        id={"sanado"}
-                        label={"Sanado"}
-                        register={register}
-                        errors={errors}
-                        defaultValue={coleta?.coleta.sanado}
-                        options={[
-                            { value: "sanado", label: "sanado" },
-                            { value: "não sanado", label: "não Sanado" }
-                        ]}
-                    />
+                                    id={"sanado"}
+                                    label={"Sanado"}
+                                    register={register}
+                                    errors={errors}
+                                    defaultValue={coleta?.coleta.sanado}
+                                    options={[
+                                        { value: "sanado", label: "sanado" },
+                                        { value: "não sanado", label: "não Sanado" }
+                                    ]}
+                                />
                             </Grid>
-                        </Grid>
 
-                        <Grid container spacing={2} sx={{ mb: 2 }}>
                             <Grid item xs={12} md={6}>
                                 <TextField
                                     variant="filled"
@@ -263,7 +246,9 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                                     </Typography>
                                 )}
                             </Grid>
+                        </Grid>
 
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
                             <Grid item xs={12} md={6}>
                                 <TextField
                                     variant="filled"
@@ -275,8 +260,7 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                                     fullWidth
                                 />
                             </Grid>
-                        </Grid>
-                        <Grid container spacing={2} sx={{ mb: 2 }}>
+
                             <Grid item xs={12} md={6}>
                                 <TextField
                                     variant="filled"
@@ -293,7 +277,9 @@ const FormUpdateColeta: React.FC<FormUpdateColetaProps> = ({ closeModal, id, use
                                     </Typography>
                                 )}
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                        </Grid>
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid item xs={12} md={12}>
                                 <TextField
                                     variant="filled"
                                     id="comentario"

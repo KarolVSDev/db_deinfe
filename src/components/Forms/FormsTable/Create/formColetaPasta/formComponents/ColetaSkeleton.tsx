@@ -21,12 +21,13 @@ const ColetaSkeleton: React.FC<ColetaSkeletonProps> = ({ isLoading }) => {
     }}>
       {/* Título */}
       <Typography variant='h2'>
-        {isLoading && <Skeleton width="40%" height={40} sx={{ mb: 3 }} />}
+        {isLoading && <Skeleton width="40%" height={50} sx={{ mb: 3 }} />}
       </Typography>
 
       {/* Seção Achado */}
       <Grid item xs={12} md={6} sx={{ mb: 2 }}>
-        <Skeleton variant="rectangular" width="100%" height={56} sx={{ mb: 2 }} />
+        <Skeleton variant="rectangular" width="50%" height={56} sx={{ mb: 2 }} />
+        <Skeleton variant="rectangular" width="40%" height={56} sx={{ mb: 2 }} />
         <Skeleton variant="rectangular" width="100%" height={120} />
       </Grid>
 
@@ -51,25 +52,18 @@ const ColetaSkeleton: React.FC<ColetaSkeletonProps> = ({ isLoading }) => {
       </Grid>
 
       {/* Linha 3 - Quantitativo e Situação Encontrada */}
+      
       <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={12} md={6}>
-          <Skeleton variant="rectangular" width="100%" height={56} />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Skeleton variant="rectangular" width="100%" height={56} />
-        </Grid>
-      </Grid>
-      <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12}>
           <Skeleton variant="rectangular" width="100%" height={56} />
         </Grid>
         <Grid item xs={12} md={12}>
-          <Skeleton variant="rectangular" width="100%" height={120} />
+          <Skeleton variant="rectangular" width="100%" height={56} />
         </Grid>
       </Grid>
 
       {/* Botão */}
-      <Skeleton variant="rectangular" width="20%" height={40} />
+      <Skeleton variant="rectangular" width="30%" height={40} />
     </Box>
   );
 }

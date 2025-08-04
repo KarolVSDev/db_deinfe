@@ -48,7 +48,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
     const [dataType, setDataType] = useState<string>('')
     const { getAchadoById } = useFetchAchado();
     const theme = useTheme();
-    const [dataTypeLocal] = useState('achado')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -75,10 +74,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             setAchadoTemaId(achado.tema_id)
         }
     };
-
-    const handleUpdate = async () => {
-        setOpenModal(true)
-    }
 
     const handleCloseModal = async () => {
         setOpenModal(false);
@@ -119,8 +114,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                 <GroupButtonColeta />
                 <Divider textAlign="center" sx={{ my: 4, color: theme.palette.text.primary }}>Seção de relação Tema - Achado - Processo</Divider>
             </Grid>
-
-
 
             <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
                 {/* Processo - Ocupa metade da linha */}
@@ -166,7 +159,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
                 <Grid item xs={12} md={12}>
                     {achado &&
-                        <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} stateModal={openModal} />
+                        <AchadoPaper achado={achado} />
                     }
                 </Grid >
 

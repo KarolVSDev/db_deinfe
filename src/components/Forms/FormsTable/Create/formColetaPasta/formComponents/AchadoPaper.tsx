@@ -1,5 +1,5 @@
 import React from 'react'
-import { Achado, User } from '../../../../../../types/types';
+import { Achado } from '../../../../../../types/types';
 import { Box, Divider, Paper, Typography } from '@mui/material';
 import HighlightedText from '../../../../../DataTable/HighLightMidleware';
 import ModalColor from '../../../../FormsColors/ModalColor';
