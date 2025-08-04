@@ -28,16 +28,17 @@ export interface FormColetaProps {
 
 const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
 
+    const { arrayProcesso, lastSelectedProcessoId, setLastSelectedProcessoId } = useContextTable();
     const { register, handleSubmit, control, watch, setValue, reset, formState: { errors } } = useForm<Coleta>({
         defaultValues: {
             sanado: "",
+            processoId: lastSelectedProcessoId || "",
         }
     });
     const { addColeta } = useFetchColeta();
     const { getAllAchados } = useFetchAchado();
     const { getAllProcessos } = useFetchProcesso();
     const { getAllTemas } = useFetchTema();
-    const { arrayProcesso } = useContextTable();
     const [achado, setAchado] = useState<Achado | null>();
     const [displayValue, setDisplayValue] = useState('');
     const fieldValue = watch('valorFinanceiro');
@@ -120,13 +121,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
             </Grid>
 
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-                {achado &&
-                    <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} handleUpdate={handleUpdate} stateModal={openModal} />
-                }
-            </Grid >
 
-            <ModalListAchados onSelectAchado={handleSelectAchado} />
             <Grid container spacing={2} sx={{ mb: 2, mt: 2 }}>
                 {/* Processo - Ocupa metade da linha */}
                 <Grid item xs={12} md={6}>
@@ -141,7 +136,12 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                                 options={arrayProcesso}
                                 getOptionLabel={(option: Processo) => option.numero}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                                onChange={(_, value) => field.onChange(value?.id || '')}
+                                value={arrayProcesso.find(p => p.id === field.value) || null}
+                                onChange={(_, value) => {
+                                    const newId = value?.id || '';
+                                    field.onChange(newId);
+                                    setLastSelectedProcessoId(newId);
+                                }}
                                 ListboxProps={{
                                     style: {
                                         maxHeight: '200px',
@@ -164,7 +164,22 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     />
                 </Grid>
 
+                <Grid item xs={12} md={12}>
+                    {achado &&
+                        <AchadoPaper handleCloseModal={handleCloseModal} user={user} dataType={dataTypeLocal} achado={achado} stateModal={openModal} />
+                    }
+                </Grid >
+
+                <Grid item xs={12} md={12}>
+                    <ModalListAchados onSelectAchado={handleSelectAchado} />
+                </Grid>
                 {/* Sanado - Ocupa metade da linha */}
+
+            </Grid>
+
+            {/* Segunda linha com 2 campos */}
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+                {/* Valor Financeiro - Ocupa metade da linha */}
                 <Grid item xs={12} md={6}>
                     <SelectSanado
                         id={"sanado"}
@@ -177,11 +192,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         ]}
                     />
                 </Grid>
-            </Grid>
-
-            {/* Segunda linha com 2 campos */}
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-                {/* Valor Financeiro - Ocupa metade da linha */}
                 <Grid item xs={12} md={6}>
                     <TextField
                         variant="filled"
@@ -200,7 +210,10 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         fullWidth
                     />
                 </Grid>
+            </Grid>
 
+            {/* Terceira linha com 2 campos */}
+            <Grid container spacing={2} sx={{ mb: 2 }}>
                 {/* Unidade - Ocupa metade da linha */}
                 <Grid item xs={12} md={6}>
                     <TextField
@@ -213,10 +226,6 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         fullWidth
                     />
                 </Grid>
-            </Grid>
-
-            {/* Terceira linha com 2 campos */}
-            <Grid container spacing={2} sx={{ mb: 2 }}>
                 {/* Quantitativo - Ocupa metade da linha */}
                 <Grid item xs={12} md={6}>
                     <TextField
@@ -234,9 +243,10 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                         </Typography>
                     )}
                 </Grid>
-
+            </Grid>
+            <Grid container spacing={2} sx={{ mb: 2 }}>
                 {/* Situação Encontrada - Ocupa metade da linha */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={12}>
                     <TextField
                         variant="filled"
                         id="comentario"
@@ -249,6 +259,7 @@ const FormColeta: React.FC<FormColetaProps> = ({ closeModal, user }) => {
                     />
                 </Grid>
             </Grid>
+
             <Grid container spacing={2} sx={{ mb: 2 }}>
                 {/* Situação Encontrada - Ocupa toda a linha */}
                 <Grid item xs={12} md={12}>

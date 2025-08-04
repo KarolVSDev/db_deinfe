@@ -8,12 +8,14 @@ interface TableContextType {
     arrayProcesso: Processo[];
     arrayColeta: Coleta[];
     arrayKeyWord: KeyWord[];
+    lastSelectedProcessoId: string | null;
     handleLocalization: {};
     setArrayTopicoAchado: Dispatch<SetStateAction<TopicoAchado[]>>;
     setArrayAchado: Dispatch<SetStateAction<Achado[]>>;
     setArrayProcesso: Dispatch<SetStateAction<Processo[]>>;
     setArrayColeta: Dispatch<SetStateAction<Coleta[]>>;
     setArrayKeyWord: Dispatch<SetStateAction<KeyWord[]>>;
+    setLastSelectedProcessoId: Dispatch<SetStateAction<string | null>>;
 }
 
 interface Props {
@@ -28,6 +30,7 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
     const [arrayProcesso, setArrayProcesso] = useState<Processo[]>([]);
     const [arrayColeta, setArrayColeta] = useState<Coleta[]>([]);
     const [arrayKeyWord, setArrayKeyWord] = useState<KeyWord[]>([]);
+    const [lastSelectedProcessoId, setLastSelectedProcessoId] = useState<string | null>(null);
 
     const handleLocalization = {
         columnHeaderSortIconLabel: 'ordenar',
@@ -70,6 +73,8 @@ export const TableProvider: React.FC<Props> = ({ children }) => {
             arrayColeta,
             arrayKeyWord,
             handleLocalization,
+            lastSelectedProcessoId,
+            setLastSelectedProcessoId,
             setArrayTopicoAchado,
             setArrayAchado,
             setArrayProcesso,
