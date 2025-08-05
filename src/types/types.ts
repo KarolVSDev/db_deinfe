@@ -57,6 +57,10 @@ export interface Achado {
   tipo_financeiro:boolean;
 }
 
+export interface AchadoTransformado extends Omit<Achado, 'tema_id'> {
+  tema_id: string | TopicoAchado['tema'];
+}
+
 export interface  AchadoPesquisa {
   id?: string;
   achado: string;

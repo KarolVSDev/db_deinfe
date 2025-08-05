@@ -1,5 +1,5 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from "firebase/firestore";
-import { Achado } from "../../../../../types/types";
+import { Achado, AchadoTransformado } from "../../../../../types/types";
 import { db } from "../../../../../service/firebase.config";
 import { useContextTable } from "../../../../../context/TableContext";
 import { TypeAlert } from "../../../../../hooks/TypeAlert";
@@ -11,14 +11,14 @@ import useFetchTema from "../FormTemaPasta/useFetchTema";
 const useFetchAchado = () => {
 
   const { setArrayAchado } = useContextTable()
-  const { getTemaById } = useFetchTema();
+  const { getTemaById, getAllTemas } = useFetchTema();
   //CREATE
   const setAchado = async (data: Achado) => {
     try {
       const colecaoRef = collection(db, "achado");
       const docRef = await addDoc(colecaoRef, data)
       console.log("Achado adicionado", docRef.id)
-     
+
       return docRef.id
     } catch (error) {
       console.error("Erro ao tentar criar o novo achado", error);
@@ -108,52 +108,56 @@ const useFetchAchado = () => {
 
   const escutarAchados = async (callback: (achados: Achado[]) => void) => {
     try {
-        // Primeiro obtemos todos os temas de uma vez
-        const temasRef = collection(db, "tema");
-        const temasSnapshot = await getDocs(temasRef);
-        const temasMap = new Map<string, string>(); // Map<ID, Nome do Tema>
+      const colecaoRef = collection(db, "achado");
 
-        // Preenchemos o mapa com os IDs e nomes dos temas
-        temasSnapshot.forEach((doc) => {
-            const temaData = doc.data();
-            temasMap.set(doc.id, temaData.tema); // Armazena apenas o nome do tema
-        });
+      const unsubscribe = onSnapshot(colecaoRef, async (querySnapshot) => {
+        // Mapeia os documentos para objetos Achado brutos (com IDs)
+        const achados: Achado[] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          achado: doc.data().achado,
+          analise: doc.data().analise,
+          criterioGeral: doc.data().criterioGeral,
+          data: doc.data().data,
+          gravidade: doc.data().gravidade,
+          situacaoAchado: doc.data().situacaoAchado,
+          tema_id: doc.data().tema_id,
+          tipo_financeiro: doc.data().tipo_financeiro
+        }));
 
-        const colecaoRef = collection(db, "achado");
+        // Transforma os IDs em valores legíveis
+        const achadosTransformados = await editorDeArrayAchado(achados);
+        callback(achadosTransformados);
+      });
 
-        const unsubscribe = onSnapshot(colecaoRef, (querySnapshot) => {
-            const achados = querySnapshot.docs.map((doc) => {
-                const achadoData = doc.data();
-                
-                // Obtemos o nome do tema usando o mapa
-                const nomeTema = achadoData.tema_id && temasMap.has(achadoData.tema_id) 
-                    ? temasMap.get(achadoData.tema_id)!
-                    : "Tema não encontrado";
-
-                return {
-                    id: doc.id,
-                    achado: achadoData.achado,
-                    analise: achadoData.analise,
-                    criterioGeral: achadoData.criterioGeral,
-                    data: achadoData.data,
-                    gravidade: achadoData.gravidade,
-                    situacaoAchado: achadoData.situacaoAchado,
-                    tema_id: nomeTema, // Já armazenamos o nome diretamente
-                    // Mantemos também o ID original se necessário para referência
-                    tema_id_original: achadoData.tema_id ,
-                    tipo_financeiro: achadoData.tipo_financeiro
-                };
-            }) as Achado[];
-
-            callback(achados);
-        });
-
-        return unsubscribe;
+      return unsubscribe;
     } catch (error) {
-        console.error("Erro ao escutar achados: ", error);
-        throw error;
+      console.error("Erro ao escutar achados: ", error);
+      throw error;
     }
-};
+  };
+
+  const editorDeArrayAchado = async (achadoData: Achado[]): Promise<AchadoTransformado[]> => {
+    const temas = await getAllTemas();
+
+    if (!temas) {
+      console.error("Não foi possível obter os temas");
+      return [];
+    }
+
+    // Criamos um mapa para rápida consulta de temas
+    const temasMap = new Map(temas.map(tema => [tema.id, tema.tema]));
+
+    return achadoData.map(item => {
+      return {
+        ...item,
+        tema_id: item.tema_id && temasMap.has(item.tema_id)
+          ? temasMap.get(item.tema_id)!
+          : "Tema não encontrado",
+        // Mantemos o ID original se necessário para referência
+        tema_id_original: item.tema_id
+      };
+    });
+  };
 
   //UPDATE
   const updateAchado = async (idAchado: string, data: Partial<Achado>) => {

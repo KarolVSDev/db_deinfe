@@ -9,7 +9,7 @@ import ProfilePage from './pages/Dashboard/Profile/ProfilePage';
 import PasswordChanger from './pages/SignPage/PasswordChanger';
 import { CssBaseline } from '@mui/material';
 import PasswordUpdater from './pages/SignPage/PasswordUpdater';
-import { ThemeProvider as MuiThemeProvider} from '@mui/material';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import { lightTheme, darkTheme } from './theme/GlobalTheme';
 import { ThemeProvider as CustomThemeProvider, useThemeContext } from './context/ThemeContext';
 

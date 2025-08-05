@@ -1,10 +1,9 @@
-
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import FormTopicoAchado from '../../Forms/FormsTable/Create/FormTemaPasta/FormTopicoAchado';
 import FormAchado from '../../Forms/FormsTable/Create/FormAchadoPasta/FormAchados';
 import SaveIcon from '@mui/icons-material/Save';
@@ -43,28 +42,15 @@ const ModalAddData: React.FC<ModalAddDataProps> = ({ dataType, user, textButton 
   const openButtonRef  = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const [isDisabled, setIsDisabled] = useState<boolean>(true)
   const handleClose = () => {
     openButtonRef .current?.focus();
     setOpen(false);
   }
 
-
-  useEffect(() => {
-
-    if (dataType === 'pesquisa') {
-      setIsDisabled(true);
-    } else {
-      setIsDisabled(false);
-    }
-
-  }, [open, dataType])
-
-
   return (
     <div>
       <Helper title='Clique aqui para criar um novo registro'>
-      <Button ref={openButtonRef}  onClick={handleOpen} disabled={isDisabled} variant='contained'>
+      <Button ref={openButtonRef}  onClick={handleOpen}  variant='contained'>
         <SaveIcon sx={{ mr: 1 }} /> 
         <Typography>Cadastrar {textButton}</Typography>
       </Button>
