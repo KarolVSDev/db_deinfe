@@ -52,8 +52,6 @@ export default function DatabaseTable() {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const theme = useTheme();
 
-
-
   // Carrega os dados iniciais quando o componente monta
   useEffect(() => {
 
