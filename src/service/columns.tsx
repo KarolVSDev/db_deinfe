@@ -27,12 +27,12 @@ export const coletaHeader = [
     { id: 'achadoId', label: 'Achado', minWidth: 450 },
     { id: 'valorFinanceiro', label: 'Valor Financeiro', minWidth: 150 },
     { id: 'quantitativo', label: 'Quantitativo', minWidth: 150 },
+    { id: 'unidade', label: 'Unidade', minWidth: 150 },
+    { id: 'acoes', label: 'Acões', minWidth: 150 },
     { id: 'situacao_encontrada', label: 'Situação Encontrada', minWidth: 170 },
     { id: 'comentario', label: 'Comentário', minWidth: 170 },
-    { id: 'unidade', label: 'Unidade', minWidth: 150 },
     { id: 'coletadorId', label: 'Coletador', minWidth: 200 },
     { id: 'sanado', label: 'Situação', minWidth: 150 },
-    { id: 'acoes', label: 'Acões', minWidth: 150 }
 ]
 export const processoHeader = [
     { id: 'numero', label: 'Nº Processo', minWidth: 150 },
