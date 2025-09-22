@@ -13,6 +13,8 @@ import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import { lightTheme, darkTheme } from './theme/GlobalTheme';
 import { ThemeProvider as CustomThemeProvider, useThemeContext } from './context/ThemeContext';
 
+
+//salvando para produção
 function AppContent() {
 
   const { isDark } = useThemeContext();
